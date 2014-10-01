@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testspecification publishdate="2014-03-05T19:41:50.625Z" purpose="REGISTRATION" version="1.0">
+   <comment>Auth</comment>
+   <identifier uniqueid="53175e56e4b0c84072ea147a" name="CC-a-11-12-TEST-I-2" version="1.0" label="CCTest"/>
+   <property label="aaa" name="subject" value="aaa"/>
+   <property label="grade 11-12" name="grade" value="11-12"/>
+   <registration>
+      <registrationform>
+         <identifier uniqueid="53177553e4b0c84072ea21b9" name="testform123" version="1.0"/>
+         <poolproperty itemcount="1006" label="type2" property="itemType" value="type2"/>
+         <poolproperty itemcount="1005" label="type1" property="itemType" value="type1"/>
+         <poolproperty itemcount="1020" label="type3" property="itemType" value="type3"/>
+         <property label="Hausa" name="language" value="HAU"/>
+      </registrationform>
+      <registrationform>
+         <identifier uniqueid="5317770fe4b0c84072ea21be" name="test222" version="1.0"/>
+         <poolproperty itemcount="1006" label="type2" property="itemType" value="type2"/>
+         <poolproperty itemcount="1005" label="type1" property="itemType" value="type1"/>
+         <poolproperty itemcount="1020" label="type3" property="itemType" value="type3"/>
+         <property label="Shan" name="language" value="SHN"/>
+      </registrationform>
+      <registrationsegment minitems="1" maxitems="10" itemselection="53062bdce4b0adc1ca08e369" position="1">
+         <identifier uniqueid="53175e94e4b0c84072ea147c" name="" label="Test123"/>
+         <poolproperty itemcount="502" label="type2" property="itemType" value="type2"/>
+         <poolproperty itemcount="509" label="type3" property="itemType" value="type3"/>
+         <poolproperty itemcount="501" label="type1" property="itemType" value="type1"/>
+      </registrationsegment>
+      <registrationsegment minitems="10" maxitems="20" itemselection="53062bdce4b0adc1ca08e369" position="2">
+         <identifier uniqueid="53175ea6e4b0c84072ea147d" name="" label="test234"/>
+         <poolproperty itemcount="504" label="type1" property="itemType" value="type1"/>
+         <poolproperty itemcount="504" label="type2" property="itemType" value="type2"/>
+         <poolproperty itemcount="511" label="type3" property="itemType" value="type3"/>
+      </registrationsegment>
+      <comment>comment</comment>
+      <poolproperty itemcount="1006" label="type2" property="itemType" value="type2"/>
+      <poolproperty itemcount="1005" label="type1" property="itemType" value="type1"/>
+      <poolproperty itemcount="1020" label="type3" property="itemType" value="type3"/>
+   </registration>
+   <tenantId>524af61ae4b0b02763aa0fe0</tenantId>
+</testspecification>

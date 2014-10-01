@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:mongo="http://www.springframework.org/schema/data/mongo"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:util="http://www.springframework.org/schema/util"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+                http://www.springframework.org/schema/data/mongo http://www.springframework.org/schema/data/mongo/spring-mongo-1.1.xsd
+                http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-3.0.xsd
+                http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
+                
+	
+    
+    <mongo:repositories base-package="org.opentestsystem.delivery.testreg.persistence,org.opentestsystem.delivery.testadmin.persistence" factory-class="org.opentestsystem.shared.search.persistence.SearchableRepositoryFactoryBean"/>
+
+    <mongo:db-factory id="mongoDbFactory"
+                      mongo-ref="testreg-mongo"
+                      dbname="${testreg.mongo.dbname}"
+                      username="${testreg.mongo.username}"
+                      password="${testreg.mongo.password}"/>
+
+    <mongo:mapping-converter id="mongoMappingConverter" db-factory-ref="mongoDbFactory" base-package="org.opentestsystem.delivery.testreg.domain,org.opentestsystem.delivery.testadmin.domain">
+        <mongo:custom-converters>
+            <mongo:converter>
+                <bean class="org.opentestsystem.delivery.testreg.mongodb.converter.DateTimeWriteConverter"/>
+            </mongo:converter>
+            <mongo:converter>
+                <bean class="org.opentestsystem.delivery.testreg.mongodb.converter.DateTimeReadConverter"/>
+            </mongo:converter>
+        </mongo:custom-converters>
+    </mongo:mapping-converter>
+
+    <bean id="mongoTemplate" class="org.springframework.data.mongodb.core.MongoTemplate">
+        <constructor-arg name="mongoDbFactory" ref="mongoDbFactory"/>
+        <constructor-arg name="mongoConverter" ref="mongoMappingConverter"/>
+        <property name="writeConcern">
+            <util:constant static-field="com.mongodb.WriteConcern.SAFE"/>
+        </property>
+    </bean>
+
+    <bean id="mappingContext" class="org.springframework.data.mongodb.core.mapping.MongoMappingContext"/>
+
+    <bean id="mappingMongoConverter" class="org.springframework.data.mongodb.core.convert.MappingMongoConverter">
+        <constructor-arg name="mongoDbFactory" ref="mongoDbFactory"/>
+        <constructor-arg name="mappingContext" ref="mappingContext"/>
+    </bean>
+
+    <bean id="gridFsTemplate" class="org.springframework.data.mongodb.gridfs.GridFsTemplate">
+        <constructor-arg ref="mongoDbFactory"/>
+        <constructor-arg ref="mappingMongoConverter"/>
+    </bean>
+
+    <bean id="fileUploadGridFsRepository" class="org.opentestsystem.delivery.testreg.persistence.FileGridFsRepositoryImpl"/>
+
+    <bean id="parentEntityClassFinder" class="org.opentestsystem.delivery.testreg.persistence.ParentEntityClassFinder">
+        <constructor-arg name="basePackageName" value="org.opentestsystem.delivery.testreg.domain"/>
+    </bean>
+
+    <context:annotation-config/>
+    <context:component-scan base-package="org.opentestsystem.delivery.testadmin.persistence.validator,
+        org.opentestsystem.delivery.testreg.persistence.criteria,
+    	org.opentestsystem.delivery.testreg.persistence.criteria.dependencyresolvers, 
+    	org.opentestsystem.delivery.testreg.persistence.criteria.verifiers.student,
+    	org.opentestsystem.delivery.testreg.persistence.criteria.verifiers.user,
+    	org.opentestsystem.delivery.testreg.persistence.criteria.verifiers,
+    	org.opentestsystem.delivery.testreg.persistence.criteria.verifiers.assessment,
+    	org.opentestsystem.delivery.testreg.persistence.criteria.verifiers.accommodation,
+    	org.opentestsystem.delivery.testreg.persistence.criteria.verifiers.eligibility,
+    	org.opentestsystem.delivery.testreg.persistence.criteria.verifiers.studentgroup"/>
+    	
+        <!-- verifier map should be changed to key of class, value map keyed by formattype -->
+        
+	<bean id="studentVerifierMap" class="java.util.HashMap">
+	   	<constructor-arg>
+	   		<map>
+	   			<entry key="#{T(org.opentestsystem.delivery.testreg.domain.FormatType).STATE}" 			value-ref="studentStateVerifier"/>
+	   			<entry key="#{T(org.opentestsystem.delivery.testreg.domain.FormatType).DISTRICT}" 		value-ref="studentDistrictVerifier"/>
+				<entry key="#{T(org.opentestsystem.delivery.testreg.domain.FormatType).INSTITUTION}" 	value-ref="studentInstitutionVerifier"/>
+				<entry key="#{T(org.opentestsystem.delivery.testreg.domain.FormatType).ACCOMMODATIONS}" value-ref="accommodationVerifier"/>
+	   		</map>
+    	</constructor-arg>
+    </bean>
+    
+    <bean id="studentGroupVerifierMap" class="java.util.HashMap">
+        <constructor-arg>
+            <map>
+            	<entry key="#{T(org.opentestsystem.delivery.testreg.domain.FormatType).USER}"      		value-ref="studentGroupUserVerifier"/>
+                <entry key="#{T(org.opentestsystem.delivery.testreg.domain.FormatType).STATE}"      	value-ref="studentGroupStateVerifier"/>
+                <entry key="#{T(org.opentestsystem.delivery.testreg.domain.FormatType).DISTRICT}"       value-ref="studentGroupDistrictVerifier"/>
+                <entry key="#{T(org.opentestsystem.delivery.testreg.domain.FormatType).INSTITUTION}"    value-ref="studentGroupInstitutionVerifier"/>
+                <entry key="#{T(org.opentestsystem.delivery.testreg.domain.FormatType).STUDENT}"        value-ref="studentGroupStudentVerifier"/>
+                <entry key="#{T(org.opentestsystem.delivery.testreg.domain.FormatType).STUDENTGROUP}"   value-ref="maxStudentGroupVerifier"/>
+            </map>
+        </constructor-arg>
+    </bean>
+  <bean id="eligibilityVerifierMap" class="java.util.HashMap">
+        <constructor-arg>
+            <map>
+                <entry key="#{T(org.opentestsystem.delivery.testreg.domain.FormatType).DISTRICT}"      value-ref="eligibilityDistrictVerifier"/>
+                <entry key="#{T(org.opentestsystem.delivery.testreg.domain.FormatType).STUDENT}"       value-ref="eligibilityStudentVerifier" />              
+                <entry key="#{T(org.opentestsystem.delivery.testreg.domain.FormatType).ASSESSMENT}"    value-ref="eligibilityAssessmentVerifier"/>
+                <entry key="#{T(org.opentestsystem.delivery.testreg.domain.FormatType).ASSESSMENT}"    value-ref="eligibilityAssessmentVerifier"/>
+                <entry key="#{T(org.opentestsystem.delivery.testreg.domain.FormatType).EXPLICITELIGIBILITY}"    value-ref="eligibilitySubjectVerifier"/>                
+            </map>
+        </constructor-arg>
+    </bean>    
+    
+    <bean id="userVerifierMap" class="java.util.HashMap">
+    	<constructor-arg>
+            <map>
+            	<entry key="userRole"      					value-ref="userRoleVerifier"/>
+            	<entry key="userParent"    					value-ref="userParentVerifier"/>
+            	<entry key="userDuplicateRoleAssociation"   value-ref="duplicateRoleAssociationVerifier"/>
+            </map>
+       	</constructor-arg>
+    </bean>
+
+    <bean id="accommodationVerifierMap" class="java.util.HashMap">
+        <constructor-arg>
+            <map>
+                <entry key="accommodationSubject"    value-ref="accommodationSubjectVerifier"/>
+                <entry key="accommodationStudent"    value-ref="accommodationStudentVerifier"/>
+            </map>
+        </constructor-arg>
+    </bean>
+    
+    <bean id="assessmentVerifierMap" class="java.util.HashMap">
+        <constructor-arg>
+            <map>
+                <entry key="assessmentSubject"    value-ref="assessmentSubjectVerifier"/>
+            </map>
+        </constructor-arg>
+    </bean>
+        
+    <bean id="verifierMap" class="java.util.HashMap">
+        <constructor-arg>
+            <map key-type="java.lang.Class">
+                <entry key="org.opentestsystem.delivery.testreg.domain.Student" value-ref="studentVerifierMap"/>
+                <entry key="org.opentestsystem.delivery.testreg.domain.StudentGroup" value-ref="studentGroupVerifierMap"/>
+               
+            </map>
+        </constructor-arg>
+    </bean>
+    	
+    <bean id="conversionService" class="org.springframework.context.support.ConversionServiceFactoryBean"/>
+    
+    <bean class="org.opentestsystem.delivery.testreg.persistence.FormatTypeToHierarchyLevelConverter"/>
+    
+    <bean class="org.opentestsystem.delivery.testreg.persistence.HierarchyLevelToFormatTypeConverter"/>
+    
+    <bean class="org.opentestsystem.delivery.testreg.persistence.HierarchyLevelToTenantTypeConverter"/>
+	
+</beans>

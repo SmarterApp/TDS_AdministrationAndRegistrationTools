@@ -1,0 +1,100 @@
+<span class="boxIcon icon_sprite icon_view1"></span>
+<div data-ng-repeat="error in errors">
+    <div><span class="icon_sprite icon_error error"></span>{{error}}</div>
+</div>
+
+<div class="boxTitle"><h2>{{entityNameLabels['GroupOfInstitutions']}} Search</h2></div>
+<div>
+	<div data-searchable data-search-url="'groupofinstitution'"  data-search-params="searchParams" data-search-response="searchResponse">
+		<div class="fieldGroup">
+			<h5>Search Filters</h5>
+			<ul class="entityLayout">
+              <li>
+                <span class="entity-auto-complete">
+                   <label class="control-label" for="searchParams.entityId">{{xwalk('Group Of Institutions Identifier')}}:</label>
+                   <input group-of-institutions-search-auto-complete type="text" 
+                    placeholder="Search..." 
+                    data-ng-model="entityId"
+                    data-typeahead="entity as entity.entityId+ ' - ' + entity.entityName for entity in filterGroupOfInstitutions($viewValue, 20,true)" 
+                    data-typeahead-wait-ms="200" 
+                    data-typeahead-editable="true" 
+                    data-typeahead-input-formatter="formatGroupOfInstitutionsLabelId($model)"
+                    data-typeahead-on-select="changeGroupOfInstitutionsId($item)" />  
+                 </span>                              
+            </li>
+            <li>
+              <span class="entity-auto-complete">
+                   <label class="control-label" for="searchParams.entityName">{{xwalk('Group Of Institutions Name')}}:</label>
+                   <input group-of-institutions-search-auto-complete type="text" 
+                    placeholder="Search..." 
+                    data-ng-model="entityName"
+                    data-typeahead="entity as entity.entityName+ ' - ' + entity.entityId for entity in filterGroupOfInstitutions($viewValue, 20,false)" 
+                    data-typeahead-wait-ms="200" 
+                    data-typeahead-editable="true" 
+                    data-typeahead-input-formatter="formatGroupOfInstitutionsLabelName($model)"
+                    data-typeahead-on-select="changeGroupOfInstitutionsName($item)" />  
+                 </span>                             
+            </li>
+
+            <!-- using size of 3 which includes the "Select..." -->
+            <div data-ng-hide="states.length < 3">
+                <li>
+                    <span>
+                        <label class="control-label" for="searchParams.stateAbbreviation">{{xwalk('State Abbreviation')}}:</label>
+                        <select data-ng-model="searchParams.stateAbbreviation" data-ng-options="id.entityId as id.entityId for id in states | orderBy:'entityId'">
+                             <option value="">Select...</option>
+                        </select>
+                    </span>
+                </li>
+            </div>
+
+			</ul>
+			
+			<button type="button" type="button" class="boxBtn" data-search-on-click	data-active-indicator="searchResponse.searching">
+				<span class="btnIcon icon_sprite icon_reTry2 ng-class:{ajax_indicator:activeIndicator}"></span>
+				<span class="btnText">Search</span>
+			</button>
+			<button type="button" type="button" class="boxBtn"	data-ng-click="addGroupOfInstitutions()">
+				<span class="btnIcon icon_sprite icon_saveAdd2"></span> <span class="btnText">New</span>
+			</button>	
+			<div data-export="groupofinstitutions"></div>		
+		</div>
+		
+		<div data-pageable data-paging-info="searchResponse"	data-search-params="searchParams" data-change-page="changePage()">
+			<table class="dataTable">
+				<colgroup>
+					<col>
+					<col>
+					<col>
+                    <col>
+                    <col>
+                    <col class="doubleActionColumn">                
+				</colgroup>
+				<tr>
+					<th data-sort-on-click data-sort-column="entityId" class="headerSortUp">{{xwalk('Group Of Institutions Identifier')}}</th>
+					<th data-sort-on-click data-sort-column="entityName">{{xwalk('Group Of Institutions Name')}}</th>
+					<th data-sort-on-click data-sort-column="parentEntityType" >{{xwalk('Parent Entity Type')}}</th>
+                    <th data-sort-on-click data-sort-column="parentEntityId">{{xwalk('Parent Entity Name')}}</th>
+					<th data-sort-on-click data-sort-column="stateAbbreviation" >{{xwalk('State Abbreviation')}}</th>	
+                    <th></th>
+				</tr>
+				<tr data-ng-repeat="groupOfInstitutions in searchResponse.searchResults">
+    				<td>{{groupOfInstitutions.entityId}}</td>
+					<td>{{groupOfInstitutions.entityName}}</td>
+					<td>{{entityNameLabels[entityHierarchyRef[groupOfInstitutions.parentEntityType]]}}</td>
+					<td class="ng-class:{ajax_indicator:savingIndicator}">{{groupOfInstitutions.parentId | parentNameFilter:groupOfInstitution.parentEntityType:parentEntities}}</td>
+					<td>{{groupOfInstitutions.stateAbbreviation}}</td>
+                    <td class="normalSpace">
+                        <div class="tableButtonGroup">
+                            <button data-ng-click="edit(groupOfInstitutions)" class="boxBtn"><span class="btnIcon icon_sprite icon_edit2"></span></button>
+                            <button data-delete-confirmation="{{groupOfInstitutions.id}}" class="boxBtn"><span class="btnIcon icon_sprite icon_delete2"></span></button>
+                        </div>
+                    </td>					
+				</tr>
+			</table>
+		</div>
+		<div data-load-parent-names></div>
+	</div>
+</div>
+<div class="clear"></div>
+

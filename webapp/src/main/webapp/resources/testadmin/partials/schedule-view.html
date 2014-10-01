@@ -1,0 +1,110 @@
+<div  data-ng-include src='"resources/testadmin/partials/leftnav.html"'></div>
+<div class="secContent"> 
+
+<div data-ng-repeat="error in errors">
+     <div><span class="icon_sprite icon_error error"></span>{{error}}</div>
+</div>
+           
+<div>
+    <div class="fieldGroup">
+    <h5>Schedule Summary</h5>
+            <ul>
+            <li>
+                <span> 
+                    <label class="control-label-summary" >Name:</label>
+                     {{schedule.scheduleName}}
+                </span>
+            </li>
+            <li>
+                <span> 
+                    <label class="control-label-summary">Institution:</label>
+                     {{schedule.institutionIdentifier}}
+                </span>
+            </li>
+            <li>
+                <span> 
+                    <label class="control-label-summary">Start Date:</label>
+                     {{formatDate(schedule.startDate)}}
+                </span>
+            </li>
+            <li>
+                <span> 
+                    <label class="control-label-summary">End Date:</label>
+                     {{formatDate(schedule.endDate)}}
+                </span>
+            </li>   
+
+            <li>
+                <span> 
+                    <label class="control-label-summary">Total Number of Test Slots:</label>
+                     {{schedule.creationInfo.totalNumTestSlots}}
+                </span>
+            </li> 
+            <li>
+                <span> 
+                    <label class="control-label-summary">Number of Empty Test Slots:</label>
+                    {{schedule.creationInfo.numEmptyTestSlots}}
+                </span>
+            </li> 
+            <li>
+                <span> 
+                    <label class="control-label-summary">Total Number of Seats:</label>
+                    {{schedule.creationInfo.totalNumSeats}}
+                </span>
+            </li>      
+            <li>
+                <span> 
+                    <label class="control-label-summary">Number of Seats With Accessibility Equipment:</label>
+                    {{schedule.creationInfo.numSeatsWithAccessibilityEquipment}}
+                </span>
+            </li>            
+            <li>
+                <span> 
+                    <label class="control-label-summary">Number of Empty Seats:</label>
+                    {{schedule.creationInfo.numEmptySeats}}
+                </span>
+            </li>     
+            <li>
+                <span> 
+                    <label class="control-label-summary">Number of Time Slots With No Proctor:</label>
+                    {{schedule.creationInfo.numTimeslotsWithNoProctor}}
+                </span>
+            </li>  
+            <li>
+                <span> 
+                    <label class="control-label-summary">Number of Scheduled Students:</label>
+                    {{schedule.creationInfo.numStudentsScheduled}}
+                </span>
+            </li>            
+            <li>
+                <span> 
+                    <label class="control-label-summary">Number of Unscheduled Students:</label>
+                    {{schedule.creationInfo.numUnscheduledStudents}}
+                </span>
+            </li>                                 
+            <li>
+                <span> 
+                    <label class="control-label-summary">Number of Unscheduled Assessments:</label>
+                    {{schedule.creationInfo.numUnscheduledAssessments}}
+                </span>
+            </li>       
+            <li>
+                <span> 
+                    <label class="control-label-summary">Capacity Used (%):</label>
+                    {{schedule.creationInfo.percentCapacityUsed}}
+                </span>
+            </li>                                                                                   
+        </ul>  
+
+         
+        <button type="button" class="boxBtn" data-ng-click="cancel()">
+            <span class="btnIcon icon_sprite icon_cancel2" ></span>
+            <span class="btnText">Cancel</span>
+        </button>      
+
+    </div>
+</div>
+</div>
+<div class="clear"></div>
+
+ 

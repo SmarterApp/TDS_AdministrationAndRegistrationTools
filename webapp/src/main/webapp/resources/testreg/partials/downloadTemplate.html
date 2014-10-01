@@ -1,0 +1,57 @@
+ <div class="secContent"> 
+<span class="boxIcon icon_sprite icon_view1"></span>
+<div data-ng-repeat="error in errors">
+    <div><span class="icon_sprite icon_error error"></span>{{error}}</div>
+</div>
+
+
+<div class="boxTitle"><h2>Download Templates</h2></div>
+        
+<div>
+     <div >
+	     <p class="informational">Download file by selecting the file:
+	     </p>
+         <form id="fileupload" method="POST" enctype="multipart/form-data"  data-file-upload="options">
+            <!-- The table listing the files available for download -->
+            <table class="dataTable  ng-cloak">
+            	<colgroup>
+                    <col>
+                    <col>
+                </colgroup>
+                <tr>
+                     
+                    <th>Entity Name</th>
+                </tr>
+                <tr data-ng-repeat="entity in entities">
+                 	<td>
+                		<input type="checkbox"  data-ng-model="entity.code">{{entityNameLabels[entity.entityName]}}
+                	</td>
+               		
+                </tr>
+             </table>
+             <br>
+             <table>
+             	<tr>
+                	<td colspan="2" data-ng-repeat="fileType in fileTypes">
+                		<span><input type="checkbox" data-ng-model="fileType.code"></span><span>:{{fileType.name}} &nbsp;</span>
+                	</td>
+                </tr>
+             </table>
+             
+             <button type="button" class="boxBtn"  data-ng-click="downloadTemplate()" data-ng-show="selectedFileTypes.length>0 && selectedEntities.length>0">
+            	<span class="btnIcon icon_sprite icon_save2 ng-class:{ajax_indicator:savingIndicator}" ></span>
+            	<span class="btnText">Download</span>
+        	</button>
+        	
+        	<div data-ng-repeat="file in downloadFiles">
+        		<iframe style="display:none; width:0px; height:0px" data-ng-src="{{file.url}}" ></iframe>
+        	</div>
+        	
+        </form> 
+    </div>
+    
+</div> 
+</div>  
+
+</div>
+<div class="clear"></div>

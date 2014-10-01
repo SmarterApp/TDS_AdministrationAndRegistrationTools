@@ -1,0 +1,504 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+    xmlns:mongo="http://www.springframework.org/schema/data/mongo"
+    xmlns:aop="http://www.springframework.org/schema/aop"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:util="http://www.springframework.org/schema/util"
+    xsi:schemaLocation="
+                http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+                http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd
+                http://www.springframework.org/schema/data/mongo http://www.springframework.org/schema/data/mongo/spring-mongo-1.1.xsd
+                http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-3.0.xsd">
+
+    <bean id="languageMap" class="java.util.HashMap">
+    	<constructor-arg>
+	   		<map>
+				<entry key="aar" value="Afar" />
+				<entry key="abk" value="Abkhazian" />
+				<entry key="ace" value="Achinese" />
+				<entry key="ach" value="Acoli" />
+				<entry key="ada" value="Adangme" />
+				<entry key="ady" value="Adyghe; Adygei" />
+				<entry key="afa" value="Afro-Asiatic languages" />
+				<entry key="afh" value="Afrihili" />
+				<entry key="afr" value="Afrikaans" />
+				<entry key="ain" value="Ainu" />
+				<entry key="aka" value="Akan" />
+				<entry key="akk" value="Akkadian" />
+				<entry key="alb" value="Albanian" />
+				<entry key="ale" value="Aleut" />
+				<entry key="alg" value="Algonquian languages" />
+				<entry key="alt" value="Southern Altai" />
+				<entry key="amh" value="Amharic" />
+				<entry key="ang" value="English, Old (ca.450-1100)" />
+				<entry key="anp" value="Angika" />
+				<entry key="apa" value="Apache languages" />
+				<entry key="ara" value="Arabic" />
+				<entry key="arc" value="Official Aramaic (700-300 BCE); Imperial Aramaic (700-300 BCE)" />
+				<entry key="arg" value="Aragonese" />
+				<entry key="arm" value="Armenian" />
+				<entry key="arn" value="Mapudungun; Mapuche" />
+				<entry key="arp" value="Arapaho" />
+				<entry key="art" value="Artificial languages" />
+				<entry key="arw" value="Arawak" />
+				<entry key="asm" value="Assamese" />
+				<entry key="ast" value="Asturian; Bable; Leonese; Asturleonese" />
+				<entry key="ath" value="Athapascan languages" />
+				<entry key="aus" value="Australian languages" />
+				<entry key="ava" value="Avaric" />
+				<entry key="ave" value="Avestan" />
+				<entry key="awa" value="Awadhi" />
+				<entry key="aym" value="Aymara" />
+				<entry key="aze" value="Azerbaijani" />
+				<entry key="bad" value="Banda languages" />
+				<entry key="bai" value="Bamileke languages" />
+				<entry key="bak" value="Bashkir" />
+				<entry key="bal" value="Baluchi" />
+				<entry key="bam" value="Bambara" />
+				<entry key="ban" value="Balinese" />
+				<entry key="baq" value="Basque" />
+				<entry key="bas" value="Basa" />
+				<entry key="bat" value="Baltic languages" />
+				<entry key="bej" value="Beja; Bedawiyet" />
+				<entry key="bel" value="Belarusian" />
+				<entry key="bem" value="Bemba" />
+				<entry key="ben" value="Bengali" />
+				<entry key="ber" value="Berber languages" />
+				<entry key="bho" value="Bhojpuri" />
+				<entry key="bih" value="Bihari languages" />
+				<entry key="bik" value="Bikol" />
+				<entry key="bin" value="Bini; Edo" />
+				<entry key="bis" value="Bislama" />
+				<entry key="bla" value="Siksika" />
+				<entry key="bnt" value="Bantu (Other)" />
+				<entry key="bos" value="Bosnian" />
+				<entry key="bra" value="Braj" />
+				<entry key="bre" value="Breton" />
+				<entry key="btk" value="Batak languages" />
+				<entry key="bua" value="Buriat" />
+				<entry key="bug" value="Buginese" />
+				<entry key="bul" value="Bulgarian" />
+				<entry key="bur" value="Burmese" />
+				<entry key="byn" value="Blin; Bilin" />
+				<entry key="cad" value="Caddo" />
+				<entry key="cai" value="Central American Indian languages" />
+				<entry key="car" value="Galibi Carib" />
+				<entry key="cat" value="Catalan; Valencian" />
+				<entry key="cau" value="Caucasian languages" />
+				<entry key="ceb" value="Cebuano" />
+				<entry key="cel" value="Celtic languages" />
+				<entry key="cha" value="Chamorro" />
+				<entry key="chb" value="Chibcha" />
+				<entry key="che" value="Chechen" />
+				<entry key="chg" value="Chagatai" />
+				<entry key="chi" value="Chinese" />
+				<entry key="chk" value="Chuukese" />
+				<entry key="chm" value="Mari" />
+				<entry key="chn" value="Chinook jargon" />
+				<entry key="cho" value="Choctaw" />
+				<entry key="chp" value="Chipewyan; Dene Suline" />
+				<entry key="chr" value="Cherokee" />
+				<entry key="chu" value="Church Slavic; Old Slavonic; Church Slavonic; Old Bulgarian; Old Church Slavonic" />
+				<entry key="chv" value="Chuvash" />
+				<entry key="chy" value="Cheyenne" />
+				<entry key="cmc" value="Chamic languages" />
+				<entry key="cop" value="Coptic" />
+				<entry key="cor" value="Cornish" />
+				<entry key="cos" value="Corsican" />
+				<entry key="cpe" value="Creoles and pidgins, English based" />
+				<entry key="cpf" value="Creoles and pidgins, French-based " />
+				<entry key="cpp" value="Creoles and pidgins, Portuguese-based " />
+				<entry key="cre" value="Cree" />
+				<entry key="crh" value="Crimean Tatar; Crimean Turkish" />
+				<entry key="crp" value="Creoles and pidgins" />
+				<entry key="csb" value="Kashubian" />
+				<entry key="cus" value="Cushitic languages" />
+				<entry key="cze" value="Czech" />
+				<entry key="dak" value="Dakota" />
+				<entry key="dan" value="Danish" />
+				<entry key="dar" value="Dargwa" />
+				<entry key="day" value="Land Dayak languages" />
+				<entry key="del" value="Delaware" />
+				<entry key="den" value="Slave (Athapascan)" />
+				<entry key="dgr" value="Dogrib" />
+				<entry key="din" value="Dinka" />
+				<entry key="div" value="Divehi; Dhivehi; Maldivian" />
+				<entry key="doi" value="Dogri" />
+				<entry key="dra" value="Dravidian languages" />
+				<entry key="dsb" value="Lower Sorbian" />
+				<entry key="dua" value="Duala" />
+				<entry key="dum" value="Dutch, Middle (ca.1050-1350)" />
+				<entry key="dut" value="Dutch; Flemish" />
+				<entry key="dyu" value="Dyula" />
+				<entry key="dzo" value="Dzongkha" />
+				<entry key="efi" value="Efik" />
+				<entry key="egy" value="Egyptian (Ancient)" />
+				<entry key="eka" value="Ekajuk" />
+				<entry key="elx" value="Elamite" />
+				<entry key="eng" value="English" />
+				<entry key="enm" value="English, Middle (1100-1500)" />
+				<entry key="epo" value="Esperanto" />
+				<entry key="est" value="Estonian" />
+				<entry key="ewe" value="Ewe" />
+				<entry key="ewo" value="Ewondo" />
+				<entry key="fan" value="Fang" />
+				<entry key="fao" value="Faroese" />
+				<entry key="fat" value="Fanti" />
+				<entry key="fij" value="Fijian" />
+				<entry key="fil" value="Filipino; Pilipino" />
+				<entry key="fin" value="Finnish" />
+				<entry key="fiu" value="Finno-Ugrian languages" />
+				<entry key="fon" value="Fon" />
+				<entry key="fre" value="French" />
+				<entry key="frm" value="French, Middle (ca.1400-1600)" />
+				<entry key="fro" value="French, Old (842-ca.1400)" />
+				<entry key="frr" value="Northern Frisian" />
+				<entry key="frs" value="Eastern Frisian" />
+				<entry key="fry" value="Western Frisian" />
+				<entry key="ful" value="Fulah" />
+				<entry key="fur" value="Friulian" />
+				<entry key="gaa" value="Ga" />
+				<entry key="gay" value="Gayo" />
+				<entry key="gba" value="Gbaya" />
+				<entry key="gem" value="Germanic languages" />
+				<entry key="geo" value="Georgian" />
+				<entry key="ger" value="German" />
+				<entry key="gez" value="Geez" />
+				<entry key="gil" value="Gilbertese" />
+				<entry key="gla" value="Gaelic; Scottish Gaelic" />
+				<entry key="gle" value="Irish" />
+				<entry key="glg" value="Galician" />
+				<entry key="glv" value="Manx" />
+				<entry key="gmh" value="German, Middle High (ca.1050-1500)" />
+				<entry key="goh" value="German, Old High (ca.750-1050)" />
+				<entry key="gon" value="Gondi" />
+				<entry key="gor" value="Gorontalo" />
+				<entry key="got" value="Gothic" />
+				<entry key="grb" value="Grebo" />
+				<entry key="grc" value="Greek, Ancient (to 1453)" />
+				<entry key="gre" value="Greek, Modern (1453-)" />
+				<entry key="grn" value="Guarani" />
+				<entry key="gsw" value="Swiss German; Alemannic; Alsatian" />
+				<entry key="guj" value="Gujarati" />
+				<entry key="gwi" value="Gwich'in" />
+				<entry key="hai" value="Haida" />
+				<entry key="hat" value="Haitian; Haitian Creole" />
+				<entry key="hau" value="Hausa" />
+				<entry key="haw" value="Hawaiian" />
+				<entry key="heb" value="Hebrew" />
+				<entry key="her" value="Herero" />
+				<entry key="hil" value="Hiligaynon" />
+				<entry key="him" value="Himachali languages; Western Pahari languages" />
+				<entry key="hin" value="Hindi" />
+				<entry key="hit" value="Hittite" />
+				<entry key="hmn" value="Hmong; Mong" />
+				<entry key="hmo" value="Hiri Motu" />
+				<entry key="hrv" value="Croatian" />
+				<entry key="hsb" value="Upper Sorbian" />
+				<entry key="hun" value="Hungarian" />
+				<entry key="hup" value="Hupa" />
+				<entry key="iba" value="Iban" />
+				<entry key="ibo" value="Igbo" />
+				<entry key="ice" value="Icelandic" />
+				<entry key="ido" value="Ido" />
+				<entry key="iii" value="Sichuan Yi; Nuosu" />
+				<entry key="ijo" value="Ijo languages" />
+				<entry key="iku" value="Inuktitut" />
+				<entry key="ile" value="Interlingue; Occidental" />
+				<entry key="ilo" value="Iloko" />
+				<entry key="ina" value="Interlingua (International Auxiliary Language Association)" />
+				<entry key="inc" value="Indic languages" />
+				<entry key="ind" value="Indonesian" />
+				<entry key="ine" value="Indo-European languages" />
+				<entry key="inh" value="Ingush" />
+				<entry key="ipk" value="Inupiaq" />
+				<entry key="ira" value="Iranian languages" />
+				<entry key="iro" value="Iroquoian languages" />
+				<entry key="ita" value="Italian" />
+				<entry key="jav" value="Javanese" />
+				<entry key="jbo" value="Lojban" />
+				<entry key="jpn" value="Japanese" />
+				<entry key="jpr" value="Judeo-Persian" />
+				<entry key="jrb" value="Judeo-Arabic" />
+				<entry key="kaa" value="Kara-Kalpak" />
+				<entry key="kab" value="Kabyle" />
+				<entry key="kac" value="Kachin; Jingpho" />
+				<entry key="kal" value="Kalaallisut; Greenlandic" />
+				<entry key="kam" value="Kamba" />
+				<entry key="kan" value="Kannada" />
+				<entry key="kar" value="Karen languages" />
+				<entry key="kas" value="Kashmiri" />
+				<entry key="kau" value="Kanuri" />
+				<entry key="kaw" value="Kawi" />
+				<entry key="kaz" value="Kazakh" />
+				<entry key="kbd" value="Kabardian" />
+				<entry key="kha" value="Khasi" />
+				<entry key="khi" value="Khoisan languages" />
+				<entry key="khm" value="Central Khmer" />
+				<entry key="kho" value="Khotanese; Sakan" />
+				<entry key="kik" value="Kikuyu; Gikuyu" />
+				<entry key="kin" value="Kinyarwanda" />
+				<entry key="kir" value="Kirghiz; Kyrgyz" />
+				<entry key="kmb" value="Kimbundu" />
+				<entry key="kok" value="Konkani" />
+				<entry key="kom" value="Komi" />
+				<entry key="kon" value="Kongo" />
+				<entry key="kor" value="Korean" />
+				<entry key="kos" value="Kosraean" />
+				<entry key="kpe" value="Kpelle" />
+				<entry key="krc" value="Karachay-Balkar" />
+				<entry key="krl" value="Karelian" />
+				<entry key="kro" value="Kru languages" />
+				<entry key="kru" value="Kurukh" />
+				<entry key="kua" value="Kuanyama; Kwanyama" />
+				<entry key="kum" value="Kumyk" />
+				<entry key="kur" value="Kurdish" />
+				<entry key="kut" value="Kutenai" />
+				<entry key="lad" value="Ladino" />
+				<entry key="lah" value="Lahnda" />
+				<entry key="lam" value="Lamba" />
+				<entry key="lao" value="Lao" />
+				<entry key="lat" value="Latin" />
+				<entry key="lav" value="Latvian" />
+				<entry key="lez" value="Lezghian" />
+				<entry key="lim" value="Limburgan; Limburger; Limburgish" />
+				<entry key="lin" value="Lingala" />
+				<entry key="lit" value="Lithuanian" />
+				<entry key="lol" value="Mongo" />
+				<entry key="loz" value="Lozi" />
+				<entry key="ltz" value="Luxembourgish; Letzeburgesch" />
+				<entry key="lua" value="Luba-Lulua" />
+				<entry key="lub" value="Luba-Katanga" />
+				<entry key="lug" value="Ganda" />
+				<entry key="lui" value="Luiseno" />
+				<entry key="lun" value="Lunda" />
+				<entry key="luo" value="Luo (Kenya and Tanzania)" />
+				<entry key="lus" value="Lushai" />
+				<entry key="mac" value="Macedonian" />
+				<entry key="mad" value="Madurese" />
+				<entry key="mag" value="Magahi" />
+				<entry key="mah" value="Marshallese" />
+				<entry key="mai" value="Maithili" />
+				<entry key="mak" value="Makasar" />
+				<entry key="mal" value="Malayalam" />
+				<entry key="man" value="Mandingo" />
+				<entry key="mao" value="Maori" />
+				<entry key="map" value="Austronesian languages" />
+				<entry key="mar" value="Marathi" />
+				<entry key="mas" value="Masai" />
+				<entry key="may" value="Malay" />
+				<entry key="mdf" value="Moksha" />
+				<entry key="mdr" value="Mandar" />
+				<entry key="men" value="Mende" />
+				<entry key="mga" value="Irish, Middle (900-1200)" />
+				<entry key="mic" value="Mi'kmaq; Micmac" />
+				<entry key="min" value="Minangkabau" />
+				<entry key="mis" value="Uncoded languages" />
+				<entry key="mkh" value="Mon-Khmer languages" />
+				<entry key="mlg" value="Malagasy" />
+				<entry key="mlt" value="Maltese" />
+				<entry key="mnc" value="Manchu" />
+				<entry key="mni" value="Manipuri" />
+				<entry key="mno" value="Manobo languages" />
+				<entry key="moh" value="Mohawk" />
+				<entry key="mon" value="Mongolian" />
+				<entry key="mos" value="Mossi" />
+				<entry key="mul" value="Multiple languages" />
+				<entry key="mun" value="Munda languages" />
+				<entry key="mus" value="Creek" />
+				<entry key="mwl" value="Mirandese" />
+				<entry key="mwr" value="Marwari" />
+				<entry key="myn" value="Mayan languages" />
+				<entry key="myv" value="Erzya" />
+				<entry key="nah" value="Nahuatl languages" />
+				<entry key="nai" value="North American Indian languages" />
+				<entry key="nap" value="Neapolitan" />
+				<entry key="nau" value="Nauru" />
+				<entry key="nav" value="Navajo; Navaho" />
+				<entry key="nbl" value="Ndebele, South; South Ndebele" />
+				<entry key="nde" value="Ndebele, North; North Ndebele" />
+				<entry key="ndo" value="Ndonga" />
+				<entry key="nds" value="Low German; Low Saxon; German, Low; Saxon, Low" />
+				<entry key="nep" value="Nepali" />
+				<entry key="new" value="Nepal Bhasa; Newari" />
+				<entry key="nia" value="Nias" />
+				<entry key="nic" value="Niger-Kordofanian languages" />
+				<entry key="niu" value="Niuean" />
+				<entry key="nno" value="Norwegian Nynorsk; Nynorsk, Norwegian" />
+				<entry key="nob" value="Bokmål, Norwegian; Norwegian Bokmål" />
+				<entry key="nog" value="Nogai" />
+				<entry key="non" value="Norse, Old" />
+				<entry key="nor" value="Norwegian" />
+				<entry key="nqo" value="N'Ko" />
+				<entry key="nso" value="Pedi; Sepedi; Northern Sotho" />
+				<entry key="nub" value="Nubian languages" />
+				<entry key="nwc" value="Classical Newari; Old Newari; Classical Nepal Bhasa" />
+				<entry key="nya" value="Chichewa; Chewa; Nyanja" />
+				<entry key="nym" value="Nyamwezi" />
+				<entry key="nyn" value="Nyankole" />
+				<entry key="nyo" value="Nyoro" />
+				<entry key="nzi" value="Nzima" />
+				<entry key="oci" value="Occitan (post 1500); Provençal" />
+				<entry key="oji" value="Ojibwa" />
+				<entry key="ori" value="Oriya" />
+				<entry key="orm" value="Oromo" />
+				<entry key="osa" value="Osage" />
+				<entry key="oss" value="Ossetian; Ossetic" />
+				<entry key="ota" value="Turkish, Ottoman (1500-1928)" />
+				<entry key="oto" value="Otomian languages" />
+				<entry key="paa" value="Papuan languages" />
+				<entry key="pag" value="Pangasinan" />
+				<entry key="pal" value="Pahlavi" />
+				<entry key="pam" value="Pampanga; Kapampangan" />
+				<entry key="pan" value="Panjabi; Punjabi" />
+				<entry key="pap" value="Papiamento" />
+				<entry key="pau" value="Palauan" />
+				<entry key="peo" value="Persian, Old (ca.600-400 B.C.)" />
+				<entry key="per" value="Persian" />
+				<entry key="phi" value="Philippine languages" />
+				<entry key="phn" value="Phoenician" />
+				<entry key="pli" value="Pali" />
+				<entry key="pol" value="Polish" />
+				<entry key="pon" value="Pohnpeian" />
+				<entry key="por" value="Portuguese" />
+				<entry key="pra" value="Prakrit languages" />
+				<entry key="pro" value="Provençal, Old (to 1500)" />
+				<entry key="pus" value="Pushto; Pashto" />
+				<entry key="que" value="Quechua" />
+				<entry key="raj" value="Rajasthani" />
+				<entry key="rap" value="Rapanui" />
+				<entry key="rar" value="Rarotongan; Cook Islands Maori" />
+				<entry key="roa" value="Romance languages" />
+				<entry key="roh" value="Romansh" />
+				<entry key="rom" value="Romany" />
+				<entry key="rum" value="Romanian; Moldavian; Moldovan" />
+				<entry key="run" value="Rundi" />
+				<entry key="rup" value="Aromanian; Arumanian; Macedo-Romanian" />
+				<entry key="rus" value="Russian" />
+				<entry key="sad" value="Sandawe" />
+				<entry key="sag" value="Sango" />
+				<entry key="sah" value="Yakut" />
+				<entry key="sai" value="South American Indian (Other)" />
+				<entry key="sal" value="Salishan languages" />
+				<entry key="sam" value="Samaritan Aramaic" />
+				<entry key="san" value="Sanskrit" />
+				<entry key="sas" value="Sasak" />
+				<entry key="sat" value="Santali" />
+				<entry key="scn" value="Sicilian" />
+				<entry key="sco" value="Scots" />
+				<entry key="sel" value="Selkup" />
+				<entry key="sem" value="Semitic languages" />
+				<entry key="sga" value="Irish, Old (to 900)" />
+				<entry key="sgn" value="Sign Languages" />
+				<entry key="shn" value="Shan" />
+				<entry key="sid" value="Sidamo" />
+				<entry key="sin" value="Sinhala; Sinhalese" />
+				<entry key="sio" value="Siouan languages" />
+				<entry key="sit" value="Sino-Tibetan languages" />
+				<entry key="sla" value="Slavic languages" />
+				<entry key="slo" value="Slovak" />
+				<entry key="slv" value="Slovenian" />
+				<entry key="sma" value="Southern Sami" />
+				<entry key="sme" value="Northern Sami" />
+				<entry key="smi" value="Sami languages" />
+				<entry key="smj" value="Lule Sami" />
+				<entry key="smn" value="Inari Sami" />
+				<entry key="smo" value="Samoan" />
+				<entry key="sms" value="Skolt Sami" />
+				<entry key="sna" value="Shona" />
+				<entry key="snd" value="Sindhi" />
+				<entry key="snk" value="Soninke" />
+				<entry key="sog" value="Sogdian" />
+				<entry key="som" value="Somali" />
+				<entry key="son" value="Songhai languages" />
+				<entry key="sot" value="Sotho, Southern" />
+				<entry key="spa" value="Spanish; Castilian" />
+				<entry key="srd" value="Sardinian" />
+				<entry key="srn" value="Sranan Tongo" />
+				<entry key="srp" value="Serbian" />
+				<entry key="srr" value="Serer" />
+				<entry key="ssa" value="Nilo-Saharan languages" />
+				<entry key="ssw" value="Swati" />
+				<entry key="suk" value="Sukuma" />
+				<entry key="sun" value="Sundanese" />
+				<entry key="sus" value="Susu" />
+				<entry key="sux" value="Sumerian" />
+				<entry key="swa" value="Swahili" />
+				<entry key="swe" value="Swedish" />
+				<entry key="syc" value="Classical Syriac" />
+				<entry key="syr" value="Syriac" />
+				<entry key="tah" value="Tahitian" />
+				<entry key="tai" value="Tai languages" />
+				<entry key="tam" value="Tamil" />
+				<entry key="tat" value="Tatar" />
+				<entry key="tel" value="Telugu" />
+				<entry key="tem" value="Timne" />
+				<entry key="ter" value="Tereno" />
+				<entry key="tet" value="Tetum" />
+				<entry key="tgk" value="Tajik" />
+				<entry key="tgl" value="Tagalog" />
+				<entry key="tha" value="Thai" />
+				<entry key="tib" value="Tibetan" />
+				<entry key="tig" value="Tigre" />
+				<entry key="tir" value="Tigrinya" />
+				<entry key="tiv" value="Tiv" />
+				<entry key="tkl" value="Tokelau" />
+				<entry key="tlh" value="Klingon; tlhIngan-Hol" />
+				<entry key="tli" value="Tlingit" />
+				<entry key="tmh" value="Tamashek" />
+				<entry key="tog" value="Tonga (Nyasa)" />
+				<entry key="ton" value="Tonga (Tonga Islands)" />
+				<entry key="tpi" value="Tok Pisin" />
+				<entry key="tsi" value="Tsimshian" />
+				<entry key="tsn" value="Tswana" />
+				<entry key="tso" value="Tsonga" />
+				<entry key="tuk" value="Turkmen" />
+				<entry key="tum" value="Tumbuka" />
+				<entry key="tup" value="Tupi languages" />
+				<entry key="tur" value="Turkish" />
+				<entry key="tut" value="Altaic languages" />
+				<entry key="tvl" value="Tuvalu" />
+				<entry key="twi" value="Twi" />
+				<entry key="tyv" value="Tuvinian" />
+				<entry key="udm" value="Udmurt" />
+				<entry key="uga" value="Ugaritic" />
+				<entry key="uig" value="Uighur; Uyghur" />
+				<entry key="ukr" value="Ukrainian" />
+				<entry key="umb" value="Umbundu" />
+				<entry key="und" value="Undetermined" />
+				<entry key="urd" value="Urdu" />
+				<entry key="uzb" value="Uzbek" />
+				<entry key="vai" value="Vai" />
+				<entry key="ven" value="Venda" />
+				<entry key="vie" value="Vietnamese" />
+				<entry key="vol" value="Volapük" />
+				<entry key="vot" value="Votic" />
+				<entry key="wak" value="Wakashan languages" />
+				<entry key="wal" value="Walamo" />
+				<entry key="war" value="Waray" />
+				<entry key="was" value="Washo" />
+				<entry key="wel" value="Welsh" />
+				<entry key="wen" value="Sorbian languages" />
+				<entry key="wln" value="Walloon" />
+				<entry key="wol" value="Wolof" />
+				<entry key="xal" value="Kalmyk; Oirat" />
+				<entry key="xho" value="Xhosa" />
+				<entry key="yao" value="Yao" />
+				<entry key="yap" value="Yapese" />
+				<entry key="yid" value="Yiddish" />
+				<entry key="yor" value="Yoruba" />
+				<entry key="ypk" value="Yupik languages" />
+				<entry key="zap" value="Zapotec" />
+				<entry key="zbl" value="Blissymbols; Blissymbolics; Bliss" />
+				<entry key="zen" value="Zenaga" />
+				<entry key="zha" value="Zhuang; Chuang" />
+				<entry key="znd" value="Zande languages" />
+				<entry key="zul" value="Zulu" />
+				<entry key="zun" value="Zuni" />
+				<entry key="zxx" value="No linguistic content; Not applicable" />
+				<entry key="zza" value="Zaza; Dimili; Dimli; Kirdki; Kirmanjki; Zazaki" />
+			</map>
+	   	</constructor-arg>
+    </bean>
+
+</beans>

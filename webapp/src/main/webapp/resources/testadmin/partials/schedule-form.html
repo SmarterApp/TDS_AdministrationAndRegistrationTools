@@ -1,0 +1,111 @@
+<div  data-ng-include src='"resources/testadmin/partials/leftnav.html"'></div>
+<div class="secContent"> 
+
+<div data-ng-repeat="error in errors">
+     <div><span class="icon_sprite icon_error error"></span>{{error}}</div>
+</div>
+           
+<div data-ng-form="scheduleForm" class="formWrapper">
+    <div data-ng-show="scheduleForm.$dirty" class="dirtynag">* Warning: You have unsaved changes</div>
+    <div class="fieldGroup">
+    <h5>{{formAction}} Schedule Information<span class="control-label-required">Indicates required field</span></h5>
+        <ul>
+            <li>
+                <span> 
+                    <label class="control-label-required" for="schedule.scheduleName" >Name:</label>
+                     <input type="text" name="schedule.scheduleName" data-ng-model="schedule.scheduleName" />
+                </span>
+            </li>
+            <li>
+                <span class="district-auto-complete">
+                    <label class="control-label-required" for="schedule.institutionIdentifier">{{xwalk('Institution Identifier')}}:</label>
+                    <input data-institution-auto-complete-schedule type="text" 
+                    placeholder="Search..." 
+                    data-ng-model="institution"
+                    data-typeahead="entity as entity.entityId + ' - ' + entity.entityName for entity in filterInstitutions($viewValue, 10)" 
+                    data-typeahead-wait-ms="200" 
+                    data-typeahead-editable="true" 
+                    data-typeahead-input-formatter="formatInstitutionLabel($model)"
+                    data-typeahead-on-select="changeInstitution({institution:$item})" />  
+                 </span>               
+            </li>         
+            <li>
+             <span  class="datepicker"> 
+                    <label class="control-label-required" for="schedule.startDate">Start Date:</label>
+                    <span class="icon-chevron-calendar" style="width:14px"></span>
+                    <input type="text" name="schedule.startDate"  data-datepicker-popup="{{format}}" 
+                      data-is-open="startDate.opened" data-show-weeks="false" data-ng-model="schedule.startDate"/>
+             </span>                  
+            </li>  
+            <li>
+             <span  class="datepicker"> 
+                    <label class="control-label-required" for="schedule.endDate">End Date:</label>
+                    <span class="icon-chevron-calendar" style="width:14px"></span>
+                    <input type="text" name="schedule.endDate"  data-datepicker-popup="{{format}}" 
+                      data-is-open="endDate.opened" data-show-weeks="false" data-ng-model="schedule.endDate"/>
+             </span>
+            </li> 
+            <li></li>
+         
+        </ul>  
+        
+        <div class="home"><div class="testslot"><hr/></div></div>
+        <div class="home"><div class="testslot"><h2>Schedule Rules</h2></div></div>
+        <div class="tableWrapper">
+            <table class="assessmentTable" style="width:60%;margin:auto">
+                <colgroup>
+                        <col>
+                        <col>
+                        <col> 
+                        <col class="actionColumn">
+                </colgroup>
+                <tbody>
+                    <tr>
+                        <th>Type</th>
+                        <th>Value</th>
+                        <th>Strict</th>
+                        <th>
+                            <div class="tableButtonGroup">
+                              <button data-ng-click="addAffinity(schedule)" class="boxBtn" ><span class="btnIcon icon_sprite icon_saveAdd2"></span></button>
+                            </div>
+                        </th>
+                    </tr>
+                    <tr data-ng-repeat="affinity in schedule.affinities">
+                        <td>
+                            <select  data-ng-model="affinity.type"  data-ng-change="setAffinities($index, affinity.type)" data-ng-options="affinityType.id as affinityType.id for affinityType in affinityTypes" >
+                                <option value="">Select...</option>
+                            </select>
+                        </td>
+                        <td>
+                            <select  data-ng-model="affinity.value"  data-ng-options="affinityValue.id as affinityValue.name for affinityValue in affinityValues[$index]" >
+                                <option value="">Select...</option>
+                            </select>
+                        </td>      
+                                             
+                        <td>
+                            <input type="checkbox" data-ng-model="affinity.rule" data-ng-true-value="STRICT" data-ng-false-value="NONSTRICT" /> 
+                        </td>
+                        <td><div class="tableButtonGroup">
+                                <button data-ng-click="removeAffinity($index, schedule)" class="boxBtn"><span class="btnIcon icon_sprite icon_delete2"></span></button>
+                         </div> 
+                         </td>
+                    </tr>
+              </tbody>
+            </table>
+        </div>          
+
+        <button type="button" class="boxBtn" data-ng-show="scheduleForm.$dirty" data-ng-click="saveSchedule(schedule)">
+            <span class="btnIcon icon_sprite icon_save2 ng-class:{ajax_indicator:savingIndicator}" ></span>
+            <span class="btnText">Schedule</span>
+        </button>
+         
+        <button type="button" class="boxBtn" data-ng-click="cancel()">
+            <span class="btnIcon icon_sprite icon_cancel2" ></span>
+            <span class="btnText">Cancel</span>
+        </button>           
+    </div>
+</div>
+</div>
+<div class="clear"></div>
+
+ 

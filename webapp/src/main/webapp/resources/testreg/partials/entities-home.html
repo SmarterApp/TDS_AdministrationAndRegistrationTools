@@ -1,0 +1,22 @@
+  <div  data-ng-include src='"resources/testreg/partials/leftnav.html"'></div>
+ 
+    <div class="secContent"> 
+    <h5>Create/Modify Institutions</h5>
+
+<div class="tabInfo">
+    <span>Type Of Institution to create or modify: </span>
+    <span data-ng-show="isAllowed('STATE')"><a data-ng-class="{selected : isActiveLink('entities.searchState')}" data-ng-click="goToFormsPage('entities.searchState')">{{entityNameLabels['State']}}</a> |</span>
+    <span data-ng-hide="parentEntity.groupOfStates  || !isAllowed('GROUPOFSTATES')"><a  data-ng-class="{selected : isActiveLink('entities.searchGroupOfStates')}" data-ng-click="goToFormsPage('entities.searchGroupOfStates')">{{entityNameLabels['GroupOfStates']}}</a> |</span>
+    <span data-ng-show="isAllowed('DISTRICT')"><a data-ng-class="{selected : isActiveLink('entities.searchDistrict')}" data-ng-click="goToFormsPage('entities.searchDistrict')">{{entityNameLabels['District']}}</a> |</span>
+    <span data-ng-hide="parentEntity.groupOfDistricts || !isAllowed('GROUPOFDISTRICTS')"><a  data-ng-class="{selected : isActiveLink('entities.searchGroupOfDistricts')}" data-ng-click="goToFormsPage('entities.searchGroupOfDistricts')">{{entityNameLabels['GroupOfDistricts']}}</a> |</span>
+    <span data-ng-show="isAllowed('INSTITUTION')"><a data-ng-class="{selected : isActiveLink('entities.searchInstitution')}" data-ng-click="goToFormsPage('entities.searchInstitution')">{{entityNameLabels['Institution']}}</a> |</span>
+    <span data-ng-hide="parentEntity.groupOfInstitutions  || !isAllowed('GROUPOFINSTITUTIONS')"><a  data-ng-class="{selected : isActiveLink('entities.searchGroupOfInstitutions')}" data-ng-click="goToFormsPage('entities.searchGroupOfInstitutions')">{{entityNameLabels['GroupOfInstitutions']}}</a></span>
+</div>
+   <div class="clear"></div>
+    <div data-ui-view="entities-home-view"></div>
+
+   </div> 
+  </div>
+ 
+
+

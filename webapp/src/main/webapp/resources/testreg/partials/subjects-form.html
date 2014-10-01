@@ -1,0 +1,33 @@
+<br><br><br>
+<div data-ng-repeat="error in errors">
+     <div><span class="icon_sprite icon_error error"></span>{{error}}</div>
+</div>
+           
+<div data-ng-form="subjectForm" class="formWrapper">
+    <div data-ng-show="subjectForm.$dirty" class="dirtynag">* Warning: You have unsaved changes</div>
+    <div class="fieldGroup">
+    <h5>{{formAction}} Subject Information<span class="control-label-required">Indicates required field</span></h5>
+        <ul>
+            <li>
+                <span> 
+                    <label class="control-label-required" for="subject.entityName">Subject Code:</label>
+                    <input type="text" name="subject.code" data-ng-model="subject.code" data-capitalize>
+                </span>
+            </li>           
+        </ul>  
+
+        <button type="button" class="boxBtn" data-ng-show="subjectForm.$dirty" data-ng-click="save(subject)">
+            <span class="btnIcon icon_sprite icon_save2 ng-class:{ajax_indicator:savingIndicator}" ></span>
+            <span class="btnText">Save</span>
+        </button>
+     
+        <button type="button" class="boxBtn" data-ng-click="cancel()">
+            <span class="btnIcon icon_sprite icon_cancel2" ></span>
+            <span class="btnText">Cancel</span>
+        </button>
+    </div>
+
+</div>
+<div class="clear"></div>
+
+ 

@@ -1,0 +1,143 @@
+ <div  data-ng-include src='"resources/testreg/partials/leftnav.html"'></div>
+
+ <div class="secContent"> 
+ <span class="boxIcon icon_sprite icon_view1"></span>
+<div data-ng-repeat="error in errors">
+    <div><span class="icon_sprite icon_error error"></span>{{error}}</div>
+</div>
+
+
+<div class="boxTitle"><h2>{{entityNameLabels['Student']}} Search</h2></div>
+<div>
+    <div data-searchable data-search-url="'student'" data-search-params="searchParams" data-search-response="searchResponse">
+        <div class="fieldGroup">
+            <h5>Search Filters</h5>
+                <ul>                
+
+            <li>
+                <span> 
+                    <label class="control-label" for="searchParams.stateAbbreviation">{{xwalk('State Abbreviation')}}:</label>
+                     <select  data-ng-model="searchParams.stateAbbreviation" data-ng-change="loadDistricts(state.entityId)" data-ng-options="state.entityId as state.entityId for state in states | orderBy:'entityId'" >
+                      <option value="">Select...</option>
+                    </select>
+                </span>
+            </li>       
+            <li>
+                <span class="district-auto-complete">
+                    <label class="control-label" for="searchParams.districtIdentifier">{{xwalk('District Identifier')}}:</label>
+				    <input data-district-auto-complete type="text" 
+				    placeholder="Search..." 
+				    data-ng-model="district"
+				    data-typeahead="entity as entity.entityId + ' - ' + entity.entityName for entity in filterDistricts($viewValue, 999999)" 
+				    data-typeahead-wait-ms="200" 
+				    data-typeahead-editable="true" 
+				    data-typeahead-input-formatter="formatDistrictLabel($model)"
+				    data-typeahead-on-select="changeDistrict({district:$item})" />  
+				 </span>               
+            </li>     
+            <li>
+                <span class="district-auto-complete">
+                    <label class="control-label" for="searchParams.institutionIdentifier">{{xwalk('Institution Identifier')}}:</label>
+                    <input data-institution-auto-complete type="text" 
+                    placeholder="Search..." 
+                    data-ng-model="institution"
+                    data-typeahead="entity as entity.entityId + ' - ' + entity.entityName for entity in filterInstitutions($viewValue, 10)" 
+                    data-typeahead-wait-ms="200" 
+                    data-typeahead-editable="true" 
+                    data-typeahead-input-formatter="formatInstitutionLabel($model)"
+                    data-typeahead-on-select="changeInstitution({institution:$item})" />  
+                 </span>               
+            </li>   
+              
+            <li>
+                <span> 
+                    <label class="control-label" for="searchParams.studentIdentifier">{{xwalk('SSID')}}:</label>
+                    <input type="text" name="entityId" data-ng-model="searchParams.entityId" />
+                </span>
+            </li>     
+            <li>
+                <span> 
+                    <label class="control-label" for="searchParams.grade">{{xwalk('Grade Level When ')}}<br>Assessed:</label>
+                     <select  data-ng-model="searchParams.gradeLevelWhenAssessed" data-ng-options="grade.id as grade.text for grade in grades" >
+                      <option value="">Select...</option>
+                    </select>
+                </span>
+            </li> 
+            <li><span></span></li>                          
+            </ul>
+            <ul class="one-column">
+            <li>
+                <span> 
+                    <label  for="searchParams['student.inValidAccommodationsSubject']">Show only those students with accommodations for assessments for which they are not registered</label>
+                     <select  data-ng-model="searchParams['student.inValidAccommodationsSubject']">
+                      <option value="">Select...</option>
+                      <option value="true">Yes</option>
+                    </select>
+                </span>
+            </li> 
+            </ul>
+            <button type="button" type="button" class="boxBtn" data-search-on-click  data-active-indicator="searchResponse.searching">
+                <span class="btnIcon icon_sprite icon_reTry2 ng-class:{ajax_indicator:activeIndicator}"></span>
+                <span class="btnText">Search</span>
+            </button>
+            <button type="button" type="button" class="boxBtn"  data-ng-click="createNew()">
+                <span class="btnIcon icon_sprite icon_saveAdd2"></span> <span class="btnText">New</span>
+            </button>	
+            <div data-export="students"></div>	            
+        </div>
+        
+        <div data-pageable data-paging-info="searchResponse"  data-search-params="searchParams" data-change-page="changePage()">
+            <table class="dataTable">
+                <colgroup>
+                    <col>
+                    <col>
+                    <col>
+                    <col>
+                    <col>
+                    <col>
+                    <col> 
+                    <col>
+                    <col>
+                    <col>         
+                    <col class="doubleActionColumn">           
+                </colgroup>
+                <tr>
+                    <th data-sort-on-click data-sort-column="entityId" class="headerSortUp fixedWidth80" >{{xwalk('SSID')}}</th>
+                    <th data-sort-on-click data-sort-column="districtIdentifier" class="fixedWidth100">{{xwalk('Organization Name')}}</th>
+                    <th data-sort-on-click data-sort-column="institutionIdentifier" >{{xwalk('Name of Institution')}}</th>
+                    <th data-sort-on-click data-sort-column="stateAbbreviation" class="fixedWidth100">{{xwalk('State Abbreviation')}}</th>
+                    <th data-sort-on-click data-sort-column="lastName" >{{xwalk('Last Name')}}</th>
+                    <th data-sort-on-click data-sort-column="firstName" >{{xwalk('First Name')}}</th>
+                    <th data-sort-on-click data-sort-column="middleName" >{{xwalk('Middle Name')}}</th>
+                    <th data-sort-on-click data-sort-column="gender" class="fixedWidth50">{{xwalk('Sex')}}</th>
+                    <th data-sort-on-click data-sort-column="birthDate" class="fixedWidth80">{{xwalk('Birth Date')}}</th>
+                    <th data-sort-on-click data-sort-column="gradeLevelWhenAssessed" >{{xwalk('Grade Level When Assessed')}}</th>                   
+                    <th></th>
+                </tr>
+                <tr data-ng-repeat="student in searchResponse.searchResults">
+                    <td>{{student.entityId}}</td>                               
+                    <td class="ng-class:{ajax_indicator:savingIndicator}">{{student.districtEntityMongoId | parentNameFilter:"DISTRICT":parentEntities}}</td>
+                    <td class="ng-class:{ajax_indicator:savingIndicator}">{{student.institutionEntityMongoId | parentNameFilter:"INSTITUTION":parentEntities}}</td>
+                    <td>{{student.stateAbbreviation}}</td>
+                    <td>{{student.lastName}}</td>
+                    <td>{{student.firstName}}</td>
+                    <td>{{student.middleName}}</td>
+                    <td>{{student.gender}}</td>
+                    <td>{{formatDate(student.birthDate)}}</td>
+                    <td>{{student.gradeLevelWhenAssessed}}</td> 
+                    <td class="normalSpace">
+                        <div class="tableButtonGroup">
+                            <button data-ng-click="edit(student)" class="boxBtn"><span class="btnIcon icon_sprite icon_edit2"></span></button>
+                            <button data-delete-confirmation="{{student.id}}" class="boxBtn"><span class="btnIcon icon_sprite icon_delete2"></span></button>
+                        </div>
+                    </td>                                       
+                </tr>
+            </table>
+        </div>
+        <div data-load-parent-names></div>
+    </div>
+</div>
+</div>  
+
+</div>
+<div class="clear"></div>

@@ -1,0 +1,108 @@
+<div class="modal">
+	<div class="modal-dialog" style="width:1100px">
+		<div class="modal-content" style="height: 750px"> 
+			<div class="modal-header">
+				<h4 class="modal-title">
+					Eligible Student Selection
+				</h4>
+			</div>
+			<div data-ng-repeat="error in errors">
+    			<div><span class="icon_sprite icon_error error"></span>{{error}}</div>
+			</div>
+
+			<div>
+    			<div data-searchable data-search-url="'eligibleStudents'" data-search-params="searchParams" data-search-response="searchResponse">
+        			<div class="fieldGroup">
+        			<ul>   
+        				<li>
+        					<span> 
+			                    <label class="control-label" for="searchParams.studentIdentifier">{{xwalk('State Abbreviation')}}:</label>
+			                    <input type="text" name="entityId" data-ng-model="searchParams['student.stateAbbreviation']" data-ng-disabled="true"/>
+			                </span>
+        				</li>             
+			            <li>
+			                <span class="district-auto-complete">
+			                    <label class="control-label" for="searchParams.institutionIdentifier">{{xwalk('Institution Identifier')}}:</label>
+			                    <input type="text" name="entityId" data-ng-model="searchParams['student.institutionIdentifier']" data-ng-disabled="true"/>                   
+			                 </span>               
+			            </li>   
+	              
+			            <li>
+			                <span> 
+			                    <label class="control-label" for="searchParams.studentIdentifier">{{xwalk('Student Identifier')}}:</label>
+			                    <input type="text" name="entityId" data-ng-model="searchParams['student.entityId']" />
+			                </span>
+			            </li>     
+			            <li>
+			                <span> 
+			                    <label class="control-label" for="searchParams.grade">{{xwalk('Entry Grade Level')}}:</label>
+			                     <select  data-ng-model="searchParams['student.gradeLevelWhenAssessed']" data-ng-options="grade.gradeName as grade.gradeName + '  - ' + grade.gradeId  for grade in grades" >
+			                      <option value="">Select...</option>
+			                    </select>
+			                </span>
+			            </li> 
+			            <li>
+			                <span></span>
+			            </li>                         
+            		</ul>
+            		<button type="button" type="button" class="boxBtn" data-search-on-click  data-active-indicator="searchResponse.searching">
+                		<span class="btnIcon icon_sprite icon_reTry2 ng-class:{ajax_indicator:activeIndicator}"></span>
+                		<span class="btnText">Search</span>
+            		</button>
+        </div>
+        <br>
+        <div data-pageable data-paging-info="searchResponse"  data-search-params="searchParams" data-change-page="changePage()">
+            <table class="dataTable">
+                <colgroup>
+                    <col>
+                    <col>
+                    <col>
+                    <col>
+                    <col>
+                    <col>
+                    <col>         
+                    <col class="doubleActionColumn">           
+                </colgroup>
+                <tr>
+                    <th data-sort-on-click data-sort-column="entityId" class="headerSortUp fixedWidth80" >{{xwalk('Student Identifier')}}</th>
+                    <th data-sort-on-click data-sort-column="lastName" >{{xwalk('Last Name')}}</th>
+                    <th data-sort-on-click data-sort-column="firstName" >{{xwalk('First Name')}}</th>
+                    <th data-sort-on-click data-sort-column="middleName" >{{xwalk('Middle Name')}}</th>
+                    <th data-sort-on-click data-sort-column="gender" class="fixedWidth50">{{xwalk('Sex')}}</th>
+                    <th data-sort-on-click data-sort-column="birthDate" class="fixedWidth80">{{xwalk('Birth Date')}}</th>
+                    <th data-sort-on-click data-sort-column="gradeLevelWhenAssessed" >{{xwalk('Entry Grade Level')}}</th>                   
+                    <th></th>
+                </tr>
+                <tr data-ng-repeat="eligibleStudentCollection in searchResponse.searchResults">
+                    <td>{{eligibleStudentCollection.student.entityId}}</td>                               
+                    <td>{{eligibleStudentCollection.student.lastName}}</td>
+                    <td>{{eligibleStudentCollection.student.firstName}}</td>
+                    <td>{{eligibleStudentCollection.student.middleName}}</td>
+                    <td>{{eligibleStudentCollection.student.gender}}</td>
+                    <td>{{formatDate(eligibleStudentCollection.student.birthDate)}}</td>
+                    <td>{{eligibleStudentCollection.student.gradeLevelWhenAssessed}}</td> 
+                    <td class="normalSpace">
+                        <div class="tableButtonGroup">
+                        	<input type="checkbox" data-ng-model="studentSelected" data-ng-change="addStudent(eligibleStudentCollection)"/>
+                        </div>
+                    </td>                                       
+                </tr>
+            </table>
+        </div>
+        <div class="modal-footer" style=" text-align:center;">
+        		<button type="button" type="button" class="boxBtn" data-ng-click="assignStudents()">
+                		<span class="btnIcon icon_sprite icon_cancel2 ng-class:{ajax_indicator:activeIndicator}"></span>
+                		<span class="btnText">Assign Students</span>
+            		</button>
+        		<button type="button" type="button" class="boxBtn" data-ng-click="cancel()">
+                		<span class="btnIcon icon_sprite icon_cancel2 ng-class:{ajax_indicator:activeIndicator}"></span>
+                		<span class="btnText">Cancel</span>
+            		</button>
+		</div>       
+    </div>
+</div>
+</div>  
+
+<div class="clear"></div>
+</div>
+</div>

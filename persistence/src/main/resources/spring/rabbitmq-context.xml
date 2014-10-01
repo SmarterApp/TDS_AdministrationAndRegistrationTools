@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans profile="rabbit"
+       xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:rabbit="http://www.springframework.org/schema/rabbit"
+       xmlns:int="http://www.springframework.org/schema/integration"
+       xmlns:int-amqp="http://www.springframework.org/schema/integration/amqp"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.2.xsd
+                           http://www.springframework.org/schema/rabbit http://www.springframework.org/schema/rabbit/spring-rabbit-1.2.xsd
+                           http://www.springframework.org/schema/integration http://www.springframework.org/schema/integration/spring-integration-3.0.xsd
+                           http://www.springframework.org/schema/integration/amqp http://www.springframework.org/schema/integration/amqp/spring-integration-amqp-3.0.xsd">
+
+    <rabbit:connection-factory id="rabbitConnectionFactory" host="${rabbitmq.host}"
+                                username="${rabbitmq.username}" password="${rabbitmq.password}" virtual-host="${rabbitmq.vhost}" />
+                                  
+    <rabbit:admin id="rabbitAdmin" connection-factory="rabbitConnectionFactory"/>
+       
+    <rabbit:queue name="events.in" />
+    <rabbit:queue name="events.failed" />
+       
+    <int-amqp:outbound-channel-adapter amqp-template="rabbitTemplate" channel="eventsOutbound" routing-key="events.in" />
+
+    <rabbit:template id="rabbitTemplate" connection-factory="rabbitConnectionFactory" />
+
+    <int-amqp:inbound-channel-adapter channel="eventsInbound" connection-factory="rabbitConnectionFactory" concurrent-consumers="3" queue-names="events.in" error-channel="failedEvents" />
+    
+    <int-amqp:outbound-channel-adapter amqp-template="rabbitTemplate" channel="failedEvents" routing-key="events.failed" />
+       
+</beans>

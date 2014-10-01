@@ -1,0 +1,193 @@
+ <div  data-ng-include src='"resources/testreg/partials/leftnav.html"'></div>
+
+ <div class="secContent"> 
+<div data-ng-repeat="error in errors">
+    <div><span class="icon_sprite icon_error error"></span>{{error}}</div>
+</div>
+           
+<div data-ng-form="studentGroupForm" class="studentFormWrapper">
+    <div data-ng-show="studentGroupForm.$dirty" class="dirtynag">* Warning: You have unsaved changes</div>
+    <div class="fieldGroup">
+    <h5 class="studentLayout">{{formAction}} {{entityNameLabels['StudentGroups']}} Information <span class="control-label-required">Indicates required field</span></h5>
+        <ul class="studentLayout">
+            <li>
+                <span> 
+                    <label class="control-label-required" for="studentGroup.studentGroupName" >{{xwalk('Student Group Name')}}:</label>
+                    <input type="text" name="studentGroup.studentGroupName" data-ng-model="studentGroup.studentGroupName" />
+                </span>
+            </li>
+            <li>
+                <span> 
+                    <label class="control-label-required" for="studentGroup.ownerEmail" >{{xwalk('User')}}:</label>
+                    <!-- <input type="text" name="studentGroup.ownerEmail" data-ng-model="studentGroup.ownerEmail" /> -->
+                     <select  data-ng-model="studentGroup.ownerEmail" 
+                     data-ng-options="user.email as user.lastName + ', ' + user.firstName for user in users">
+                      <option value="">Select...</option>
+                    </select>                    
+                </span>
+            </li>
+           <li>
+                <span> 
+                    <label class="control-label-required" for="studentGroup.stateAbbreviation">{{xwalk('State Abbreviation')}}:</label>
+                     <select  data-ng-model="studentGroup.stateAbbreviation" data-ng-change="changeState(studentGroup.stateAbbreviation)"
+                     data-ng-options="state.entityId as state.entityId for state in states | orderBy:'entityId'" >
+                      <option value="">Select...</option>
+                    </select>
+                </span>
+            </li>     
+           <li>
+                <span class="district-auto-complete">
+                    <label class="control-label" for="studentGroup.districtIdentifier">{{xwalk('District Identifier')}}:</label>
+                    <input data-district-auto-complete-student-group type="text" 
+                    placeholder="Search..." 
+                    data-ng-model="district"
+                    data-typeahead="entity as entity.entityId + ' - ' + entity.entityName for entity in filterDistricts($viewValue, 10)" 
+                    data-typeahead-wait-ms="200" 
+                    data-typeahead-editable="true" 
+                    data-typeahead-input-formatter="formatDistrictLabel($model)"
+                    data-typeahead-on-select="changeDistrict({district:$item})" />  
+                 </span>               
+            </li>     
+            <li>
+                <span class="district-auto-complete">
+                    <label class="control-label-required" for="studentGroup.institutionIdentifier">{{xwalk('Institution Identifier')}}:</label>
+                    <input data-institution-auto-complete-student-group type="text" 
+                    placeholder="Search..." 
+                    data-ng-model="institution"
+                    data-typeahead="entity as entity.entityId + ' - ' + entity.entityName for entity in filterInstitutions($viewValue, 10)" 
+                    data-typeahead-wait-ms="200" 
+                    data-typeahead-editable="true" 
+                    data-typeahead-input-formatter="formatInstitutionLabel($model)"
+                    data-typeahead-on-select="changeInstitution({institution:$item})" />  
+                 </span>               
+            </li>  
+            <li>
+                <span>
+	                 <label class="control-label" for="selectedGrades">{{xwalk('Grades')}}:</label>
+					 <input type="text"	data-ui-select2="gradesSelector"  data-ng-model="selectedGrades" />                 
+                 </span>           
+            </li>
+            <li>
+                <span>
+                     <label class="control-label" for="firstName">{{xwalk('First Name')}}:</label>
+                     <input type="text" data-ng-model="firstName" />                 
+                 </span>           
+            </li>
+            <li>
+                <span>
+                     <label class="control-label" for="lastName">{{xwalk('Last Name')}}:</label>
+                     <input type="text" data-ng-model="lastName" />                 
+                 </span>           
+            </li>
+            <li>
+                <span></span>
+            </li>
+            <li>
+                <span>
+                     <label class="control-label" for="entityId">{{xwalk('Student ID')}}:</label>
+                     <input type="text" data-ng-model="entityId" />                 
+                 </span>           
+            </li>                                  
+        </ul>
+        <button type="button" class="boxBtn" data-ng-show="studentGroupForm.$dirty" data-ng-click="save(studentGroup)">
+            <span class="btnIcon icon_sprite icon_save2 ng-class:{ajax_indicator:savingIndicator}" ></span>
+            <span class="btnText">Save</span>
+        </button>
+        <button type="button" class="boxBtn" data-ng-click="cancel()">
+            <span class="btnIcon icon_sprite icon_cancel2" ></span>
+            <span class="btnText">Cancel</span>
+        </button>             
+        <button type="button" 
+            type="button" class="boxBtn" data-ng-click="searchStudents()" data-active-indicator="searchResponse.searching">
+            <span class="btnIcon icon_sprite icon_reTry2 ng-class:{ajax_indicator:activeIndicator}"></span>
+            <span class="btnText">Search Students</span>
+        </button>         
+      </div>
+    <table>
+    <tr>
+
+        <td style="width:50%">
+            <span data-ng-show="availableStudents.length > 0" class="studentGroupLegend"></span>
+            <span data-ng-show="availableStudents.length == 0" class="studentGroupLegend">There are no students in this group. Search students and add to the group.</span>
+            <br>
+            <div style="width:90%">
+            <span data-ng-show="availableStudents.length >0">
+	            <button type="button" class="boxBtn"  data-ng-click="removeStudents()">
+	                <span class="btnIcon icon_sprite icon_cancel2"></span>
+	                <span class="btnText">Remove selected from group</span>
+	            </button>  
+	            <span style="float:right">Students in this group: {{availableStudents.length}}</span>      
+            </span>          
+            </div>
+            <div data-ng-show="availableStudents.length >0" style="width:90%;height:400px; overflow:auto; top:0px;margin-top:0px">            
+            <table class="dataTable">
+
+                <colgroup>
+                    <col>
+                    <col>
+                    <col>
+                    <col>
+                    <col>        
+                </colgroup>
+                <tr>
+                    <th>Select All<br><input type="checkbox" data-ng-click="toggleRemoveAll()"  data-ng-model="chkboxRemoveAll" data-ng-true-value="YES" data-ng-false-value="NO"/></th>
+                    <th class="fixedWidth80" >{{xwalk('Student Identifier')}}</th>
+                    <th class="fixedWidth100">{{xwalk('First Name')}}</th>
+                    <th class="fixedWidth100">{{xwalk('Last Name')}}</th>
+                    <th>{{xwalk('Grade')}}</th>             
+                </tr>
+                <tr data-ng-repeat="student in availableStudents">
+                    <td style="text-align:center"> <input type="checkbox" data-ng-click="toggleAvailableStudent(student, $index)"  data-ng-model="chkboxAvailableStudent[$index]" data-ng-true-value="YES" data-ng-false-value="NO"/>
+                    <td>{{student.entityId}}</td>                               
+                    <td>{{student.firstName}}</td>    
+                    <td>{{student.lastName}}</td> 
+                    <td>{{student.gradeLevelWhenAssessed}}</td>                       
+                </tr>
+            </table>        
+            </div>          
+        </td>
+        <td style="width:50%;">
+             <span data-ng-show="searchResponse.totalCount > 0" class="studentGroupLegend"></span><br>
+	             <div style="width:90%;float:right">
+		             <span data-ng-show="searchResponse.totalCount > 0">
+		                 <button  style="float:left" type="button" class="boxBtn"  data-ng-click="addStudents()">
+		                    <span class="btnIcon icon_sprite icon_saveAdd2" ></span>
+		                    <span class="btnText">Add selected to group</span>
+		                </button>   
+		                <span style="float:right">Total Students found: {{searchResponse.totalCount}}</span>      
+		             </span>            
+	             </div>
+	            <div style="width:90%;float:right;height:400px; overflow:auto; top:0px;margin-top:0px" data-ng-show="searchResponse.totalCount > 0">
+		            <table class="dataTable">
+		
+		                <colgroup>
+		                    <col>
+		                    <col>
+		                    <col>
+		                    <col>
+		                    <col>        
+		                </colgroup>
+		                <tr>
+		                    <th>Select All<br><input type="checkbox" data-ng-click="toggleSelectAll()"  data-ng-model="chkboxSelectAll" data-ng-true-value="YES" data-ng-false-value="NO"/></th>
+		                    <th class="fixedWidth80" >{{xwalk('Student Identifier')}}</th>
+		                    <th class="fixedWidth100">{{xwalk('First Name')}}</th>
+		                    <th class="fixedWidth100">{{xwalk('Last Name')}}</th>
+		                    <th>{{xwalk('Grade')}}</th>             
+		                </tr>
+		                <tr data-ng-repeat="student in searchResponse.searchResults">
+		                    <td style="text-align:center"> <input type="checkbox" data-ng-click="toggleStudent(student, $index)"  data-ng-model="chkboxStudent[$index]" data-ng-true-value="YES" data-ng-false-value="NO"/>
+		                    <td>{{student.entityId}}</td>                               
+		                    <td>{{student.firstName}}</td>    
+		                    <td>{{student.lastName}}</td> 
+		                    <td>{{student.gradeLevelWhenAssessed}}</td>                       
+		                </tr>
+		            </table>   
+	            </div>     
+        </td>
+        </tr>
+    </table>
+</div>  
+</div>
+<div class="clear"></div>
+
+ 

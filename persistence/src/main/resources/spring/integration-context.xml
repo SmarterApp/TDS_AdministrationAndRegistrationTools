@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:int="http://www.springframework.org/schema/integration"
+       xmlns:task="http://www.springframework.org/schema/task"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+                           http://www.springframework.org/schema/integration http://www.springframework.org/schema/integration/spring-integration-3.0.xsd
+                           http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task-3.0.xsd">
+
+    <int:annotation-config/>
+    
+    <task:annotation-driven executor="executor" />
+    
+    <task:executor id="executor" pool-size="20"/>
+    
+    <int:channel id="eventsOutbound">
+        <int:dispatcher task-executor="executor" />
+    </int:channel>
+    
+    <int:channel id="eventsInbound"/>
+    <int:channel id="assessmentModificationEventsInbound"/>
+    <int:channel id="explicitEligibilityModificationEventsInbound"/>
+    <int:channel id="studentModificationEventsInbound"/>
+    
+    <int:channel id="failedEvents"/>
+    <int:channel id="failedEventNotify">
+        <int:dispatcher task-executor="executor"/>
+    </int:channel>
+    
+    <int:logging-channel-adapter id="logger" level="INFO" log-full-message="true"/>
+    <int:logging-channel-adapter id="errorLogger" level="ERROR" log-full-message="true"/>
+    
+    <int:wire-tap channel="logger"
+                      pattern="eventsOutbound,eventsInbound"/>
+                      
+    <int:wire-tap channel="errorLogger" pattern="failedEvents"/>
+    <int:wire-tap channel="failedEventNotify" pattern="failedEvents"/>
+    
+    <int:outbound-channel-adapter channel="failedEventNotify" ref="failedEventNotifier" method="notifyMna"/>
+    
+    <int:gateway id="outboundGateway" service-interface="org.opentestsystem.delivery.testreg.event.EventEmitter" default-request-channel="eventsOutbound"/>
+
+    <int:payload-type-router input-channel="eventsInbound">
+        <int:mapping type="org.opentestsystem.delivery.testreg.domain.event.AssessmentModificationEvent" channel="assessmentModificationEventsInbound" />
+        <int:mapping type="org.opentestsystem.delivery.testreg.domain.event.ExplicitEligibilityModificationEvent" channel="explicitEligibilityModificationEventsInbound" />
+        <int:mapping type="org.opentestsystem.delivery.testreg.domain.event.StudentModificationEvent" channel="studentModificationEventsInbound" />
+    </int:payload-type-router>
+    
+    <!-- service activator is annotated on the methods of EligibilityEvaluatorImpl
+         and each channel is directed to a specific method on the class -->
+
+</beans>

@@ -1,0 +1,30 @@
+  <div  data-ng-include src='"resources/testreg/partials/leftnav.html"'></div>
+
+ <div class="secContent"> 
+<span class="boxIcon icon_sprite icon_view1"></span>
+<div data-ng-repeat="error in errors">
+    <div><span class="icon_sprite icon_error error"></span>{{error}}</div>
+</div>
+
+
+<div class="boxTitle"><h2>Confirmation</h2></div>
+        
+<div data-ng-show = "fileSummary != null && fileSummary.length > 0">
+    <div class="successMessage" data-ng-show ="fileSummary[0].updatedRecords != 0 || fileSummary[0].addedRecords !=0 || fileSummary[0].deletedRecords !=0" ><div class="icon_successMessage icon_sprite icon_save1"></div>Your file has successfully been saved.</div> 
+    <div class="errorMessage"   data-ng-show ="fileSummary[0].updatedRecords == 0 && fileSummary[0].addedRecords ==0 && fileSummary[0].deletedRecords ==0" ><div class="icon_errorMessage icon_sprite icon_error"></div>Zero records have been uploaded.</div>
+    <div style="clear:both"></div>
+        <table class="dataTable">
+                 <tr bordercolor="blue">
+	               <td>File Type</td>
+	               <td>Deleted Records</td>
+	               <td>Inserted Records</td>
+	           </tr> 
+            <tr data-ng-repeat="summary in fileSummary">
+	               <td>{{summary.formatType}}</td>
+	               <td>{{summary.deletedRecords}}</td>
+	               <td>{{summary.updatedRecords}}</td>
+	           </tr> 
+        </table>
+</div>
+</div>  
+<div class="clear"></div>

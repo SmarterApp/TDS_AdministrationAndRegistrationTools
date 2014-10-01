@@ -1,0 +1,307 @@
+  <div  data-ng-include src='"resources/testreg/partials/leftnav.html"'></div>
+
+ <div class="secContent"> 
+
+<div data-ng-repeat="error in errors">
+    <div><span class="icon_sprite icon_error error"></span>{{error}}</div>
+</div>
+           
+<div data-ng-form="assessmentForm" class="formWrapper">
+    <div data-ng-show="assessmentForm.$dirty" class="dirtynag">* Warning: You have unsaved changes</div>
+    <div class="fieldGroup">
+    <h5>{{formAction}} {{entityNameLabels['Assessment']}} Information <span class="control-label-required">Indicates required field</span></h5>
+        <ul class="assessmentLayout">
+            <li>
+                <span> 
+                    <label class="control-label" for="assessment.entityId" >{{xwalk('Identifier')}}:</label>
+                    <input type="text" name="assessment.entityId" data-ng-model="assessment.entityId" disabled="disabled"/>
+                </span>
+            </li>
+            <li>
+                <span> 
+                    <label class="control-label" for="assessment.testName" >{{xwalk('Name')}}:</label>
+                    <input type="text" name="assessment.testName" data-ng-model="assessment.testName" disabled="disabled"/>
+                </span>
+            </li> 
+            <li>
+                <span> 
+                    <label class="control-label" for="assessment.subjectCode" >{{xwalk('Subject Code')}}:</label>
+                    <input type="text" name="assessment.subjectCode" data-ng-model="assessment.subjectCode" disabled="disabled"/>
+                </span>
+            </li>  
+            <li>
+                <span> 
+                    <label class="control-label" for="assessment.version" >{{xwalk('Version')}}:</label>
+                    <input type="text" name="assessment.version" data-ng-model="assessment.version" disabled="disabled"/>
+                </span>
+            </li>
+            <li>
+                <span>
+                    <label class="control-label" for="assessment.grade" >{{xwalk('Grade')}}:</label>
+                    <input type="text" name="assessment.grade" data-ng-model="assessment.grade" disabled="disabled"/>
+                </span>
+            </li>
+            <li>
+                <span> 
+                    <label class="control-label-required" for="assessment.numGlobalOpportunities" >{{xwalk('Total Global Opportunities')}}:</label>
+                    <input type="text" name="assessment.numGlobalOpportunities" data-ng-model="assessment.numGlobalOpportunities"/>
+                </span>
+            </li>
+            <li>
+                <span> 
+                    <label data-ng-class="{'control-label-required':assessment.numGlobalOpportunities > 1 && assessment.testWindow.length == 0}" for="assessment.delayRule" >{{xwalk('Delay Rule')}}:</label>
+                    <input type="text" name="assessment.delayRule" data-ng-model="assessment.delayRule"/>
+                </span>
+            </li> 
+            <li>
+                <span> 
+                    <label class="control-label-required" for="assessment.eligibilityType" >{{xwalk('Eligibility Type')}}:</label>
+                    <select name="assessment.eligibilityType" data-ng-model="assessment.eligibilityType" data-ng-options="id.entityId as id.entityId for id in eligibilityTypes | orderBy:'entityId'">
+                       <option value="" >Select...</option>
+                    </select>
+                </span>
+            </li>        
+            <li>
+                <span>
+                    <label class="control-label-required" for="assessment.academicYear" >{{xwalk('Academic Year (yyyy)')}}:</label>
+                    <input type="text" name="assessment.academicYear" data-ng-model="assessment.academicYear"/>
+                </span>
+            </li>
+        </ul>
+     <h5>Test Windows</h5>
+     	<div class="tableWrapper">
+	     	<table class="assessmentTable">
+	                <colgroup>
+	                    <col>
+	                    <col>
+	                    <col> 
+	                    <col class="actionColumn">
+	                </colgroup>
+	                <tr>
+	                    <th data-ng-class="{'control-label-required' : assessment.testWindow && assessment.testWindow.length > 0}">{{xwalk('Start Date')}}</th>
+	                    <th data-ng-class="{'control-label-required' : assessment.testWindow && assessment.testWindow.length > 0}">{{xwalk('End Date')}}</th>
+	                    <th>{{xwalk('Total Opportunities')}}</th>
+	                    <th>
+		                    <div class="tableButtonGroup">
+	                          <button data-ng-click="addTestWindow()" class="boxBtn" ><span class="btnIcon icon_sprite icon_saveAdd2"></span></button>
+	                        </div>
+		                </th>
+	                </tr>
+	                <tr data-ng-class="{highlight: $index == highlighted}" data-ng-repeat="(index, testWindowEntry) in assessment.testWindow">	                
+	                	<td><div class="centerDiv datepicker"><span class="icon-chevron-calendar"></span>
+	                		<input type="text"  name="assessment.testWindow[$index].beginWindow"  data-datepicker-popup="{{format}}"  data-show-weeks="false"  data-is-open="assessment.testWindow[$index].beginWindowOpened" data-ng-model="assessment.testWindow[$index].beginWindow"/></div></td>
+	                	<td><div class="centerDiv datepicker"><span class="icon-chevron-calendar"></span>
+	                		<input type="text" name="assessment.testWindow[$index].endWindow"     data-datepicker-popup="{{format}}"  data-show-weeks="false"  data-is-open="assessment.testWindow[$index].endWindowOpened" data-ng-model="assessment.testWindow[$index].endWindow"/></div></td>
+	                	<td><div class="centerDiv"><input type="text" name="assessment.testWindow[$index].numOpportunities" data-ng-model="assessment.testWindow[$index].numOpportunities" data-ng-disabled=" assessment.testWindow.length == 1 "/></div></td>
+	                	<td>
+	                        <div class="tableButtonGroup">
+	                            <button data-ng-click="deleteTestWindow($index)" class="boxBtn"><span class="btnIcon icon_sprite icon_delete2"></span></button>
+	                        </div>
+                    	</td>      
+	                </tr>
+	       	</table>
+       </div>
+       <h5>Implicit Eligibility Rules</h5>
+       	  <div class="tableWrapper">
+       	  		<table class="dataTable">
+       	  			<colgroup>
+       	  				<col>
+       	  				<col>
+       	  				<col>
+       	  				<col>
+       	  				<col class="actionColumn">
+       	  			</colgroup>
+       	  			<tr>
+       	  				<th  data-ng-class="{'control-label-required' : assessment.implicitEligibilityRules && assessment.implicitEligibilityRules.length > 0}">{{xwalk('Rule Field')}}</th>
+       	  				<th>{{xwalk('Operator')}}</th>
+       	  				<th data-ng-class="{'control-label-required' : assessment.implicitEligibilityRules && assessment.implicitEligibilityRules.length > 0}">{{xwalk('Value')}}</th>
+       	  				<th data-ng-class="{'control-label-required' : assessment.implicitEligibilityRules && assessment.implicitEligibilityRules.length > 0}">{{xwalk('Rule Type')}}</th>
+       	  				<th>
+	       	  				<div class="tableButtonGroup">
+	                        	<button data-ng-click="addImplicitEligibilityRule()" class="boxBtn" ><span class="btnIcon icon_sprite icon_saveAdd2"></span></button>
+	                        </div>
+       	  				</th>
+       	  			</tr>
+       	  			<tr data-ng-class="{highlight: $index == highlighted}" data-ng-repeat="(index, implicitEligibilityRulesEntry) in assessment.implicitEligibilityRules">
+       	  				<td><select name="implicitEligibilityRulesEntry.field" data-ng-change="emptyTheValueField(implicitEligibilityRulesEntry)" data-ng-model="implicitEligibilityRulesEntry.field" 
+       	  				data-ng-options="item.fieldValue as item.fieldId group by item.segment for item in fields | orderBy:'fieldId'">
+                       			<option value="" >Select...</option>
+                    		</select>
+                    	</td>
+                    	<td><select name="implicitEligibilityRulesEntry.operatorType" data-ng-model="implicitEligibilityRulesEntry.operatorType" data-ng-show="implicitEligibilityRulesEntry.field.indexOf('Date') > -1">
+                                <option data-ng-class="{'hide': implicitEligibilityRulesEntry.field.indexOf('Date') == -1}" data-ng-selected="ot.operatorName == implicitEligibilityRulesEntry.operatorType" data-ng-repeat="ot in operatorTypes | orderBy:'order'">{{ot.operatorId}}</option>
+                            </select><input type="text" name="implicitEligibilityRulesEntry.operatorType"  data-ng-hide="implicitEligibilityRulesEntry.field.indexOf('Date') > -1"                        
+                                data-ng-model="defaultOperatorType" data-ng-disabled="operatorTypeMuted"/>                            
+                    	</td>
+	                	<td  class="normalSpace">
+	                		<div class="datepicker" data-ng-show="dateTimeFields.indexOf(implicitEligibilityRulesEntry.field)>-1" >
+	                		<span class="datepicker icon-chevron-calendar"></span>
+	                			<input type="text"  name="implicitEligibilityRulesEntry.value"	                			     
+	                					data-datepicker-popup="{{format}}"  
+	                					data-show-weeks="false" 
+	                					readonly="readonly" 
+	                					data-ng-model="implicitEligibilityRulesEntry.value"/>
+	                		</div>
+	                		
+		                	<input type="text" name="implicitEligibilityRulesEntry.value"
+		                				data-ng-show="textFields.indexOf(implicitEligibilityRulesEntry.field)>-1" 
+		                				data-ng-model="implicitEligibilityRulesEntry.value" data-ng-disabled=" assessment.eligibilityType != 'IMPLICIT' " />
+		                				
+		                	<select name="implicitEligibilityRulesEntry.value"  
+		                				data-ng-show="yesOrNoFields.indexOf(implicitEligibilityRulesEntry.field)>-1" 
+		                				data-ng-model="implicitEligibilityRulesEntry.value" data-ng-options="id.entityId as id.entityId for id in yesOrNoTypes | orderBy:'entityId'">
+	                       		<option value="" >Select...</option>
+	                    	</select>
+	                    	
+	                    	<select name="implicitEligibilityRulesEntry.value"  
+		                				data-ng-show="implicitEligibilityRulesEntry.field=='section504Status'" 
+		                				data-ng-model="implicitEligibilityRulesEntry.value" data-ng-options="sectionStatus.name as sectionStatus.name for sectionStatus in section504Status">
+	                       		<option value="" >Select...</option>
+	                    	</select>
+	                    
+                               <select name="implicitEligibilityRulesEntry.value"  
+                                        data-ng-show="implicitEligibilityRulesEntry.field=='languageCode'" 
+                                        data-ng-model="implicitEligibilityRulesEntry.value" data-ng-options="language.id as language.text for language in languages">
+                                <option value="" >Select...</option>
+                            </select>                                                 	
+                            <select name="implicitEligibilityRulesEntry.value"  
+                                        data-ng-show="implicitEligibilityRulesEntry.field=='stateAbbreviation'" 
+                                        data-ng-model="implicitEligibilityRulesEntry.value" data-ng-options="id.entityId as id.entityId for id in states | orderBy:'entityId'"">
+                                <option value="" >Select...</option>
+                            </select>                                                   
+                            	                    	
+	                    	<select name="implicitEligibilityRulesEntry.value"  
+		                				data-ng-show="implicitEligibilityRulesEntry.field=='gradeLevelWhenAssessed'" 
+		                				data-ng-model="implicitEligibilityRulesEntry.value" data-ng-options="grade.id as grade.text for grade in grades">
+	                       		<option value="" >Select...</option>
+	                    	</select>
+	                    	
+	                    	<select name="implicitEligibilityRulesEntry.value"  
+		                				data-ng-show="implicitEligibilityRulesEntry.field=='gender'" 
+		                				data-ng-model="implicitEligibilityRulesEntry.value" data-ng-options="gender.genderId as gender.genderName for gender in genders">
+	                       		<option value="" >Select...</option>
+	                    	</select>
+	                    	
+	                    	<select name="implicitEligibilityRulesEntry.value"  
+		                				data-ng-show="implicitEligibilityRulesEntry.field=='title3ProgramType'" 
+		                				data-ng-model="implicitEligibilityRulesEntry.value" data-ng-options="progType.name as progType.description for progType in title3ProgramType">
+	                       		<option value="" >Select...</option>
+	                    	</select>
+	                    	
+	                    	<select name="implicitEligibilityRulesEntry.value"  
+		                				data-ng-show="implicitEligibilityRulesEntry.field=='primaryDisabilityType'" 
+		                				data-ng-model="implicitEligibilityRulesEntry.value" data-ng-options="disabilityType.name as disabilityType.name for disabilityType in primaryDisabilityType">
+	                       		<option value="" >Select...</option>
+	                    	</select>
+	                    	
+	                    	<select name="implicitEligibilityRulesEntry.value"  
+		                				data-ng-show="implicitEligibilityRulesEntry.field=='americanSignLanguage'" 
+		                				data-ng-model="implicitEligibilityRulesEntry.value" data-ng-options="aslVideo.name as aslVideo.description for aslVideo in americanSignLanguage">
+	                       		<option value="" >Select...</option>
+	                    	</select>
+	                    	
+	                    	<select name="implicitEligibilityRulesEntry.value"  
+                                        data-ng-show="implicitEligibilityRulesEntry.field=='colorContrast'" 
+                                        data-ng-model="implicitEligibilityRulesEntry.value" data-ng-options="color.name as color.description for color in colorContrast">
+                                <option value="" >Select...</option>
+                            </select>
+	                    	
+	                    	<select name="implicitEligibilityRulesEntry.value"  
+		                				data-ng-show="implicitEligibilityRulesEntry.field=='closedCaptioning'" 
+		                				data-ng-model="implicitEligibilityRulesEntry.value" data-ng-options="caption.name as caption.description for caption in closedCaptioning">
+	                       		<option value="" >Select...</option>
+	                    	</select>
+	                    	
+	                    	<select name="implicitEligibilityRulesEntry.value"  
+                                        data-ng-show="implicitEligibilityRulesEntry.field=='language'" 
+                                        data-ng-model="implicitEligibilityRulesEntry.value" data-ng-options="lang.name as lang.description for lang in language">
+                                <option value="" >Select...</option>
+                            </select>
+                            
+                            <select name="implicitEligibilityRulesEntry.value"  
+                                        data-ng-show="implicitEligibilityRulesEntry.field=='masking'" 
+                                        data-ng-model="implicitEligibilityRulesEntry.value" data-ng-options="mask.name as mask.description for mask in masking">
+                                <option value="" >Select...</option>
+                            </select>
+                            
+                            <select name="implicitEligibilityRulesEntry.value"  
+                                        data-ng-show="implicitEligibilityRulesEntry.field=='permissiveMode'" 
+                                        data-ng-model="implicitEligibilityRulesEntry.value" data-ng-options="permMode.name as permMode.description for permMode in permissiveMode">
+                                <option value="" >Select...</option>
+                            </select>
+	                    	
+	                    	<select name="implicitEligibilityRulesEntry.value"  
+                                        data-ng-show="implicitEligibilityRulesEntry.field=='printOnDemand'" 
+                                        data-ng-model="implicitEligibilityRulesEntry.value" data-ng-options="printDem.name as printDem.description for printDem in printOnDemand">
+                                <option value="" >Select...</option>
+                            </select>
+                            
+                            <select name="implicitEligibilityRulesEntry.value"  
+                                        data-ng-show="implicitEligibilityRulesEntry.field=='printSize'" 
+                                        data-ng-model="implicitEligibilityRulesEntry.value" data-ng-options="prntSize.name as prntSize.description for prntSize in printSize">
+                                <option value="" >Select...</option>
+                            </select>
+	                    	
+	                    	<select name="implicitEligibilityRulesEntry.value"  
+                                        data-ng-show="implicitEligibilityRulesEntry.field=='streamlinedInterface'" 
+                                        data-ng-model="implicitEligibilityRulesEntry.value" data-ng-options="stream.name as stream.description for stream in streamlinedInterface">
+                                <option value="" >Select...</option>
+                            </select>
+	                    	
+	                    	<select name="implicitEligibilityRulesEntry.value"  
+		                				data-ng-show="implicitEligibilityRulesEntry.field=='textToSpeech'" 
+		                				data-ng-model="implicitEligibilityRulesEntry.value" data-ng-options="tts.name as tts.description for tts in textToSpeech">
+	                       		<option value="" >Select...</option>
+	                    	</select>
+	                    	
+	                    	<select name="implicitEligibilityRulesEntry.value"  
+		                				data-ng-show="implicitEligibilityRulesEntry.field=='translation'" 
+		                				data-ng-model="implicitEligibilityRulesEntry.value" data-ng-options="translate.name as translate.description for translate in translation">
+	                       		<option value="" >Select...</option>
+	                    	</select>
+	                    	
+	                    	<select name="implicitEligibilityRulesEntry.value"  
+		                				data-ng-show="implicitEligibilityRulesEntry.field=='nonEmbeddedDesignatedSupports'" 
+		                				data-ng-model="implicitEligibilityRulesEntry.value" data-ng-options="supports.name as supports.description for supports in nonEmbeddedDesignatedSupports">
+	                       		<option value="" >Select...</option>
+	                    	</select>
+	                    	
+	                    	<select name="implicitEligibilityRulesEntry.value"  
+                                        data-ng-show="implicitEligibilityRulesEntry.field=='nonEmbeddedAccommodations'" 
+                                        data-ng-model="implicitEligibilityRulesEntry.value" data-ng-options="nonembed.name as nonembed.description for nonembed in nonEmbeddedAccommodations">
+                                <option value="" >Select...</option>
+                            </select>
+                            
+                            <input type="text" name="implicitEligibilityRulesEntry.value"
+                                data-ng-show="implicitEligibilityRulesEntry.field=='other'"   
+                                data-ng-model="implicitEligibilityRulesEntry.value"/>
+	                    	
+	                	</td>
+	                	<td><select name="implicitEligibilityRulesEntry.ruleType" data-ng-model="implicitEligibilityRulesEntry.ruleType" data-ng-options="id.ruleId as id.ruleId for id in ruleTypes | orderBy:'ruleId'" data-ng-disabled=" assessment.eligibilityType != 'IMPLICIT' ">
+                       			<option value="" >Select...</option>
+                    		</select>
+                    	</td>
+	                	<td class="normalSpace">
+	                        <div class="tableButtonGroup">
+	                            <button data-ng-click="deleteImplicitEligibilityRule($index)" class="boxBtn"><span class="btnIcon icon_sprite icon_delete2"></span></button>
+	                        </div>
+                    	</td>  
+       	  			</tr>
+       	  		</table>	
+       	  </div>
+        <button type="button" class="boxBtn" data-ng-show="assessmentForm.$dirty" data-ng-click="save(assessment)">
+            <span class="btnIcon icon_sprite icon_save2 ng-class:{ajax_indicator:savingIndicator}" ></span>
+            <span class="btnText">Save</span>
+        </button>
+        <button type="button" class="boxBtn" data-ng-click="cancel()">
+            <span class="btnIcon icon_sprite icon_cancel2" ></span>
+            <span class="btnText">Cancel</span>
+        </button>
+    </div>
+</div>  
+</div>  
+
+</div>
+<div class="clear"></div>
+
+ 

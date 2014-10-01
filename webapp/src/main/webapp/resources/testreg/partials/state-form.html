@@ -1,0 +1,58 @@
+<div data-ng-repeat="error in errors">
+     <div><span class="icon_sprite icon_error error"></span>{{error}}</div>
+</div>
+           
+<div data-ng-form="stateForm" class="formWrapper">
+    <div data-ng-show="stateForm.$dirty" class="dirtynag">* Warning: You have unsaved changes</div>
+    <div class="fieldGroup">
+    <h5>{{formAction}} {{entityNameLabels['State']}} Information<span class="control-label-required">Indicates required field</span></h5>
+        <ul>
+            <li>
+                <span data-ng-if="!state.entityId" > 
+                    <label class="control-label-required" for="state.entityId" >{{xwalk('State Abbreviation')}}:</label>
+                    <select data-ng-show="!state.id" style="width: 200px" data-ng-model="state.entityId" data-ng-options="id.entityId as id.entityId for id in states | orderBy:'entityId'" data-ng-change="selectState(state.entityId)">
+                       <option value="" >Select...</option>
+                    </select>
+                    <label data-ng-show="state.id" for="state.entityName"><span class="viewSpanLeft">{{state.entityId}}</span></label>  
+                </span>
+            </li>
+            <li>
+                <span> 
+                    <label class="control-label" for="state.entityName">{{xwalk('State Name')}}:</label>
+                    <label data-ng-show="state.entityName" for="state.entityName"><span class="viewSpanLeft">{{state.entityName}}</span></label>
+                </span>
+            </li>  
+            <li>
+                <span>
+                    <label class="control-label-required" for="state.parentEntityType">{{xwalk('Parent Entity Type')}}:</label>
+                     <select style="width: 200px" data-ng-model="state.parentEntityType" data-load-parent-entities="{{state.parentEntityType}}" data-ng-options="entity.entityId as entity.entityName for entity in entities" >
+                      <option value="">Select...</option>
+                    </select>
+                </span>
+            </li>
+            <li>
+                <span>
+                    <label class="control-label-required" for="state.parentEntityId">{{xwalk('Parent External Id')}}:</label>
+                     <select style="width: 300px" data-ng-model="state.parentEntityId" data-ng-options="entity.entityId as entity.entityId + ' - ' + entity.entityName for entity in selectedParentEntities | orderBy:'entityId'" >
+                      <option value="">Select...</option>
+                    </select>
+                </span>
+            </li>  
+         
+        </ul>  
+
+        <button type="button" class="boxBtn" data-ng-show="stateForm.$dirty" data-ng-click="save(state)">
+            <span class="btnIcon icon_sprite icon_save2 ng-class:{ajax_indicator:savingIndicator}" ></span>
+            <span class="btnText">Save</span>
+        </button>
+     
+        <button type="button" class="boxBtn" data-ng-click="cancel()">
+            <span class="btnIcon icon_sprite icon_cancel2" ></span>
+            <span class="btnText">Cancel</span>
+        </button>
+    </div>
+
+</div>
+<div class="clear"></div>
+
+ 

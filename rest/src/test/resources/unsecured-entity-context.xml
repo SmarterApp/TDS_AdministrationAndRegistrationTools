@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:util="http://www.springframework.org/schema/util"
+       xsi:schemaLocation="
+                http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+                http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-3.0.xsd">
+
+    <util:map id="entityRepositoryMap">
+        <entry key="#{T(org.opentestsystem.delivery.testreg.domain.FormatType).CLIENT}" value-ref="clientEntityRepository"/>
+        <entry key="#{T(org.opentestsystem.delivery.testreg.domain.FormatType).STATE}" value-ref="stateEntityRepository"/>
+        <entry key="#{T(org.opentestsystem.delivery.testreg.domain.FormatType).DISTRICT}" value-ref="districtEntityRepository"/>
+        <entry key="#{T(org.opentestsystem.delivery.testreg.domain.FormatType).INSTITUTION}" value-ref="institutionEntityRepository"/>
+        <entry key="#{T(org.opentestsystem.delivery.testreg.domain.FormatType).GROUPOFSTATES}" value-ref="groupOfStatesEntityRepository"/>
+        <entry key="#{T(org.opentestsystem.delivery.testreg.domain.FormatType).GROUPOFDISTRICTS}" value-ref="groupOfDistrictsEntityRepository"/>
+        <entry key="#{T(org.opentestsystem.delivery.testreg.domain.FormatType).GROUPOFINSTITUTIONS}" value-ref="groupOfInstitutionsEntityRepository"/>
+    </util:map>
+
+    <!--<bean id="userDetailService" class="org.opentestsystem.delivery.testreg.service.impl.TestRegUserDetailsServiceImpl"/>-->
+    <bean id="userDetailService" class="org.opentestsystem.delivery.testreg.service.impl.MockTestRegUserDetailsServiceImpl"/>
+    <!-- <bean id="testRegUberEntityRelationshipService" class="org.opentestsystem.delivery.testreg.service.impl.TestRegUberEntityRelationshipServiceImpl"/> -->
+    <bean id="sb11EntityService" class="org.opentestsystem.delivery.testreg.service.impl.Sb11EntityServiceImpl"/>
+
+</beans>

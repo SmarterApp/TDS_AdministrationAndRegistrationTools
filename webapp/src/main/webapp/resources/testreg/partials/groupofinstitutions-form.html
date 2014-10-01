@@ -1,0 +1,69 @@
+<div data-ng-repeat="error in errors">
+               <div><span class="icon_sprite icon_error error"></span>{{error}}</div>
+</div>
+           
+<div data-ng-form="groupofInstitutionsForm" class="formWrapper">
+    <div data-ng-show="groupofInstitutionsForm.$dirty" class="dirtynag">* Warning: You have unsaved changes</div>
+    <div class="fieldGroup">
+    <h5>{{formAction}} {{entityNameLabels['GroupOfInstitutions']}} Information <span class="control-label-required">Indicates required field</span></h5>
+        <ul class="entityLayout">
+             <li>
+                <span> 
+                    <label class="control-label-required" for="groupofInstitutions.entityId">{{xwalk('Group Of Institutions Identifier')}}:</label>
+                    <input type="text" data-ng-model="groupofInstitutions.entityId"/>
+                
+                </span>
+            </li>
+             <li>
+                <span> 
+                    <label class="control-label-required" for="groupofInstitutions.entityName">{{xwalk('Group Of Institutions Name')}}:</label>
+                    <input type="text" data-ng-model="groupofInstitutions.entityName"/>
+                
+                </span>
+            </li>  
+            <li>
+                <span> 
+                    <label class="control-label-required" for="groupofInstitutions.parentEntityType">{{xwalk('Parent Entity Type')}}:</label>
+                     <select  data-ng-model="groupofInstitutions.parentEntityType" data-load-parent-entities="{{groupofInstitutions.parentEntityType}}" data-ng-options="entity.entityId as entity.entityName for entity in entities" >
+                        <option value="">Select...</option>
+                    </select>
+                </span>
+            </li>  
+              
+            <li>
+                <span>
+                    <label class="control-label-required" for="groupofInstitutions.parentEntityId">{{xwalk('Parent External Id')}}:</label>
+                    <select  data-ng-model="groupofInstitutions.parentId" data-ng-options="entity.id as entity.entityId + ' - ' + entity.entityName for entity in selectedParentEntities | orderBy:'entityId'" data-ng-change="setParentInfoOnChange(groupofInstitutions.parentId)">
+                      <option value="">Select...</option>
+                    </select>
+                </span>
+            </li>    
+            <li>
+                <span> 
+                    <label class="control-label-required" for="groupofInstitutions.stateAbbreviation" >{{xwalk('State Abbreviation')}}:</label>
+                    <select data-ng-model="groupofInstitutions.stateAbbreviation" data-ng-options="id.entityId as id.entityId for id in states | orderBy:'entityId'" >
+                       <option value="" >Select...</option>
+                    </select>
+                </span>
+            </li>
+            <li>
+                <span> 
+                </span>
+            </li>
+        </ul>  
+
+        <button type="button" class="boxBtn" data-ng-show="groupofInstitutionsForm.$dirty" data-ng-click="save(groupofInstitutions)">
+            <span class="btnIcon icon_sprite icon_save2 ng-class:{ajax_indicator:savingIndicator}" ></span>
+            <span class="btnText">Save</span>
+        </button>
+     
+        <button type="button" class="boxBtn" data-ng-click="cancel()">
+            <span class="btnIcon icon_sprite icon_cancel2" ></span>
+            <span class="btnText">Cancel</span>
+        </button>
+    </div>
+</div>
+<div class="clear"></div>
+
+
+ 

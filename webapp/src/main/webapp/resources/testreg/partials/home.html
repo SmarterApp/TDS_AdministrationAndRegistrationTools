@@ -1,0 +1,45 @@
+   <div class="home">
+        <div class="menuslide" data-ng-click="slidePage('/testadmin')">
+             <span class="icon_arrows_sprite icon_slider"></span>slide to view <b>scheduling</b> options
+        </div>
+           <div class="navCore">
+           <h2>{{entityNameLabels['Assessments']}}</h2>
+                    <ol>
+ 
+                     <li class="arrowStyle homeSecondRow upload_assessments green" data-ng-click="go('searchTSBAssessment')">Select <br/>{{entityNameLabels['Assessments']}}<span></span><p>Select a test to<br/> download from the Test Spec Bank</p></li>
+                     <li class="notArrowStyle homeSecondRow modify_assessments navy" data-ng-click="go('searchAssessment')">Add/Modify <br/>{{entityNameLabels['Assessment']}} Information<span></span><p>Add Assessment Windows, Opportunities,<br/> Delay Rules and Eligibility Rules</p></li>
+                     <li class="notArrowStyle homeSecondRow participation_report maroon" data-ng-click="go('participationReports')">View<br/>Participation Reports<span></span><p>View summary and detailed<br> reports of student testing status</p></li>
+                    </ol>
+
+            </div>
+            <div class="clear"></div>
+             <div class="navCore">
+             <hr/>
+              <h2 class="secondRow">Registration</h2>
+              <ol>
+                  <li class="notArrowStyle homeSecondRow upload_entities green" data-ng-click="go('uploadFile')">Upload {{entityNameLabels['Institutions']}},<br/> {{entityNameLabels['User']}} and {{entityNameLabels['Students']}}<span></span><p>Upload file that associates personnel with students<br/> (including accommodations)</p></li>
+                  <li class="listSeperator">or</li> 
+                  <li class="arrowStyle homeSecondRow modify_institutions maroon" data-ng-click="go('entities')">Create/Modify <br/> {{entityNameLabels['Institutions']}}<span></span><p>Create or modify </br>school,district and<br/> state information</p></li>
+                  <li class="studentPersonal homeSecondRow modify_students navy" data-ng-click="go('searchStudent')">Create/Modify <br/> {{entityNameLabels['Students']}}<span></span><p class="studentPersonal_p">Create or modify student information <br/> including accommodation </p></li>
+                  <li class="studentPersonal  modify_personnels maroon" data-ng-click="go('searchUser')">Create/Modify <br/>{{entityNameLabels['User']}}<span></span><p class="studentPersonal_p">Create or modify personnel information including roles </p></li>
+                    <div class="clear"></div>
+
+                  <li class="notArrowStyle upload_studentEligibility green" data-ng-click="go('uploadExplicitEligibility')">Upload Student <br/>{{entityNameLabels['ExplicitEligibility']}}<span></span><p >Upload student explicit eligibility for assessments</p></li>
+                    <li class="listSeperator">or</li> 
+                  <li class="notArrowStyle upload_studentGroups navy" data-ng-click="go('uploadStudentGroups')">Upload <br/>{{entityNameLabels['StudentGroups']}}<span></span><p>Upload file that associate <br/> personnel with students</p></li>
+                    <li class="listSeperator">or</li> 
+                  <li class="notArrowStyle modify_studentGroups maroon" data-ng-click="go('searchStudentGroup')">Create/Modify <br/>{{entityNameLabels['StudentGroups']}}<span></span><p>Create or modify student group that associates personnel with students</p></li>
+
+                </ol>
+
+           </div>
+            <div class="clear"></div>
+       </div>
+
+<div class="footer">
+    <div data-ng-if="buildInfo.appVersion" class="footerText">
+        Version: {{buildInfo.appVersion}}
+        <span data-ng-show="buildInfo.jenkinsBuildNumber"> (build #: {{buildInfo.jenkinsBuildNumber}})</span>
+    </div>
+</div>
+

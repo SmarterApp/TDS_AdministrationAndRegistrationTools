@@ -1,0 +1,133 @@
+
+<div data-ng-repeat="error in errors">
+     <div><span class="icon_sprite icon_error error"></span>{{error}}</div>
+</div>
+           
+<div data-ng-form="scheduleSummaryForm" class="formWrapper">
+    <div data-ng-show="scheduleSummaryForm.$dirty" class="dirtynag">* Warning: You have unsaved changes</div>
+    <div class="fieldGroup">
+    <h5>{{formAction}} Schedule Summary <span class="control-label-required">Indicates required field</span></h5>
+        <ul>
+            <li>
+                <span> 
+                    <label class="control-label" for="proctorRole.name" >{{_.getEntityLabel('Institution')}} :</label> 
+                    <label class="control-label" for="proctorRole.name" >{{institution.entityName}}</label>
+                </span>             
+            </li>  
+            <li>
+                <span> 
+                    <label class="control-label" for="proctorRole.assessments" >Facility :</label>  
+                    <label class="control-label" for="proctorRole.name" >{{facilityName}}</label>                  
+                </span>
+           </li>
+        </ul> 
+          <ul>      
+            <li>
+                <span> 
+                    <label class="control-label" for="proctorRole.assessments" >Schedule Day :</label>   
+                    <label class="control-label" for="proctorRole.name" >{{scheduledDay}}</label>                 
+                </span>            
+            </li>
+            
+            <li>
+                <span> 
+                    <label class="control-label" for="proctorRole.assessments" >TimeSlot :</label>   
+                    <label class="control-label" for="proctorRole.name" >{{timeSlotText}}</label>                 
+                </span>
+            </li>
+        </ul>
+          
+        <h5 style="width:70% ;margin:auto">Proctor</h5>
+        <ul>      
+            <li>
+                <span> 
+                    <label class="control-label" for="proctorRole.assessments" >Name :</label>  
+                    <select name="proctor"  data-ng-model="timeSlot.proctor.user" 
+       	  				data-ng-options="user as _.getFullName(user)  for user in users">
+                       			<option value="" >Select...</option>
+                    		</select>                        
+                </span>
+            </li>     
+            <li>
+            	<span>
+            		<label class="control-label" for="proctorRole.assessments" >Email :</label>  
+            		<label class="control-label" for="proctorRole.name" >{{timeSlot.proctor.user.email}}</label>        
+            	</span>
+            </li>        
+        </ul>
+        
+        	
+        <h5 style="width:70% ;margin:auto">{{_.getEntityLabel('Students')}} </h5>
+        <div>
+        	<span style="padding: 20px"><b>Total Capacity:</b> {{totalCapacity}} </span> 
+        	<span style="padding: 20px"><b>Scheduled:</b> {{timeSlot.seats.length}} </span> 
+        	<span style="padding: 20px"><b>Available:</b> {{totalCapacity-timeSlot.seats.length}}</span> 
+        </div>
+        <div class="tableWrapper" style="width:70%; margin:auto; table-layout: fixed;">
+	     	<table class="dataTable">
+	                <colgroup>
+	                    <col class="actionColumn">
+	                    <col>
+	                    <col> 
+	                    <col>
+	                    <col>
+	                    <col>
+	                </colgroup>
+	                <tr>
+	                	<th rowspan="2">	                   
+	                          <button data-ng-click="addStudent()" class="boxBtn" ><span class="btnIcon icon_sprite icon_saveAdd2"></span></button>	                       
+		                </th>
+	                    <th rowspan="2">Student Name</th>
+	                    <th rowspan="2">Student Id</th>
+	                    <th rowspan="2">Test Name</th>
+	                    <th colspan="3">Seat Configuration</th>	                    
+	                </tr>
+	                <tr>
+	                	<th>Test Platform</th>
+	                	<th >Accessibility Equipment</th>	                	
+	                	<th>Choose Seats</th>
+	                </tr>
+	                <tbody>
+		                <tr data-ng-repeat="seat in timeSlot.seats | filter:_.isSeatScheduledInSystem">
+		                	<td class="normalSpace">
+	                   			<div class="tableButtonGroup">
+	                        		<button data-ng-click="removeStudent($index)" class="boxBtn" ><span class="btnIcon icon_sprite icon_delete2"></span></button>
+	                   			</div>
+	               			</td> 
+		                	<td>{{seat.student.lastName}} &#44; {{seat.student.firstName}} </td>
+		                	<td>{{seat.student.entityId}}</td>
+		                	<td>{{syncAssessment(seat,eligibleAssessments[$index].assessments)}}<select name="seat.assessment"   
+			                				data-ng-model="seat.assessment" 
+			                				data-ng-options="eligibleAssessment as eligibleAssessment.testName 
+			                					for eligibleAssessment in eligibleAssessments[$index].assessments">
+		                       		<option value="" >Select...</option>
+		                    	</select>	                		
+		                	</td>	                	 
+		                	<td>{{seat.testPlatform}}</td>
+		                	<td>{{_.getAccessibilityEquipmentText(seat.accessibilityEquipments)}}</td>	
+		                	<td class="normalSpace"><div class="tableButtonGroup">
+				                   <button data-ng-click="selectSeatConfig($index, seat.seatNumber, seat.testPlatform, seat.accessibilityEquipments)" 
+				                   	class="boxBtn"><span class="btnIcon icon_sprite icon_edit2"></span></button>
+				                                      
+				               </div>
+				            </td>                	
+		                </tr>
+	                </tbody>
+	        </table>
+	    </div>
+
+        <button type="button" class="boxBtn" data-ng-show="scheduleSummaryForm.$dirty" data-ng-click="save()">
+            <span class="btnIcon icon_sprite icon_save2 ng-class:{ajax_indicator:savingIndicator}" ></span>
+            <span class="btnText">Save</span>
+        </button>
+     
+        <button type="button" class="boxBtn" data-ng-click="cancel()">
+            <span class="btnIcon icon_sprite icon_cancel2" ></span>
+            <span class="btnText">Cancel</span>
+        </button>
+    </div>
+
+</div>
+<div class="clear"></div>
+
+ 

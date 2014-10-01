@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+    xmlns:mongo="http://www.springframework.org/schema/data/mongo"
+    xmlns:aop="http://www.springframework.org/schema/aop"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:util="http://www.springframework.org/schema/util"
+    xsi:schemaLocation="
+                http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+                http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd
+                http://www.springframework.org/schema/data/mongo http://www.springframework.org/schema/data/mongo/spring-mongo-1.1.xsd
+                http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-3.0.xsd">
+
+    <bean id="gradeLevel" class="java.util.LinkedHashMap">
+    	<constructor-arg>
+	   		<map>
+			    <entry value="PR"  key="Preschool"/>         
+                <entry value="PK"  key="Prekindergarten"/>       
+                <entry value="TK"  key="Transitional Kindergarten"/> 
+                <entry value="KG"  key="Kindergarten"/>  
+                <entry value="01"  key="First Grade"/>           
+                <entry value="02"  key="Second Grade"/>      
+                <entry value="03"  key="Third Grade"/>           
+                <entry value="04"  key="Fourth Grade"/>      
+                <entry value="05"  key="Fifth Grade"/>           
+                <entry value="06"  key="Sixth Grade"/>           
+                <entry value="07"  key="Seventh Grade"/>     
+                <entry value="08"  key="Eighth Grade"/>  
+                <entry value="09"  key="Ninth Grade"/>       
+                <entry value="10"  key="Tenth Grade"/>           
+                <entry value="11"  key="Eleventh Grade"/>    
+                <entry value="12"  key="Twelfth Grade"/> 
+                <entry value="13"  key="Thirteenth Grade"/>      
+                <entry value="PS"  key="Postsecondary"/> 
+                <entry value="UG"  key="Ungraded"/>       
+			</map>
+	   	</constructor-arg>
+    </bean>
+
+</beans>

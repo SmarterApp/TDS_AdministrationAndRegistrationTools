@@ -1,0 +1,112 @@
+
+<div data-ng-repeat="error in errors">
+     <div><span class="icon_sprite icon_error error"></span>{{error}}</div>
+</div>
+           
+<div data-ng-form="participationReportForm" class="formWrapper">
+    <div class="fieldGroup">
+        <ul class="reportLayout">
+              <li>
+                <span> 
+                    <label class="control-label" for="participationReport.reportLevel" > Report Type :</label>
+                  <select  data-ng-model="participationReport.reportLevel"  data-ng-options="entity.entityId as entityNameLabels[entity.entityName] for entity in reportLevels" data-ng-change="setAccessFlag(participationReport.reportLevel)">
+                        <option value="">Select...</option>
+                    </select>
+                                
+                </span>
+            </li> 
+            <li data-ng-show="reportTypeFlag('CLIENT')" >
+                <span > 
+                    <label class="control-label" for="participationReport.clientsId" > {{entityNameLabels['Client']}}:</label>
+                  <select  data-ng-model="participationReport.clientsId"  data-ng-options="entity.id as entity.entityId + ' - ' + entity.entityName for entity in clients" data-ng-change="selectedEntityType(participationReport.clientsId,'CLIENT')" data-ng-hide="(userEntityType=='CLIENT')" >
+                       <option value="">Select...</option>
+                    </select>
+                    <span class="reportSpanLeft" data-ng-show="(userEntityType=='CLIENT')">{{clients[0].entityName}}</span>
+                    
+                </span>
+            </li>
+            <li data-ng-show="reportTypeFlag('GROUPOFSTATES')&& (groupOfStatesFlag())">
+                <span > 
+                    <label class="control-label" for="participationReport.groupofstatesId" > {{entityNameLabels['GroupOfStates']}}:</label>
+                  <select  data-ng-model="participationReport.groupofstatesId"  data-ng-options="entity.id as entity.entityId + ' - ' + entity.entityName for entity in groupofstates" data-ng-change="selectedEntityType(participationReport.groupofstatesId,'GROUPOFSTATES')" data-ng-disabled="groupofstatesFlag" data-ng-hide="(userEntityType=='GROUPOFSTATES')" >
+                       <option value="">Select...</option>
+                    </select>
+                    <span class="reportSpanLeft" data-ng-show="(userEntityType=='GROUPOFSTATES')">{{groupofstates[0].entityName}}</span>
+                </span>
+            </li>
+ 
+             <li data-ng-show="reportTypeFlag('STATE')">
+                <span > 
+                    <label class="control-label" for="participationReport.statesId" >  {{entityNameLabels['State']}}:</label>
+                  <select  data-ng-model="participationReport.statesId"  data-ng-options="entity.id as entity.entityId + ' - ' + entity.entityName for entity in states"  data-ng-change="selectedEntityType(participationReport.statesId,'STATE')" data-ng-disabled="statesFlag" data-ng-hide="(userEntityType=='STATE')">
+                        <option value="">Select...</option>
+                    </select>
+                    <span class="reportSpanLeft" data-ng-show="(userEntityType=='STATE')">{{states[0].entityName}}</span> 
+                </span>
+            </li>
+            <li data-ng-show="reportTypeFlag('GROUPOFDISTRICTS')&& (groupOfDistrictsFlag())" >
+                <span > 
+                    <label class="control-label" for="participationReport.groupofdistrictsId" > {{entityNameLabels['GroupOfDistricts']}}:</label>
+                  <select  data-ng-model="participationReport.groupofdistrictsId"  data-ng-options="entity.id as entity.entityId + ' - ' + entity.entityName for entity in groupofdistricts" data-ng-change="selectedEntityType(participationReport.groupofdistrictsId,'GROUPOFDISTRICTS')" data-ng-disabled="groupofdistrictsFlag" data-ng-hide="(userEntityType=='GROUPOFDISTRICTS')">
+                       <option value="">Select...</option>
+                    </select>
+                    <span class="reportSpanLeft" data-ng-show="(userEntityType=='GROUPOFDISTRICTS')">{{groupofdistricts[0].entityName}}</span>
+                </span>
+            </li>          
+             <li data-ng-show="reportTypeFlag('DISTRICT')">
+                <span > 
+                    <label class="control-label" for="participationReport.districtsId" > {{entityNameLabels['District']}}:</label>
+                  <select  data-ng-model="participationReport.districtsId"  data-ng-options="entity.id as entity.entityId + ' - ' + entity.entityName for entity in districts"  data-ng-change="selectedEntityType(participationReport.districtsId,'DISTRICT')" data-ng-disabled="districtsFlag" data-ng-hide="(userEntityType=='DISTRICT')">
+                        <option value="">Select...</option>
+                    </select>
+                    <span class="reportSpanLeft" data-ng-show="(userEntityType=='DISTRICT')">{{districts[0].entityName}}</span>
+                </span>
+            </li>
+            <li data-ng-show="reportTypeFlag('GROUPOFINSTITUTIONS')&& (groupOfInstitutionsFlag())">
+                <span > 
+                    <label class="control-label" for="participationReport.groupofinstitutionsId" > {{entityNameLabels['GroupOfInstitutions']}}:</label>
+                  <select  data-ng-model="participationReport.groupofinstitutionsId"  data-ng-options="entity.id as entity.entityId + ' - ' + entity.entityName for entity in groupofinstitutions" data-ng-change="selectedEntityType(participationReport.groupofinstitutionsId,'GROUPOFINSTITUTIONS')" data-ng-disabled="groupofinstitutionsFlag" data-ng-hide="(userEntityType=='GROUPOFINSTITUTIONS')">
+                       <option value="">Select...</option>
+                    </select>
+                    <span class="viewSpanLeft" data-ng-show="(userEntityType=='GROUPOFINSTITUTIONS')">{{groupofinstitutions[0].entityName}}</span>
+                </span>
+            </li>                
+
+             <li data-ng-show="reportTypeFlag('INSTITUTION')">
+                <span > 
+                    <label class="control-label" for="participationReport.institutionsId" > {{entityNameLabels['Institution']}}:</label>
+                  <select  data-ng-model="participationReport.institutionsId"  data-ng-options="entity.id as entity.entityId + ' - ' + entity.entityName for entity in institutions" data-ng-change="selectedEntityType(participationReport.institutionsId,'INSTITUTION')" data-ng-disabled="institutionsFlag" data-ng-hide="(userEntityType=='INSTITUTION')">
+                        <option value="">Select...</option>
+                    </select>
+                     <span class="reportSpanLeft" data-ng-show="(userEntityType=='INSTITUTION')">{{institutions[0].entityName}}</span>
+                </span>
+            </li>
+                <li>
+                <span> 
+                    <label class="control-label" for="participationReport.assessmentId" > Test Name :</label>
+                  <select  data-ng-model="participationReport.assessmentId"  data-ng-options="entity.id as entity.testName for entity in assessments"  >
+                        <option value="">Select...</option>
+                    </select>
+                </span>
+            </li> 
+                <li>
+                <span> 
+                    <label class="control-label" for="participationReport.opportunity" > Opportunity :</label>
+                  <select  data-ng-model="participationReport.opportunity"  data-ng-options="opportunity for opportunity in opportunities" >
+                        <option value="">Select...</option>
+                    </select>
+                </span>
+            </li>             
+        </ul>  
+
+        <button type="button" class="boxBtn"  data-ng-click="createSummaryReport(participationReport)">
+            <span class="btnIcon icon_sprite icon_save2" ></span>
+            <span class="btnText">Create Report</span>
+        </button>
+
+    </div>
+
+</div>
+<div class="clear"></div>
+
+ 

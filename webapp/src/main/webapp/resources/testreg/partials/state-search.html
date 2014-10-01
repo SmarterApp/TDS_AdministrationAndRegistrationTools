@@ -1,0 +1,75 @@
+
+<span class="boxIcon icon_sprite icon_view1"></span>
+<div data-ng-repeat="error in errors">
+     <div><span class="icon_sprite icon_error error"></span>{{error}}</div>
+</div>
+
+<div class="boxTitle"><h2>{{entityNameLabels['State']}} Search</h2></div>
+<div>
+	<div data-searchable data-search-url="'state'"  data-search-params="searchParams" data-search-response="searchResponse">
+		<div class="fieldGroup">
+			<h5>Search Filters</h5>
+			<ul class="entityLayout">
+            <li>
+                <span> 
+                    <label class="control-label" for="searchParams.entityId" >{{xwalk('State Abbreviation')}}:</label>
+                     <select style="width: 200px" data-ng-model="searchParams.entityId" data-ng-options="id.entityId as id.entityId for id in states | orderBy:'entityId'" data-ng-change="selectState(searchParams.entityId)">
+                       <option value="" >Select...</option>
+                    </select>
+                </span>
+            </li>
+            <li>
+                <span> 
+                    <label class="control-label" for="searchParams.entityName">{{xwalk('State Name')}}:</label>
+                     <select style="width: 200px" data-ng-model="searchParams.entityName" data-ng-options="name.entityName as name.entityName for name in states"  data-ng-disabled="true">
+                      <option value="">Select...</option>
+                    </select>
+                </span>
+            </li>  			
+
+			</ul>
+			<button type="button" type="button" class="boxBtn" data-search-on-click	data-active-indicator="searchResponse.searching">
+				<span class="btnIcon icon_sprite icon_reTry2 ng-class:{ajax_indicator:activeIndicator}"></span>
+				<span class="btnText">Search</span>
+			</button>
+			<button type="button" type="button" class="boxBtn"	data-ng-click="createNewState()">
+				<span class="btnIcon icon_sprite icon_saveAdd2"></span> <span class="btnText">New</span>
+			</button>
+			<div data-export="states"></div>
+		</div>
+        
+		<div data-pageable data-paging-info="searchResponse"	data-search-params="searchParams" data-change-page="changePage()">
+			<table class="dataTable">
+				<colgroup>
+					<col>
+					<col>
+					<col>
+					<col>
+					<col class="doubleActionColumn">
+				</colgroup>
+				<tr>
+					<th data-sort-on-click data-sort-column="entityId" class="headerSortUp">{{xwalk('State Abbreviation')}}</th>
+					<th data-sort-on-click data-sort-column="entityName" >{{xwalk('State Name')}}</th>
+					<th data-sort-on-click data-sort-column="parentEntityType" >{{xwalk('Parent Entity Type')}}</th>
+                    <th data-sort-on-click data-sort-column="parentEntityId">{{xwalk('Parent Entity Name')}}</th>
+                    <th></th>
+				</tr>
+				<tr data-ng-repeat="state in searchResponse.searchResults" >
+					<td>{{state.entityId}}</td>
+					<td>{{state.entityName}}</td>
+					<td>{{entityNameLabels[entityHierarchyRef[state.parentEntityType]]}}</td>
+					<td class="ng-class:{ajax_indicator:savingIndicator}">{{state.parentId | parentNameFilter:state.parentEntityType:parentEntities}}</td>
+                    <td class="normalSpace">
+                        <div class="tableButtonGroup">
+                            <button data-ng-click="edit(state)" class="boxBtn"><span class="btnIcon icon_sprite icon_edit2"></span></button>
+                            <button data-delete-confirmation="{{state.id}}" class="boxBtn"><span class="btnIcon icon_sprite icon_delete2"></span></button>                          
+                        </div>
+                    </td>
+				</tr>
+			</table>
+		</div>
+		<div data-load-parent-names></div>
+	</div>
+</div>
+
+<div class="clear"></div>

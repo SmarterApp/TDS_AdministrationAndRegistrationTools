@@ -1,0 +1,48 @@
+  <div  data-ng-include src='"resources/testreg/partials/leftnav.html"'></div>
+
+ <div class="secContent"> 
+<span class="boxIcon icon_sprite icon_view1"></span>
+<div data-ng-repeat="error in errors">
+    <div><span class="icon_sprite icon_error error"></span>{{error}}</div>
+</div>
+
+
+<div class="boxTitle"><h2>Preview File</h2></div>
+        
+<div>
+     <div >
+        <p class="informational">This page allows you to preview the first few records in the file to ensure that you 
+          uploaded the correct file and the data are in the correct fields.
+        </p>
+		<div>
+		     <tabset vertical="false">
+		             <tab  ng-repeat="previewFile in previewFiles" heading="{{previewFile.sheetName}}">
+		                <table class="previewTable" >
+		                     <tr>
+		                         <th data-ng-repeat="data in previewFile.rowData[0]">{{data}}</th>
+		                     </tr>
+		                     <tr data-ng-repeat="rowData in previewFile.rowData" data-ng-show="!$first">
+		                         <td data-ng-repeat="data in previewFile.rowData[0]">{{rowData[$index]}}</td>
+		                     </tr>
+		                </table>
+		             </tab>
+		     </tabset>
+		</div>
+        <div>
+			<br>
+			<button type="button" class="boxBtn" data-ng-show="errors == null || errors.length == 0" data-ng-disabled="isValidateButtonDisabled" data-ng-click="validate();">
+                 <span class="btnIcon icon_sprite icon_save2 ng-class:{ajax_indicator:savingIndicator}" ></span>
+			     <span class="btnText">Validate</span>
+			</button>
+		    <button type="button" class="boxBtn" data-ng-click="cancel()">
+		        <span class="btnIcon icon_sprite icon_cancel2" ></span>
+		        <span class="btnText">Cancel</span>
+		    </button>
+            <div data-ng-show="savingIndicator" class="dirtynag">* Please wait... Validation in process. You will be redirected to another page once complete.</div>
+	    </div>
+    </div>
+
+
+</div> 
+</div> 
+<div class="clear"></div>

@@ -1,0 +1,42 @@
+<div class="home">
+     <div class="menuslide" data-ng-click="slidePage('/')">
+          <span class="icon_arrows_sprite icon_slider"></span>slide to view <b>registration</b> options
+     </div>
+    <div class="navCore">
+        <h2></h2>
+        <ol>
+            <li class="arrowStyle homeSecondRow proctor_roles green" data-ng-click="go('searchProctorRoles')">Add/Modify<br>Proctor Roles<span></span><p>Add or modify specific roles<br>that can act as a proctor</p></li>
+            <li class="arrowStyle homeSecondRow test_platform navy" data-ng-click="go('searchTestPlatform')">Add/Modify<br>Test Platforms<span></span><p>Add/Modify types of computer<br>equipment to deliver tests to students</p></li>
+            <li class="arrowStyle homeSecondRow accessibility_equipment maroon" data-ng-click="go('searchAccessibilityEquipment')">Add/Modify<br>Accessibility Equipment<span></span><p>Add or modify hardware or<br>software accessibility equipment<br>to enhance test accessibility</p></li>
+        </ol>
+    </div>
+     <div class="clear"></div>
+     <div class="navCore">
+        <h2></h2>
+         <h2></h2>
+        <ol>                           
+            <li class="arrowStyle homeSecondRow test_facility green" data-ng-click="go('searchFacility')">Add/Modify<br>Test Facilities<span></span><p>Add or modify the type and<br>number of seats for facilities that will<br>be used for student testing</p></li>
+            <li class="arrowStyle homeSecondRow test_time maroon" data-ng-click="go('searchFacilityAvailability')">Add/Modify<br>Test Time<span></span><p>Add or modify test times<br>for particular test facilities</p></li>            
+            <li class="arrowStyle homeSecondRow test_schedule navy" data-ng-click="go('searchSchedule')">Add/Modify<br>Schedule Information<span></span><p>Add or modify testing<br>schedule time and constraints</p></li>                                  
+        </ol>
+     </div>
+     <div class="clear"></div>
+     <div class="navCore">
+        <h2></h2>
+         <h2></h2>
+        <ol>      
+            <li class="arrowStyle homeSecondRow schedule_result green" data-ng-click="go('scheduleSummary')">Add/Modify<br>Schedule Results<span></span><p>View the result of automatic scheduling<br>and make manual adjustments to the schedule</p></li>     
+            <li class="arrowStyle homeSecondRow proctor_report navy" data-ng-click="go('proctorScheduleReport')">View Proctor<br>Schedule Report<span></span><p>Generate a schedule<br>report for test proctors</p></li>        
+            <li class="notArrowStyle homeSecondRow student_report maroon" data-ng-click="go('studentScheduleReport')">View Student<br>Schedule Report<span></span><p>Generate a schedule<br>report for students</p></li>
+        </ol>
+    </div>
+    <div class="clear"></div>
+</div>
+
+<div class="footer">
+    <div data-ng-if="buildInfo.appVersion" class="footerText">
+        Version: {{buildInfo.appVersion}}
+        <span data-ng-show="buildInfo.jenkinsBuildNumber"> (build #: {{buildInfo.jenkinsBuildNumber}})</span>
+    </div>
+</div>
+

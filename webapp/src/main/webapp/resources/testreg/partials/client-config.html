@@ -1,0 +1,79 @@
+<br><br><br>
+<div data-ng-repeat="error in errors">
+     <div><span class="icon_sprite icon_error error"></span>{{error}}</div>
+</div>   
+<div data-ng-form="clientForm" class="formWrapper">
+    <div data-ng-show="clientForm.$dirty" class="dirtynag">* Warning: You have unsaved changes</div>
+    <div class="fieldGroup">
+    <h5>Client  Information</h5>
+        <ul class="clientLayout">
+            <li>
+                <span> 
+                    <label class="control-label" for="client.entityName" >Client Id:</label>
+                    <span class="viewSpanLeft">{{client.entityId}}</span>
+                 </span>
+            </li>        
+            <li>
+                <span> 
+                    <label class="control-label" for="client.entityName" >Client Name:</label>
+                    <span class="viewSpanLeft">{{client.entityName}}</span>
+                 </span>
+            </li>
+            <li>
+                <span> 
+                    <label class="control-label" for="client.systemId" >Test Reg System Id:</label>
+                    <span class="viewSpanLeft">{{client.systemId}}</span>
+                 </span>
+            </li>            
+            <li>
+                <span> 
+                    <label class="control-label" for="client.timeZone" >Time Zone:</label>
+                    <select name="client.timeZone" data-ng-model="client.timeZone" data-ng-options="zone.name as zone.name for zone in timeZones">
+                       <option value="" >Select...</option>
+                    </select>                    
+                 </span>
+            </li>
+            <li>
+                <span> 
+                    <label class="control-label" for="client.sbacExportTypes" >Assessment Eligibility types <br>for export to SBAC<br> Data Warehouse:</label>                   
+                    <span class="viewSpanLeft" data-ng-repeat="type in client.sbacExportTypes">{{type}}</span>
+                 </span>
+            </li>
+            
+            <li>
+                <span> 
+                    <label class="control-label" for="client.localExportTypes" >Assessment Eligibility types <br>for export to Local<br> Data Warehouse:</label>                
+                    <span class="viewSpanLeft" data-ng-repeat="type in client.localExportTypes">{{type}}</span>
+                 </span>
+            </li>
+    
+            <li>
+                <span > 
+                    <label class="control-label" for="client.groupOfLevels" >Share Student Identity Data:<br>(Student's First/Last Name,  Birth Date & SSID)</label>
+                    <span class="viewSpanLeft">{{client.shareStudentIdentity}}</span>           
+                 </span>
+            </li>                          
+            <li>
+                <span> 
+                    <label class="control-label" for="client.groupOfLevels" >Hide 'Group Of' Entity Levels:</label>
+                    <span class="viewSpanLeft">
+                        <input type="checkbox" data-ng-model="client.groupOfStates"  data-ng-checked="client.groupOfStates">{{entityNameLabels['GroupOfStates']}}</input><br>
+                        <input type="checkbox" data-ng-model="client.groupOfDistricts"  data-ng-checked="client.groupOfDistricts">{{entityNameLabels['GroupOfDistricts']}}</input><br>
+                        <input type="checkbox" data-ng-model="client.groupOfInstitutions"   data-ng-checked="client.groupOfInstitutions">{{entityNameLabels['GroupOfInstitutions']}}</input>
+                    </span>
+                 </span>
+            </li> 
+        </ul>  
+        <button type="button" class="boxBtn" data-ng-show="clientForm.$dirty" data-ng-click="save(client)">
+            <span class="btnIcon icon_sprite icon_save2 ng-class:{ajax_indicator:savingIndicator}" ></span>
+            <span class="btnText">Save</span>
+        </button>
+     
+        <button type="button" class="boxBtn" data-ng-click="cancel()">
+            <span class="btnIcon icon_sprite icon_cancel2" ></span>
+            <span class="btnText">Cancel</span>
+        </button>
+    </div>
+
+</div>
+<div class="clear"></div>

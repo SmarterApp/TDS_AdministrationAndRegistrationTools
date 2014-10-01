@@ -1,0 +1,22 @@
+   <div class="secondary">
+     <div class="navCore">   
+           <ol>
+             <li class="upload_assessments leftnavgrey"  data-ng-class="{selected : isActiveLink('searchTSBAssessment')}" data-ng-click="goToFormsPage('searchTSBAssessment')">Select <br/>{{entityNameLabels['Assessments']}}<span></span></li>
+             <li class="modify_assessments leftnavgrey"   data-ng-class="{selected : isActiveLink('searchAssessment')}" data-ng-click="goToFormsPage('searchAssessment')">Add/Modify <br/>{{entityNameLabels['Assessment']}} Information<span></span></li>
+             <li class="participation_report leftnavgrey"    data-ng-class="{selected : isActiveLink('participationReports')}" data-ng-click="goToFormsPage('participationReports')">Participation<br/>Reports<span></span></li>
+             <li class="upload_entities leftnavgrey"    data-ng-class="{selected : isActiveLink('uploadFile')}" data-ng-click="goToFormsPage('uploadFile')">Upload {{entityNameLabels['Institutions']}}, {{entityNameLabels['Users']}} and {{entityNameLabels['Students']}}<span></span></li>
+             <li class="modify_institutions leftnavgrey" data-ng-class="{selected : isActiveLink('entities')}" data-ng-click="goToFormsPage('entities')">Create/Modify <br/> {{entityNameLabels['Institutions']}}<span></span></li>
+             <li class="modify_students leftnavgrey"      data-ng-class="{selected : isActiveLink('searchStudent')}" data-ng-click="goToFormsPage('searchStudent')">Create/Modify <br/> {{entityNameLabels['Students']}}<span></span></li>
+             <li class="modify_personnels leftnavgrey"   data-ng-class="{selected : isActiveLink('searchUser')}" data-ng-click="goToFormsPage('searchUser')">Create/Modify <br/>{{entityNameLabels['Users']}}<span></span></li>
+             <li class="upload_studentEligibility leftnavgrey" data-ng-class="{selected : isActiveLink('uploadExplicitEligibility')}" data-ng-click="goToFormsPage('uploadExplicitEligibility')">Upload {{entityNameLabels['Student']}} <br/>{{entityNameLabels['ExplicitEligibility']}}<span></span></li>
+             <li class="upload_studentGroups leftnavgrey"  data-ng-class="{selected : isActiveLink('uploadStudentGroups')}" data-ng-click="goToFormsPage('uploadStudentGroups')">Upload <br/>{{entityNameLabels['StudentGroups']}}<span></span></li>
+             <li class="modify_studentGroups leftnavgrey"  data-ng-class="{selected : isActiveLink('searchStudentGroup')}" data-ng-click="goToFormsPage('searchStudentGroup')">Create/Modify <br/>{{entityNameLabels['StudentGroups']}}<span></span></li>
+        </ol>   
+        <div class="submenuslideText" >slide to view <b>schedule options</b></div>
+            <div class="submenuslide" data-ng-click="showTestAdmin(true)">
+                <div class="icon_arrows_sprite_submenu icon_slider_submenu"></div>
+            </div>         
+     </div>
+<div class="clear"></div>
+    <a href="javascript:void(0);" class="slider-arrow" data-menu-slider>&raquo;</a>
+

@@ -1,0 +1,23 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <parent>
+    <groupId>org.opentestsystem.delivery</groupId>
+    <artifactId>test-reg-parent</artifactId>
+    <version>R01.00.00</version>
+  </parent>
+  <artifactId>test-reg-null-client</artifactId>
+  
+  <name>Smarter Balanced #11 Test Registration - Null Client</name>
+  <description>Test Registration Null Client Implementation</description>
+  
+  
+      <dependencies>
+        <dependency>
+            <groupId>org.opentestsystem.delivery</groupId>
+            <artifactId>test-reg-client-interfaces</artifactId>
+            <version>R01.00.00</version>
+        </dependency>
+       
+    </dependencies>
+    
+</project>

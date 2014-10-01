@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:security="http://www.springframework.org/schema/security"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans-3.1.xsd
+              http://www.springframework.org/schema/security 
+              http://www.springframework.org/schema/security/spring-security-3.2.xsd 
+              http://www.springframework.org/schema/context 
+              http://www.springframework.org/schema/context/spring-context-3.1.xsd">
+    
+          <!-- Provider of default SAML Context -->
+
+ <beans profile="server.loadbalanced"> 
+        <bean id="contextProvider" class="org.springframework.security.saml.context.SAMLContextProviderLB">
+            <property name="scheme" value="http"/>
+            <property name="serverName" value="sb11-testreg-load.drc-ec2.com"/>
+            <property name="serverPort" value="80"/>
+            <property name="includeServerPortInRequestURL" value="false"/>
+            <property name="contextPath" value=""/>
+        </bean>
+  </beans>
+  
+ <beans profile="server.singleinstance"> 
+        <bean id="contextProvider" class="org.springframework.security.saml.context.SAMLContextProviderImpl"></bean>
+ </beans>
+ 
+ <beans>
+        <bean id="contextProvider" class="org.springframework.security.saml.context.SAMLContextProviderImpl">
+        
+        </bean> 
+        <bean id="metadataProviderResource" class="org.springframework.core.io.FileSystemResource">
+            <constructor-arg type="java.lang.String" value="${testreg.security.dir}/${testreg.webapp.saml.metadata.filename}"/>
+        </bean>
+        
+        <bean id="metadataDelegate" class="org.springframework.security.saml.metadata.ExtendedMetadataDelegate">
+                <constructor-arg>
+                    <bean class="org.opensaml.saml2.metadata.provider.FilesystemMetadataProvider">
+                     <constructor-arg type="java.io.File" value="#{metadataProviderResource.getFile()}"/>
+                    <property name="parserPool" ref="parserPool"/>
+                </bean>
+            </constructor-arg>
+            <constructor-arg>
+                <bean class="org.springframework.security.saml.metadata.ExtendedMetadata">
+                   <property name="local" value="true"/>
+                   <property name="alias" value="testreg_webapp"/>
+                   <property name="securityProfile" value="metaiop"/>
+                   <property name="sslSecurityProfile" value="pkix"/>
+                   <property name="signingKey" value="${testreg.security.saml.keystore.cert}"/>
+                   <property name="encryptionKey" value="${testreg.security.saml.keystore.cert}"/>
+                   <property name="requireArtifactResolveSigned" value="false"/>
+                   <property name="requireLogoutRequestSigned" value="false"/>
+                   <property name="requireLogoutResponseSigned" value="false"/>
+                   <property name="idpDiscoveryEnabled" value="false"/>
+                </bean>
+            </constructor-arg>
+        </bean>
+   </beans>
+</beans>

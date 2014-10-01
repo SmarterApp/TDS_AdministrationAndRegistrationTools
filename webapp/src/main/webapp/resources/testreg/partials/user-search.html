@@ -1,0 +1,148 @@
+
+  <div  data-ng-include src='"resources/testreg/partials/leftnav.html"'></div>
+
+ <div class="secContent"> 
+<span class="boxIcon icon_sprite icon_view1"></span>
+<div class="boxTitle"><h2>{{entityNameLabels['User']}} Search</h2></div>
+<div>
+	<div data-searchable data-search-url="'user'" data-search-params="searchParams" data-search-response="searchResponse">
+		<div class="fieldGroup">
+			<h5>Search Filters</h5>
+                <ul>		
+              <li>
+                 <span class="entity-auto-complete">
+                    <label class="control-label" for="searchParams.firstName">{{xwalk('First Name')}}:</label>
+                    <input user-search-auto-complete type="text" 
+                     placeholder="Search..." 
+                     data-ng-model="firstName"
+                     data-typeahead="entity as entity.firstName + ' - ' +entity.lastName  for entity in filterUsers($viewValue, 20, 'firstName')" 
+                     data-typeahead-wait-ms="200" 
+                     data-typeahead-editable="true" 
+                     data-typeahead-input-formatter="formatUserFirstName($model)"
+                     data-typeahead-on-select="changeUserFirstName($item)" />  
+                  </span>                              
+                </li>               
+              <li>
+                 <span class="entity-auto-complete">
+                    <label class="control-label" for="searchParams.lastName">{{xwalk('Last Name')}}:</label>
+                    <input user-search-auto-complete type="text" 
+                     placeholder="Search..." 
+                     data-ng-model="lastName"
+                     data-typeahead="entity as entity.lastName + ' - ' +entity.firstName  for entity in filterUsers($viewValue, 20, 'lastName')" 
+                     data-typeahead-wait-ms="200" 
+                     data-typeahead-editable="true" 
+                     data-typeahead-input-formatter="formatUserLastName($model)"
+                     data-typeahead-on-select="changeUserLastName($item)" />  
+                  </span>                              
+                </li>               
+              <li>
+                 <span class="entity-auto-complete">
+                    <label class="control-label" for="searchParams.email">{{xwalk('Email Address')}}:</label>
+                    <input user-search-auto-complete type="text" 
+                     placeholder="Search..." 
+                     data-ng-model="email"
+                     data-typeahead="entity as entity.email  for entity in filterUsers($viewValue, 20, 'email')" 
+                     data-typeahead-wait-ms="200" 
+                     data-typeahead-editable="true" 
+                     data-typeahead-input-formatter="formatUserEmail($model)"
+                     data-typeahead-on-select="changeUserEmail($item)" />  
+                  </span>                              
+                </li> 
+               <li>
+                <span> 
+                    <label class="control-label" for="searchParams.roleAssociations.role">{{xwalk('Role')}}:</label>
+                     <select  data-ng-model="searchParams['roleAssociations.role']"  data-ng-options="userRole.role as userRole.role for userRole in roles | orderBy:'role'"   >
+                      <option value="">Select...</option>
+                    </select>
+                </span>
+            </li>
+            <li>
+                <span> 
+                    <label class="control-label" for="searchParams.roleAssociations.stateAbbreviation">{{xwalk('State Abbreviation')}}:</label>
+                     <select  data-ng-model="searchParams['roleAssociations.stateAbbreviation']"  data-ng-options="id.entityId as id.entityId for id in states | orderBy:'entityId'"  >
+                      <option value="">Select...</option>
+                    </select>
+                </span>
+            </li>
+            <li>
+                <span> 
+                    <label class="control-label" for="searchParams.changeEventExportError">Show Users with Errors:</label>
+                     <select  data-ng-model="searchParams.changeEventExportError" >
+                      <option value="">Select...</option>
+                      <option value="true">Yes</option>
+                    </select>
+                </span>
+            </li>
+            <li><span></span></li>
+			</ul>
+			<button type="button" type="button" class="boxBtn" data-search-on-click	data-active-indicator="searchResponse.searching">
+				<span class="btnIcon icon_sprite icon_reTry2 ng-class:{ajax_indicator:activeIndicator}"></span>
+				<span class="btnText">Search</span>
+			</button>
+			<button type="button" type="button" class="boxBtn"	data-ng-click="addUser()">
+				<span class="btnIcon icon_sprite icon_saveAdd2"></span> <span class="btnText">New</span>
+			</button>	
+			 <div data-export="users"></div>     				
+		</div>
+       
+		<div data-pageable data-paging-info="searchResponse"	data-search-params="searchParams" data-change-page="changePage()">
+			<table class="dataTable">
+				<colgroup>
+					<col>
+					<col>
+					<col>
+                    <col>
+                    <col>
+                    <col>
+                    <col>
+                    <col>
+                    <col class="doubleActionColumn">                    
+				</colgroup>
+				<tr>
+					<th rowspan="2" data-sort-on-click data-sort-column="firstName" class="headerSortUp">{{xwalk('First Name')}}</th>
+					<th rowspan="2" data-sort-on-click data-sort-column="lastName" >{{xwalk('Last Name')}}</th>
+					<th rowspan="2" data-sort-on-click data-sort-column="email" >{{xwalk('Email Address')}}</th>
+					<th rowspan="2" data-sort-on-click data-sort-column="phone" >{{xwalk('Telephone Number')}}</th>
+					<th colspan="4" >{{xwalk('Role Associations')}}</th>
+                    <th rowspan="2"></th>
+				</tr>
+				<tr>
+					<th data-sort-on-click data-sort-column="roleAssociations.role" >{{xwalk('Role')}}</th>
+                    <th data-sort-on-click data-sort-column="roleAssociations.associatedEntityId" >{{xwalk('Associated Entity Name')}}</th>
+					<th data-sort-on-click data-sort-column="roleAssociations.level" >{{xwalk('Responsible Entity Type')}}</th>
+					<th data-sort-on-click data-sort-column="roleAssociations.stateAbbreviation" >{{xwalk('State Abbreviation')}}</th>
+				</tr>
+				<tbody data-ng-repeat="user in searchResponse.searchResults">
+					<tr>
+	    				<td rowspan="{{user.roleAssociations.length+1}}">{{user.firstName}}</td>
+						<td rowspan="{{user.roleAssociations.length+1}}">{{user.lastName}}</td>
+						<td rowspan="{{user.roleAssociations.length+1}}">{{user.email}}</td>
+						<td rowspan="{{user.roleAssociations.length+1}}">{{user.phone}}</td>
+						<td>{{user.roleAssociations[0].role}}</td>
+	                    <td class="ng-class:{ajax_indicator:savingIndicator}">{{user.roleAssociations[0].associatedEntityMongoId | parentNameFilter:user.roleAssociations[0].level:parentEntities}}</td>   					
+						<td>{{user.roleAssociations[0].level}}</td>				
+						<td><span data-ng-show="user.roleAssociations[0].level != 'CLIENT'  && user.roleAssociations[0].level != 'GROUPOFSTATES'">{{getStateAbbreviation(user.roleAssociations[0])}}</span></td>
+                        <td rowspan="{{user.roleAssociations.length+1}}" class="normalSpace">
+                            <div class="tableButtonGroup">
+                                <button data-ng-click="edit(user)" class="boxBtn"><span class="btnIcon icon_sprite icon_edit2"></span></button>
+                                <button data-delete-confirmation="{{user.id}}" class="boxBtn"><span class="btnIcon icon_sprite icon_delete2"></span></button>
+                                <button class="boxBtn" data-ng-click="editProctor(user)" data-ng-show="isUserAProctor(user.roleAssociations)"><span class="btnIcon icon_sprite icon_publisher1"></span></button>
+                            </div>
+                        </td>
+					</tr>
+					<tr data-ng-repeat="roleAssociation in user.roleAssociations">
+	                    <td data-ng-show="$index > 0 ">{{roleAssociation.role}}</td>
+	                    <td data-ng-show="$index > 0 " class="ng-class:{ajax_indicator:savingIndicator}">{{roleAssociation.associatedEntityMongoId | parentNameFilter:roleAssociation.level:parentEntities}}</td>
+	                    <td data-ng-show="$index > 0 ">{{roleAssociation.level}}</td>
+	                    <td data-ng-show="$index > 0 "><span data-ng-show="user.roleAssociations[$index].level != 'CLIENT' && user.roleAssociations[$index].level != 'GROUPOFSTATES'">{{getStateAbbreviation(roleAssociation)}}</span></td>	                    
+	                </tr>
+                </tbody>
+			</table>
+		</div>
+		<div data-load-parent-names></div>
+	</div>
+</div>
+</div>  
+
+</div>
+<div class="clear"></div>

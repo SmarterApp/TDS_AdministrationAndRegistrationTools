@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+    xmlns:context="http://www.springframework.org/schema/context"
+    xmlns:int="http://www.springframework.org/schema/integration"
+    xmlns:aop="http://www.springframework.org/schema/aop" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:mvc="http://www.springframework.org/schema/mvc"
+    xmlns:util="http://www.springframework.org/schema/util"
+    xsi:schemaLocation="
+                http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+                http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
+                http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd
+                http://www.springframework.org/schema/integration http://www.springframework.org/schema/integration/spring-integration-2.1.xsd
+                http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-3.2.xsd
+                http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-3.2.xsd">
+
+    <context:component-scan base-package="org.opentestsystem.delivery.testreg.rest, 
+    									  org.opentestsystem.delivery.testreg.upload, 
+    									  org.opentestsystem.delivery.testreg.upload.validator.fileformat, 
+    									  org.opentestsystem.delivery.testadmin.rest,
+    									  org.opentestsystem.delivery.testreg.rest.view" />
+
+    <bean id="clientRequestFactory" class="org.springframework.http.client.HttpComponentsClientHttpRequestFactory"/>
+
+    <!-- a generic rest Template bean for invoking webservices can be injected into clients -->
+    <bean id="restTemplate" class="org.springframework.web.client.RestTemplate">
+        <constructor-arg ref="clientRequestFactory"/>
+    </bean>
+    
+    <bean id="objectMapper" class="org.springframework.http.converter.json.Jackson2ObjectMapperFactoryBean" >
+        <property name="indentOutput" value="true"/>
+        <property name="simpleDateFormat" value="yyyy-MM-dd'T'HH:mm:ss.SSSZ"/>
+    </bean>
+    
+	
+    <bean class="org.springframework.beans.factory.config.MethodInvokingFactoryBean" >
+        <property name="targetObject" ref="objectMapper"/>
+        <property name="targetMethod" value="registerModule"/>
+        <property name="arguments">
+            <list>
+                <bean class="com.fasterxml.jackson.datatype.joda.JodaModule" />
+            </list>
+        </property>
+    </bean>
+
+    <mvc:annotation-driven validator="sb11GlobalValidator">
+    	<mvc:argument-resolvers>
+    		<bean class="org.opentestsystem.delivery.testreg.upload.validation.ValidatingPathVariableMethodArgumentResolver"/>
+    	</mvc:argument-resolvers>
+        <mvc:message-converters>
+            <bean class="org.springframework.http.converter.StringHttpMessageConverter" />
+            <bean class="org.springframework.http.converter.ResourceHttpMessageConverter" />
+            <bean class="org.springframework.http.converter.json.MappingJackson2HttpMessageConverter">
+                <property name="objectMapper" ref="objectMapper" />
+            </bean>
+        </mvc:message-converters>
+    </mvc:annotation-driven>
+
+    <bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver"/>
+
+
+<util:map id="headersMap" key-type="java.lang.String" value-type="java.lang.String[]">
+    <entry key="STATE"          value="State Abbreviation, State Name, Parent Entity Type, Parent Entity Name"/>
+    <entry key="DISTRICT"       value="Local Education Agency Identifier, Organization Name, NCESLEAID, Parent Entity Type, Parent Entity Name, State Abbreviation"/>
+    <entry key="INSTITUTION"    value="Institution Identifier, Name of Institution, Parent Entity Type, NCES InstitutionId, Parent Entity Name, State Abbreviation"/>
+    <entry key="GROUPOFSTATES"  value="Group Of States Identifier, Group Of States Name, Parent Entity Type, Parent Entity Name"/>
+    <entry key="GROUPOFDISTRICTS"  value="Group Of Districts Identifier, Group Of Districts Name, Parent Entity Type, Parent Entity Name, State Abbreviation"/>
+    <entry key="GROUPOFINSTITUTIONS"    value="Group Of Institutions Identifier, Group Of Institutions Name, Parent Entity Type, Parent Entity Name, State Abbreviation"/>
+    <entry key="USER"           value="First Name, Last Or Surname, Email Address, Telephone Number, Role, Associated Entity Name, Level, State Abbreviation"/>
+    <entry key="ACCOMMODATIONS"   value="Student Identifier,State Abbreviation,Subject,American Sign Language,Color Contrast,Closed Captioning,Language,Masking,Permissive Mode,Print On Demand,Print Size,Streamlined Interface,Text to Speech,Translation,Non Embedded Designated Supports,Non Embedded Accommodations,Other"/>
+    <entry key="STUDENT" 		 value="State Abbreviation, Responsible District Identifier, Responsible Institution Identifier, Last Or Surname, First Name, Middle Name, Birth Date, SSID, Alternate SSID, Grade Level When Assessed, Sex, Hispanic Or Latino Ethnicity, American Indian Or Alaska Native, Asian, Black Or African American, White, Native Hawaiian Or Other Pacific Islander, Demographic Race Two Or More Races, IDEA Indicator, LEP Status, Section 504 Status, Economic Disadvantage Status, Language Code, English Language Proficiency Level, Migrant Status, First Entry Date Into US School, Limited English Proficiency Entry Date, LEP Exit Date, Title III Language Instruction Program Type, Primary Disability Type"/>
+    <entry key="STUDENTGROUP"          value="Student Group Name, Organization Name, Name of Institution, Student Identifier, State Abbreviation, Email Address"/>   
+    <entry key="ASSESSMENT"		 value="Assessment Identifier, Assessment Name, Assessment Begin Window, Assessment End Window, Number Of Test Opportunities, Subject Code, Version, Delay Rule, Number of Global Opportunities, Eligibility Type, Academic Year, Grade"/>
+</util:map> 
+<util:map id="reportHeaders" key-type="java.lang.String" value-type="java.lang.String[]">
+    <entry key="PARTICIPATION_CLIENT_REPORT"    value="No,Date,TestName,Test Label,Parent Entity Id,Parent Entity Name,Parent Type,ClientId,ClientName,Total Students,Students Not Started,% NotStarted,Students Started,% Started, Students Completed,% Completed,Students OptedOut,% OptedOut"/>
+    <entry key="PARTICIPATION_GROUPOFSTATES_REPORT"    value="No,Date,TestName,Test Label,Parent Entity Id,Parent Entity Name,Parent Type,Group Of States Identifier,Group Of States Name,Total Students,Students Not Started,% NotStarted,Students Started,% Started, Students Completed,% Completed,Students OptedOut,% OptedOut"/>
+    <entry key="PARTICIPATION_STATE_REPORT"    value="No,Date,TestName,Test Label,Parent Entity Id,Parent Entity Name,Parent Type,State Abbreviation,State Name,Total Students,Students Not Started,% NotStarted,Students Started,% Started, Students Completed,% Completed,Students OptedOut,% OptedOut"/>
+    <entry key="PARTICIPATION_GROUPOFDISTRICTS_REPORT"     value="No,Date,TestName,Test Label,Parent EntityId,ParentEntityName,ParentType,Group Of Districts Identifier,Group Of Districts Name,Total Students,Students Not Started,% NotStarted,Students Started,% Started, Students Completed,% Completed,Students OptedOut,% OptedOut"/>
+    <entry key="PARTICIPATION_DISTRICT_REPORT"     value="No,Date,TestName,Test Label,Parent Entity Id,Parent Entity Name,Parent Type,Local Education Agency Identifier,Organization Name,Total Students,Students Not Started,% NotStarted,Students Started,% Started, Students Completed,% Completed,Students OptedOut,% OptedOut"/>
+    <entry key="PARTICIPATION_GROUPINSTITUTIONS_REPORT"    value="No,Date,TestName,Test Label,Parent Entity Id,Parent Entity Name,Parent Type,Group Of Institutions Identifier,Group Of Institutions Name,Total Students,Students Not Started,% NotStarted,Students Started,% Started, Students Completed,% Completed,Students OptedOut,% OptedOut"/>
+    <entry key="PARTICIPATION_INSTITUTION_REPORT"    value="No,Date,TestName,Test Label,Parent Entity Id,Parent Entity Name,Parent Type,Institution Identifier,Name of Institution,Total Students,Students Not Started,% NotStarted,Students Started,% Started, Students Completed,% Completed,Students OptedOut,% OptedOut"/>
+    
+    <entry key="PARTICIPATION_DETAIL_REPORT"    value="No,Last name,First name,Middle initial,SSID,Test name,Test Label,Opportunity,Status,Date,Time"/>
+    <entry key="STUDENT_SCHEDULE_REPORT"    value="No,Last name,First name,Middle initial,SSID,Test name,Test Label,Accessibility Equipments,Date,Time,Location"/>
+    <entry key="PROCTOR_SCHEDULE_REPORT"    value="No,Last Name,First Name,Email Address,Date,Time Range,Location"/>    
+</util:map> 
+
+	<bean class="org.springframework.web.servlet.view.ContentNegotiatingViewResolver">
+			<property name="order" value="1" />
+			<property name="contentNegotiationManager" ref="contentNegotiationManagerBean"/>
+			<property name="defaultViews">
+				<list>
+					<bean class="org.opentestsystem.delivery.testreg.rest.view.ExcelView" />
+					<bean class="org.opentestsystem.delivery.testreg.rest.view.CSVView" />
+					<bean class="org.opentestsystem.delivery.testreg.rest.view.PDFReportView" />
+					<bean class="org.springframework.web.servlet.view.json.MappingJackson2JsonView">
+						<property name="extractValueFromSingleKeyModel" value="true" />
+						<property name="modelKeys">
+                        	<set>
+                        		<value>DATA_LIST</value>
+                        	</set>
+                        	</property>
+  					</bean>
+				</list>
+			</property>	
+	</bean>
+ 	<bean id="contentNegotiationManagerBean" class="org.springframework.web.accept.ContentNegotiationManagerFactoryBean">
+		<property name="favorPathExtension" value="true" />
+		<property name="favorParameter" value="true" />
+        <property name="defaultContentType" value="application/json" />
+        <property name="ignoreAcceptHeader" value="true" />		
+	    <property name="mediaTypes">
+			<map>
+				<entry key="xls" value="application/vnd.ms-excel" />
+				<entry key="csv" value="text/csv" />
+				<entry key="json" value="application/json" />
+				<entry key="pdf" value="application/pdf" />
+		    </map>
+		</property>
+	</bean>  
+    
+    <bean id="messageSource" class="org.springframework.context.support.ResourceBundleMessageSource">
+        <property name="basename" value="messages" />
+    </bean>
+    
+    <bean id="conversionService" class="org.springframework.context.support.ConversionServiceFactoryBean"/>
+    
+    <bean id="fileUploadUtils" class="org.opentestsystem.delivery.testreg.upload.FileUploadUtils"/>
+    
+    <bean id="entityBasedExcelParser" class="org.opentestsystem.delivery.testreg.upload.parser.TestRegistrationEntityBasedExcelFileParser"/>
+    
+    <bean id="entityBasedTextParser" class="org.opentestsystem.delivery.testreg.upload.parser.TestRegistrationEntityBasedTextFileParser"/>
+    
+    <util:map id="entityBasedParserMap" key-type="org.opentestsystem.delivery.testreg.rest.FileType">
+    	<entry key="TXT"  value-ref="entityBasedTextParser"/>
+    	<entry key="XLSX" value-ref="entityBasedExcelParser"/>
+    </util:map>
+    
+    <bean id="excelFileAppender" class="org.opentestsystem.delivery.testreg.upload.ExcelFileAppender"/>
+    <bean id="textFileAppender" class="org.opentestsystem.delivery.testreg.upload.TextFileAppender"/>
+    
+    <util:map id="fileAppenderMap" key-type="org.opentestsystem.delivery.testreg.rest.FileType">
+    	<entry key="TXT"  value-ref="textFileAppender"/>
+    	<entry key="XLSX" value-ref="excelFileAppender"/>
+    </util:map>
+    
+    <bean id="fileFormatTypeAppender" class="org.opentestsystem.delivery.testreg.upload.FileFormatTypeAppender"/>
+ 
+</beans>

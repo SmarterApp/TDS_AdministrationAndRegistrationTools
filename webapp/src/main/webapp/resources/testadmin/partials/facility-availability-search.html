@@ -1,0 +1,79 @@
+<div  data-ng-include src='"resources/testadmin/partials/leftnav.html"'></div>
+<div class="secContent"> 
+<span class="boxIcon icon_sprite icon_view1"></span>
+<div data-ng-repeat="error in errors">
+     <div><span class="icon_sprite icon_error error"></span>{{error}}</div>
+</div>
+
+<div class="boxTitle"><h2> Facility  Availability Search</h2></div>
+<div>
+	<div data-searchable data-search-url="'facilityAvailability'"  data-search-params="searchParams" data-search-response="searchResponse">
+		<div class="fieldGroup">
+			<h5>Search Filters</h5>
+			<ul>
+	            <li>
+	                <span> 
+	                    <label class="control-label" for="facilityAvailability.facilityName" >Name:</label>
+	                     <input type="text" name="facilityAvailability.facilityName" data-ng-model="searchParams.facilityName" />
+	                </span>
+	            </li>
+	            <li>
+	                <span class="district-auto-complete">
+	                    <label class="control-label" for="facility.institutionIdentifier">{{xwalk('Institution Identifier')}}:</label>
+	                    <input data-institution-auto-complete-schedule type="text" 
+	                    placeholder="Search..." 
+	                    data-ng-model="institution"
+	                    data-typeahead="entity as entity.entityId + ' - ' + entity.entityName for entity in filterInstitutions($viewValue, 10)" 
+	                    data-typeahead-wait-ms="200" 
+	                    data-typeahead-editable="true" 
+	                    data-typeahead-input-formatter="formatInstitutionLabel($model)"
+	                    data-typeahead-on-select="changeInstitution({institution:$item})" />  
+	                 </span>               
+	            </li> 	            
+			</ul>        			
+			<button type="button" type="button" class="boxBtn" data-search-on-click	data-active-indicator="searchResponse.searching">
+				<span class="btnIcon icon_sprite icon_reTry2 ng-class:{ajax_indicator:activeIndicator}"></span>
+				<span class="btnText">Search</span>
+			</button>
+			<button type="button" type="button" class="boxBtn"	data-ng-click="createNew()">
+				<span class="btnIcon icon_sprite icon_saveAdd2"></span> <span class="btnText">New</span>
+			</button>
+		</div>
+        
+		<div data-pageable data-paging-info="searchResponse"	data-search-params="searchParams" data-change-page="changePage()">
+			<table class="dataTable">
+				<colgroup>
+					<col>
+					<col>
+					<col>
+					<col>
+					<col>
+					<col class="doubleActionColumn">
+				</colgroup>
+				<tr>
+					<th data-sort-on-click data-sort-column="facilityName" class="headerSortUp">Facility Name</th>
+					<th data-sort-on-click data-sort-column="institutionIdentifier" >{{xwalk('Institution Identifier')}}</th>
+					<th data-sort-on-click data-sort-column="fromDate" >From Date</th>
+					<th data-sort-on-click data-sort-column="fromDate" >To Date</th>
+					<th data-sort-on-click data-sort-column="status" >Availability</th>
+                    <th></th>
+				</tr>
+				<tr data-ng-repeat="facilityAvailability in searchResponse.searchResults" >
+					<td>{{facilityAvailability.facilityName}}</td>
+					<td>{{facilityAvailability.institutionIdentifier}}</td>
+					<td>{{formatDate(facilityAvailability.fromDate)}}</td>
+					<td>{{formatDate(facilityAvailability.toDate)}}</td>
+					<td>{{facilityAvailability.availability}}</td>
+			      <td class="normalSpace">
+                        <div class="tableButtonGroup">
+                            <button data-ng-click="edit(facilityAvailability)" class="boxBtn"><span class="btnIcon icon_sprite icon_edit2"></span></button>
+                            <button data-delete-confirmation="{{facilityAvailability.id}}" class="boxBtn"><span class="btnIcon icon_sprite icon_delete2"></span></button>                          
+                        </div>
+                    </td>
+				</tr>
+			</table>
+		</div>
+	</div>
+</div>
+</div>
+<div class="clear"></div>

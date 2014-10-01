@@ -1,0 +1,47 @@
+
+<div class="modal">
+	<div class="modal-dialog" style="width:750px">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h4 class="modal-title">
+					<span class="glyphicon glyphicon-star"></span> Select Seat Configuration
+				</h4>
+			</div>
+			 <div data-ng-repeat="error in errors">
+                <div><span class="icon_sprite icon_error error"></span>{{error}}</div>
+            </div>
+			<div class="modal-body">
+				<ng-form name="seatDialogForm">
+			        <div class="tableWrapper">
+			            <table class="dataTable" style="width:100%;margin:auto">
+			                <colgroup>	                
+			                    <col style="width:20%">
+			                    <col style="width:20%">
+                                <col style="width:20%">
+                                <col>			                    
+			                </colgroup>
+			                <tr>
+			                    <th>Select</th>
+			                    <th>Remaining Number of Seats</th>
+			                    <th>Test Platform</th>
+			                    <th>Accessibility Equipment</th>
+			                </tr>
+			                <tr data-ng-repeat="seatConfig in seatConfigurations">
+			                     <td style="text-align:center"><input name="selectedSeatConfig" 
+			                     	data-ng-disabled="seatConfig.remainingSeats==0"
+			                     	class="addSeat" type="radio" data-ng-click="selectASeatConfig(selectedSeatConfig)" data-ng-model="selectedSeatConfig" value="{{seatConfig.testPlatform + '&' + seatConfig.accessibilityEquipments}}"/>
+			                     <td>{{seatConfig.remainingSeats}}</td>
+			                     <td>{{seatConfig.testPlatform}}</td>
+			                     <td>{{seatConfig.accessibilityEquipments}}</td>
+			                </tr>
+			            </table> 
+				    </div>
+				</ng-form>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-default" data-ng-click="cancel()">Cancel</button>
+				<button type="button" class="btn btn-primary" data-ng-click="selectSeat()">OK</button>
+			</div>
+		</div>
+	</div>
+</div>

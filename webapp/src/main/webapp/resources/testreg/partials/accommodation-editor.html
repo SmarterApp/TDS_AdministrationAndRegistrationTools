@@ -1,0 +1,125 @@
+
+<div class="tableWrapper"> 
+    <h5 class="h5Accommodations">{{entityNameLabels['Accommodations']}}</h5>
+    <table class="accommodationTable">
+           <colgroup>
+               <col class="actionColumn">
+               <col>
+               <col>
+               <col>
+               <col>
+               <col>
+               <col>
+               <col>
+               <col>
+               <col>                              
+               <col>
+           </colgroup>
+           <tr>
+               <th>
+                   <div class="tableButtonGroup">
+                        <button data-ng-click="addItem()" class="boxBtn" data-ng-disabled="isDisabled"><span class="btnIcon icon_sprite icon_saveAdd2"></span></button>
+                   </div>
+               </th>
+               <th data-ng-class="{'control-label-required' : student.accommodations && student.accommodations.length > 0}">{{accommodationXwalk('Subject')}}</th>
+               <th>{{accommodationXwalk('American Sign Language')}}</th>
+               <th>{{accommodationXwalk('Color Contrast')}}</th>
+               <th>{{accommodationXwalk('Closed Captioning')}}</th>
+               <th>{{accommodationXwalk('Language')}}</th>
+               <th>{{accommodationXwalk('Masking')}}</th>
+               <th>{{accommodationXwalk('Permissive Mode')}}</th>
+               <th>{{accommodationXwalk('Print On Demand')}}</th>
+               <th>{{accommodationXwalk('Print Size')}}</th>
+               <th>{{accommodationXwalk('Streamlined Interface')}}</th>
+               <th>{{accommodationXwalk('Text to Speech')}}</th>
+               <th>{{accommodationXwalk('Translation')}}</th>
+               <th>{{accommodationXwalk('Non-Embedded Designated Supports')}}</th>
+               <th>{{accommodationXwalk('Non-Embedded Accommodations')}}</th>
+               <th>{{accommodationXwalk('Other')}}</th>
+           </tr>
+           
+           <tr data-ng-repeat="accommodation in student.accommodations">              
+               <td class="normalSpace">
+                   <div class="tableButtonGroup">
+                        <button data-ng-click="removeAccommodation($index)" class="boxBtn" ><span class="btnIcon icon_sprite icon_delete2"></span></button>
+                   </div>
+               </td>           
+               <td>                     
+                    <input type="hidden" data-ng-model="accommodation.studentId"  value={{student.entityId}}/>
+                    <input type="hidden" data-ng-model="accommodation.stateAbbreviation" value="{{student.stateAbbreviation}}"/>
+                    <select  data-ng-model="accommodation.subject" data-ng-options="subject for subject in subjects[$index]" data-ng-change="refreshSubject(accommodation.subject,$index)">
+                      <option value="">Select...</option>
+                    </select> 
+               </td>
+               <td>                     
+                    <select  data-ng-model="accommodation.americanSignLanguage" data-ng-options="asl.name as asl.description for asl in americanSignLanguage" >
+                      <option value="">Select...</option>
+                    </select> 
+               </td>
+               <td>                     
+                    <select  data-ng-model="accommodation.colorContrast" data-ng-options="color.name as color.description for color in colorContrast" >
+                      <option value="">Select...</option>
+                    </select> 
+               </td>
+               <td>                     
+                    <select  data-ng-model="accommodation.closedCaptioning" data-ng-options="caption.name as caption.description for caption in closedCaptioning" >
+                      <option value="">Select...</option>
+                    </select> 
+               </td>   
+               <td>                     
+                    <select  data-ng-model="accommodation.language" data-ng-options="lang.name as lang.description for lang in language" >
+                      <option value="">Select...</option>
+                    </select> 
+               </td>
+               <td>                     
+                    <select  data-ng-model="accommodation.masking" data-ng-options="mask.name as mask.description for mask in masking" >
+                      <option value="">Select...</option>
+                    </select> 
+               </td>
+               <td>                     
+                    <select  data-ng-model="accommodation.permissiveMode" data-ng-options="permissive.name as permissive.description for permissive in permissiveMode" >
+                      <option value="">Select...</option>
+                    </select> 
+               </td>
+               <td>                     
+                    <select  data-ng-model="accommodation.printOnDemand" data-ng-options="printDem.name as printDem.description for printDem in printOnDemand" >
+                      <option value="">Select...</option>
+                    </select> 
+               </td>
+               <td>                     
+                    <select  data-ng-model="accommodation.printSize" data-ng-options="prntSize.name as prntSize.description for prntSize in printSize" >
+                      <option value="">Select...</option>
+                    </select> 
+               </td>
+               <td>                     
+                    <select  data-ng-model="accommodation.streamlinedInterface" data-ng-options="stream.name as stream.description for stream in streamlinedInterface" >
+                      <option value="">Select...</option>
+                    </select> 
+               </td>
+               <td>                     
+                    <select  data-ng-model="accommodation.textToSpeech" data-ng-options="tts.name as tts.description for tts in textToSpeech" >
+                      <option value="">Select...</option>
+                    </select> 
+               </td>   
+               <td>                     
+                    <select  data-ng-model="accommodation.translation" data-ng-options="translate.name as translate.description for translate in translation" >
+                      <option value="">Select...</option>
+                    </select> 
+               </td>
+               <td>                     
+                    <select  data-ng-model="accommodation.nonEmbeddedDesignatedSupports" data-ng-options="supports.name as supports.description for supports in nonEmbeddedDesignatedSupports" >
+                      <option value="">Select...</option>
+                    </select> 
+               </td>
+               <td>                     
+                    <select  data-ng-model="accommodation.nonEmbeddedAccommodations" data-ng-options="nonembedaccomm.name as nonembedaccomm.description for nonembedaccomm in nonEmbeddedAccommodations" >
+                      <option value="">Select...</option>
+                    </select> 
+               </td>
+               <td>
+                    <input type="text" data-ng-model="accommodation.other"/>
+               </td>
+                                                                                                                                                    
+           </tr>
+    </table>
+</div>

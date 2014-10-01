@@ -1,0 +1,117 @@
+ <div  data-ng-include src='"resources/testreg/partials/leftnav.html"'></div>
+
+ <div class="secContent"> 
+ <span class="boxIcon icon_sprite icon_view1"></span>
+<div data-ng-repeat="error in errors">
+    <div><span class="icon_sprite icon_error error"></span>{{error}}</div>
+</div>
+
+
+<div class="boxTitle"><h2>{{entityNameLabels['StudentGroups']}} Search</h2></div>
+<div>
+    <div data-searchable data-search-url="'studentGroups'" data-search-post-process="postProcess(response)" data-search-params="searchParams" data-search-response="searchResponse">
+        <div class="fieldGroup">
+            <h5>Search Filters</h5>
+            <ul>
+            <li>
+                <span> 
+                    <label class="control-label" for="searchParams.stateAbbreviation">{{xwalk('State Abbreviation')}}:</label>
+                     <select  data-ng-model="searchParams.stateAbbreviation" data-ng-change="loadDistricts(state.entityId)" data-ng-options="state.entityId as state.entityId for state in states | orderBy:'entityId'" >
+                      <option value="">Select...</option>
+                    </select>
+                </span>
+            </li>      
+            <li>
+                <span> 
+                    <label class="control-label" for="searchParams.studentGroupName">{{xwalk('Student Group Name')}}:</label>
+                    <input type="text" name="entityId" data-ng-model="searchParams.studentGroupName" />
+                </span>
+            </li>                 
+            <li>
+                <span class="district-auto-complete">
+                    <label class="control-label" for="searchParams.districtIdentifier">{{xwalk('Responsible District Identifier')}}:</label>
+				    <input data-district-auto-complete-student-group type="text" 
+				    placeholder="Search..." 
+				    data-ng-model="district"
+				    data-typeahead="entity as entity.entityId + ' - ' + entity.entityName for entity in filterDistricts($viewValue, 10)" 
+				    data-typeahead-wait-ms="200" 
+				    data-typeahead-editable="true" 
+				    data-typeahead-input-formatter="formatDistrictLabel($model)"
+				    data-typeahead-on-select="changeDistrict({district:$item})" />  
+				 </span>               
+            </li>     
+            <li>
+                <span class="district-auto-complete">
+                    <label class="control-label" for="searchParams.institutionIdentifier">{{xwalk('Institution Identifier')}}:</label>
+                    <input data-institution-auto-complete-student-group type="text" 
+                    placeholder="Search..." 
+                    data-ng-model="institution"
+                    data-typeahead="entity as entity.entityId + ' - ' + entity.entityName for entity in filterInstitutions($viewValue, 10)" 
+                    data-typeahead-wait-ms="200" 
+                    data-typeahead-editable="true" 
+                    data-typeahead-input-formatter="formatInstitutionLabel($model)"
+                    data-typeahead-on-select="changeInstitution({institution:$item})" />  
+                 </span>               
+            </li>                     
+            <li>
+                <span> 
+                    <label class="control-label" for="searchParams.ownerEmail">{{xwalk('Owner Email')}}:</label>
+                    <input type="text" name="ownerEmail" data-ng-model="searchParams.ownerEmail" />
+                </span>
+            </li>                       
+            <li><span></span></li>
+            </ul>
+            <button type="button" type="button" class="boxBtn" data-search-on-click  data-active-indicator="searchResponse.searching">
+                <span class="btnIcon icon_sprite icon_reTry2 ng-class:{ajax_indicator:activeIndicator}"></span>
+                <span class="btnText">Search</span>
+            </button>
+            <button type="button" type="button" class="boxBtn"  data-ng-click="createNew()">
+                <span class="btnIcon icon_sprite icon_saveAdd2"></span> <span class="btnText">New</span>
+            </button>	
+            <div data-export="studentGroups"></div>	            
+        </div>
+        
+        <div data-pageable data-paging-info="searchResponse"  data-search-params="searchParams" data-change-page="changePage()">
+            <table class="dataTable">
+                <colgroup>
+                    <col>
+                    <col>
+                    <col>
+                    <col>
+                    <col> 
+                    <col>
+                    <col>    
+                    <col class="doubleActionColumn">                         
+                </colgroup>
+                <tr>
+                    <th data-sort-on-click data-sort-column="studentGroupName" class="headerSortUp fixedWidth80" >{{xwalk('Student Group Name')}}</th>
+                    <th data-sort-on-click data-sort-column="districtIdentifier" class="fixedWidth100">{{xwalk('Organization Name')}}</th>
+                    <th data-sort-on-click data-sort-column="institutionIdentifier" >{{xwalk('Name of Institution')}}</th>
+                    <th data-sort-on-click data-sort-column="stateAbbreviation" style="width:100px">{{xwalk('State Abbreviation')}}</th>
+                    <th data-sort-on-click data-sort-column="ownerEmail" >{{xwalk('Email')}}</th>    
+                    <th>{{xwalk('First Name')}}</th>                        
+                    <th>{{xwalk('Last Name')}}</th>    
+                    <th></th>                                 
+                </tr>
+                <tr data-ng-repeat="studentGroup in searchResponse.searchResults">
+                    <td>{{studentGroup.studentGroupName}}</td>                               
+                    <td class="ng-class:{ajax_indicator:savingIndicator}">{{studentGroup.districtEntityMongoId | parentNameFilter:"DISTRICT":parentEntities}}</td>
+                    <td class="ng-class:{ajax_indicator:savingIndicator}">{{studentGroup.institutionEntityMongoId | parentNameFilter:"INSTITUTION":parentEntities}}</td>
+                    <td>{{studentGroup.stateAbbreviation}}</td>
+                    <td>{{studentGroup.ownerEmail}}</td>       
+                    <td>{{getFirstName(studentGroup)}}</td>
+                    <td>{{getLastName(studentGroup)}}</td>       
+                    <td class="normalSpace">
+                        <div class="tableButtonGroup">
+                            <button data-ng-click="edit(studentGroup)" class="boxBtn"><span class="btnIcon icon_sprite icon_edit2"></span></button>
+                            <button data-delete-confirmation="{{studentGroup.id}}" class="boxBtn"><span class="btnIcon icon_sprite icon_delete2"></span></button>
+                        </div>
+                    </td>                              
+                </tr>
+            </table>
+        </div>
+        <div data-load-parent-names></div>
+    </div>
+</div>
+</div>  
+<div class="clear"></div>
