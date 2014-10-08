@@ -154,7 +154,7 @@ testreg.directive("sortOnClick", function(){
 	};
 });
 
-testreg.directive("export", function($window,EntityService){
+testreg.directive("export", function($window, $timeout, EntityService){
 	return {
 		restrict:"A",
 		transclude :true,
@@ -174,10 +174,11 @@ testreg.directive("export", function($window,EntityService){
 	  		$scope.exportAllResults = function(fileType) {
 	  			EntityService.getExportLimit().then(function(response){
 	  				$scope.pageLimit=response;
-
 	  			});
-	  			var  endpoint = $attrs.export + "." + fileType + '?pageSize='+$scope.pageLimit;
-	  			$window.open(baseUrl + endpoint);
+                $timeout(function() {
+    	  			var  endpoint = $attrs.export + "." + fileType + '?pageSize='+$scope.pageLimit;
+    	  			$window.open(baseUrl + endpoint);
+                }, 300);
 	  		};
 		},
 		link:function(scope, element, attrs){}
@@ -775,6 +776,348 @@ testreg.directive("loadParentNames", function($timeout ,EntityService){
 		link:function(scope, element, attrs){
 		}
 	};
+});
+
+testreg.directive('accessibleTable', function() {
+	return {
+		restrict: 'A',
+		scope: true,
+		link: function(scope, el) {
+			
+			var isMenu = false;
+			var keys = {left: 37, up: 38, right: 39, down: 40};
+			var parentTypes = [];
+			
+			var siblingIndex = 0;
+			
+			var firstVisibleField = function(node, tdIndex, leftNav) {
+				if (tdIndex !== undefined) {
+					node = node.children[tdIndex];
+				}
+				if (node) {
+					var descendants = node.getElementsByTagName('*');
+					if(leftNav) {
+						for (var i = descendants.length - 1; i >= 0; i--) {
+							if ((descendants[i].nodeName === 'INPUT' || descendants[i].nodeName === 'BUTTON' || descendants[i].nodeName === 'SELECT')
+									&& descendants[i].offsetHeight > 0 && descendants[i].offsetWidth > 0 && !descendants[i].disabled) {
+								siblingIndex = i;
+								return descendants[i];
+							}
+						}
+					} else {
+						for (var i = 0; i < descendants.length; i++) {
+							if ((descendants[i].nodeName === 'INPUT' || descendants[i].nodeName === 'BUTTON' || descendants[i].nodeName === 'SELECT')
+									&& descendants[i].offsetHeight > 0 && descendants[i].offsetWidth > 0 && !descendants[i].disabled) {
+								siblingIndex = i;
+								return descendants[i];
+							}
+						}
+					}
+				}
+				return undefined;
+			}
+			
+			scope.focusNext = function(event, node, startInput) {
+				var key = event.which;
+				event.preventDefault();
+			
+				// check for siblings
+				var sibling = startInput;
+				var fieldFound = false;
+				do {
+					sibling = (key === keys.left || key === keys.up ? sibling.previousElementSibling : sibling.nextElementSibling);
+					
+					angular.forEach(parentTypes, function(parentType) {
+						if(sibling != null && sibling.nodeName === parentType && sibling.offsetHeight > 0 && sibling.offsetWidth > 0 && !sibling.disabled) {
+							fieldFound = true;
+						}
+					});
+				} while(sibling != null && !fieldFound);
+				
+				if(sibling != null) {
+					destinationInput = sibling;
+					
+				} else {
+					//walk along the TDs until we find one that has a visible input within it
+					var parentNodeName = 'TD';
+					if(isMenu) {
+						parentNodeName = 'DIV';
+					}
+					do {
+						node = (key === keys.left ? node.previousElementSibling : node.nextElementSibling);
+						if (node && node.nodeName === parentNodeName) {
+							siblingIndex = 0;
+							destinationInput = firstVisibleField(node, undefined, key === keys.left);
+						} else {
+							return;  //no more TDs available - we're done here
+						}
+					} while (!destinationInput);
+				}
+				return destinationInput;
+			};
+		  
+			el.bind('keydown', function(event) {
+				var key = event.which;
+			  
+				//start at the currently focused element, must be an input for this to continue
+				var startInput = document.activeElement;
+				if(startInput.nodeName == 'LI') {
+					parentTypes = ["DIV", "LI"];
+					isMenu = true;
+				} else if (startInput.nodeName !== 'INPUT' && startInput.nodeName !== 'BUTTON' && startInput.nodeName !== 'SELECT') {
+					return;
+				} else {
+					parentTypes = ["INPUT", "BUTTON", "SELECT"];
+				}
+				
+				var destinationInput;
+				var node = startInput;
+				var count = 0;
+				var parentNodeName = 'TD';
+				if(isMenu) {
+					parentNodeName = 'DIV';
+				}
+			  
+				//look for the startInput's TD
+				do {
+					node = node.parentNode;
+					count++;
+				} while (node && node.nodeName !== parentNodeName || count == 10);
+				
+				if (!node) {
+					return;  //ill-formed html
+				}
+
+				// keys.left, keys.right
+				if (key === keys.left || key === keys.right) {				  				  		
+					destinationInput = scope.focusNext(event, node, startInput);
+					
+				// keys.down, keys.up
+				} else if (key === keys.up || key === keys.down) {
+					if(isMenu) {
+						destinationInput = scope.focusNext(event, node, startInput);
+					} else {
+						event.preventDefault();
+						
+						var tdIndex = node.cellIndex;
+						var count = 0;
+	
+						do { //find the TR
+							node = node.parentNode;
+							count++;
+						} while (node && node.nodeName !== 'TR' || count == 10);
+						
+						if (!node) {
+							return;  //ill-formed html
+						}
+	
+						do {
+							node = (key === keys.up ? node.previousElementSibling : node.nextElementSibling);
+							if (node && node.nodeName === 'TR') {
+								destinationInput = firstVisibleField(node, tdIndex);
+							} else {
+								return;  //no more rows or ill-formed html
+							}
+						} while (!destinationInput);
+					}
+				}
+
+				if (destinationInput) {
+					destinationInput.focus();
+					if(!isMenu) {
+						startInput.setAttribute("tabindex", "-1");
+						destinationInput.setAttribute("tabindex", "0");
+					}
+				}
+			})
+		}
+	}
+});
+
+testreg.directive('dragDrop', function() {
+	return {
+		restrict: 'A',
+        
+        controller : function($scope, $attrs) {
+			
+            $scope.getSelectedRow = function(eventTarget) {
+            	var selectedRow = eventTarget;
+            	while(selectedRow.parentNode != null && selectedRow.attributes["draggable"] == null) {
+            		selectedRow = selectedRow.parentNode;
+            	}
+            	return selectedRow; 
+            };
+        	
+        	$scope.toggleDragged = function(index, event, sortedList) {
+        		var selectedRow = $scope.getSelectedRow(event.target);
+  				
+	  			switch(event.keyCode) {
+	  			
+	  			case 32:  // Space
+	  				if(selectedRow.getAttribute("aria-grabbed") == "true") {
+	  	  				selectedRow.setAttribute("aria-grabbed", false);
+	  	  				selectedRow.setAttribute("aria-droppeffect", "none");
+	  	  				selectedRow.className = selectedRow.className.replace(/\ draggable\b/, "");
+	  				} else {
+	  	  				selectedRow.setAttribute("aria-grabbed", true);
+	  	  				selectedRow.setAttribute("aria-droppeffect", "move");
+	  	  				selectedRow.className += " draggable";
+	  				}
+	  				break;
+	  				
+	  			case 37 :  // Left arrow
+				case 38 :  // Up arrow
+					var previousSibling = selectedRow.previousElementSibling;
+					if (previousSibling != null) {
+						if(selectedRow.getAttribute("aria-grabbed") == "true") {
+							previousSibling = selectedRow.previousElementSibling;
+							if (previousSibling != null) {
+								var selectedObject = sortedList[index];
+								var previousObject = sortedList[index - 1];
+								
+								if(selectedObject != null && previousObject != null && index > 0) {
+									sortedList[index] = previousObject;
+									sortedList[index - 1] = selectedObject;
+									$scope.sortChanged = true;
+									index++;
+								}
+							}
+						} else {
+							previousSibling.focus();
+						}
+					}
+					event.preventDefault();
+					break;
+				
+				case 39 :  // Right arrow
+				case 40 :  // Down arrow
+					var nextSibling = selectedRow.nextElementSibling;
+					if (nextSibling != null) {
+						if(selectedRow.getAttribute("aria-grabbed") == "true") {
+							nextSibling = selectedRow.nextElementSibling;
+							if (nextSibling != null) {
+								var selectedObject = sortedList[index];
+								var nextObject = sortedList[index + 1];
+								
+								if(selectedObject != null && nextObject != null && index < sortedList.length) {
+									sortedList[index] = nextObject;
+									sortedList[index + 1] = selectedObject;
+									$scope.sortChanged = true;
+									index++;
+								}
+							}
+						} else {
+							nextSibling.focus();
+						}
+					}
+					event.preventDefault();
+					break;
+	  				
+	  			case 27:  // Escape
+	  			case 9:  // Tab
+	  				selectedRow.setAttribute("aria-grabbed", false);
+	  				selectedRow.setAttribute("aria-droppeffect", "none");
+	  				selectedRow.className = selectedRow.className.replace(/\ draggable\b/, "");
+	  				break;
+	  			}
+        	};
+        	
+        	$scope.unfocusDragged = function(event) {
+        		var selectedRow = $scope.getSelectedRow(event.target);
+				selectedRow.setAttribute("aria-grabbed", false);
+				selectedRow.setAttribute("aria-droppeffect", "none");
+				selectedRow.className = selectedRow.className.replace(/\ draggable\b/, "");
+        	};
+		},
+        
+		link:function(scope, element, attrs){
+
+		}
+	}
+});
+
+testreg.directive('widgetNavigation', function() {
+	return {
+		restrict: 'A',
+		scope: true,
+		
+		controller: function($scope, $attrs) {
+			$scope.focusElement = function(elementId) {
+				var foundElement = document.getElementById(elementId);
+				document.getElementById(elementId).focus();
+			};
+		},
+        
+		link:function(scope, element) {
+			
+			scope.processPreviousSibling = function(previousSibling) {
+				if(previousSibling && previousSibling.getAttribute("class") != null) {
+					var hidden = previousSibling.getAttribute("class").indexOf("ng-hide") > -1;
+					
+					if(hidden) {
+						scope.processPreviousSibling(previousSibling.previousElementSibling);
+					} else {
+						event.target.setAttribute("tabindex", -1);
+						previousSibling.setAttribute("tabindex", 0);
+						previousSibling.focus();
+					}
+				}
+			};
+			
+			scope.processNextSibling = function(nextSibling) {
+				if(nextSibling && nextSibling.getAttribute("class") != null) {
+					var hidden = nextSibling.getAttribute("class").indexOf("ng-hide") > -1;
+					
+					if(hidden) {
+						scope.processNextSibling(nextSibling.nextElementSibling);
+					} else {
+						event.target.setAttribute("tabindex", -1);
+						nextSibling.setAttribute("tabindex", 0);
+						nextSibling.focus();
+					}
+				}
+			};
+			
+			element.bind('keydown', function(event) {
+  				
+	  			switch(event.keyCode) {
+	  			
+	  			case 13:  // Enter
+	  			case 32:  // Space
+	  				event.target.click();
+	  				event.preventDefault();
+	  				break;
+	  				
+	  			case 37 :  // Left arrow
+				case 38 :  // Up arrow
+					scope.processPreviousSibling(event.target.previousElementSibling);
+					event.preventDefault();
+					break;
+				
+				case 39 :  // Right arrow
+				case 40 :  // Down arrow
+					scope.processNextSibling(event.target.nextElementSibling);
+					event.preventDefault();
+					break;
+	  			}
+        	});
+		}
+	}
+});
+
+testreg.directive('enter', function () {
+    return function (scope, element, attrs) {
+        element.bind("keydown keypress", function (event) {
+        	// Enter or Space
+            if(event.which === 13 || event.which === 32) {
+                scope.$apply(function (){
+                    scope.$eval(attrs.enter);
+                });
+
+                event.preventDefault();
+            }
+        });
+    };
 });
 
 testreg.filter("parentNameFilter", function(){

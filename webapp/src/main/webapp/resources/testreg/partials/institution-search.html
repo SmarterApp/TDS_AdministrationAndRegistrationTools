@@ -2,15 +2,15 @@
 <div data-ng-repeat="error in errors">
      <div><span class="icon_sprite icon_error error"></span>{{error}}</div>
 </div>
-<div class="boxTitle"><h2>{{entityNameLabels['Institution']}} Search</h2></div>
+<div class="boxTitle"><h2 tabindex="-1">{{entityNameLabels['Institution']}} Search</h2></div>
 <div>
 	<div data-searchable data-search-url="'institution'"  data-search-params="searchParams" data-search-response="searchResponse">
 		<div class="fieldGroup">
-			<h5>Search Filters</h5>
+			<h5 tabindex="-1">Search Filters</h5>
 			<ul class="entityLayout">
            <li>
                 <span class="entity-auto-complete">
-                   <label class="control-label" for="searchParams.entityId">{{xwalk('Institution Identifier')}}:</label>
+                   <label class="control-label" for="searchParams.entityId" title="Institution Identifier">{{xwalk('Institution Identifier')}}:</label>
                    <input institutions-search-auto-complete type="text" 
                     placeholder="Search..." 
                     data-ng-model="entityId"
@@ -18,12 +18,14 @@
                     data-typeahead-wait-ms="200" 
                     data-typeahead-editable="true" 
                     data-typeahead-input-formatter="formatInstitutionsLabelId($model)"
-                    data-typeahead-on-select="changeInstitutionsId($item)" />  
+                    data-typeahead-on-select="changeInstitutionsId($item)" 
+                    alt="Institution Identifier" 
+                    tabindex="0" />  
                  </span>                              
             </li>
             <li>
               <span class="entity-auto-complete">
-                   <label class="control-label" for="searchParams.entityName">{{xwalk('Name of Institution')}}:</label>
+                   <label class="control-label" for="searchParams.entityName" title="Name of Institution">{{xwalk('Name of Institution')}}:</label>
                    <input institutions-search-auto-complete type="text" 
                     placeholder="Search..." 
                     data-ng-model="entityName"
@@ -31,7 +33,9 @@
                     data-typeahead-wait-ms="200" 
                     data-typeahead-editable="true" 
                     data-typeahead-input-formatter="formatInstitutionsLabelName($model)"
-                    data-typeahead-on-select="changeInstitutionsName($item)" />  
+                    data-typeahead-on-select="changeInstitutionsName($item)" 
+                    alt="Name of Institution" 
+                    tabindex="0" />  
                  </span>                             
             </li>
 
@@ -39,8 +43,8 @@
             <div data-ng-hide="states.length < 3">
                 <li>
                     <span>
-                        <label class="control-label" for="searchParams.stateAbbreviation">{{xwalk('State Abbreviation')}}:</label>
-                         <select data-ng-model="searchParams.stateAbbreviation" data-ng-options="id.entityId as id.entityId for id in states | orderBy:'entityId'">
+                        <label class="control-label" for="searchParams.stateAbbreviation" title="State Abbreviation">{{xwalk('State Abbreviation')}}:</label>
+                         <select data-ng-model="searchParams.stateAbbreviation" data-ng-options="id.entityId as id.entityId for id in states | orderBy:'entityId'" title="State Abbreviation" tabindex="0">
                              <option value="">Select...</option>
                          </select>
                     </span>
@@ -48,18 +52,18 @@
             </div>
 
 			</ul>
-			<button type="button" type="button" class="boxBtn" data-search-on-click	data-active-indicator="searchResponse.searching">
-				<span class="btnIcon icon_sprite icon_reTry2 ng-class:{ajax_indicator:activeIndicator}"></span>
+			<button type="button" type="button" class="boxBtn" data-search-on-click	data-active-indicator="searchResponse.searching" tabindex="0">
+				<span class="btnIcon icon_sprite icon_reTry2 ng-class:{ajax_indicator:activeIndicator}" aria-hidden="true"></span>
 				<span class="btnText">Search</span>
 			</button>
-			<button type="button" type="button" class="boxBtn"	data-ng-click="addInstitution()">
-				<span class="btnIcon icon_sprite icon_saveAdd2"></span> <span class="btnText">New</span>
+			<button type="button" type="button" class="boxBtn"	data-ng-click="addInstitution()" tabindex="0">
+				<span class="btnIcon icon_sprite icon_saveAdd2" aria-hidden="true"></span> <span class="btnText">New</span>
 			</button>		
 			 <div data-export="institutions"></div>  			
 		</div>
        	
 		<div data-pageable data-paging-info="searchResponse"	data-search-params="searchParams" data-change-page="changePage()">
-			<table class="dataTable">
+			<table class="dataTable" data-accessible-table role="grid">
 				<colgroup>
 					<col>
 					<col>
@@ -69,28 +73,28 @@
                     <col>
                     <col class="doubleActionColumn">                    
 				</colgroup>
-				<tr>
+				<tr role="row">
 					
-					<th data-sort-on-click data-sort-column="entityId" class="headerSortUp">{{xwalk('Institution Identifier')}}</th>
-					<th data-sort-on-click data-sort-column="entityName">{{xwalk('Name of Institution')}}</th>
-					<th data-sort-on-click data-sort-column="parentEntityType" >{{xwalk('Parent Entity Type')}}</th>
-					<th data-sort-on-click data-sort-column="nationwideIdentifier" >{{xwalk('NCES Institution Id')}}</th>
-                    <th data-sort-on-click data-sort-column="parentEntityId">{{xwalk('Parent Entity Name')}}</th>
-					<th data-sort-on-click data-sort-column="stateAbbreviation" >{{xwalk('State Abbreviation')}}</th>
-	               <th></th>
+					<th data-sort-on-click data-sort-column="entityId" class="headerSortUp" scope="col" id="idHeader" title="Institution Identifier">{{xwalk('Institution Identifier')}}</th>
+					<th data-sort-on-click data-sort-column="entityName" scope="col" id="nameHeader" title="Name of Institution">{{xwalk('Name of Institution')}}</th>
+					<th data-sort-on-click data-sort-column="parentEntityType" scope="col" id="entityTypeHeader" title="Parent Entity Type">{{xwalk('Parent Entity Type')}}</th>
+					<th data-sort-on-click data-sort-column="nationwideIdentifier" scope="col" id="ncesInstitutionHeader" title="NCES Institution Id">{{xwalk('NCES Institution Id')}}</th>
+                    <th data-sort-on-click data-sort-column="parentEntityId" scope="col" id="entityNameHeader" title="Parent Entity Name">{{xwalk('Parent Entity Name')}}</th>
+					<th data-sort-on-click data-sort-column="stateAbbreviation" scope="col" id="stateAbbrevHeader" title="State Abbreviation">{{xwalk('State Abbreviation')}}</th>
+	               <th scope="col" id="actionHeader" title="Edit"></th>
 				</tr>
-				<tr data-ng-repeat="institution in searchResponse.searchResults">
+				<tr data-ng-repeat="institution in searchResponse.searchResults" role="row">
 
-    				<td>{{institution.entityId}}</td>
-					<td>{{institution.entityName}}</td>
-					<td>{{entityNameLabels[entityHierarchyRef[institution.parentEntityType]]}}</td>
-					<td>{{institution.nationwideIdentifier}}</td>
-					<td class="ng-class:{ajax_indicator:savingIndicator}">{{institution.parentId | parentNameFilter:institution.parentEntityType:parentEntities}}</td>
-					<td>{{institution.stateAbbreviation}}</td>
-                    <td class="normalSpace">
+    				<td role="gridcell" aria-labelledby="idHeader">{{institution.entityId}}</td>
+					<td role="gridcell" aria-labelledby="nameHeader">{{institution.entityName}}</td>
+					<td role="gridcell" aria-labelledby="entityTypeHeader">{{entityNameLabels[entityHierarchyRef[institution.parentEntityType]]}}</td>
+					<td role="gridcell" aria-labelledby="ncesInstitutionHeader">{{institution.nationwideIdentifier}}</td>
+					<td class="ng-class:{ajax_indicator:savingIndicator}" role="gridcell" aria-labelledby="entityNameHeader">{{institution.parentId | parentNameFilter:institution.parentEntityType:parentEntities}}</td>
+					<td role="gridcell" aria-labelledby="stateAbbrevHeader">{{institution.stateAbbreviation}}</td>
+                    <td class="normalSpace" role="gridcell" aria-labelledby="actionHeader">
                         <div class="tableButtonGroup">
-                            <button data-ng-click="edit(institution)" class="boxBtn"><span class="btnIcon icon_sprite icon_edit2"></span></button>
-                            <button data-delete-confirmation="{{institution.id}}" class="boxBtn"><span class="btnIcon icon_sprite icon_delete2"></span></button>
+                            <button data-ng-click="edit(institution)" class="boxBtn" tabindex="0"><span class="btnIcon icon_sprite icon_edit2" aria-hidden="true"></span></button>
+                            <button data-delete-confirmation="{{institution.id}}" class="boxBtn" tabindex="0"><span class="btnIcon icon_sprite icon_delete2" aria-hidden="true"></span></button>
                         </div>
                     </td>					
 				</tr>

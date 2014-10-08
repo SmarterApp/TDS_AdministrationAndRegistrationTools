@@ -1,5 +1,5 @@
-testreg.controller('InstitutionSearchController', ['$scope', '$state','$window', 'InstitutionService','StateService', 'EntityService',
-    function ($scope, $state,$window, InstitutionService, StateService, EntityService ) {
+testreg.controller('InstitutionSearchController', ['$scope', '$state','$window', '$location', 'InstitutionService','StateService', 'EntityService',
+    function ($scope, $state,$window, $location, InstitutionService, StateService, EntityService ) {
 
 	if(!$state.current.searchParams) {
 
@@ -55,6 +55,7 @@ testreg.controller('InstitutionSearchController', ['$scope', '$state','$window',
 		InstitutionService.deleteInstitution(institutionId).then(function(response){
 			$scope.errors = response.errors;
 			if($scope.errors.length == 0){
+				$state.current.searchParams = '';
 				window.location.reload();
 			}
 		});

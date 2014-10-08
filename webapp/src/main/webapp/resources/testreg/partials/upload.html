@@ -7,7 +7,7 @@
 </div>
 
 
-<div class="boxTitle"><h2>Upload File</h2></div>
+<div class="boxTitle"><h2 tabindex="-1">Upload File</h2></div>
         
 <div>
      <div >
@@ -19,10 +19,10 @@
                     <ul>
                       <li>
                       	<span>
-                      		<label class="control-label">Entity:</label>
+                      		<label class="control-label" title="Entity">Entity:</label>
                       		<div>                    		
-                      		<label  data-ng-show="formatTypeDisabled">{{formatType}}</label>
-                      		<select data-ng-model="formatType" data-ng-options="entity.entityName.toUpperCase() as entityNameLabels[entity.entityName] for entity in entities |  filter: {entityName: '!StudentGroup' && '!ExplicitEligibility'}" data-ng-show="!formatTypeDisabled">
+                      		<label  data-ng-show="formatTypeDisabled" title="Format Type">{{formatType}}</label>
+                      		<select data-ng-model="formatType" data-ng-options="entity.entityName.toUpperCase() as entityNameLabels[entity.entityName] for entity in entities |  filter: {entityName: '!StudentGroup' && '!ExplicitEligibility'}" data-ng-show="!formatTypeDisabled" title="Format Type" tabindex="0">
                       		<option value="" >Select...</option>
                       		</select>
                       	</div>
@@ -30,10 +30,10 @@
                       </li>
                       <li>
                         <span> 
-                            <label class="control-label" for="files[]">Select File:</label>
+                            <label class="control-label" for="files[]" title="Select File">Select File:</label>
     <div class="choose_file">
         <span>Choose File</span>
-        <input name="uploadFile" type="file" />
+        <input name="uploadFile" type="file" alt="Choose File" tabindex="0" />
     </div>                            
                         
                         </span>
@@ -43,33 +43,33 @@
                      
             </div>
             <!-- The table listing the files available for upload/download -->
-            <table class="dataTable  ng-cloak">
-                <tr>
-                    <th>File Name</th>
-                    <th>File Size</th>
-                    <th></th>
+            <table class="dataTable  ng-cloak" role="grid">
+                <tr role="row">
+                    <th scope="col" id="fileNameHeader" title="File Name">File Name</th>
+                    <th scope="col" id="fileSizeHeader" title="File Size">File Size</th>
+                    <th scope="col" id="actionHeader" title="Upload"></th>
                 </tr>
-                <tr data-ng-show="queue.length == 0">
+                <tr data-ng-show="queue.length == 0" role="row">
                   <td colspan="3">
                       No files to upload.
                   </td>
                 </tr>
-                <tr data-ng-repeat="file in queue" data-ng-hide="!file.$cancel">
-                        <td>
+                <tr data-ng-repeat="file in queue" data-ng-hide="!file.$cancel" role="row">
+                        <td role="gridcell" aria-labelledby="fileNameHeader">
                             <span>{{file.name}}</span>
                             <div data-ng-show="file.error"><span class="label label-important">Error</span> {{file.error}}</div>
                         </td>
-                        <td>
+                        <td role="gridcell" aria-labelledby="fileSizeHeader">
                             <p class="size">{{file.size | formatFileSize}}</p>
                             <div class="progress-animated active fade" data-ng-class="{pending: 'in'}[file.$state()]" data-file-upload-progress="file.$progress()"><div class="bar progress-bar-success" data-ng-style="{width: num + '%'}"></div></div>
                         </td>
-                        <td>
-                        <button type="button" class="uploadBtn"  data-ng-click="file.$submit()" data-ng-hide="!(formatType.length>1) || !file.$submit">
-	                        <span class="btnIcon icon_sprite icon_save2 ng-class:{ajax_indicator:savingIndicator}" ></span>
+                        <td role="gridcell" aria-labelledby="actionHeader">
+                        <button type="button" class="uploadBtn"  data-ng-click="file.$submit()" data-ng-hide="!(formatType.length>1) || !file.$submit" tabindex="0">
+	                        <span class="btnIcon icon_sprite icon_save2 ng-class:{ajax_indicator:savingIndicator}" aria-hidden="true"></span>
 	                        <span class="btnText">Upload</span>
 	                    </button>
-	                    <button type="button" class="uploadBtn"  data-ng-click="file.$cancel();resetErrors();" data-ng-hide="!file.$cancel">
-	                        <span class="btnIcon icon_sprite icon_cancel2" ></span>
+	                    <button type="button" class="uploadBtn"  data-ng-click="file.$cancel();resetErrors();" data-ng-hide="!file.$cancel" tabindex="0">
+	                        <span class="btnIcon icon_sprite icon_cancel2" aria-hidden="true"></span>
 	                        <span class="btnText">Cancel</span>
 	                    </button>
                     </td>

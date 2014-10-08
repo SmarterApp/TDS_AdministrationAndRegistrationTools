@@ -13,7 +13,6 @@ testreg.controller('HomeController', ['$scope','$location','$window', '$state', 
 	    	$location.path(path);
 		};
 
-
 		 $scope.isActiveLink = function(link){
 			 return  $scope.activeLink === link || $state.current.name === link; 
 		 };

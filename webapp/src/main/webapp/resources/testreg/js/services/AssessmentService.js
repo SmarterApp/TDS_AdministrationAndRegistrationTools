@@ -107,6 +107,7 @@ testreg.factory("AssessmentService", function($http){
 			       {fieldId: "Print on Demand", 	fieldValue: "printOnDemand", segment: "Accommodation"},
 			       {fieldId: "Print Size", 	fieldValue: "printSize", segment: "Accommodation"},
 			       {fieldId: "Streamlined Interface", fieldValue: "streamlinedInterface", segment: "Accommodation"},
+			       {fieldId: "Subject", fieldValue: "subject", segment: "Accommodation"},
 			       {fieldId: "Text to Speech", fieldValue: "textToSpeech", segment: "Accommodation"},
 			       {fieldId: "Translation", fieldValue: "translation", segment: "Accommodation"},
 			       {fieldId: "Non-Embedded Designated Supports", fieldValue: "nonEmbeddedDesignatedSupports", segment: "Accommodation"},

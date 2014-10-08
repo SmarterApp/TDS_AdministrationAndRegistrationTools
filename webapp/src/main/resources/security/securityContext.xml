@@ -29,6 +29,9 @@
     <security:http security="none" pattern="/resources/testreg/css_sbac/*.css"/>
     <security:http security="none" pattern="/resources/testreg/images/*.png"/>
     <security:http security="none" pattern="/resources/testreg/images/*.jpg"/>
+    <security:http security="none" pattern="/userguide/*.docx"/>
+    <security:http security="none" pattern="/userguide/*.doc"/>
+    <security:http security="none" pattern="/userguide/*.pdf"/>
 
     <!-- Secured pages -->
     <security:http entry-point-ref="samlEntryPoint" use-expressions="true">

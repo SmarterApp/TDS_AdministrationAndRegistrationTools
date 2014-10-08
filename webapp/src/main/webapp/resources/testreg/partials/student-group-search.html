@@ -7,29 +7,29 @@
 </div>
 
 
-<div class="boxTitle"><h2>{{entityNameLabels['StudentGroups']}} Search</h2></div>
+<div class="boxTitle"><h2 tabindex="-1">{{entityNameLabels['StudentGroups']}} Search</h2></div>
 <div>
     <div data-searchable data-search-url="'studentGroups'" data-search-post-process="postProcess(response)" data-search-params="searchParams" data-search-response="searchResponse">
         <div class="fieldGroup">
-            <h5>Search Filters</h5>
+            <h5 tabindex="-1">Search Filters</h5>
             <ul>
             <li>
                 <span> 
-                    <label class="control-label" for="searchParams.stateAbbreviation">{{xwalk('State Abbreviation')}}:</label>
-                     <select  data-ng-model="searchParams.stateAbbreviation" data-ng-change="loadDistricts(state.entityId)" data-ng-options="state.entityId as state.entityId for state in states | orderBy:'entityId'" >
+                    <label class="control-label" for="searchParams.stateAbbreviation" title="State Abbreviation">{{xwalk('State Abbreviation')}}:</label>
+                     <select  data-ng-model="searchParams.stateAbbreviation" data-ng-change="loadDistricts(state.entityId)" data-ng-options="state.entityId as state.entityId for state in states | orderBy:'entityId'" title="State Abbreviation" tabindex="0">
                       <option value="">Select...</option>
                     </select>
                 </span>
             </li>      
             <li>
                 <span> 
-                    <label class="control-label" for="searchParams.studentGroupName">{{xwalk('Student Group Name')}}:</label>
-                    <input type="text" name="entityId" data-ng-model="searchParams.studentGroupName" />
+                    <label class="control-label" for="searchParams.studentGroupName" title="Student Group Name">{{xwalk('Student Group Name')}}:</label>
+                    <input type="text" name="entityId" data-ng-model="searchParams.studentGroupName" alt="Student Group Name" tabindex="0" />
                 </span>
             </li>                 
             <li>
                 <span class="district-auto-complete">
-                    <label class="control-label" for="searchParams.districtIdentifier">{{xwalk('Responsible District Identifier')}}:</label>
+                    <label class="control-label" for="searchParams.districtIdentifier" title="District Identifier">{{xwalk('District Identifier')}}:</label>
 				    <input data-district-auto-complete-student-group type="text" 
 				    placeholder="Search..." 
 				    data-ng-model="district"
@@ -37,12 +37,14 @@
 				    data-typeahead-wait-ms="200" 
 				    data-typeahead-editable="true" 
 				    data-typeahead-input-formatter="formatDistrictLabel($model)"
-				    data-typeahead-on-select="changeDistrict({district:$item})" />  
+				    data-typeahead-on-select="changeDistrict({district:$item})" 
+				    alt="Responsible District Identifier" 
+				    tabindex="0" />  
 				 </span>               
             </li>     
             <li>
                 <span class="district-auto-complete">
-                    <label class="control-label" for="searchParams.institutionIdentifier">{{xwalk('Institution Identifier')}}:</label>
+                    <label class="control-label" for="searchParams.institutionIdentifier" title="Institution Identifier">{{xwalk('Institution Identifier')}}:</label>
                     <input data-institution-auto-complete-student-group type="text" 
                     placeholder="Search..." 
                     data-ng-model="institution"
@@ -50,29 +52,31 @@
                     data-typeahead-wait-ms="200" 
                     data-typeahead-editable="true" 
                     data-typeahead-input-formatter="formatInstitutionLabel($model)"
-                    data-typeahead-on-select="changeInstitution({institution:$item})" />  
+                    data-typeahead-on-select="changeInstitution({institution:$item})" 
+                    alt="Institution Identifier" 
+                    tabindex="0" />  
                  </span>               
             </li>                     
             <li>
                 <span> 
-                    <label class="control-label" for="searchParams.ownerEmail">{{xwalk('Owner Email')}}:</label>
-                    <input type="text" name="ownerEmail" data-ng-model="searchParams.ownerEmail" />
+                    <label class="control-label" for="searchParams.ownerEmail" title="Owner Email">{{xwalk('Owner Email')}}:</label>
+                    <input type="text" name="ownerEmail" data-ng-model="searchParams.ownerEmail" alt="Owner Email" tabindex="0" />
                 </span>
             </li>                       
             <li><span></span></li>
             </ul>
-            <button type="button" type="button" class="boxBtn" data-search-on-click  data-active-indicator="searchResponse.searching">
-                <span class="btnIcon icon_sprite icon_reTry2 ng-class:{ajax_indicator:activeIndicator}"></span>
+            <button type="button" type="button" class="boxBtn" data-search-on-click  data-active-indicator="searchResponse.searching" tabindex="0">
+                <span class="btnIcon icon_sprite icon_reTry2 ng-class:{ajax_indicator:activeIndicator}" aria-hidden="true"></span>
                 <span class="btnText">Search</span>
             </button>
-            <button type="button" type="button" class="boxBtn"  data-ng-click="createNew()">
-                <span class="btnIcon icon_sprite icon_saveAdd2"></span> <span class="btnText">New</span>
+            <button type="button" type="button" class="boxBtn"  data-ng-click="createNew()" tabindex="0">
+                <span class="btnIcon icon_sprite icon_saveAdd2" aria-hidden="true"></span> <span class="btnText">New</span>
             </button>	
             <div data-export="studentGroups"></div>	            
         </div>
         
         <div data-pageable data-paging-info="searchResponse"  data-search-params="searchParams" data-change-page="changePage()">
-            <table class="dataTable">
+            <table class="dataTable" data-accessible-table role="grid">
                 <colgroup>
                     <col>
                     <col>
@@ -83,28 +87,28 @@
                     <col>    
                     <col class="doubleActionColumn">                         
                 </colgroup>
-                <tr>
-                    <th data-sort-on-click data-sort-column="studentGroupName" class="headerSortUp fixedWidth80" >{{xwalk('Student Group Name')}}</th>
-                    <th data-sort-on-click data-sort-column="districtIdentifier" class="fixedWidth100">{{xwalk('Organization Name')}}</th>
-                    <th data-sort-on-click data-sort-column="institutionIdentifier" >{{xwalk('Name of Institution')}}</th>
-                    <th data-sort-on-click data-sort-column="stateAbbreviation" style="width:100px">{{xwalk('State Abbreviation')}}</th>
-                    <th data-sort-on-click data-sort-column="ownerEmail" >{{xwalk('Email')}}</th>    
-                    <th>{{xwalk('First Name')}}</th>                        
-                    <th>{{xwalk('Last Name')}}</th>    
-                    <th></th>                                 
+                <tr role="row">
+                    <th data-sort-on-click data-sort-column="studentGroupName" class="headerSortUp fixedWidth80" scope="col" id="studentGroupNameHeader" title="Student Group Name">{{xwalk('Student Group Name')}}</th>
+                    <th data-sort-on-click data-sort-column="districtIdentifier" class="fixedWidth100" scope="col" id="organizationNameHeader" title="Organization Name">{{xwalk('Organization Name')}}</th>
+                    <th data-sort-on-click data-sort-column="institutionIdentifier" scope="col" id="nameOfInstitutionHeader" title="Name of Institution">{{xwalk('Name of Institution')}}</th>
+                    <th data-sort-on-click data-sort-column="stateAbbreviation" style="width:100px" scope="col" id="stateAbbrevHeader" title="State Abbreviation">{{xwalk('State Abbreviation')}}</th>
+                    <th data-sort-on-click data-sort-column="ownerEmail" scope="col" id="emailHeader" title="Email">{{xwalk('Email')}}</th>    
+                    <th scope="col" id="firstNameHeader" title="First Name">{{xwalk('First Name')}}</th>                        
+                    <th scope="col" id="lastNameHeader" title="Last Name">{{xwalk('Last Name')}}</th>    
+                    <th scope="col" id="actionHeader" title="Edit"></th>                                 
                 </tr>
-                <tr data-ng-repeat="studentGroup in searchResponse.searchResults">
-                    <td>{{studentGroup.studentGroupName}}</td>                               
-                    <td class="ng-class:{ajax_indicator:savingIndicator}">{{studentGroup.districtEntityMongoId | parentNameFilter:"DISTRICT":parentEntities}}</td>
-                    <td class="ng-class:{ajax_indicator:savingIndicator}">{{studentGroup.institutionEntityMongoId | parentNameFilter:"INSTITUTION":parentEntities}}</td>
-                    <td>{{studentGroup.stateAbbreviation}}</td>
-                    <td>{{studentGroup.ownerEmail}}</td>       
-                    <td>{{getFirstName(studentGroup)}}</td>
-                    <td>{{getLastName(studentGroup)}}</td>       
-                    <td class="normalSpace">
+                <tr data-ng-repeat="studentGroup in searchResponse.searchResults" role="row">
+                    <td role="gridcell" aria-labelledby="studentGroupName">{{studentGroup.studentGroupName}}</td>                               
+                    <td class="ng-class:{ajax_indicator:savingIndicator}" role="gridcell" aria-labelledby="districtIdentifier">{{studentGroup.districtEntityMongoId | parentNameFilter:"DISTRICT":parentEntities}}</td>
+                    <td class="ng-class:{ajax_indicator:savingIndicator}" role="gridcell" aria-labelledby="institutionIdentifier">{{studentGroup.institutionEntityMongoId | parentNameFilter:"INSTITUTION":parentEntities}}</td>
+                    <td role="gridcell" aria-labelledby="stateAbbreviation">{{studentGroup.stateAbbreviation}}</td>
+                    <td role="gridcell" aria-labelledby="ownerEmail">{{studentGroup.ownerEmail}}</td>       
+                    <td role="gridcell" aria-labelledby="firstNameHeader">{{getFirstName(studentGroup)}}</td>
+                    <td role="gridcell" aria-labelledby="lastNameHeader">{{getLastName(studentGroup)}}</td>       
+                    <td class="normalSpace" role="gridcell" aria-labelledby="actionHeader">
                         <div class="tableButtonGroup">
-                            <button data-ng-click="edit(studentGroup)" class="boxBtn"><span class="btnIcon icon_sprite icon_edit2"></span></button>
-                            <button data-delete-confirmation="{{studentGroup.id}}" class="boxBtn"><span class="btnIcon icon_sprite icon_delete2"></span></button>
+                            <button data-ng-click="edit(studentGroup)" class="boxBtn" tabindex="0"><span class="btnIcon icon_sprite icon_edit2" aria-hidden="true"></span></button>
+                            <button data-delete-confirmation="{{studentGroup.id}}" class="boxBtn" tabindex="0"><span class="btnIcon icon_sprite icon_delete2" aria-hidden="true"></span></button>
                         </div>
                     </td>                              
                 </tr>

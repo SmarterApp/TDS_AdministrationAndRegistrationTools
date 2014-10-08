@@ -14,19 +14,19 @@ testreg.factory("EntityService", function($http, $rootScope, CurrentUserService)
 			});
     	},
     	loadParentEntities : function(entityType) {
-    		   	var url = baseUrl + endpoints[entityType] + '/?pageSize=9999&_=' + Math.random();
+    		   	var url = baseUrl + endpoints[entityType] + '/?pageSize=999999&_=' + Math.random();
 		    	return $http.get(url, {headers: {'Accept': 'text/html'}}).then(this.successHandler, this.errorHandler).then(function(loadedData) {
 						return loadedData.data;
 				});
     	},
         loadEntitiesMatchingParent : function(entityType, parentEntityId) {
-            var url = baseUrl + endpoints[entityType] + '/?pageSize=9999&parentEntityId=' + parentEntityId + '&_=' + Math.random();
+            var url = baseUrl + endpoints[entityType] + '/?pageSize=999999&parentEntityId=' + parentEntityId + '&_=' + Math.random();
             return $http.get(url, {headers: {'Accept': 'text/html'}}).then(this.successHandler, this.errorHandler).then(function(loadedData) {
                 return loadedData.data;
             });
         },
         loadTheRealParentEntities : function(parentType) {
-            var url = baseUrl + endpoints[parentType] + '/parents/?pageSize=9999&_=' + Math.random();
+            var url = baseUrl + endpoints[parentType] + '/parents/?pageSize=999999&_=' + Math.random();
             return $http.get(url).then(this.successHandler, this.errorHandler).then(function(loadedData) {
                 return loadedData.data;
             });

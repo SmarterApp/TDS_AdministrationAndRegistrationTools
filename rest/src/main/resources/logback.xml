@@ -7,7 +7,6 @@
 	<include resource="logback-included-common-config.xml" />
     <logger name="log4j.logger.org.springframework.security.saml" level="DEBUG" />
     <logger name="log4j.logger.org.opensaml" level="DEBUG" />
-    <logger name="log4j.logger.org.opentestsystem.shared.security.service" level="DEBUG" />
     
     <logger name="PERFORMANCE_CONTROLLER" additivity="false" level="debug">
         <appender-ref ref="MDCAppender" />
@@ -26,7 +25,7 @@
     <!-- <logger name="org.springframework.data.mongodb.core.MongoTemplate" level="debug" /> -->
     
     <!-- stop logging the uber entity map debug statements -->
-    <logger name="org.opentestsystem.delivery.testreg.service.TestRegUberEntityRelationshipService" level="error" />
+    <!-- <logger name="org.opentestsystem.delivery.testreg.service.TestRegUberEntityRelationshipService" level="error" /> -->
     
     <!-- trace level will also log a representation of the uber cache tree -->
     <!-- <logger name="org.opentestsystem.delivery.testreg.service.TestRegUberEntityRelationshipService" level="trace" /> -->
@@ -35,6 +34,9 @@
     <!-- <logger name="PERFORMANCE_PERSISTENCE" level="error" /> -->
     
     <!-- stop logging search request debug statements -->
-    <logger name="org.opentestsystem.delivery.testreg.domain.search.AbstractTestRegSearchRequest" level="error" />
+    <!-- <logger name="org.opentestsystem.delivery.testreg.domain.search.AbstractTestRegSearchRequest" level="error" /> -->
+
+    <!-- turns on logging for things like the permission client -->
+    <logger name="org.opentestsystem.shared.security.integration" level="debug" />
     
 </configuration>

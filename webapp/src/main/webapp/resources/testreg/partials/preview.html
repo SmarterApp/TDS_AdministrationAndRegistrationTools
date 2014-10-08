@@ -17,12 +17,12 @@
 		<div>
 		     <tabset vertical="false">
 		             <tab  ng-repeat="previewFile in previewFiles" heading="{{previewFile.sheetName}}">
-		                <table class="previewTable" >
-		                     <tr>
-		                         <th data-ng-repeat="data in previewFile.rowData[0]">{{data}}</th>
+		                <table class="previewTable" role="grid">
+		                     <tr role="row">
+		                         <th data-ng-repeat="data in previewFile.rowData[0]" scope="col" id="previewHeader" title="Preview">{{data}}</th>
 		                     </tr>
-		                     <tr data-ng-repeat="rowData in previewFile.rowData" data-ng-show="!$first">
-		                         <td data-ng-repeat="data in previewFile.rowData[0]">{{rowData[$index]}}</td>
+		                     <tr data-ng-repeat="rowData in previewFile.rowData" data-ng-show="!$first" role="row">
+		                         <td data-ng-repeat="data in previewFile.rowData[0]" role="gridcell" aria-labelledby="previewHeader">{{rowData[$index]}}</td>
 		                     </tr>
 		                </table>
 		             </tab>
@@ -30,12 +30,12 @@
 		</div>
         <div>
 			<br>
-			<button type="button" class="boxBtn" data-ng-show="errors == null || errors.length == 0" data-ng-disabled="isValidateButtonDisabled" data-ng-click="validate();">
-                 <span class="btnIcon icon_sprite icon_save2 ng-class:{ajax_indicator:savingIndicator}" ></span>
+			<button type="button" class="boxBtn" data-ng-show="errors == null || errors.length == 0" data-ng-disabled="isValidateButtonDisabled" data-ng-click="validate();" tabindex="0">
+                 <span class="btnIcon icon_sprite icon_save2 ng-class:{ajax_indicator:savingIndicator}" aria-hidden="true"></span>
 			     <span class="btnText">Validate</span>
 			</button>
-		    <button type="button" class="boxBtn" data-ng-click="cancel()">
-		        <span class="btnIcon icon_sprite icon_cancel2" ></span>
+		    <button type="button" class="boxBtn" data-ng-click="cancel()" tabindex="0">
+		        <span class="btnIcon icon_sprite icon_cancel2" aria-hidden="true"></span>
 		        <span class="btnText">Cancel</span>
 		    </button>
             <div data-ng-show="savingIndicator" class="dirtynag">* Please wait... Validation in process. You will be redirected to another page once complete.</div>

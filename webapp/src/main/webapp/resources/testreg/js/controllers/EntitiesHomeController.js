@@ -34,9 +34,12 @@ testreg.controller('EntitiesHomeController',['$scope','$state','EntityService','
 		 }
 		 return (allowedEntities.indexOf(entity) != -1);
      };
-     var pageData = EntityService.loadEntityPage();
-	         if(pageData != null){
-	         	$state.transitionTo(pageData);
-	         	$scope.activeLink =pageData;
-	         }
+
+     if($scope.activeLink == "entities") {
+	     var pageData = EntityService.loadEntityPage();
+         if(pageData != null){
+         	$state.transitionTo(pageData);
+         	$scope.activeLink =pageData;
+         }
+     }
 }]);

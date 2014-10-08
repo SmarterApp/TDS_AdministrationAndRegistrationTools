@@ -16,11 +16,11 @@
   
  <beans profile="server.loadbalanced"> 
         <bean id="contextProvider" class="org.springframework.security.saml.context.SAMLContextProviderLB">
-            <property name="scheme" value="http"/>
-            <property name="serverName" value="sb11-testreg-load.drc-ec2.com"/>
-            <property name="serverPort" value="80"/>
-            <property name="includeServerPortInRequestURL" value="false"/>
-            <property name="contextPath" value="/rest"/>
+            <property name="scheme" value="${testreg.loadbalanced.url.scheme}"/>
+            <property name="serverName" value="${testreg.loadbalanced.server.name}"/>
+            <property name="serverPort" value="${testreg.loadbalanced.server.port}"/>
+            <property name="includeServerPortInRequestURL" value="${testreg.loadbalanced.includeServerPortInRequestURL}"/>
+            <property name="contextPath" value="${testreg.loadbalanced.server.rest.contextpath}"/>
         </bean>
   </beans>
   

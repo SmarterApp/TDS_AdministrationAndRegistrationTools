@@ -104,7 +104,7 @@ testreg.controller('SubjectSearchController', ['$scope', '$state','$window', '$t
 						});
 					}
 				}
-		    }, 300);
+		    }, 500);
 
 		};
 

@@ -8,8 +8,14 @@ testreg.controller('SaveFileController',['$scope','$state', 'loadedData','SaveFi
 	$scope.fileSummary = loadedData.data;
         $scope.errors = loadedData.errors;
         
-        $scope.cancel = function() {
-            $state.transitionTo("uploadFile");
+        $scope.cancel = function(formatType) {
+        	if(formatType === "EXPLICITELIGIBILITY"){
+        		$state.transitionTo("uploadExplicitEligibility");
+        	} else if(formatType === "STUDENTGROUP"){
+        		$state.transitionTo("uploadStudentGroups");
+        	}else{
+                $state.transitionTo("uploadFile");        		
+        	}
         };
     }
 ]);

@@ -6,7 +6,7 @@
     <div><span class="icon_sprite icon_error error"></span>{{error}}</div>
 </div>
 
-<div class="boxTitle"><h2>Validate File</h2></div>
+<div class="boxTitle"><h2 tabindex="-1">Validate File</h2></div>
 
 <div class="successMessage" data-ng-show = "validationResults != null && validationResults.length == 0"><div class="icon_successMessage icon_sprite icon_save1"></div>No validation errors found. File can be saved.</div>
 <div data-ng-show = "validationResults != null && validationResults.length > 0">
@@ -15,25 +15,25 @@
     <div class="icon_warningMessage icon_sprite icon_warning"></div><div class="warningMessage">These are warnings. File can be saved. However, you are strongly encouraged to review the associated records. You may edit these records using the administration option to manage this type of file records.</div>    
 
     <div data-ng-show = "hasGlobalErrors" class="globalErrors">
-	    <table class="dataTable">
+	    <table class="dataTable" role="grid">
 	        <colgroup>
 	            <col class="actionColumn">
 	            <col>                 
 	        </colgroup>
-	        <tr>
-	            <th></th>
-	            <th>Validation Message</th>
+	        <tr role="row">
+	            <th scope="col" id="openCloseHeader" title="Open Close"></th>
+	            <th scope="col" id="validationMessageHeader" title="Validation Message">Validation Message</th>
 	        </tr>
-	        <tr data-ng-repeat="error in globalErrors.fatalErrors">
-	           <td><span class="icon_sprite icon_close"></span></td>
-	           <td>{{error.message}}</td>
+	        <tr data-ng-repeat="error in globalErrors.fatalErrors" role="row">
+	           <td role="gridcell" aria-labelledby="openCloseHeader"><span class="icon_sprite icon_close"></span></td>
+	           <td role="gridcell" aria-labelledby="validationMessageHeader">{{error.message}}</td>
 	        </tr>
 	    </table>
     </div>
     <div data-ng-show = "!hasGlobalErrors">
     <tabset vertical="false" >
         <tab  ng-repeat="validationResult in validationResults" heading="{{validationResult.formatType}}" >
-            <table class="dataTable">
+            <table class="dataTable" role="grid">
 	            <colgroup>
 	                <col class="actionColumn">
 	                <col>
@@ -41,33 +41,34 @@
 	                <col>
 	                <col>                 
 	            </colgroup>
-	            <tr>
-	                <th></th>
-	                <th>Record Number</th>
-	                <th>Field Name</th>
-	                <th>Field Value</th>
-	                <th>Validation Message</th>
+	            <tr role="row">
+	                <th scope="col" id="openCloseHeader" title="Open Close"></th>
+	                <th scope="col" id="recordNumberHeader" title="Record Number">Record Number</th>
+	                <th scope="col" id="fieldNameHeader" title="Field Name">Field Name</th>
+	                <th scope="col" id="fieldValueHeader" title="Field Value">Field Value</th>
+	                <th scope="col" id="validationMessageHeader" title="Validation Message">Validation Message</th>
 	            </tr>
-	            <tr data-ng-repeat="error in validationResult.fatalErrors">
-	               <td><span class="icon_sprite icon_close"></span></td>
-	               <td>{{error.recordNumber}}</td>
-	               <td>{{error.fieldName}}</td>
-	               <td>{{error.fieldValue}}</td>
-	               <td>{{error.message}}</td>
+				<!-- Adjust record number for FormatType row here. Keep in mind that backend still assumes there is a FormatType row. -->
+	            <tr data-ng-repeat="error in validationResult.fatalErrors" role="row">
+	               <td role="gridcell" aria-labelledby="openCloseHeader"><span class="icon_sprite icon_close"></span></td>
+	               <td role="gridcell" aria-labelledby="recordNumberHeader">{{error.recordNumber}}-1</td>
+	               <td role="gridcell" aria-labelledby="fieldNameHeader">{{error.fieldName}}</td>
+	               <td role="gridcell" aria-labelledby="fieldValueHeader">{{error.fieldValue}}</td>
+	               <td role="gridcell" aria-labelledby="validationMessageHeader">{{error.message}}</td>
 	            </tr>
-	            <tr data-ng-repeat="error in validationResult.recordErrors">
-                   <td><span class="icon_sprite icon_error"></span></td>
-                   <td>{{error.recordNumber}}</td>
-                   <td>{{error.fieldName}}</td>
-                   <td>{{error.fieldValue}}</td>
-                   <td>{{error.message}}</td>
+	            <tr data-ng-repeat="error in validationResult.recordErrors" role="row">
+                   <td role="gridcell" aria-labelledby="openCloseHeader"><span class="icon_sprite icon_error"></span></td>
+                   <td role="gridcell" aria-labelledby="recordNumberHeader">{{error.recordNumber}}-1</td>
+                   <td role="gridcell" aria-labelledby="fieldNameHeader">{{error.fieldName}}</td>
+                   <td role="gridcell" aria-labelledby="fieldValueHeader">{{error.fieldValue}}</td>
+                   <td role="gridcell" aria-labelledby="validationMessageHeader">{{error.message}}</td>
                 </tr>
-                <tr data-ng-repeat="error in validationResult.warnings">
-                   <td><span class="icon_sprite icon_warning"></span></td>
-                   <td>{{error.recordNumber}}</td>
-                   <td>{{error.fieldName}}</td>
-                   <td>{{error.fieldValue}}</td>
-                   <td>{{error.message}}</td>
+                <tr data-ng-repeat="error in validationResult.warnings" role="row">
+                   <td role="gridcell" aria-labelledby="openCloseHeader"><span class="icon_sprite icon_warning"></span></td>
+                   <td role="gridcell" aria-labelledby="recordNumberHeader">{{error.recordNumber}}-1</td>
+                   <td role="gridcell" aria-labelledby="fieldNameHeader">{{error.fieldName}}</td>
+                   <td role="gridcell" aria-labelledby="fieldValueHeader">{{error.fieldValue}}</td>
+                   <td role="gridcell" aria-labelledby="validationMessageHeader">{{error.message}}</td>
                 </tr>                
             </table>
         
@@ -77,12 +78,12 @@
 </div>    
 <div>
         <br>
-        <button type="button" class="boxBtn" data-ng-show = "(errors == null || errors.length == 0) && !hasGlobalErrors && !hasFatalErrors" data-ng-disabled="isSaveButtonDisabled" data-ng-click="save()">
-             <span class="btnIcon icon_sprite icon_save2 ng-class:{ajax_indicator:savingIndicator}" ></span>
+        <button type="button" class="boxBtn" data-ng-show = "(errors == null || errors.length == 0) && !hasGlobalErrors && !hasFatalErrors" data-ng-disabled="isSaveButtonDisabled" data-ng-click="save()" tabindex="0">
+             <span class="btnIcon icon_sprite icon_save2 ng-class:{ajax_indicator:savingIndicator}" aria-hidden="true"></span>
              <span class="btnText">Save</span>
         </button>
-        <button type="button" class="boxBtn" data-ng-click="cancel()">
-            <span class="btnIcon icon_sprite icon_cancel2" ></span>
+        <button type="button" class="boxBtn" data-ng-click="cancel()" tabindex="0">
+            <span class="btnIcon icon_sprite icon_cancel2" aria-hidden="true"></span>
             <span class="btnText">Cancel</span>
         </button>
         <div data-ng-show="savingIndicator" class="dirtynag">* Please wait... Save in process. You will be redirected to another page once complete.</div>

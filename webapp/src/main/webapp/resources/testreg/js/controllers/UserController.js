@@ -24,8 +24,12 @@ testreg.controller(	'UserController',['$scope','$state','loadedData','UserServic
 					    		$scope.states = loadedData.data;
 					    	});
                             $scope.filteredEntityIds = function(index, entityType, parentId){
-                                $scope.entityIds[index] = EntityService.loadEntitiesMatchingParent(entityType, parentId);
-                            }
+                            	if (parentId) {
+                            		$scope.entityIds[index] = EntityService.loadEntitiesMatchingParent(entityType, parentId);
+                            	} else {
+                            		$scope.entityIds[index] = EntityService.loadParentEntities(entityType);
+                            	}
+                            };
 					    	$scope.getStateAbbreviation= function(entityIds,roleAssociation){
 					    		var stateAbbreviations = new Array();
 					    		var counter =0;

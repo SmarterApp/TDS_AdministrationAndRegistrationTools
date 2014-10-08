@@ -5,43 +5,43 @@
 <div data-ng-form="groupOfStatesForm" class="formWrapper">
     <div data-ng-show="groupOfStatesForm.$dirty" class="dirtynag">* Warning: You have unsaved changes</div>
     <div class="fieldGroup">
-    <h5>{{formAction}} {{entityNameLabels['GroupOfStates']}} Information <span class="control-label-required">Indicates required field</span></h5>
+    <h5 tabindex="-1">{{formAction}} {{entityNameLabels['GroupOfStates']}} Information <span class="control-label-required">Indicates required field</span></h5>
         <ul class="entityLayout">
             <li>
                 <span> 
-                    <label class="control-label-required" for="groupOfStates.entityId" >{{xwalk('Group Of States Identifier')}}:</label>
-                    <input type="text" name="groupOfStates.entityId" data-ng-model="groupOfStates.entityId" />
+                    <label class="control-label-required" for="groupOfStates.entityId" title="Group Of States Identifier">{{xwalk('Group Of States Identifier')}}:</label>
+                    <input type="text" name="groupOfStates.entityId" data-ng-model="groupOfStates.entityId" alt="Group Of States Identifier" tabindex="0" />
                 </span>
             </li>
             <li>
                 <span> 
-                    <label class="control-label-required" for="groupOfStates.entityName" >{{xwalk('Group Of States Name')}}:</label>
-                    <input type="text" name="groupOfStates.entityName" data-ng-model="groupOfStates.entityName" />
+                    <label class="control-label-required" for="groupOfStates.entityName" title="Group Of States Name">{{xwalk('Group Of States Name')}}:</label>
+                    <input type="text" name="groupOfStates.entityName" data-ng-model="groupOfStates.entityName" alt="Group Of States Name" tabindex="0" />
                 </span>
             </li>         
             <li>
                 <span>
-                    <label class="control-label-required" for="groupOfStates.parentEntityType">{{xwalk('Parent Entity Type')}}:</label>
-                     <select  data-ng-model="groupOfStates.parentEntityType" data-load-parent-entities="{{groupOfStates.parentEntityType}}" data-ng-options="entity.entityId as entity.entityName for entity in entities" >
+                    <label class="control-label-required" for="groupOfStates.parentEntityType" title="Parent Entity Type">{{xwalk('Parent Entity Type')}}:</label>
+                     <select  data-ng-model="groupOfStates.parentEntityType" data-load-parent-entities="{{groupOfStates.parentEntityType}}" data-ng-options="entity.entityId as entity.entityName for entity in entities" title="Parent Entity Type" tabindex="0">
                       <option value="">Select...</option>
                     </select>
                 </span>
             </li>              
             <li>
                 <span>
-                    <label class="control-label-required" for="groupOfStates.parentEntityId">{{xwalk('Parent External Id')}}:</label>
-                     <select  data-ng-model="groupOfStates.parentEntityId" data-ng-options="entity.entityId as entity.entityId + ' - ' + entity.entityName for entity in selectedParentEntities | orderBy:'entityId'" >
+                    <label class="control-label-required" for="groupOfStates.parentEntityId" title="Parent External Id">{{xwalk('Parent External Id')}}:</label>
+                     <select  data-ng-model="groupOfStates.parentEntityId" data-ng-options="entity.entityId as entity.entityId + ' - ' + entity.entityName for entity in selectedParentEntities | orderBy:'entityId'" title="Parent External Id" tabindex="0">
                       <option value="">Select...</option>
                     </select>
                 </span>
             </li>           
         </ul>  
-        <button type="button" class="boxBtn" data-ng-show="groupOfStatesForm.$dirty" data-ng-click="save(groupOfStates)">
-            <span class="btnIcon icon_sprite icon_save2 ng-class:{ajax_indicator:savingIndicator}" ></span>
+        <button type="button" class="boxBtn" data-ng-show="groupOfStatesForm.$dirty" data-ng-click="save(groupOfStates)" tabindex="0">
+            <span class="btnIcon icon_sprite icon_save2 ng-class:{ajax_indicator:savingIndicator}" aria-hidden="true"></span>
             <span class="btnText">Save</span>
         </button>
-        <button type="button" class="boxBtn" data-ng-click="cancel()">
-            <span class="btnIcon icon_sprite icon_cancel2" ></span>
+        <button type="button" class="boxBtn" data-ng-click="cancel()" tabindex="0">
+            <span class="btnIcon icon_sprite icon_cancel2" aria-hidden="true"></span>
             <span class="btnText">Cancel</span>
         </button>
     </div>

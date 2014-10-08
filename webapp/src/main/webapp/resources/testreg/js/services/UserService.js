@@ -28,8 +28,13 @@ testreg.factory("UserService", function($http) {
 			return $http.get(url).then(this.successHandler, this.errorHandler);
 	    },
 	    loadProctorRoles: function() {
+			var params = {"currentPage": '0', "pageSize":"10000"};
 	    	var url = baseUrl + 'proctorRole?_='+'/?_=' + Math.random();
-	    	return $http.get(url).then(this.successHandler, this.errorHandler);
+    	    return  $http({
+                method: 'GET',
+                url: url,
+                params: params
+    	    }).then(this.successHandler, this.errorHandler);
 	    },
 	    loadRoles : function() {
     		var url = baseUrl + 'user/role'+ '/?_=' + Math.random();

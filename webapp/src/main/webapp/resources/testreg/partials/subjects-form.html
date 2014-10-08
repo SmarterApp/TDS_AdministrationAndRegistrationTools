@@ -6,23 +6,23 @@
 <div data-ng-form="subjectForm" class="formWrapper">
     <div data-ng-show="subjectForm.$dirty" class="dirtynag">* Warning: You have unsaved changes</div>
     <div class="fieldGroup">
-    <h5>{{formAction}} Subject Information<span class="control-label-required">Indicates required field</span></h5>
+    <h5 tabindex="-1">{{formAction}} Subject Information<span class="control-label-required">Indicates required field</span></h5>
         <ul>
             <li>
                 <span> 
-                    <label class="control-label-required" for="subject.entityName">Subject Code:</label>
-                    <input type="text" name="subject.code" data-ng-model="subject.code" data-capitalize>
+                    <label class="control-label-required" for="subject.entityName" title="Subject Code">Subject Code:</label>
+                    <input type="text" name="subject.code" data-ng-model="subject.code" data-capitalize alt="Subject Code" tabindex="0">
                 </span>
             </li>           
         </ul>  
 
-        <button type="button" class="boxBtn" data-ng-show="subjectForm.$dirty" data-ng-click="save(subject)">
-            <span class="btnIcon icon_sprite icon_save2 ng-class:{ajax_indicator:savingIndicator}" ></span>
+        <button type="button" class="boxBtn" data-ng-show="subjectForm.$dirty" data-ng-click="save(subject)" tabindex="0">
+            <span class="btnIcon icon_sprite icon_save2 ng-class:{ajax_indicator:savingIndicator}" aria-hidden="true"></span>
             <span class="btnText">Save</span>
         </button>
      
-        <button type="button" class="boxBtn" data-ng-click="cancel()">
-            <span class="btnIcon icon_sprite icon_cancel2" ></span>
+        <button type="button" class="boxBtn" data-ng-click="cancel()" tabindex="0">
+            <span class="btnIcon icon_sprite icon_cancel2" aria-hidden="true"></span>
             <span class="btnText">Cancel</span>
         </button>
     </div>

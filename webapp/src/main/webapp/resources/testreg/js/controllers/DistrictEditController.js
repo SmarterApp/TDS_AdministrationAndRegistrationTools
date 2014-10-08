@@ -36,6 +36,7 @@ testreg.controller('DistrictEditController',['$scope','$state', 'loadedData', 'D
 		//TODO: move this function to directive. 
 		$scope.resetParent = function() {
 			$scope.district.parentEntityId = '';
+			$scope.district.parentId = '';
 		};
 		
 		$scope.save = function(district){
@@ -58,8 +59,8 @@ testreg.controller('DistrictEditController',['$scope','$state', 'loadedData', 'D
 					$scope.district.stateAbbreviation =  parentEntity.stateAbbreviation;
 					return;
 				}
-			} ) 
-		}
+			} );
+		};
     
 		$scope.cancel = function() {
 			$scope.actionButton = 'cancel';

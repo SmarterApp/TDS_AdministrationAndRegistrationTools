@@ -438,6 +438,33 @@ textarea.large {
 tr.expander td {
        white-space: normal;
 }
+
+a.skipToContent {
+    padding: 6px;
+    position:absolute;
+    left:-10000px;
+    top:0px;
+    overflow:hidden;
+    border: 1px solid white;
+    color: white;
+    background: transparent;
+    -webkit-transition: top .1s ease-out, background .5s linear;
+    transition: top 1s ease-out, background 1s linear;
+    z-index: 100;
+}
+
+a.skipToContent:focus {
+    left:580px;
+    background:#3DB11A;
+    -webkit-transition: top .1s ease-in, background .5s linear;
+    transition: top .1s ease-in, background .5s linear;
+}
+
+a.skipToContent:blur {
+    left:-10000px;
+    -webkit-transition: top .1s ease-out, background .5s linear;
+    transition: top .1s ease-out, background .5s linear;
+}
  
 ul.propertyList {
     list-style-type:none;
@@ -660,6 +687,7 @@ h3 {
 h5 {
     font-size: 1.15em;
 }
+
 h5 span{
     float:right;
     font-size:0.7em;
@@ -1221,4 +1249,7 @@ th.control-label-required:before {
 .fieldGroup label.control-label-summary{
 	float:left;
 	text-align:left;
+}
+.assessmentFont {
+      font-size: 1.00em;
 }

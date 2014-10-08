@@ -5,7 +5,7 @@
 <div data-ng-form="subjectForm" class="formWrapper">
     <div data-ng-show="subjectForm.$dirty" class="dirtynag">* Warning: You have unsaved changes</div>
     <div class="fieldGroup">
-    <h5>Merge Subject<span class="control-label-required">Indicates required field</span></h5>
+    <h5 tabindex="-1">Merge Subject<span class="control-label-required">Indicates required field</span></h5>
         <ul>
             <li>
                 <span class="viewSpanLeft">
@@ -14,21 +14,21 @@
             </li>
             <li>
                 <span> 
-                    <label class="control-label-required" for="subject.entityName">New Subject:</label>
-                    <select  data-ng-model="subject.code" data-ng-options="subject as subject for subject in subjects | orderBy:'code'" >
+                    <label class="control-label-required" for="subject.entityName" title="New Subject">New Subject:</label>
+                    <select  data-ng-model="subject.code" data-ng-options="subject as subject for subject in subjects | orderBy:'code'" title="New Subject" tabindex="0">
                       <option value="">Select...</option>
                     </select>
                 </span>
             </li>                        
         </ul>  
 
-        <button type="button" class="boxBtn" data-ng-show="subjectForm.$dirty" data-ng-click="merge(subject)">
-            <span class="btnIcon icon_sprite icon_save2 ng-class:{ajax_indicator:savingIndicator}" ></span>
+        <button type="button" class="boxBtn" data-ng-show="subjectForm.$dirty" data-ng-click="merge(subject)" tabindex="0">
+            <span class="btnIcon icon_sprite icon_save2 ng-class:{ajax_indicator:savingIndicator}" aria-hidden="true"></span>
             <span class="btnText">Merge</span>
         </button>
      
-        <button type="button" class="boxBtn" data-ng-click="cancel()">
-            <span class="btnIcon icon_sprite icon_cancel2" ></span>
+        <button type="button" class="boxBtn" data-ng-click="cancel()" tabindex="0">
+            <span class="btnIcon icon_sprite icon_cancel2" aria-hidden="true"></span>
             <span class="btnText">Cancel</span>
         </button>
     </div>

@@ -8,19 +8,19 @@
 <div data-ng-form="studentForm" class="studentFormWrapper">
     <div data-ng-show="studentForm.$dirty" class="dirtynag">* Warning: You have unsaved changes</div>
     <div class="fieldGroup">
-    <h5 class="studentLayout">{{formAction}} {{entityNameLabels['Student']}} Information <span class="control-label-required">Indicates required field</span></h5>
+    <h5 class="studentLayout" tabindex="-1">{{formAction}} {{entityNameLabels['Student']}} Information <span class="control-label-required">Indicates required field</span></h5>
         <ul class="studentLayout">
             <li>
                 <span> 
-                    <label class="control-label-required" for="student.stateAbbreviation">{{xwalk('State Abbreviation')}}:</label>
-                     <select  data-ng-model="student.stateAbbreviation" data-ng-options="state.entityId as state.entityId for state in states | orderBy:'entityId'" >
+                    <label class="control-label-required" for="student.stateAbbreviation" title="State Abbreviation">{{xwalk('State Abbreviation')}}:</label>
+                     <select  data-ng-model="student.stateAbbreviation" data-ng-options="state.entityId as state.entityId for state in states | orderBy:'entityId'" title="State Abbreviation" tabindex="0">
                       <option value="">Select...</option>
                     </select>
                 </span>
             </li>     
            <li>
                 <span class="district-auto-complete">
-                    <label class="control-label" for="student.districtIdentifier">{{xwalk('District Identifier')}}:</label>
+                    <label class="control-label" for="student.districtIdentifier" title="District Identifier">{{xwalk('District Identifier')}}:</label>
                     <input data-district-auto-complete type="text" 
                     placeholder="Search..." 
                     data-ng-model="district"
@@ -28,12 +28,14 @@
                     data-typeahead-wait-ms="200" 
                     data-typeahead-editable="true" 
                     data-typeahead-input-formatter="formatDistrictLabel($model)"
-                    data-typeahead-on-select="changeDistrict({district:$item})" />  
+                    data-typeahead-on-select="changeDistrict({district:$item})" 
+                    alt="District Identifier" 
+                    tabindex="0" />  
                  </span>               
             </li>     
             <li>
                 <span class="institution-auto-complete">
-                    <label class="control-label-required" for="student.institutionIdentifier">{{xwalk('Institution Identifier')}}:</label>
+                    <label class="control-label-required" for="student.institutionIdentifier" title="Institution Identifier">{{xwalk('Institution Identifier')}}:</label>
                     <input data-institution-auto-complete type="text" 
                     placeholder="Search..." 
                     data-ng-model="institution"
@@ -41,50 +43,52 @@
                     data-typeahead-wait-ms="200" 
                     data-typeahead-editable="true" 
                     data-typeahead-input-formatter="formatInstitutionLabel($model)"
-                    data-typeahead-on-select="changeInstitution({institution:$item})" />  
+                    data-typeahead-on-select="changeInstitution({institution:$item})" 
+                    alt="Institution Identifier" 
+                    tabindex="0" />  
                  </span>               
             </li>
             <li>
                 <span> 
-                    <label class="control-label-required" for="student.entityId" >{{xwalk('SSID')}}:</label>
-                    <input type="text" name="student.entityId" data-ng-model="student.entityId" />
+                    <label class="control-label-required" for="student.entityId" title="SSID">{{xwalk('SSID')}}:</label>
+                    <input type="text" name="student.entityId" data-ng-model="student.entityId" alt="SSID" tabindex="0" />
                 </span>
             </li>                  
             <li>
                 <span> 
-                    <label class="control-label" for="student.firstName" >{{xwalk('First Name')}}:</label>
-                    <input type="text" name="student.firstName" data-ng-model="student.firstName" />
+                    <label class="control-label" for="student.firstName" title="First Name">{{xwalk('First Name')}}:</label>
+                    <input type="text" name="student.firstName" data-ng-model="student.firstName" alt="First Name" tabindex="0" />
                 </span>
             </li> 
             <li>
                 <span> 
-                    <label class="control-label" for="student.lastName" >{{xwalk('Last Name')}}:</label>
-                    <input type="text" name="student.lastName" data-ng-model="student.lastName" />
+                    <label class="control-label" for="student.lastName" title="Last Name">{{xwalk('Last Name')}}:</label>
+                    <input type="text" name="student.lastName" data-ng-model="student.lastName" alt="Last Name" tabindex="0" />
                 </span>
             </li>
             <li>
                 <span> 
-                    <label class="control-label" for="student.middleName" >{{xwalk('Middle Name')}}:</label>
-                    <input type="text" name="student.middleName" data-ng-model="student.middleName" />
+                    <label class="control-label" for="student.middleName" title="Middle Name">{{xwalk('Middle Name')}}:</label>
+                    <input type="text" name="student.middleName" data-ng-model="student.middleName" alt="Middle Name" tabindex="0" />
                 </span>
             </li>                
              <li>
                 <span class="datepicker"> 
-                    <label class="control-label" for="student.birthDate" >{{xwalk('Birth Date')}}:</label>
+                    <label class="control-label" for="student.birthDate" title="Birth Date">{{xwalk('Birth Date')}}:</label>
                     <span class="icon-chevron-calendar" style="width:14px"></span>
-                    <input type="text" name="student.birthDate" data-date-parser data-datepicker-popup="{{format}}"  data-is-open="birthDate.opened" data-show-weeks="false"  data-ng-model="student.birthDate"/>
+                    <input type="text" name="student.birthDate" data-date-parser data-datepicker-popup="{{format}}"  data-is-open="birthDate.opened" data-show-weeks="false"  data-ng-model="student.birthDate" alt="Birth Date" tabindex="0" />
                 </span>
             </li> 
             <li>
                 <span> 
-                    <label class="control-label-required" for="student.externalSsid" >{{xwalk('Alternate SSID')}}:</label>
-                    <input type="text" name="student.externalSsid" data-ng-model="student.externalSsid" />
+                    <label class="control-label-required" for="student.externalSsid" title="Alternate SSID">{{xwalk('Alternate SSID')}}:</label>
+                    <input type="text" name="student.externalSsid" data-ng-model="student.externalSsid" alt="Alternate SSID" tabindex="0" />
                 </span>
             </li>          
             <li>
                 <span> 
-                    <label class="control-label-required" for="student.gender">{{xwalk('Sex')}}:</label>
-                     <select  data-ng-model="student.gender" >
+                    <label class="control-label-required" for="student.gender" title="Sex">{{xwalk('Sex')}}:</label>
+                     <select  data-ng-model="student.gender" title="Sex" tabindex="0">
                         <option value="">Select...</option>
                         <option value="Male">Male</option>
                         <option value="Female">Female</option>
@@ -93,121 +97,121 @@
             </li>      
             <li>
                 <span> 
-                    <label class="control-label" for="student.hispanicOrLatino" >{{xwalk('Hispanic or Latino Ethnicity')}}:</label>
-                    <input type="checkbox" name="student.hispanicOrLatino" data-ng-model="student.hispanicOrLatino" data-ng-true-value="YES" data-ng-false-value="NO" />
+                    <label class="control-label" for="student.hispanicOrLatino" title="Hispanic or Latino Ethnicity">{{xwalk('Hispanic or Latino Ethnicity')}}:</label>
+                    <input type="checkbox" name="student.hispanicOrLatino" data-ng-model="student.hispanicOrLatino" data-ng-true-value="YES" data-ng-false-value="NO" alt="Hispanic or Latino Ethnicity" tabindex="0" />
                 </span>
             </li>
             <li>
                 <span> 
-                    <label class="control-label-required" for="student.gradeLevelWhenAssessed">{{xwalk('Grade Level When Assessed')}}:</label>
+                    <label class="control-label-required" for="student.gradeLevelWhenAssessed" title="Grade Level When Assessed">{{xwalk('Grade Level When Assessed')}}:</label>
                      <select  data-ng-model="student.gradeLevelWhenAssessed" 
-                     		  data-ng-options="grade.id as grade.text for grade in grades">
+                     		  data-ng-options="grade.id as grade.text for grade in grades" title="Grade Level When Assessed" tabindex="0">
                       <option value="">Select...</option>
                     </select>
                 </span>
             </li>                         
             <li>
                 <span> 
-                    <label class="control-label" for="student.americanIndianOrAlaskaNative" >{{xwalk('American Indian Or Alaska Native')}}:</label>
-                    <input type="checkbox" name="student.americanIndianOrAlaskaNative" data-ng-model="student.americanIndianOrAlaskaNative" data-ng-true-value="YES" data-ng-false-value="NO" />
+                    <label class="control-label" for="student.americanIndianOrAlaskaNative" title="American Indian Or Alaska Native">{{xwalk('American Indian Or Alaska Native')}}:</label>
+                    <input type="checkbox" name="student.americanIndianOrAlaskaNative" data-ng-model="student.americanIndianOrAlaskaNative" data-ng-true-value="YES" data-ng-false-value="NO" alt="American Indian Or Alaska Native" tabindex="0" />
                 </span>
             </li>         
              <li>      
                 <span> 
-                    <label class="control-label" for="student.languageCode" >{{xwalk('Language Code')}}:</label>
+                    <label class="control-label" for="student.languageCode" title="Language Code">{{xwalk('Language Code')}}:</label>
 
-                   <select data-ng-model="student.languageCode" data-ng-options="language.id as language.text for language in languages" >
+                   <select data-ng-model="student.languageCode" data-ng-options="language.id as language.text for language in languages" title="Language Code" tabindex="0">
                       <option value="">Select...</option>
                     </select>                    
                 </span>  
              </li>                                  
             <li>   
                 <span> 
-                    <label class="control-label" for="student.asian" >{{xwalk('Asian')}}:</label>
-                    <input type="checkbox" name="student.asian" data-ng-model="student.asian" data-ng-true-value="YES" data-ng-false-value="NO" />
+                    <label class="control-label" for="student.asian" title="Asian">{{xwalk('Asian')}}:</label>
+                    <input type="checkbox" name="student.asian" data-ng-model="student.asian" data-ng-true-value="YES" data-ng-false-value="NO" alt="Asian" tabindex="0" />
                 </span>
             </li>
              <li>     
                 <span class="datepicker"> 
-                    <label class="control-label" for="student.firstEntryDateIntoUsSchool" >{{xwalk('First Entry Date Into US School')}}:</label>
+                    <label class="control-label" for="student.firstEntryDateIntoUsSchool" title="First Entry Date Into US School">{{xwalk('First Entry Date Into US School')}}:</label>
                     <span class="icon-chevron-calendar" style="width:14px"></span>
-                    <input type="text" name="student.firstEntryDateIntoUsSchool" data-date-parser data-datepicker-popup="{{format}}"  data-is-open="firstEntryDateIntoUsSchool.opened" data-show-weeks="false" readonly="readonly" data-ng-model="student.firstEntryDateIntoUsSchool"/>
+                    <input type="text" name="student.firstEntryDateIntoUsSchool" data-date-parser data-datepicker-popup="{{format}}"  data-is-open="firstEntryDateIntoUsSchool.opened" data-show-weeks="false" readonly="readonly" data-ng-model="student.firstEntryDateIntoUsSchool" alt="First Entry Into US School" tabindex="0" />
                 </span>
              </li>           
             <li>
                 <span> 
-                    <label class="control-label" for="student.blackOrAfricanAmerican" >{{xwalk('Black Or African American')}}:</label>
-                    <input type="checkbox" name="student.blackOrAfricanAmerican" data-ng-model="student.blackOrAfricanAmerican" data-ng-true-value="YES" data-ng-false-value="NO" />
+                    <label class="control-label" for="student.blackOrAfricanAmerican" title="Black Or African American">{{xwalk('Black Or African American')}}:</label>
+                    <input type="checkbox" name="student.blackOrAfricanAmerican" data-ng-model="student.blackOrAfricanAmerican" data-ng-true-value="YES" data-ng-false-value="NO" alt="Black Or African American" tabindex="0" />
                 </span>  
             </li>
              <li>
                 <span class="datepicker"> 
-                    <label class="control-label" for="student.lepEntryDate" >{{xwalk('Limited English Proficiency Entry Date')}}:</label>
+                    <label class="control-label" for="student.lepEntryDate" title="Limited English Proficiency Entry Date">{{xwalk('Limited English Proficiency Entry Date')}}:</label>
                     <span class="icon-chevron-calendar" style="width:14px"></span>
-                    <input type="text" name="student.lepEntryDate" data-date-parser data-datepicker-popup="{{format}}"  data-is-open="lepEntryDate.opened" data-show-weeks="false" readonly="readonly" data-ng-model="student.lepEntryDate"/>
+                    <input type="text" name="student.lepEntryDate" data-date-parser data-datepicker-popup="{{format}}"  data-is-open="lepEntryDate.opened" data-show-weeks="false" readonly="readonly" data-ng-model="student.lepEntryDate" alt="Limited English Proficiency Entry Date" tabindex="0" />
                 </span>
              </li>       
             <li>            
                 <span> 
-                    <label class="control-label" for="student.white" >{{xwalk('White')}}:</label>
-                    <input type="checkbox" name="student.white" data-ng-model="student.white" data-ng-true-value="YES" data-ng-false-value="NO" />
+                    <label class="control-label" for="student.white" title="White">{{xwalk('White')}}:</label>
+                    <input type="checkbox" name="student.white" data-ng-model="student.white" data-ng-true-value="YES" data-ng-false-value="NO" alt="White" tabindex="0" />
                 </span> 
             </li>
              <li>
                 <span class="datepicker"> 
-                    <label class="control-label" for="student.lepExitDate" >{{xwalk('LEP Exit Date')}}:</label>
+                    <label class="control-label" for="student.lepExitDate" title="LEP Exit Date">{{xwalk('LEP Exit Date')}}:</label>
                     <span class="icon-chevron-calendar" style="width:14px"></span>
-                    <input type="text" name="student.lepExitDate" data-date-parser data-datepicker-popup="{{format}}"  data-is-open="lepExitDate.opened" data-show-weeks="false" readonly="readonly" data-ng-model="student.lepExitDate" />
+                    <input type="text" name="student.lepExitDate" data-date-parser data-datepicker-popup="{{format}}"  data-is-open="lepExitDate.opened" data-show-weeks="false" readonly="readonly" data-ng-model="student.lepExitDate" alt="LEP Exit Date" tabindex="0" />
                 </span>
              </li>            
             <li>
                 <span> 
-                    <label class="control-label" for="student.nativeHawaiianOrPacificIsland" >{{xwalk('Native Hawaiian Or Other Pacific Islander')}}:</label>
-                    <input type="checkbox" name="student.nativeHawaiianOrPacificIsland" data-ng-model="student.nativeHawaiianOrPacificIsland" data-ng-true-value="YES" data-ng-false-value="NO" />
+                    <label class="control-label" for="student.nativeHawaiianOrPacificIsland" title="Native Hawaiian Or Other Pacific Islander">{{xwalk('Native Hawaiian Or Other Pacific Islander')}}:</label>
+                    <input type="checkbox" name="student.nativeHawaiianOrPacificIsland" data-ng-model="student.nativeHawaiianOrPacificIsland" data-ng-true-value="YES" data-ng-false-value="NO" alt="Native Hawaiian Or Other Pacific Islander" tabindex="0" />
                 </span>
             </li>
              <li>   
                 <span> 
-                    <label class="control-label" for="student.title3ProgramType" >{{xwalk('Title III Language Instruction Program Type')}}:</label>
-                    <select  data-ng-model="student.title3ProgramType" data-ng-options="progType.name as progType.description for progType in title3ProgramType" >
+                    <label class="control-label" for="student.title3ProgramType" title="Title III Language Instruction Program Type">{{xwalk('Title III Language Instruction Program Type')}}:</label>
+                    <select  data-ng-model="student.title3ProgramType" data-ng-options="progType.name as progType.description for progType in title3ProgramType" title="Title III Language Instruction Program Type" tabindex="0">
                       <option value="">Select...</option>
                     </select>
                 </span> 
              </li>             
             <li> 
                 <span> 
-                    <label class="control-label" for="student.twoOrMoreRaces" >{{xwalk('Demographic Race Two Or More Races')}}:</label>
-                    <input type="checkbox" name="student.twoOrMoreRaces" data-ng-model="student.twoOrMoreRaces" data-ng-true-value="YES" data-ng-false-value="NO" />
+                    <label class="control-label" for="student.twoOrMoreRaces" title="Demographic Race Two Or More Races">{{xwalk('Demographic Race Two Or More Races')}}:</label>
+                    <input type="checkbox" name="student.twoOrMoreRaces" data-ng-model="student.twoOrMoreRaces" data-ng-true-value="YES" data-ng-false-value="NO" alt="Demographic Race Two Or More Races" tabindex="0" />
                 </span> 
             </li>
              <li> 
                 <span> 
-                    <label class="control-label" for="student.primaryDisabilityType" >{{xwalk('Primary Disability Type')}}:</label>
-                    <select  data-ng-model="student.primaryDisabilityType" data-ng-options="disabilityType.name as disabilityType.name for disabilityType in primaryDisabilityType" >
+                    <label class="control-label" for="student.primaryDisabilityType" title="Primary Disability Type">{{xwalk('Primary Disability Type')}}:</label>
+                    <select  data-ng-model="student.primaryDisabilityType" data-ng-options="disabilityType.name as disabilityType.name for disabilityType in primaryDisabilityType" title="Primary Disability Type" tabindex="0">
                       <option value="">Select...</option>
                     </select>
                 </span>                                                                                                                                  
             </li>            
             <li>
                 <span> 
-                    <label class="control-label-required" for="student.iDEAIndicator" >{{xwalk('IDEA Indicator')}}:</label>
-                    <select  data-ng-model="student.iDEAIndicator" data-ng-options="ms.name as ms.name for ms  in iDEAIndicator" >
+                    <label class="control-label-required" for="student.iDEAIndicator" title="IDEA Indicator">{{xwalk('IDEA Indicator')}}:</label>
+                    <select  data-ng-model="student.iDEAIndicator" data-ng-options="ms.name as ms.name for ms  in iDEAIndicator" title="IDEA Indicator" tabindex="0">
                         <option value="">Select...</option>
                     </select>
                 </span>
             </li>
             <li>               
                 <span> 
-                    <label class="control-label-required" for="student.section504Status" >{{xwalk('Section 504 Status')}}:</label>
-                    <select  data-ng-model="student.section504Status" data-ng-options="secStatus.name as secStatus.name for secStatus in section504Status" >
+                    <label class="control-label-required" for="student.section504Status" title="Section 504 Status">{{xwalk('Section 504 Status')}}:</label>
+                    <select  data-ng-model="student.section504Status" data-ng-options="secStatus.name as secStatus.name for secStatus in section504Status" title="Section 504 Status" tabindex="0">
                       <option value="">Select...</option>
                     </select>
                 </span>
             </li>               
             <li>
                 <span> 
-                    <label class="control-label-required" for="student.lepStatus" >{{xwalk('LEPStatus')}}:</label>
-                    <select  data-ng-model="student.lepStatus" data-ng-options="ms.name as ms.name for ms in lepStatus" >
+                    <label class="control-label-required" for="student.lepStatus" title="LEPStatus">{{xwalk('LEPStatus')}}:</label>
+                    <select  data-ng-model="student.lepStatus" data-ng-options="ms.name as ms.name for ms in lepStatus" title="LEPStatus" tabindex="0">
                         <option value="">Select...</option>
                     </select>                    
                     
@@ -215,15 +219,15 @@
             </li>
             <li>            
                 <span> 
-                    <label class="control-label" for="student.title3ProgressStatus" >{{xwalk('English Language Proficiency Level')}}:</label>
-                     <input type="text" name="student.title3ProgressStatus" data-ng-model="student.title3ProgressStatus" />
+                    <label class="control-label" for="student.title3ProgressStatus" title="English Language Proficiency Level">{{xwalk('English Language Proficiency Level')}}:</label>
+                     <input type="text" name="student.title3ProgressStatus" data-ng-model="student.title3ProgressStatus" alt="English Language Proficiency Level" tabindex="0" />
 
                 </span> 
              </li>
             <li>
                 <span> 
-                    <label class="control-label-required" for="student.disadvantageStatus" >{{xwalk('Economic Disadvantage Status')}}:</label>
-                    <select  data-ng-model="student.disadvantageStatus" data-ng-options="ms.name as ms.name for ms in disadvantageStatus" >
+                    <label class="control-label-required" for="student.disadvantageStatus" title="Economic Disadvantage Status">{{xwalk('Economic Disadvantage Status')}}:</label>
+                    <select  data-ng-model="student.disadvantageStatus" data-ng-options="ms.name as ms.name for ms in disadvantageStatus" title="Economic Disadvantage Status" tabindex="0">
                         <option value="">Select...</option>
                     </select>                 
                 </span> 
@@ -235,8 +239,8 @@
              </li>
             <li>                
                 <span> 
-                    <label class="control-label" for="student.migrantStatus" >{{xwalk('Migrant Status')}}:</label>
-                    <select  data-ng-model="student.migrantStatus" data-ng-options="ms.name as ms.name for ms in migrantStatus" >
+                    <label class="control-label" for="student.migrantStatus" title="Migrant Status">{{xwalk('Migrant Status')}}:</label>
+                    <select  data-ng-model="student.migrantStatus" data-ng-options="ms.name as ms.name for ms in migrantStatus" title="Migrant Status" tabindex="0">
                       <option value="">Select...</option>
                     </select>
                 </span>                                                                  
@@ -250,8 +254,8 @@
         <br>
         
         <div data-ng-show="eligibleAssessments.length > 0">
-        <h5 class="h5Accommodations">Eligible {{entityNameLabels['Assessments']}}</h5>
-        <table class="dataTable">
+        <h5 class="h5Accommodations" tabindex="-1">Eligible {{entityNameLabels['Assessments']}}</h5>
+        <table class="dataTable" role="grid">
            <colgroup>
                <col style="width:60%">
                <col>
@@ -259,33 +263,33 @@
                <col>
                <col>
            </colgroup>
-           <tr>     
-               <th>Test Name</th>
-               <th>Version</th>
-               <th>Subject Code</th>
-               <th>Status</th>
-               <th>Opt-out</th>
+           <tr role="row">     
+               <th scope="col" id="testNameHeader" title="Test Name">Test Name</th>
+               <th scope="col" id="versionHeader" title="Version">Version</th>
+               <th scope="col" id="subjectCodeHeader" title="Subject Code">Subject Code</th>
+               <th scope="col" id="statusHeader" title="Status">Status</th>
+               <th scope="col" id="optoutHeader" title="Opt-out">Opt-out</th>
            </tr>
-            <tr data-ng-repeat="assessment in eligibleAssessments">
-                <td>{{assessment.testName}}</td>
-                <td>{{assessment.version}}</td>
-                <td>{{assessment.subjectCode}}</td>
-                <td>{{assessment.id | testStatusFilter:testStatuses}}</td>
-                <td><input style="width:80px;" data-ng-show="!hasStatus(assessment.id)" type="checkbox" data-ng-model="studentTestStatuses[assessment.id]" data-ng-true-value="OPTED_OUT" data-ng-false-value="" /> </td>
+            <tr data-ng-repeat="assessment in eligibleAssessments" role="row">
+                <td role="gridcell" aria-labelledby="testNameHeader">{{assessment.testName}}</td>
+                <td role="gridcell" aria-labelledby="versionHeader">{{assessment.version}}</td>
+                <td role="gridcell" aria-labelledby="subjectCodeHeader">{{assessment.subjectCode}}</td>
+                <td role="gridcell" aria-labelledby="statusHeader">{{assessment.id | testStatusFilter:testStatuses}}</td>
+                <td role="gridcell" aria-labelledby="optoutHeader"><input style="width:80px;" data-ng-show="!hasStatus(assessment.id)" type="checkbox" data-ng-model="studentTestStatuses[assessment.id]" data-ng-true-value="OPTED_OUT" data-ng-false-value="" alt="Student Test Statuses" tabindex="0" /> </td>
             </tr>
         </table>
         </div>
         <div data-ng-hide="eligibleAssessments.length > 0">
-            <h5 class="h5Accommodations">Not Eligible for any {{entityNameLabels['Assessments']}}</h5>
+            <h5 class="h5Accommodations" tabindex="-1">Not Eligible for any {{entityNameLabels['Assessments']}}</h5>
         </div>
         
         <br>
-        <button type="button" class="boxBtn" data-ng-show="studentForm.$dirty" data-ng-click="save(student)">
-            <span class="btnIcon icon_sprite icon_save2 ng-class:{ajax_indicator:savingIndicator}" ></span>
+        <button type="button" class="boxBtn" data-ng-show="studentForm.$dirty" data-ng-click="save(student)" tabindex="0">
+            <span class="btnIcon icon_sprite icon_save2 ng-class:{ajax_indicator:savingIndicator}" aria-hidden="true"></span>
             <span class="btnText">Save</span>
         </button>
-        <button type="button" class="boxBtn" data-ng-click="cancel()">
-            <span class="btnIcon icon_sprite icon_cancel2" ></span>
+        <button type="button" class="boxBtn" data-ng-click="cancel()" tabindex="0">
+            <span class="btnIcon icon_sprite icon_cancel2" aria-hidden="true"></span>
             <span class="btnText">Cancel</span>
         </button>
     </div>

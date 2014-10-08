@@ -5,7 +5,7 @@
 </div>
 
 
-<div class="boxTitle"><h2>Download Templates</h2></div>
+<div class="boxTitle"><h2 tabindex="-1">Download Templates</h2></div>
         
 <div>
      <div >
@@ -13,33 +13,33 @@
 	     </p>
          <form id="fileupload" method="POST" enctype="multipart/form-data"  data-file-upload="options">
             <!-- The table listing the files available for download -->
-            <table class="dataTable  ng-cloak">
+            <table class="dataTable  ng-cloak" role="grid">
             	<colgroup>
                     <col>
                     <col>
                 </colgroup>
-                <tr>
+                <tr role="row">
                      
-                    <th>Entity Name</th>
+                    <th scope="col" id="entityNameHeader" title="Entity Name">Entity Name</th>
                 </tr>
-                <tr data-ng-repeat="entity in entities">
-                 	<td>
-                		<input type="checkbox"  data-ng-model="entity.code">{{entityNameLabels[entity.entityName]}}
+                <tr data-ng-repeat="entity in entities" role="row">
+                 	<td role="gridcell" aria-labelledby="entityNameHeader">
+                		<input type="checkbox"  data-ng-model="entity.code" alt="Entity Name" tabindex="0">{{entityNameLabels[entity.entityName]}}
                 	</td>
                		
                 </tr>
              </table>
              <br>
-             <table>
-             	<tr>
+             <table role="grid">
+             	<tr role="row">
                 	<td colspan="2" data-ng-repeat="fileType in fileTypes">
-                		<span><input type="checkbox" data-ng-model="fileType.code"></span><span>:{{fileType.name}} &nbsp;</span>
+                		<span><input type="checkbox" data-ng-model="fileType.code" alt="File Type" tabindex="0"></span><span>:{{fileType.name}} &nbsp;</span>
                 	</td>
                 </tr>
              </table>
              
-             <button type="button" class="boxBtn"  data-ng-click="downloadTemplate()" data-ng-show="selectedFileTypes.length>0 && selectedEntities.length>0">
-            	<span class="btnIcon icon_sprite icon_save2 ng-class:{ajax_indicator:savingIndicator}" ></span>
+             <button type="button" class="boxBtn"  data-ng-click="downloadTemplate()" data-ng-show="selectedFileTypes.length>0 && selectedEntities.length>0" tabindex="0">
+            	<span class="btnIcon icon_sprite icon_save2 ng-class:{ajax_indicator:savingIndicator}" aria-hidden="true"></span>
             	<span class="btnText">Download</span>
         	</button>
         	

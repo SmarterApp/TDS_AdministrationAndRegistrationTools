@@ -13,18 +13,25 @@
     <div class="successMessage" data-ng-show ="fileSummary[0].updatedRecords != 0 || fileSummary[0].addedRecords !=0 || fileSummary[0].deletedRecords !=0" ><div class="icon_successMessage icon_sprite icon_save1"></div>Your file has successfully been saved.</div> 
     <div class="errorMessage"   data-ng-show ="fileSummary[0].updatedRecords == 0 && fileSummary[0].addedRecords ==0 && fileSummary[0].deletedRecords ==0" ><div class="icon_errorMessage icon_sprite icon_error"></div>Zero records have been uploaded.</div>
     <div style="clear:both"></div>
-        <table class="dataTable">
-                 <tr bordercolor="blue">
+        <table class="dataTable" role="grid">
+                 <tr bordercolor="blue" role="row">
 	               <td>File Type</td>
 	               <td>Deleted Records</td>
 	               <td>Inserted Records</td>
 	           </tr> 
-            <tr data-ng-repeat="summary in fileSummary">
+            <tr data-ng-repeat="summary in fileSummary" role="row">
 	               <td>{{summary.formatType}}</td>
 	               <td>{{summary.deletedRecords}}</td>
 	               <td>{{summary.updatedRecords}}</td>
 	           </tr> 
-        </table>
+        </table>      
 </div>
+ <br>
+<div class="fieldGroup">
+        <button type="button" class="boxBtn" data-ng-click="cancel(fileSummary[0].formatType)">
+            <span class="btnIcon icon_sprite icon_reTry2" ></span>
+            <span class="btnText">Back</span>
+        </button>
+</div>         
 </div>  
 <div class="clear"></div>

@@ -20,7 +20,7 @@
 
     <script src="resources/vendor/angular/angular-module-cookies.min.js"></script>    
         
-    <script src="resources/vendor/angular/ui-bootstrap-tpls-0.6.0.min.js"></script> 
+    <script src="resources/vendor/angular/ui-bootstrap-tpls-0.6.0.js"></script> 
     
     <script src="resources/vendor/image_upload/jquery.ui.widget.js"></script>
 

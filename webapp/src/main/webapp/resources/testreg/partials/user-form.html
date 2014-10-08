@@ -9,30 +9,30 @@
 <div data-ng-form="userForm" class="formWrapper">
     <div data-ng-show="userForm.$dirty" class="dirtynag">* Warning: You have unsaved changes</div>
     <div class="fieldGroup">
-    <h5>{{formAction}} {{entityNameLabels['User']}} Information <span class="control-label-required">Indicates required field</span></h5>
+    <h5 tabindex="-1">{{formAction}} {{entityNameLabels['User']}} Information <span class="control-label-required">Indicates required field</span></h5>
         <ul>
              <li>
                 <span> 
-                    <label class="control-label-required" for="user.firstName">{{xwalk('First Name')}}:</label>
-                    <input type="text" data-ng-model="user.firstName"/>
+                    <label class="control-label-required" for="user.firstName" title="First Name">{{xwalk('First Name')}}:</label>
+                    <input type="text" data-ng-model="user.firstName" alt="First Name" tabindex="0" />
                 </span>
             </li>
              <li>
                 <span> 
-                    <label class="control-label-required" for="user.lastName">{{xwalk('Last Name')}}:</label>
-                    <input type="text" data-ng-model="user.lastName"/>
+                    <label class="control-label-required" for="user.lastName" title="Last Name">{{xwalk('Last Name')}}:</label>
+                    <input type="text" data-ng-model="user.lastName" alt="Last Name" tabindex="0" />
                </span>
             </li> 
              <li>
                 <span> 
-                    <label class="control-label-required" for="user.email">{{xwalk('Email Address')}}:</label>
-                    <input type="text" data-ng-model="user.email"/>
+                    <label class="control-label-required" for="user.email" title="Email Address">{{xwalk('Email Address')}}:</label>
+                    <input type="text" data-ng-model="user.email" alt="Email Address" tabindex="0" />
                </span>
             </li>  
              <li>
                 <span> 
-                    <label class="control-label" for="user.phone">{{xwalk('Telephone Number')}}:</label>
-                    <input type="text" data-ng-model="user.phone"/>
+                    <label class="control-label" for="user.phone" title="Telephone Number">{{xwalk('Telephone Number')}}:</label>
+                    <input type="text" data-ng-model="user.phone" alt="Telephone Number" tabindex="0" />
                 </span>
             </li>  
         </ul>
@@ -42,9 +42,9 @@
             <div class="user-error-alert">{{user.changeEventExportError}}</div>
         </div>
 
-        <h5>Role Associations</h5>
+        <h5 tabindex="-1">Role Associations</h5>
         <div class="tableWrapper">
-            <table class="assessmentTable">
+            <table class="assessmentTable" role="grid">
                     <colgroup>
                         <col>
                         <col>
@@ -53,93 +53,93 @@
                         <col>
                         <col class="actionColumn">
                     </colgroup>
-                    <tr>
-                        <th data-ng-class="{'control-label-required' : user.roleAssociations && user.roleAssociations.length > 0}">{{xwalk('Role')}}</th>
-                        <th data-ng-class="{'control-label-required' : user.roleAssociations && user.roleAssociations.length > 0}">{{xwalk('Responsible Entity Type')}}</th>
-                        <th data-ng-class="{'control-label' : user.roleAssociations && user.roleAssociations.length > 0}">{{xwalk('Parent Filter')}}</th>
-                        <th data-ng-class="{'control-label-required' : user.roleAssociations && user.roleAssociations.length > 0}">{{xwalk('Associated Entity Id')}}</th>
-                        <th>{{xwalk('State')}}</th>
-                        <th>
+                    <tr role="row">
+                        <th data-ng-class="{'control-label-required' : user.roleAssociations && user.roleAssociations.length > 0}" scope="col" id="roleHeader" title="Role">{{xwalk('Role')}}</th>
+                        <th data-ng-class="{'control-label-required' : user.roleAssociations && user.roleAssociations.length > 0}" scope="col" id="entityTypeHeader" title="Responsible Entity Type">{{xwalk('Responsible Entity Type')}}</th>
+                        <th data-ng-class="{'control-label' : user.roleAssociations && user.roleAssociations.length > 0}" scope="col" id="parentFilterHeader" title="Parent Filter">{{xwalk('Parent Filter')}}</th>
+                        <th data-ng-class="{'control-label-required' : user.roleAssociations && user.roleAssociations.length > 0}" scope="col" id="entityIdHeader" title="Associated Entity Id">{{xwalk('Associated Entity Id')}}</th>
+                        <th scope="col" id="stateHeader" title="State">{{xwalk('State')}}</th>
+                        <th scope="col" id="actionHeader" title="Save">
                             <div class="tableButtonGroup">
-                              <button data-ng-click="addRoleAssociation()" class="boxBtn" ><span class="btnIcon icon_sprite icon_saveAdd2"></span></button>
+                              <button data-ng-click="addRoleAssociation()" class="boxBtn" tabindex="0"><span class="btnIcon icon_sprite icon_saveAdd2" aria-hidden="true"></span></button>
                             </div>
                         </th>
                     </tr>
-                    <tr  data-ng-repeat="roleAssociation in user.roleAssociations">   
-                        <td>
+                    <tr  data-ng-repeat="roleAssociation in user.roleAssociations" role="row">   
+                        <td role="gridcell" aria-labelledby="roleHeader">
                             <div class="centerDiv">                
-                                 <select data-ng-model="roleAssociation.role" data-ng-options="userRole.role as userRole.role for userRole in roles | orderBy:'role'" data-ng-change="getEntities(roleAssociation.role, $index)">
+                                 <select data-ng-model="roleAssociation.role" data-ng-options="userRole.role as userRole.role for userRole in roles | orderBy:'role'" data-ng-change="getEntities(roleAssociation.role, $index)" title="Role" tabindex="0">
                                     <option value="">Select...</option>
                                  </select>
                             </div>
                         </td>               
-                        <td>
+                        <td role="gridcell" aria-labelledby="entityTypeHeader">
                             <div class="centerDiv">                
-                                <select  data-ng-model="roleAssociation.level" data-ng-options="entity.entity as entity.entity for entity in entities[$index]" data-ng-change="getAssociatedEntityIds(roleAssociation.level, $index)">
+                                <select  data-ng-model="roleAssociation.level" data-ng-options="entity.entity as entity.entity for entity in entities[$index]" data-ng-change="getAssociatedEntityIds(roleAssociation.level, $index)" title="Level" tabindex="0">
                                     <option value="">Select...</option>
                                 </select>
                             </div>
                         </td>
-                        <td>
+                        <td role="gridcell" aria-labelledby="parentFilterHeader">
                             <div class="centerDiv">
-                                 <select  data-ng-model="selectedParentId[$index]" data-ng-options="entity.entityId as entity.entityId + ' - ' + entity.entityName + ' (' + entity.entityType + ')' for entity in parentEntityIds[$index] | orderBy:'entityId'" data-ng-change="filteredEntityIds($index,roleAssociation.level,selectedParentId[$index])">
+                                 <select  data-ng-model="selectedParentId[$index]" data-ng-options="entity.entityId as entity.entityId + ' - ' + entity.entityName + ' (' + entity.entityType + ')' for entity in parentEntityIds[$index] | orderBy:'entityId'" data-ng-change="filteredEntityIds($index,roleAssociation.level,selectedParentId[$index])" title="Identifier" tabindex="0">
                                     <option value="">Select...</option>
                                  </select>
                             </div>
                         </td>
-                        <td>
+                        <td role="gridcell" aria-labelledby="entityIdHeader">
                             <div class="centerDiv">
-                                <select  data-ng-model="roleAssociation.associatedEntityId" data-ng-options="entity.entityId as entity.entityId + ' - ' + entity.entityName for entity in entityIds[$index] | orderBy:'entityId'" data-ng-change="getStateAbbreviation(entityIds[$index],roleAssociation)">
+                                <select  data-ng-model="roleAssociation.associatedEntityId" data-ng-options="entity.entityId as entity.entityId + ' - ' + entity.entityName for entity in entityIds[$index] | orderBy:'entityId'" data-ng-change="getStateAbbreviation(entityIds[$index],roleAssociation)" title="Association ID" tabindex="0">
                                     <option value="">Select...</option>
                                 </select>
                             </div>
                         </td>
-                        <td>
+                        <td role="gridcell" aria-labelledby="stateHeader">
                           <div class="centerDiv">                      
                                 <span data-ng-show="!roleAssociation.muliFlag">{{roleAssociation.stateAbbreviation}}</span>  
                                 <span data-ng-show="roleAssociation.muliFlag">
-                                     <select  data-ng-model="roleAssociation.stateAbbreviation" data-ng-options="stateAbbreviation for stateAbbreviation in roleAssociation.stateAbbreviations" >
+                                     <select  data-ng-model="roleAssociation.stateAbbreviation" data-ng-options="stateAbbreviation for stateAbbreviation in roleAssociation.stateAbbreviations" title="State Abbreviation" tabindex="0">
                                  </select>  
                                  </span>  
                             </div>
                         </td>                                                  
-                        <td>
+                        <td role="gridcell" aria-labelledby="actionHeader">
                             <div class="tableButtonGroup">
-                                <button data-ng-click="removeRoleAssociation($index)" class="boxBtn"><span class="btnIcon icon_sprite icon_delete2"></span></button>
+                                <button data-ng-click="removeRoleAssociation($index)" class="boxBtn" tabindex="0"><span class="btnIcon icon_sprite icon_delete2" aria-hidden="true"></span></button>
                             </div>
                         </td>      
                     </tr>
             </table>
        </div>
         
-        <button type="button" class="boxBtn" data-ng-show="userForm.$dirty" data-ng-click="save(user)">
-            <span class="btnIcon icon_sprite icon_save2 ng-class:{ajax_indicator:savingIndicator}" ></span>
+        <button type="button" class="boxBtn" data-ng-show="userForm.$dirty" data-ng-click="save(user)" tabindex="0">
+            <span class="btnIcon icon_sprite icon_save2 ng-class:{ajax_indicator:savingIndicator}" aria-hidden="true"></span>
             <span class="btnText">Save</span>
         </button>
      
-        <button type="button" class="boxBtn" data-ng-click="cancel()">
-            <span class="btnIcon icon_sprite icon_cancel2" ></span>
+        <button type="button" class="boxBtn" data-ng-click="cancel()" tabindex="0">
+            <span class="btnIcon icon_sprite icon_cancel2" aria-hidden="true"></span>
             <span class="btnText">Cancel</span>
         </button>
 
-        <h5>{{entityNameLabels['User']}} Actions</h5>
-        <button type="button" class="boxBtn" data-ng-click="sync()">
-            <span class="btnIcon icon_sprite icon_reTry2" ></span>
+        <h5 tabindex="-1">{{entityNameLabels['User']}} Actions</h5>
+        <button type="button" class="boxBtn" data-ng-click="sync()" tabindex="0">
+            <span class="btnIcon icon_sprite icon_reTry2" aria-hidden="true"></span>
             <span class="btnText">Sync</span>
         </button>
 
-        <button type="button" class="boxBtn" data-ng-click="resetPassword()">
-            <span class="btnIcon icon_sprite icon_save2" ></span>
+        <button type="button" class="boxBtn" data-ng-click="resetPassword()" tabindex="0">
+            <span class="btnIcon icon_sprite icon_save2" aria-hidden="true"></span>
             <span class="btnText">Reset Password</span>
         </button>
 
-        <button type="button" class="boxBtn" data-ng-click="lock()">
-            <span class="btnIcon icon_sprite icon_save2" ></span>
+        <button type="button" class="boxBtn" data-ng-click="lock()" tabindex="0">
+            <span class="btnIcon icon_sprite icon_save2" aria-hidden="true"></span>
             <span class="btnText">Lock User</span>
         </button>
 
-        <button type="button" class="boxBtn" data-ng-click="unlock()">
-            <span class="btnIcon icon_sprite icon_save2" ></span>
+        <button type="button" class="boxBtn" data-ng-click="unlock()" tabindex="0">
+            <span class="btnIcon icon_sprite icon_save2" aria-hidden="true"></span>
             <span class="btnText">Unlock User</span>
         </button>
 

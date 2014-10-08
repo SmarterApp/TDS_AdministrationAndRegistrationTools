@@ -12,6 +12,9 @@ testadmin.controller('HomeController', ['$scope','$location','$state', '$window'
 			$location.path(path);			
 		};
 		
+		 $scope.openUserGuide = function(link) {
+			$window.open(link,'_blank');
+		 };
 		 $scope.isActiveLink = function(link){
 			 return  $scope.activeLink === link || $state.current.name === link; 
 	     };

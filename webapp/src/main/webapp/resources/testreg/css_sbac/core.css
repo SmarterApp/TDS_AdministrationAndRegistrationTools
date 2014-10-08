@@ -61,6 +61,9 @@ body, button, input, select, textarea {
     font-family: 'Arial', sans-serif;
     color: #5a5a5a;
 }
+h1, h2, h3, h4, h5, h6 {
+    outline: none;
+}
 /* 
  * Remove text-shadow in selection highlight: h5bp.com/i
  * These selection declarations have to be separate
@@ -160,7 +163,7 @@ fieldset {
 }
 /* Indicate that 'label' will shift focus to the associated form element */
 label {
-    cursor: pointer;
+    cursor: default;
 }
 /* 
  * 1. Correct color not inheriting in IE6/7/8/9 
@@ -581,6 +584,7 @@ td {
   min-width: 1024px;
   position: relative;
   top:0px;
+  outline: none;
 }
 .boxWrap {
     /*text-align: center;*/

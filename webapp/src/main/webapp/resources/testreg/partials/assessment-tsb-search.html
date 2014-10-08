@@ -7,35 +7,38 @@
     <div><span class="icon_sprite icon_error error"></span>{{error}}</div>
 </div>
 
-<div class="boxTitle"><h2>Test Spec Bank {{entityNameLabels['Assessment']}} Search</h2></div>
+<div class="boxTitle"><h2 tabindex="-1">Test Spec Bank {{entityNameLabels['Assessment']}} Search</h2></div>
 <div>
     <div data-searchable data-search-overwrite-url="searchUrl" data-search-params="searchParams" data-search-response="searchResponse">
         <div class="fieldGroup">
-            <h5>Search Filters</h5>
+            <h5 tabindex="-1">Search Filters</h5>
             <ul>
-	            <li>
-	                <span> 
-	                    <label class="control-label" for="searchParams.subjectAbbreviation" >{{xwalk('Subject Code')}}:</label>
-	                    <input type="text" name="subjectAbbreviation" data-ng-model="searchParams.subjectAbbreviation" />
-	                </span>
-	            </li>
-	            <li>
-	                <span> 
-	                    <label class="control-label" for="searchParams.grade" >{{xwalk('Grade')}}:</label>
-	                    <input type="text" name="grade" data-ng-model="searchParams.grade" />
-	                </span>
-	            </li>
-	            <li>
-	                <span></span>
-	            </li>	                
+                <li>
+                    <span> 
+                        <label class="control-label" for="searchParams.subjectAbbreviationContains" title="Subject Code">{{xwalk('Subject Code')}}:</label>
+                        <input type="text" name="subjectAbbreviationContains" data-ng-model="searchParams.subjectAbbreviationContains" alt="Subject Code" tabindex="0" />
+                    </span>
+                </li>
+                <li>
+                <span> 
+                    <label class="control-label" for="searchParams.grade" title="Grade">{{xwalk('Grade')}}:</label>
+                     <select  data-ng-model="grade" 
+                              data-ng-options="grade.id as grade.text  for grade in grades"  data-ng-change="formatGrade(grade)" title="Grade" tabindex="0">
+                      <option value="">Select...</option>
+                    </select>
+                </span>     
+                </li>  
+                <li>
+                    <span></span>
+                </li>                   
             </ul>
-            <button type="button" type="button" class="boxBtn" data-search-on-click  data-active-indicator="searchResponse.searching">
-                <span class="btnIcon icon_sprite icon_reTry2 ng-class:{ajax_indicator:activeIndicator}"></span>
+            <button type="button" type="button" class="boxBtn" data-search-on-click  data-active-indicator="searchResponse.searching" tabindex="0">
+                <span class="btnIcon icon_sprite icon_reTry2 ng-class:{ajax_indicator:activeIndicator}" aria-hidden="true"></span>
                 <span class="btnText">Search</span>
             </button>
         </div>
         <div data-pageable data-paging-info="searchResponse"  data-search-params="searchParams" data-change-page="changePage()">
-            <table class="dataTable">
+            <table class="dataTable" data-accessible-table role="grid">
                 <colgroup>
                     <col class="doubleActionColumn">
                     <col class="width30Percent">
@@ -44,38 +47,38 @@
                     <col>       
                     <col class="doubleActionColumn">
                 </colgroup>
-                <tr>
-                    <th>{{xwalk('Save')}}</th>
-                    <th data-sort-on-click data-sort-column="testName" class="headerSortUp">{{xwalk('Assessment Name')}}</th>
-                    <th data-sort-on-click data-sort-column="subjectCode" >{{xwalk('Subject Code')}}</th>
-                    <th data-sort-on-click data-sort-column="grade">{{xwalk('Grade')}}</th>
-                    <th data-sort-on-click data-sort-column="version">{{xwalk('Version')}}</th>
-                    <th>{{xwalk('Flags')}}</th>
-                    <th>{{xwalk('Update')}}</th>
+                <tr role="row">
+                    <th scope="col" id="saveHeader" title="Save" >{{xwalk('Save')}}</th>
+                    <th data-sort-on-click data-sort-column="testName" class="headerSortUp" scope="col" id="assessmentNameHeader" title="Assessment Name" >{{xwalk('Assessment Name')}}</th>
+                    <th data-sort-on-click data-sort-column="subjectCode" scope="col" id="subjectCodeHeader" title="Subject Code" >{{xwalk('Subject Code')}}</th>
+                    <th data-sort-on-click data-sort-column="grade" scope="col" id="gradeHeader" title="Grade" >{{xwalk('Grade')}}</th>
+                    <th data-sort-on-click data-sort-column="version" scope="col" id="versionHeader" title="Version" >{{xwalk('Version')}}</th>
+                    <th scope="col" id="flagsHeader" title="Flags" >{{xwalk('Flags')}}</th>
+                    <th scope="col" id="updateHeader" title="Update" >{{xwalk('Update')}}</th>
                 </tr>
 
                 <tbody data-ng-repeat="assessment in searchResponse.searchResults" data-ng-style="{'uncheckedClass':assessment.updatedVersion}">
-                <tr>
-                    <td class="normalSpace">
+                <tr role="row">
+                    <td class="normalSpace" role="gridcell" aria-labelledby="saveHeader">
                         <div  data-ng-show="!(assessment.exists) && !(assessment.updatedVersion)">
-                            <button data-ng-click="edit(assessment)" class="boxBtn"><span class="btnIcon icon_sprite icon_save2"></span></button>
+                            <button data-ng-click="edit(assessment)" class="boxBtn" tabindex="0"><span class="btnIcon icon_sprite icon_save2" aria-hidden="true"></span></button>
                          </div>
                     </td>          
  
-                    <td>{{assessment.testName}}</td>
-                    <td>{{assessment.subjectCode}}</td>
-                    <td>{{assessment.grade}}</td>
-                    <td>{{assessment.version}}</td>
-                    <td title='{{getAltText(assessment)}}'>{{status(assessment)}}      
+                    <td role="gridcell" aria-labelledby="assessmentNameHeader">{{assessment.testName}}</td>
+                    <td role="gridcell" aria-labelledby="subjectCodeHeader">{{assessment.subjectCode}}</td>
+                    <td role="gridcell" aria-labelledby="gradeHeader">{{assessment.grade}}</td>
+                    <td role="gridcell" aria-labelledby="versionHeader">{{assessment.version}}</td>
+                    <td title='{{getAltText(assessment)}}' role="gridcell" aria-labelledby="flagsHeader">{{status(assessment)}}      
                     </td>                    
-                   <td class="normalSpace">
+                   <td class="normalSpace" role="gridcell" aria-labelledby="updateHeader">
                           <div  data-ng-show="(assessment.updatedVersion) && (assessment.exists)">
-                           <button data-ng-click="update(assessment)" class="boxBtn"><span class="btnIcon icon_sprite icon_save2"></span></button>
+                           <button data-ng-click="update(assessment)" class="boxBtn" tabindex="0"><span class="btnIcon icon_sprite icon_save2" aria-hidden="true"></span></button>
                         </div>                        
                     </td>                       
                  </tr>
     
-	            </tbody>
+                </tbody>
             </table>
         </div>
     </div>

@@ -1,8 +1,9 @@
-testreg.controller('AssessmentEditController',['$scope','$state', '$filter', 'loadedData', 'AssessmentService', 'StudentService', 'AccommodationService','StateService', 'inputData','$window','tsbNav','prevActiveLink',
-    function($scope, $state, $filter, loadedData, AssessmentService, StudentService, AccommodationService, StateService,inputData,$window,tsbNav,prevActiveLink) {
+testreg.controller('AssessmentEditController',['$scope','$state', '$filter', 'loadedData', 'AssessmentService', 'StudentService', 'AccommodationService','StateService', 'inputData','$window','tsbNav','prevActiveLink','SubjectService',
+    function($scope, $state, $filter, loadedData, AssessmentService, StudentService, AccommodationService, StateService,inputData,$window,tsbNav,prevActiveLink,SubjectService) {
 	$scope.activeLink = prevActiveLink;
 	 $state.$current.self.name = prevActiveLink;
 	 $scope.languages = [];
+	 $scope.subjects =[];
 
 	 $scope.isActiveLink = function(link){
 			return  $scope.activeLink.indexOf(link) == 0; 
@@ -47,6 +48,7 @@ testreg.controller('AssessmentEditController',['$scope','$state', '$filter', 'lo
 		};
 		
 		if($scope.assessment && $scope.assessment.id){
+			
 			$scope.formAction = 'Edit';
 			
 			if($scope.assessment.testWindow) {
@@ -60,9 +62,13 @@ testreg.controller('AssessmentEditController',['$scope','$state', '$filter', 'lo
 			}
 			
 		} else {
+			//set the Default Value
+			$scope.assessment.numGlobalOpportunities="2";
 			if(inputData) {
+
 				$scope.assessment.entityId = inputData.entityId;
 				$scope.assessment.testName = inputData.testName;
+				
 			}
 		}
 
@@ -109,7 +115,7 @@ testreg.controller('AssessmentEditController',['$scope','$state', '$filter', 'lo
 			if(!$scope.assessment.testWindow) {
 				$scope.assessment.testWindow = [];
 			}
-			$scope.assessment.testWindow.push({"beginWindow":"", "endWindow":"", "numOpportunities":""});
+			$scope.assessment.testWindow.push({"beginWindow":"", "endWindow":"", "numOpportunities":$scope.assessment.numGlobalOpportunities});
 			$scope.assessmentForm.$dirty = true;
 			
 			
@@ -155,8 +161,10 @@ testreg.controller('AssessmentEditController',['$scope','$state', '$filter', 'lo
 		$scope.section504Status 		= StudentService.section504Status();
 		$scope.title3ProgramType 		= StudentService.title3ProgramType();
 		$scope.primaryDisabilityType 	= StudentService.primaryDisabilityType();
-
-		$scope.subjects 						= AccommodationService.subjects();
+		
+		SubjectService.findAll().then(function(response){
+			$scope.subjects = response.data;
+		});
 		$scope.americanSignLanguage 			= AccommodationService.americanSignLanguage();
 		$scope.colorContrast 					= AccommodationService.colorContrast();
 		$scope.closedCaptioning 				= AccommodationService.closedCaptioning();

@@ -4,7 +4,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.opentestsystem.delivery</groupId>
     <artifactId>test-reg-parent</artifactId>
-    <version>R01.00.00</version>
+    <version>R01.00.01</version>
     <name>Smarter Balanced #11 Test Registration - Parent Project</name>
     <packaging>pom</packaging>
 
@@ -29,21 +29,12 @@
     </properties>
 
     <scm>
-        <connection>scm:git://github.com/DataRecognitionCorporation/sb11-test-registration.git</connection>
-        <developerConnection>scm:git:get@github.com:DataRecognitionCorporation/sb11-test-registration.git</developerConnection>
-        <url>https://github.com/DataRecognitionCorporation/sb11-test-registration</url>
+        <connection>scm:hg:https://bitbucket.org/sbacoss/adminandregtools_release</connection>
+        <developerConnection>scm:hg:https://bitbucket.org/sbacoss/adminandregtools_release</developerConnection>
+        <url>https://bitbucket.org/sbacoss/adminandregtools_release</url>
     </scm>
 
     <!-- needed to bootstrap the parent -->
-    <repositories>
-        <!-- Project Artifactory Proxy of Remote Repositories, which also 
-            exposes SB11 artifacts when they are deployed -->
-        <repository>
-            <id>SB11-Remote-Mirror-Repo</id>
-            <name>SB11 Remote Mirror Repo</name>
-            <url>http://datarecognitioncorp.artifactoryonline.com/datarecognitioncorp/remote-repos</url>
-        </repository>
-    </repositories>
 
     <!-- needed to bootstrap the parent -->
     <pluginRepositories>
@@ -273,12 +264,5 @@
         <module>client</module>
     </modules>
     
-    <distributionManagement>
-       <repository>
-            <id>central</id>
-            <name>libs-releases</name>
-            <url>http://airdev.artifactoryonline.com/airdev/libs-releases-local</url>
-        </repository>
-    </distributionManagement>
     
 </project>

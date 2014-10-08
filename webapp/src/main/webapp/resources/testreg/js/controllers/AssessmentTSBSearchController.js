@@ -1,11 +1,14 @@
-testreg.controller('AssessmentTSBSearchController', ['$scope', '$state','$window', 'AssessmentService', 'CurrentUserService',
-    function ($scope, $state,$window, AssessmentService, CurrentUserService) {
+testreg.controller('AssessmentTSBSearchController', ['$scope', '$state','$window', 'AssessmentService', 'CurrentUserService','StudentService',
+    function ($scope, $state,$window, AssessmentService, CurrentUserService,StudentService) {
 
 	 $scope.activeLink = $state.$current.self.name;
 	 $scope.searchUrl= "tsbassessments/tenant/" + CurrentUserService.getTenantId();
 	 $scope.isActiveLink = function(link){
 		return  $scope.activeLink.indexOf(link) == 0; 
 	 };
+
+
+	 $scope.grades = StudentService.loadGrades();
 	 $scope.getAltText = function(assessmentObj){
 		 if (assessmentObj.exists && assessmentObj.updatedVersion) {
 			 return "Updated version can be imported";				
@@ -25,7 +28,7 @@ testreg.controller('AssessmentTSBSearchController', ['$scope', '$state','$window
 		 }
 	 };	 
 		if(!$state.current.searchParams) {
-			$scope.searchParams = {"purpose":"REGISTRATION","subjectAbbreviation":"","grade":"", "includeXml":"false", "sortKey":"name", "sortDir":"asc", "currentPage": 1};
+			$scope.searchParams = {"purpose":"REGISTRATION","subjectAbbreviationContains":"","grade":"", "includeXml":"false", "sortKey":"name", "sortDir":"asc", "currentPage": 1};
 		}else{
 			$scope.searchParams = $state.current.searchParams;
 		}
@@ -37,6 +40,11 @@ testreg.controller('AssessmentTSBSearchController', ['$scope', '$state','$window
 		$scope.searchResponse = {};
 		$scope.eligibilityTypes = AssessmentService.loadEligibilityTypes();
 		
+		$scope.formatGrade=function(gradeValue){
+			if(!isNaN(gradeValue)){
+				$scope.searchParams.grade= parseInt(gradeValue);
+			}
+		};
 		
   		$scope.edit = function(assessmentObj) {
   			AssessmentService.addAssessmentData(assessmentObj).then(
