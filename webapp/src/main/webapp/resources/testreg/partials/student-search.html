@@ -52,13 +52,24 @@
                     tabindex="0" />  
                  </span>               
             </li>   
-              
             <li>
                 <span> 
                     <label class="control-label" for="searchParams.studentIdentifier" title="SSID">{{xwalk('SSID')}}:</label>
                     <input type="text" name="entityId" data-ng-model="searchParams.entityId" alt="SSID" tabindex="0" />
                 </span>
             </li>     
+            <li>
+                <span> 
+                    <label class="control-label" for="searchParams.lastName" title="Last Name">{{xwalk('Last Name')}}:</label>
+                    <input type="text" name="lastName" data-ng-model="searchParams.lastName" alt="lastName" tabindex="0" />
+                </span>
+            </li>     
+            <li>
+                <span> 
+                    <label class="control-label" for="searchParams.firstName" title="First Name">{{xwalk('First Name')}}:</label>
+                    <input type="text" name="firstName" data-ng-model="searchParams.firstName" alt="firstName" tabindex="0" />
+                </span>
+            </li>
             <li>
                 <span> 
                     <label class="control-label" for="searchParams.grade" title="Grade Level When">{{xwalk('Grade Level When ')}}<br>Assessed:</label>

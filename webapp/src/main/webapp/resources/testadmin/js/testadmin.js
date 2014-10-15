@@ -223,7 +223,7 @@ $stateProvider
    }
 })
 .state('editScheduleSummary', {
-	   url: "/scheduleSummary/{timeSlotNum}/{institutionId}/{facilityId}/{facilityName}/{scheduledDay}/{startTime}/{endTime}", // root route
+	   url: "/scheduleSummary/{timeSlotNum}/{timeSlotId}/{institutionId}/{facilityId}/{facilityName}/{scheduledDay}/{startTime}/{endTime}", // root route
 	   resolve: {
 		   	loadedData:scheduleSummaryResolver,
 		   	timeSlotNum: timeSlotNumResolver,
@@ -328,7 +328,7 @@ var eligibleAssessmentResolver = ['$stateParams', 'ScheduleSummaryService', 'Stu
 }];
 
 var timeSlotResolver = ['$stateParams', 'FacilityAvailabilityService', function($stateParams, FacilityAvailabilityService){
-	return FacilityAvailabilityService.getTimeSlot($stateParams.facilityId, $stateParams.institutionId, $stateParams.scheduledDay, $stateParams.startTime, $stateParams.endTime);	
+	return FacilityAvailabilityService.getTimeSlot($stateParams.facilityId, $stateParams.institutionId, $stateParams.scheduledDay, $stateParams.timeSlotId);	
 }];
 
 //add resolvers here

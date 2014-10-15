@@ -176,7 +176,9 @@ testreg.directive("export", function($window, $timeout, EntityService){
 	  				$scope.pageLimit=response;
 	  			});
                 $timeout(function() {
-    	  			var  endpoint = $attrs.export + "." + fileType + '?pageSize='+$scope.pageLimit;
+                	$scope.searchParams.currentPage = '0';
+    	  			var paramValues = $.param($scope.searchParams);
+    	  			var  endpoint = $attrs.export + "." + fileType + '?pageSize='+$scope.pageLimit+"&"+paramValues;
     	  			$window.open(baseUrl + endpoint);
                 }, 300);
 	  		};

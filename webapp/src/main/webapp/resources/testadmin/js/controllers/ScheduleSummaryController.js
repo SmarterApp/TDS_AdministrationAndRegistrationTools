@@ -181,12 +181,13 @@ testreg.controller('ScheduleSummaryController', ['$scope', '$state','$window', '
 			var timeSlot = S.schedule.scheduledDays[0].facilities[0].timeSlots[timeSlotIndex];
   			$state.transitionTo("editScheduleSummary", {
   					timeSlotNum:timeSlotIndex,
-  					startTime: timeSlot.originalTimeSlot.startTime,
-  					endTime:   timeSlot.originalTimeSlot.endTime,
+  					timeSlotId:timeSlot.originalTimeSlot.id,
   					institutionId: S.institutionId, 
+  					facilityId: S.facilityId,   					
   					facilityName: S.facilityName, 
-  					facilityId: S.facilityId, 
-  					scheduledDay: S.scheduledDay});
+  					scheduledDay: S.scheduledDay,
+  					startTime: timeSlot.originalTimeSlot.startTime,
+  					endTime:   timeSlot.originalTimeSlot.endTime});
   		};
   		
   		S.$on('$stateChangeStart', function(event, toState, toParams, fromState, fromParams){ 
