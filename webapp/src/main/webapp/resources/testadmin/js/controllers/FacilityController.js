@@ -1,6 +1,6 @@
 
-testreg.controller('FacilityController',['$scope','$state', '$window', 'loadedData','FacilityService', 'TestPlatFormService', 'AccessibilityService',
-    function($scope, $state, $window,loadedData,FacilityService,TestPlatFormService,AccessibilityService) {
+testreg.controller('FacilityController',['$scope','$state', '$window', 'loadedData','FacilityService', 'TestPlatFormService', 'AccessibilityService', 'StateService',
+    function($scope, $state, $window,loadedData,FacilityService,TestPlatFormService,AccessibilityService, StateService) {
 		$scope.domain = "facility";
 		$scope.savingIndicator = false;
 		$scope.errors = [];
@@ -8,11 +8,14 @@ testreg.controller('FacilityController',['$scope','$state', '$window', 'loadedDa
 		$scope.formAction = 'Add';
 		$scope.errors = loadedData.errors;
 		$scope.facility = loadedData.data;
-
+		$scope.states=[];
+		
 		if($scope.facility && $scope.facility.id){
 			$scope.formAction = 'Edit';				
 		} 
-		
+    	StateService.loadStates().then(function(loadedData) {
+    		$scope.states = loadedData.data;
+    	});
         TestPlatFormService.getAll().then(function (response){
         	$scope.testPlatforms=response.data;
 	        });

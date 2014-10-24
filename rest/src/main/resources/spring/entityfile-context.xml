@@ -30,12 +30,17 @@
     	<property name="ignoreEmptyRows" value="true"/>
     </bean>
     <bean id="csvParser"   class="org.opentestsystem.delivery.testreg.upload.parser.TextFileUploadParser">
-    	<property name="delimiter" value=","></property>
+        <!-- delimiter -->
+        <constructor-arg index="0" value=","/>
+        <!-- disallowed header value -->
+        <constructor-arg index="1" value="\t"/>
     </bean>
     <bean id="tabDelimitedParser" class="org.opentestsystem.delivery.testreg.upload.parser.TextFileUploadParser">
-    	<property name="delimiter" value="\t"></property>
+        <!-- delimiter -->
+        <constructor-arg index="0" value="\t"/>
+        <!-- disallowed header value -->
+        <constructor-arg index="1" value=","/>
     </bean>
-    
     
     <!-- File Creators -->   
     <util:map id="templateDownloadMap" key-type="org.opentestsystem.delivery.testreg.domain.FormatType">

@@ -43,6 +43,7 @@ testadmin.controller('ReportController',['$scope','$state','$window','ReportServ
 			$scope.reportLevels = EntityService.loadReportEntities(response.data);
 		});	 
      var tenantType = CurrentUserService.getTenantType();
+
      ReportService.findEntityById(CurrentUserService.getTenantName(),CurrentUserService.getTenantType()).then(function(loadData){
     	 var selectedData=loadData.data;
     	 $scope.entityType = CurrentUserService.getTenantType();
@@ -76,9 +77,7 @@ testadmin.controller('ReportController',['$scope','$state','$window','ReportServ
     		 $scope.populateChildValues(parentId,parentType);
     	 }
      };
-
      $scope.groupOfStatesFlag = function(){
-    	// alert($scope.clientConfig.groupOfStates);
     	 if(! $scope.clientConfig.groupOfStates){
     		 return true;
     	 }
@@ -210,4 +209,5 @@ testadmin.controller('ReportController',['$scope','$state','$window','ReportServ
         	 }
     	 }
      };
+     
 } ]);

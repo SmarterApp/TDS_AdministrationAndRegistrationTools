@@ -91,7 +91,7 @@ testreg.controller('StudentEditController',['$scope','$state', '$filter', '$time
 	  			});
 	  		});
 		} else {
-
+			$scope.student.birthDate = null;
 			$scope.student.americanIndianOrAlaskaNative = "NO";
 			$scope.student.hispanicOrLatino = "NO";		
 			$scope.student.asian = "NO";
@@ -140,51 +140,54 @@ testreg.controller('StudentEditController',['$scope','$state', '$filter', '$time
 			$scope.states = loadedData.data;
 		});
 		
-		
-		var splitExp = function(property) {
-			var tokens =  property.split('student.')[1];
-			return tokens+'.opened';
-		};
-		
-		$scope.addDateWatchers(['student.birthDate', 'student.firstEntryDateIntoUsSchool', 
-		                        'student.lepEntryDate', 'student.lepExitDate'], splitExp, $scope, function(flag) {
-			if(flag) {
-				$scope.formatDateFields(true);
-				$scope.studentForm.$dirty = true;
-			}		
-		});
-		
 		//DatePicker format
 		$scope.format = "yyyy-MM-dd";
 		$scope.formatDateFields = function(flag) {
 			if(flag) {
-				$scope.student.birthDate = $filter('date')($scope.student.birthDate, $scope.format);
-				$scope.student.firstEntryDateIntoUsSchool = $filter('date')($scope.student.firstEntryDateIntoUsSchool, $scope.format);
-				$scope.student.lepEntryDate = $filter('date')($scope.student.lepEntryDate, $scope.format);
-				$scope.student.lepExitDate = $filter('date')($scope.student.lepExitDate, $scope.format);
+				if ($scope.studentForm['student.birthDate'].$dirty) {
+					$scope.student.birthDate = $filter('date')($scope.student.birthDate, $scope.format);
+				}
+				if ($scope.studentForm['student.firstEntryDateIntoUsSchool'].$dirty) {
+					$scope.student.firstEntryDateIntoUsSchool = $filter('date')($scope.student.firstEntryDateIntoUsSchool, $scope.format);
+				}	
+				if ($scope.studentForm['student.lepEntryDate'].$dirty) {
+					$scope.student.lepEntryDate = $filter('date')($scope.student.lepEntryDate, $scope.format);
+				}
+				if ($scope.studentForm['student.lepExitDate'].$dirty) {
+					$scope.student.lepExitDate = $filter('date')($scope.student.lepExitDate, $scope.format);
+				}				
+				
 			}
 		};
 			
 		$scope.save = function(student) {
+			$scope.errors =[];
 			$scope.savingIndicator = true;
-			$scope.formatDateFields(true);
-			StudentService.saveStudent(student).then(function(response) {
+			//if date is undefined then it means the entered date is not a valid date
+			if (student.birthDate === undefined) {
+				$scope.errors.push("The Birthdate is invalid: the valid format is YYYY-MM-DD, and the range should be between '1900 <= YYYY <=9999'");
 				$scope.savingIndicator = false;
-				$scope.errors = response.errors;
-				if($scope.errors.length == 0){
-					//save optout test statuses if any
-					angular.forEach($scope.eligibleAssessments, function(assessment){
-						status = $scope.studentTestStatuses[assessment.id];
-						if(status && status === "OPTED_OUT") {
-							testStatus = {"studentId" : student.id, "stateAbbreviation" : student.stateAbbreviation, "assessmentId":assessment.id, "status" : "OPTED_OUT", "opportunity" :0};
-							TestStatusService.save(testStatus);
-						}
-					});
-					$scope.studentForm.$setPristine();
-					$scope.student = response.data;
-					$state.transitionTo("searchStudent");
-				}
-			});
+			}		
+			$scope.formatDateFields(true);
+			if ($scope.errors.length == 0) {
+				StudentService.saveStudent(student).then(function(response) {
+					$scope.savingIndicator = false;
+					$scope.errors = response.errors;
+					if($scope.errors.length == 0){
+						//save optout test statuses if any
+						angular.forEach($scope.eligibleAssessments, function(assessment){
+							status = $scope.studentTestStatuses[assessment.id];
+							if(status && status === "OPTED_OUT") {
+								testStatus = {"studentId" : student.id, "stateAbbreviation" : student.stateAbbreviation, "assessmentId":assessment.id, "status" : "OPTED_OUT", "opportunity" :0};
+								TestStatusService.save(testStatus);
+							}
+						});
+						$scope.studentForm.$setPristine();
+						$scope.student = response.data;
+						$state.transitionTo("searchStudent");
+					}
+				});
+			}
 		};
     
 		$scope.cancel = function() {

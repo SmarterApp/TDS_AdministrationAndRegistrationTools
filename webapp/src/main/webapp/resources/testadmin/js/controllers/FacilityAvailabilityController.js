@@ -1,5 +1,5 @@
-testreg.controller('FacilityAvailabilityController',['$scope','$state', '$window', '$timeout', 'loadedData','FacilityAvailabilityService','FacilityService', 'AssessmentService', 'SubjectService', '$dialogs','StudentService',
-    function($scope, $state, $window,$timeout,loadedData,FacilityAvailabilityService,FacilityService, AssessmentService, SubjectService, $dialogs,StudentService) {
+testreg.controller('FacilityAvailabilityController',['$scope','$state', '$window', '$timeout', 'loadedData','FacilityAvailabilityService','FacilityService', 'AssessmentService', 'SubjectService', '$dialogs','StudentService', 'StateService',
+    function($scope, $state, $window,$timeout,loadedData,FacilityAvailabilityService,FacilityService, AssessmentService, SubjectService, $dialogs,StudentService, StateService) {
 		$scope.savingIndicator = false;
 		$scope.errors = [];
 		$scope.actionButton = '';
@@ -16,7 +16,8 @@ testreg.controller('FacilityAvailabilityController',['$scope','$state', '$window
 		$scope.selectedConfigurations=[];
 		$scope.subjects = [];
 		$scope.selectedAssessments = [];
-
+		$scope.states =[];
+		
 		//DatePicker format
 		$scope.format = "yyyy-MM-dd";
 		$scope.domain = "facilityAvailability";
@@ -25,6 +26,10 @@ testreg.controller('FacilityAvailabilityController',['$scope','$state', '$window
 			$scope.assessments = response.data;
 		});
 		
+    	StateService.loadStates().then(function(loadedData) {
+    		$scope.states = loadedData.data;
+    	});
+    	
 		SubjectService.findAll().then(function(loadedData) {
 			$scope.subjects = loadedData.data;
 		});

@@ -12,17 +12,19 @@
         <ul>
             <li>
                 <span> 
-                    <label class="control-label-required" for="schedule.scheduleName" >Name:</label>
-                     <input type="text" name="schedule.scheduleName" data-ng-model="schedule.scheduleName" />
+                    <label class="control-label-required" for="schedule.stateAbbreviation" title="State Abbreviation">State Abbreviation:</label>
+                    <select data-ng-model="schedule.stateAbbreviation" data-ng-options="id.entityId as id.entityId for id in states | orderBy:'entityId'" title="State Abbreviation" tabindex="0">
+                       <option value="" >Select...</option>
+                    </select>
                 </span>
-            </li>
+            </li>               
             <li>
                 <span class="district-auto-complete">
                     <label class="control-label-required" for="schedule.institutionIdentifier">{{xwalk('Institution Identifier')}}:</label>
                     <input data-institution-auto-complete-schedule type="text" 
                     placeholder="Search..." 
                     data-ng-model="institution"
-                    data-typeahead="entity as entity.entityId + ' - ' + entity.entityName for entity in filterInstitutions($viewValue, 10)" 
+                    data-typeahead="entity as entity.entityId + ' - ' + entity.entityName for entity in filterInstitutions($viewValue, schedule.stateAbbreviation, 10)" 
                     data-typeahead-wait-ms="200" 
                     data-typeahead-editable="true" 
                     data-typeahead-input-formatter="formatInstitutionLabel($model)"
@@ -47,12 +49,16 @@
             </li> 
             <li>
                 <span> 
+                    <label class="control-label-required" for="schedule.scheduleName" >Name:</label>
+                     <input type="text" name="schedule.scheduleName" data-ng-model="schedule.scheduleName" />
+                </span>
+            </li>            
+            <li>
+                <span> 
                     <label class="control-label-required" for="schedule.doNotScheduleWeekends" >Do Not Schedule Weekends:</label>
                      <input type="checkbox" name="schedule.doNotScheduleWeekends" data-ng-model="schedule.doNotScheduleWeekends" checked="checked"/>
                 </span>
             </li>
-            <li></li>
-         
         </ul>  
         
         <div class="home"><div class="testslot"><hr/></div></div>

@@ -56,7 +56,22 @@
                     alt="Institution Identifier" 
                     tabindex="0" />  
                  </span>               
-            </li>                     
+            </li>
+            <li>
+                <span class="group-owner-auto-complete">
+                    <label class="control-label" for="searchParams.ownerEmail" title="Owner Name">{{xwalk('Owner Name')}}:</label>
+				    <input data-group-owner-auto-complete-student-group type="text" 
+				    placeholder="Search..." 
+				    data-ng-model="ownerUser"
+				    data-typeahead="owner as owner.lastName + ', ' + owner.firstName for owner in filterOwners($viewValue, 10)" 
+				    data-typeahead-wait-ms="200" 
+				    data-typeahead-editable="true" 
+				    data-typeahead-input-formatter="formatOwnerLabel($model)"
+				    data-typeahead-on-select="changeOwnerEmail({ownerUser:$item})" 
+				    alt="Owner Name" 
+				    tabindex="0" />  
+				 </span>               
+            </li>
             <li>
                 <span> 
                     <label class="control-label" for="searchParams.ownerEmail" title="Owner Email">{{xwalk('Owner Email')}}:</label>
@@ -103,8 +118,8 @@
                     <td class="ng-class:{ajax_indicator:savingIndicator}" role="gridcell" aria-labelledby="institutionIdentifier">{{studentGroup.institutionEntityMongoId | parentNameFilter:"INSTITUTION":parentEntities}}</td>
                     <td role="gridcell" aria-labelledby="stateAbbreviation">{{studentGroup.stateAbbreviation}}</td>
                     <td role="gridcell" aria-labelledby="ownerEmail">{{studentGroup.ownerEmail}}</td>       
-                    <td role="gridcell" aria-labelledby="firstNameHeader">{{getFirstName(studentGroup)}}</td>
-                    <td role="gridcell" aria-labelledby="lastNameHeader">{{getLastName(studentGroup)}}</td>       
+                    <td role="gridcell" aria-labelledby="firstNameHeader">{{studentGroup.ownerFirstName}}</td>
+                    <td role="gridcell" aria-labelledby="lastNameHeader">{{studentGroup.ownerLastName}}</td>       
                     <td class="normalSpace" role="gridcell" aria-labelledby="actionHeader">
                         <div class="tableButtonGroup">
                             <button data-ng-click="edit(studentGroup)" class="boxBtn" tabindex="0"><span class="btnIcon icon_sprite icon_edit2" aria-hidden="true"></span></button>

@@ -1,5 +1,5 @@
-testreg.controller(	'UserController',['$scope','$state','loadedData','UserService','StateService', 'EntityService','inputData', 'roles','prevActiveLink',
-						function($scope, $state, loadedData, UserService, StateService, EntityService, inputData, roles,prevActiveLink) {
+testreg.controller(	'UserController',['$scope','$state','$timeout','loadedData','UserService','StateService', 'EntityService','inputData', 'roles','prevActiveLink',
+						function($scope, $state, $timeout, loadedData, UserService, StateService, EntityService, inputData, roles,prevActiveLink) {
 						   $scope.activeLink = prevActiveLink;
 						   $state.$current.self.name = prevActiveLink;
 						   $scope.isActiveLink = function(link){
@@ -14,6 +14,7 @@ testreg.controller(	'UserController',['$scope','$state','loadedData','UserServic
 						    $scope.entityIds = [];
                             $scope.parentEntityIds = [];
                             $scope.selectedParentId = [];
+                            $scope.selectedParentDBId= [];
 							$scope.actionButton = '';
 							$scope.formAction = 'Add';
 							$scope.entityStateAbbreviation=[];
@@ -31,27 +32,21 @@ testreg.controller(	'UserController',['$scope','$state','loadedData','UserServic
                             	}
                             };
 					    	$scope.getStateAbbreviation= function(entityIds,roleAssociation){
-					    		var stateAbbreviations = new Array();
-					    		var counter =0;
 						    	angular.forEach(entityIds, function(entity){
-						    		 if (entity.formatType == 'STATE' || entity.formatType == 'GROUPOFSTATES' || entity.formatType == 'CLIENT') {
-						    			 roleAssociation.stateAbbreviation ="";
-						    			 return
-						    		 }
-						    		 if (entity.entityId == roleAssociation.associatedEntityId) {
-						    			 stateAbbreviation = entity.stateAbbreviation;
-						    			 stateAbbreviations[counter] = stateAbbreviation;
-						    			 roleAssociation.stateAbbreviation = entity.stateAbbreviation;
-						    			 roleAssociation.stateAbbreviations = stateAbbreviations;
-						    			 counter++;
-						    		 }
+						    		if (entity.id == roleAssociation.associatedEntityMongoId) {
+						    			roleAssociation.associatedEntityId = entity.entityId;
+							    		 if (entity.formatType == 'STATE' || entity.formatType == 'GROUPOFSTATES' || entity.formatType == 'CLIENT') {
+							    			 roleAssociation.stateAbbreviation ="";						    			 
+							    		 } else {
+							    			 roleAssociation.stateAbbreviation = entity.stateAbbreviation;
+							    		 }		
+							    		 return;
+						    		}
 						    	});
-						    	
-						    	if(roleAssociation.stateAbbreviations.length >1){
-						    		roleAssociation.muliFlag = true;
-						    	}else{
-						    		roleAssociation.muliFlag = false;
-						    	}
+					    	};
+					    	
+					    	$scope.getAssociatedEntity = function(index,entities){
+					    		return entities[index].entityId;
 					    	};
 					    	$scope.xwalk   = function(label) {
 					    		return $scope.safewalk('User', label);

@@ -9,13 +9,21 @@
     <div class="fieldGroup">
     <h5>{{formAction}} Facility Availability/Unavailability Information<span class="control-label-required">Indicates required field</span></h5>
         <ul>          
+           <li>
+                <span> 
+                    <label class="control-label-required" for="facilityAvailability.stateAbbreviation" title="State Abbreviation">State Abbreviation:</label>
+                    <select data-ng-model="facilityAvailability.stateAbbreviation" data-ng-options="id.entityId as id.entityId for id in states | orderBy:'entityId'" title="State Abbreviation" tabindex="0">
+                       <option value="" >Select...</option>
+                    </select>
+                </span>
+            </li>   
             <li>
                 <span class="district-auto-complete">
                     <label class="control-label-required" for="facilityAvailability.institutionIdentifier">{{xwalk('Institution Identifier')}}:</label>
                     <input data-institution-auto-complete-schedule type="text" 
                     placeholder="Search..." 
                     data-ng-model="institution"
-                    data-typeahead="entity as entity.entityId + ' - ' + entity.entityName for entity in filterInstitutions($viewValue, 10)" 
+                    data-typeahead="entity as entity.entityId + ' - ' + entity.entityName for entity in filterInstitutions($viewValue, facilityAvailability.stateAbbreviation, 10)" 
                     data-typeahead-wait-ms="200" 
                     data-typeahead-editable="true" 
                     data-typeahead-input-formatter="formatInstitutionLabel($model)"
@@ -29,6 +37,14 @@
                       <option value="">Select...</option>
                     </select>
                 </span>           
+            </li>
+            <li>
+             <span> 
+                    <label class="control-label-required" for="facilityAvailability.status">Availability:</label>
+                    <select name="facilityAvailability.status" data-ng-model="facilityAvailability.status" data-ng-change='clearAvailabilities()' data-ng-options="availability.id as availability.name for availability in availabilityChoices | orderBy:'id'">
+                        <option value="" >Select...</option>
+                    </select>
+             </span>
             </li>
             <li>
              <span  class="datepicker"> 
@@ -45,16 +61,7 @@
                     <input type="text" name="facilityAvailability.toDate"  data-datepicker-popup="{{format}}" 
                       data-is-open="toDate.opened" data-show-weeks="false"  data-ng-model="facilityAvailability.toDate"/>
              </span>
-            </li>   
-            <li>
-             <span> 
-                    <label class="control-label-required" for="facilityAvailability.status">Availability:</label>
-                    <select name="facilityAvailability.status" data-ng-model="facilityAvailability.status" data-ng-change='clearAvailabilities()' data-ng-options="availability.id as availability.name for availability in availabilityChoices | orderBy:'id'">
-                        <option value="" >Select...</option>
-                    </select>
-             </span>
-            </li>   
-            <li><span></span></li>                      
+            </li>                       
         </ul>
 
         <div data-ng-show="facilityAvailability.status && facilityAvailability.status == 'AVAILABLE'">

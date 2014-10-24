@@ -19,8 +19,8 @@ testreg.factory("EntityService", function($http, $rootScope, CurrentUserService)
 						return loadedData.data;
 				});
     	},
-        loadEntitiesMatchingParent : function(entityType, parentEntityId) {
-            var url = baseUrl + endpoints[entityType] + '/?pageSize=999999&parentEntityId=' + parentEntityId + '&_=' + Math.random();
+        loadEntitiesMatchingParent : function(entityType, parentId) {
+            var url = baseUrl + endpoints[entityType] + '/?pageSize=999999&parentId=' + parentId + '&_=' + Math.random();
             return $http.get(url, {headers: {'Accept': 'text/html'}}).then(this.successHandler, this.errorHandler).then(function(loadedData) {
                 return loadedData.data;
             });

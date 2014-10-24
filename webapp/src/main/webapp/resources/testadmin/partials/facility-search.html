@@ -19,18 +19,27 @@
 	                </span>
 	            </li>
 	            <li>
+	                <span> 
+	                    <label class="control-label" for="facility.stateAbbreviation" title="State Abbreviation">State Abbreviation:</label>
+	                    <select data-ng-model="searchParams.stateAbbreviation" data-ng-options="id.entityId as id.entityId for id in states | orderBy:'entityId'" title="State Abbreviation" tabindex="0">
+	                       <option value="" >Select...</option>
+	                    </select>
+	                </span>
+	            </li>   	            
+	            <li>
 	                <span class="district-auto-complete">
 	                    <label class="control-label" for="facility.institutionIdentifier">{{xwalk('Institution Identifier')}}:</label>
 	                    <input data-institution-auto-complete-schedule type="text" 
 	                    placeholder="Search..." 
 	                    data-ng-model="institution"
-	                    data-typeahead="entity as entity.entityId + ' - ' + entity.entityName for entity in filterInstitutions($viewValue, 10)" 
+	                    data-typeahead="entity as entity.entityId + ' - ' + entity.entityName for entity in filterInstitutions($viewValue, searchParams.stateAbbreviation, 10)" 
 	                    data-typeahead-wait-ms="200" 
 	                    data-typeahead-editable="true" 
 	                    data-typeahead-input-formatter="formatInstitutionLabel($model)"
 	                    data-typeahead-on-select="changeInstitution({institution:$item})" />  
 	                 </span>               
-	            </li> 	            
+	            </li> 
+	            <li><span></span></li>	            
 			</ul>
 			<button type="button" type="button" class="boxBtn" data-search-on-click	data-active-indicator="searchResponse.searching">
 				<span class="btnIcon icon_sprite icon_reTry2 ng-class:{ajax_indicator:activeIndicator}"></span>
@@ -48,11 +57,13 @@
 					<col>
 					<col>
 					<col>
+					<col>
 					<col class="doubleActionColumn">
 				</colgroup>
 				<tr>
 					<th data-sort-on-click data-sort-column="facilityName" class="headerSortUp">Name</th>
 					<th data-sort-on-click data-sort-column="institutionIdentifier" >{{xwalk('Institution Identifier')}}</th>
+                    <th data-sort-on-click data-sort-column="stateAbbreviation" >State Abbreviation</th>					
 					<th data-sort-on-click data-sort-column="location" >Location</th>
 					<th>Total Seats</th>
                     <th></th>
@@ -60,6 +71,7 @@
 				<tr data-ng-repeat="facility in searchResponse.searchResults" >
 					<td>{{facility.facilityName}}</td>
 					<td>{{facility.institutionIdentifier}}</td>
+					<td>{{facility.stateAbbreviation}}</td>
 					<td>{{facility.location}}</td>
 					<td>{{facility.seats.length}}</td>
 			      <td class="normalSpace">

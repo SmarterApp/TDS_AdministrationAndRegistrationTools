@@ -9,17 +9,19 @@
         <ul>
             <li>
                 <span> 
-                    <label class="control-label-required" for="schedule.scheduleName" title="Name">Name:</label>
-                     <input type="text" name="schedule.scheduleName" data-ng-model="schedule.scheduleName" alt="Name" tabindex="0" />
+                    <label class="control-label-required" for="schedule.stateAbbreviation" title="State Abbreviation">State Abbreviation:</label>
+                    <select data-ng-model="schedule.stateAbbreviation" data-ng-options="id.entityId as id.entityId for id in states | orderBy:'entityId'" title="State Abbreviation" tabindex="0">
+                       <option value="" >Select...</option>
+                    </select>
                 </span>
-            </li>
+            </li>               
             <li>
                 <span class="district-auto-complete">
                     <label class="control-label-required" for="schedule.institutionIdentifier" title="Institution">Institution:</label>
                     <input data-institution-auto-complete-schedule type="text" 
                     placeholder="Search..." 
                     data-ng-model="institution"
-                    data-typeahead="entity as entity.entityId + ' - ' + entity.entityName for entity in filterInstitutions($viewValue, 10)" 
+                    data-typeahead="entity as entity.entityId + ' - ' + entity.entityName for entity in filterInstitutions($viewValue, schedule.stateAbbreviation, 10)" 
                     data-typeahead-wait-ms="200" 
                     data-typeahead-editable="true" 
                     data-typeahead-input-formatter="formatInstitutionLabel($model)"
@@ -44,8 +46,12 @@
                       data-is-open="endDate.opened" data-show-weeks="false" data-ng-model="schedule.endDate" alt="End Date" tabindex="0" />
              </span>
             </li> 
-            <li></li>
-         
+            <li>
+                <span> 
+                    <label class="control-label-required" for="schedule.scheduleName" title="Name">Name:</label>
+                     <input type="text" name="schedule.scheduleName" data-ng-model="schedule.scheduleName" alt="Name" tabindex="0" />
+                </span>
+            </li>            
         </ul>  
 
         <button type="button" class="boxBtn" data-ng-show="scheduleForm.$dirty" data-ng-click="schedule(schedule)" tabindex="0">

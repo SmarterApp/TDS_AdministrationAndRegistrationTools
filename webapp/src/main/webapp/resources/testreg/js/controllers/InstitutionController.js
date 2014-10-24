@@ -5,6 +5,9 @@ testreg.controller(	'InstitutionController',['$scope','$state','loadedData','Ins
 							$scope.actionButton = '';
 							$scope.formAction = 'Add';
 							$scope.errors = loadedData.errors;
+							$scope.allStates = [];
+							$scope.states=[];
+							$scope.dbStates=[];
 							$scope.cancel = function() {
 					            $state.transitionTo("entities.searchInstitution");
 					        };
@@ -14,9 +17,20 @@ testreg.controller(	'InstitutionController',['$scope','$state','loadedData','Ins
 								$scope.entities = EntityService.loadInstitutionParentEntities(response.data);
 							});					        
 					    	StateService.loadStates().then(function(loadedData) {
-					    		$scope.states = loadedData.data;
+					    		$scope.dbStates = loadedData.data;
 					    	});
-					    						    	
+					    	StateService.loadAllStates().then(function(loadedData) {
+					    		$scope.allStates = loadedData.data;
+					    	});
+					    	
+					    	$scope.loadStates = function(parentType){
+					    		if (parentType === 'CLIENT' || parentType === 'GROUPOFSTATES'){
+					    			$scope.states = $scope.allStates;
+					    		} else {
+					    			$scope.states = $scope.dbStates;
+					    		}
+					    	};
+					    								    						    	
 							if ($scope.institution && $scope.institution.id) {
 								$scope.formAction = 'Edit';
 								EntityService.getEntity($scope.institution.parentEntityType, $scope.institution.parentId).then(function(response){

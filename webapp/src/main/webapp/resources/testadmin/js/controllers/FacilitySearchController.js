@@ -1,10 +1,11 @@
-testreg.controller('FacilitySearchController', ['$scope', '$state','$window', 'FacilityService', 
-    function ($scope, $state,$window, FacilityService) {
+testreg.controller('FacilitySearchController', ['$scope', '$state','$window', 'FacilityService', 'StateService', 
+    function ($scope, $state,$window, FacilityService, StateService) {
 
 	$scope.domain = "facility";
+	$scope.states=[];
 	
 	if(!$state.current.searchParams) {
-			$scope.searchParams = {"facilityName":"", "institutionIdentifier":"", "locaiton":"","sortKey":"facilityName", "sortDir":"asc", "currentPage": 1};
+			$scope.searchParams = {"facilityName":"", "institutionIdentifier":"", "stateAbbreviation":"", "locaiton":"","sortKey":"facilityName", "sortDir":"asc", "currentPage": 1};
 		}else{
 			$scope.searchParams = $state.current.searchParams;
 		}
@@ -16,6 +17,10 @@ testreg.controller('FacilitySearchController', ['$scope', '$state','$window', 'F
   			} 			
   		};
   		
+    	StateService.loadStates().then(function(loadedData) {
+    		$scope.states = loadedData.data;
+    	});
+    	
   		$scope.changeInstitutionId = function(institutionId){
   			$scope.searchParams.institutionIdentifier = institutionId;
   		};

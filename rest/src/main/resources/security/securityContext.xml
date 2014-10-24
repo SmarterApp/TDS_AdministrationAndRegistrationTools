@@ -27,24 +27,11 @@
     </bean>
 
     <!-- Unsecured pages -->
-    
     <security:http security="none" pattern="/saml/web/**"/>
     <security:http security="none" pattern="/thankyou"/>
     <security:http security="none" pattern="/favicon.ico"/>
-    <!-- TODO: this exception should be re after AIR is complete with verification     -->
-    <security:http security="none" pattern="/studentpackage"/>
-    <!-- TODO: this exception should be re after AIR is complete with verification     -->
-    <security:http security="none" pattern="/proctorassessments"/>
-    <!-- TODO: this exception should be re after AIR is complete with verification     -->
-    <security:http security="none" pattern="/testStatus"/>
-    <!-- TODO: the following exceptions should be removed after AIR is complete with verification -->
-    <security:http security="none" pattern="/districts"/>
-    <security:http security="none" pattern="/institutions"/>
     <security:http security="none" pattern="/api"/>
     <security:http security="none" pattern="/version"/>
-    
-    <security:http security="none" pattern="/institution/**/state/**/grades"/>
-    
     <security:http security="none" pattern="/resources/dtd/**"/>
 
     <!-- Secured pages -->
@@ -52,9 +39,6 @@
         <security:custom-filter ref="oauth2ProviderFilter" before="PRE_AUTH_FILTER" />
         <security:custom-filter after="BASIC_AUTH_FILTER" ref="samlFilter"/>
         <security:intercept-url pattern="/datawarehouse/extract/status**" access="permitAll"/>
-        <!--  TODO This exception for the /student GET endpoint should be removed after AIR testing -->
-        <security:intercept-url pattern="/student*" method="GET" access="permitAll"/>
-        <security:intercept-url pattern="/users/extract**" access="permitAll"/>
         <security:intercept-url pattern="/**" access="isFullyAuthenticated()"/>
     </security:http>
 

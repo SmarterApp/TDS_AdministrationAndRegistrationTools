@@ -51,21 +51,21 @@
 				<!-- Adjust record number for FormatType row here. Keep in mind that backend still assumes there is a FormatType row. -->
 	            <tr data-ng-repeat="error in validationResult.fatalErrors" role="row">
 	               <td role="gridcell" aria-labelledby="openCloseHeader"><span class="icon_sprite icon_close"></span></td>
-	               <td role="gridcell" aria-labelledby="recordNumberHeader">{{error.recordNumber}}-1</td>
+	               <td role="gridcell" aria-labelledby="recordNumberHeader">{{error.recordNumber}}</td>
 	               <td role="gridcell" aria-labelledby="fieldNameHeader">{{error.fieldName}}</td>
 	               <td role="gridcell" aria-labelledby="fieldValueHeader">{{error.fieldValue}}</td>
 	               <td role="gridcell" aria-labelledby="validationMessageHeader">{{error.message}}</td>
 	            </tr>
 	            <tr data-ng-repeat="error in validationResult.recordErrors" role="row">
                    <td role="gridcell" aria-labelledby="openCloseHeader"><span class="icon_sprite icon_error"></span></td>
-                   <td role="gridcell" aria-labelledby="recordNumberHeader">{{error.recordNumber}}-1</td>
+                   <td role="gridcell" aria-labelledby="recordNumberHeader">{{error.recordNumber}}</td>
                    <td role="gridcell" aria-labelledby="fieldNameHeader">{{error.fieldName}}</td>
                    <td role="gridcell" aria-labelledby="fieldValueHeader">{{error.fieldValue}}</td>
                    <td role="gridcell" aria-labelledby="validationMessageHeader">{{error.message}}</td>
                 </tr>
                 <tr data-ng-repeat="error in validationResult.warnings" role="row">
                    <td role="gridcell" aria-labelledby="openCloseHeader"><span class="icon_sprite icon_warning"></span></td>
-                   <td role="gridcell" aria-labelledby="recordNumberHeader">{{error.recordNumber}}-1</td>
+                   <td role="gridcell" aria-labelledby="recordNumberHeader">{{error.recordNumber}}</td>
                    <td role="gridcell" aria-labelledby="fieldNameHeader">{{error.fieldName}}</td>
                    <td role="gridcell" aria-labelledby="fieldValueHeader">{{error.fieldValue}}</td>
                    <td role="gridcell" aria-labelledby="validationMessageHeader">{{error.message}}</td>

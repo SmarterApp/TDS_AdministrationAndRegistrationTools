@@ -24,7 +24,7 @@
             <li>
                 <span> 
                     <label class="control-label-required" for="institution.parentEntityType" title="Parent Entity Type">{{xwalk('Parent Entity Type')}}:</label>
-                     <select  data-ng-model="institution.parentEntityType" data-load-parent-entities="{{institution.parentEntityType}}" data-ng-options="entity.entityId as entity.entityName for entity in entities" title="Parent Entity Type" tabindex="0">
+                     <select  data-ng-model="institution.parentEntityType" data-load-parent-entities="{{institution.parentEntityType}}" data-ng-options="entity.entityId as entity.entityName for entity in entities" data-ng-change="loadStates(institution.parentEntityType)" title="Parent Entity Type" tabindex="0">
                         <option value="">Select...</option>
                     </select>
                 </span>

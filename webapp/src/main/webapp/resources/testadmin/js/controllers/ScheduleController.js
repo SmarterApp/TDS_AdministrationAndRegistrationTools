@@ -1,7 +1,7 @@
 
 testreg.controller('ScheduleController',['$scope','$state', '$window','$timeout','loadedData', 'ScheduleService', 'AssessmentService', 
-                                         'SubjectService', 'StudentGroupService','StudentService',
-    function($scope, $state, $window, $timeout, loadedData, ScheduleService, AssessmentService, SubjectService, StudentGroupService,StudentService) {
+                                         'SubjectService', 'StudentGroupService','StudentService', 'StateService',
+    function($scope, $state, $window, $timeout, loadedData, ScheduleService, AssessmentService, SubjectService, StudentGroupService,StudentService, StateService) {
 		$scope.domain = "schedule";
 		$scope.savingIndicator = false;
 		$scope.errors = [];
@@ -14,6 +14,12 @@ testreg.controller('ScheduleController',['$scope','$state', '$window','$timeout'
 		$scope.affinityValues =[];
 		$scope.schedule = loadedData.data;
 		$scope.studentGroups = [];
+		$scope.states=[];
+		
+    	StateService.loadStates().then(function(loadedData) {
+    		$scope.states = loadedData.data;
+    	});
+    	
   		$scope.formatDate = function(date) {
   			return ScheduleService.getFormattedDate(date);
   		};

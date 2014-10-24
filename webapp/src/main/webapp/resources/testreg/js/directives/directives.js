@@ -359,6 +359,70 @@ testreg.directive("districtAutoCompleteStudentGroup", function(DistrictService, 
     };
 });
 
+testreg.directive("groupOwnerAutoCompleteStudentGroup", function(UserService, $timeout) {
+    return {
+        restrict : "A",
+        replace: true,
+        require: ["ngModel"],
+        scope:true,
+        transclude : false,
+        controller : function($scope, $attrs) {
+        	if ($scope.studentGroup && $scope.studentGroup.id) {
+        		//TODO figure out this kind of directive w/ name field vs. email
+    		    var searchParams = {"email": $scope.studentGroup.ownerEmail,"currentPage": '0', "pageSize":"10"};
+    		    $scope.ownerUser = UserService.searchUsers(searchParams).then( function(response) {
+    	    		if (response.data && response.data.searchResults.length > 0) {
+    	    			return response.data.searchResults[0];
+    	    		}
+    		    });
+        	}
+
+            $scope.filterOwners = function(searchVal, pageSize) {           	
+            	var state = '';
+            	if (!$scope.searchParams) {
+            		state = $scope.studentGroup.stateAbbreviation;
+            	} else {
+//            		$scope.searchParams.ownerEmail = searchVal;
+            		state = $scope.searchParams.stateAbbreviation;
+            	}
+            	
+        		var lastName = '', firstName = '';
+        		if (searchVal.indexOf(',') != -1) {
+        			nameFieldArray = searchVal.split(',');
+        			lastName = nameFieldArray[0];
+        			if (nameFieldArray[1] && nameFieldArray[1].length > 0 && nameFieldArray[1].trim()) {
+        				firstName = nameFieldArray[1];
+        			}
+        		} else {
+        			lastName = searchVal;
+        		}
+    		    var searchParams = {"lastName": lastName, "currentPage": '0', "pageSize":"10"};
+    		    if (firstName.length > 0) {
+    		    	searchParams.firstName = firstName;
+    		    }
+    		    if (state.length > 0) {
+    		    	searchParams.stateAbbreviation = state;
+    		    }
+    		    return UserService.searchUsers(searchParams).then( function(response) {
+	    			return response.data.searchResults;
+    		    });
+            };
+        },
+        link : function(scope, element, attrs, ctrls) {
+        	
+        	$(element).bind('focus', function() {
+                $timeout(function() { // timeout necessary for IE10 to work..
+                    ctrls[0].$setViewValue(ctrls[0].$viewValue ? ctrls[0].$viewValue : " ");
+                }, 1);
+            });
+        	
+			element.bind("change", function(){
+				scope.changeOwnerEmail(scope.$eval(attrs.ngModel));
+			});	
+        }
+    };
+});
+
 testreg.directive("institutionAutoComplete", function(InstitutionService, GroupOfInstitutionsService, $timeout) {
     return {
         restrict : "A",
@@ -697,23 +761,40 @@ testreg.directive('dateParser', function($filter){
 	return {
 		restrict: 'A',
 		require: 'ngModel',
-		link: function(scope, element, attrs, ctrl){
+		scope:true,
+		link: function(scope, element, attrs, ctrl, ngModel){
+			ctrl.$parsers.unshift(function (modelValue) {
+				viewValue = ctrl.$viewValue;
+				if(viewValue && angular.isDate(viewValue)) {
+        			ctrl.$pristine = false; //Do not allow ctrl to set $dirty
+        			return viewValue;       			           		
+            	} else {
+					if(viewValue.length == 10) {
+		            	if(viewValue && (angular.isString(viewValue)) ) { //Thinks format is yyyy-MM-dd
+		            		var y = viewValue.substr(0, 4),
+		                    m = viewValue.substr(5,2) - 1,
+		                    d = viewValue.substr(8,2);
+		            		var D = new Date(y,m,d);
+		            		var res = (D.getFullYear() == y && D.getMonth() == m && D.getDate() == d) ? D : '';
+		            		if(angular.isDate(res)) {
+		            			ctrl.$pristine = false; //Do not allow ctrl to set $dirty
+		            			return new Date(res);
+		            		} 
+		            	}
+					}
+            	}
+            });		
+
 			ctrl.$formatters.unshift(function (modelValue) {
-            	if(modelValue && (angular.isString(modelValue)) ) { //Thinks format is yyyy-MM-dd
+				if(modelValue && angular.isString(modelValue)) {  
             		var y = modelValue.substr(0, 4),
                     m = modelValue.substr(5,2) - 1,
                     d = modelValue.substr(8,2);
             		var D = new Date(y,m,d);
             		var res = (D.getFullYear() == y && D.getMonth() == m && D.getDate() == d) ? D : '';
-            		if(res) {
-            			ctrl.$pristine = false; //Do not allow ctrl to set $dirty
-            			ctrl.$setViewValue(new Date(res));
-            			return new Date(res);
-            		}
-            	} else if(modelValue && angular.isDate(modelValue)) {
-            		return $filter('date')(modelValue, "yyyy-MM-dd");
-            	}
-            });  
+            		return res;
+            	}		
+			});
 		},
 	};
 });

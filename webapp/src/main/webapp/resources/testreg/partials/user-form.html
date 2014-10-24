@@ -82,25 +82,21 @@
                         </td>
                         <td role="gridcell" aria-labelledby="parentFilterHeader">
                             <div class="centerDiv">
-                                 <select  data-ng-model="selectedParentId[$index]" data-ng-options="entity.entityId as entity.entityId + ' - ' + entity.entityName + ' (' + entity.entityType + ')' for entity in parentEntityIds[$index] | orderBy:'entityId'" data-ng-change="filteredEntityIds($index,roleAssociation.level,selectedParentId[$index])" title="Identifier" tabindex="0">
+                                 <select  data-ng-model="selectedParentDBId[$index]" data-ng-options="entity.id as entity.entityId + ' - ' + entity.entityName + ' (' + entity.entityType + ')' for entity in parentEntityIds[$index] | orderBy:'entityId'" data-ng-change="filteredEntityIds($index,roleAssociation.level,selectedParentDBId[$index])" title="Identifier" tabindex="0">
                                     <option value="">Select...</option>
                                  </select>
                             </div>
                         </td>
                         <td role="gridcell" aria-labelledby="entityIdHeader">
                             <div class="centerDiv">
-                                <select  data-ng-model="roleAssociation.associatedEntityId" data-ng-options="entity.entityId as entity.entityId + ' - ' + entity.entityName for entity in entityIds[$index] | orderBy:'entityId'" data-ng-change="getStateAbbreviation(entityIds[$index],roleAssociation)" title="Association ID" tabindex="0">
+                                <select  data-ng-model="roleAssociation.associatedEntityMongoId" data-ng-options="entity.id as entity.entityId + ' - ' + entity.entityName for entity in entityIds[$index] | orderBy:'entityId'" data-ng-change="getStateAbbreviation(entityIds[$index],roleAssociation)" title="Association ID" tabindex="0">
                                     <option value="">Select...</option>
                                 </select>
                             </div>
                         </td>
                         <td role="gridcell" aria-labelledby="stateHeader">
                           <div class="centerDiv">                      
-                                <span data-ng-show="!roleAssociation.muliFlag">{{roleAssociation.stateAbbreviation}}</span>  
-                                <span data-ng-show="roleAssociation.muliFlag">
-                                     <select  data-ng-model="roleAssociation.stateAbbreviation" data-ng-options="stateAbbreviation for stateAbbreviation in roleAssociation.stateAbbreviations" title="State Abbreviation" tabindex="0">
-                                 </select>  
-                                 </span>  
+                                <span>{{roleAssociation.stateAbbreviation}}</span>  
                             </div>
                         </td>                                                  
                         <td role="gridcell" aria-labelledby="actionHeader">

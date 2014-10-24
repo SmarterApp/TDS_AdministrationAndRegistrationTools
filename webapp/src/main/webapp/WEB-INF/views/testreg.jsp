@@ -37,7 +37,7 @@
                      <li id="systemsDropdown">Resources
                         <ul data-ng-controller="HomeController">
                             <li class="submenu" data-ng-click="go('/downloadTemplate')" tabindex="0">Download Templates</li>
-                            <li class="submenu" data-ng-click="openUserGuide('${userguideLocation}" tabindex="0">User Guide</li>
+                            <li class="submenu" data-ng-click="openUserGuide('${userguideLocation}')" tabindex="0">User Guide</li>
                         </ul>
                      </li>                                                          
                      <li>Logged in as: 

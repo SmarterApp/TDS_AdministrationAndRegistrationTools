@@ -1,8 +1,14 @@
-testreg.controller('ScheduleSearchController', ['$scope', '$state','$window', '$timeout', 'ScheduleService', 'AssessmentService',
-    function ($scope, $state,$window, $timeout, ScheduleService, AssessmentService) {
+testreg.controller('ScheduleSearchController', ['$scope', '$state','$window', '$timeout', 'ScheduleService', 'AssessmentService', 'StateService',
+    function ($scope, $state,$window, $timeout, ScheduleService, AssessmentService, StateService) {
 
 	$scope.domain = "schedule";
+	$scope.states=[];
 	$scope.assessments=[];
+	
+	StateService.loadStates().then(function(loadedData) {
+		$scope.states = loadedData.data;
+	});
+	
 	if(!$state.current.searchParams) {
 			$scope.searchParams = {"scheduleName":"", "institutionIdentifier":"", "sortKey":"scheduleName", "sortDir":"asc", "currentPage": 1};
 		}else{

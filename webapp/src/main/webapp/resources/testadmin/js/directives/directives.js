@@ -13,8 +13,8 @@ testreg.directive("institutionAutoCompleteSchedule", function(InstitutionService
            			 }
            	 	);
            	}
-            $scope.filterInstitutions = function(searchVal, pageSize) { 
-        		return InstitutionService.findInstitutionByEntityId(searchVal).then(
+            $scope.filterInstitutions = function(searchVal, stateAbbreviation, pageSize) { 
+        		return InstitutionService.findInstitutionsByState(searchVal, stateAbbreviation, pageSize).then(
               			 function(loadedData) {
               				 return loadedData.data.searchResults;
               			 }
