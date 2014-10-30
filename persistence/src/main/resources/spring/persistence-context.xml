@@ -111,8 +111,16 @@
             	<entry key="userRole"      					value-ref="userRoleVerifier"/>
             	<entry key="userParent"    					value-ref="userParentVerifier"/>
             	<entry key="userDuplicateRoleAssociation"   value-ref="duplicateRoleAssociationVerifier"/>
+                <entry key="userEmail"                      value-ref="duplicateUserVerifier"/>
             </map>
        	</constructor-arg>
+    </bean>
+    <bean id="userCreateVerifierMap" class="java.util.HashMap">
+        <constructor-arg>
+            <map>
+                <entry key="userDuplicateEmail"             value-ref="duplicateUserVerifier"/>
+            </map>
+        </constructor-arg>
     </bean>
 
     <bean id="accommodationVerifierMap" class="java.util.HashMap">
