@@ -35,10 +35,6 @@ testreg.controller(	'InstitutionController',['$scope','$state','loadedData','Ins
 								$scope.formAction = 'Edit';
 								EntityService.getEntity($scope.institution.parentEntityType, $scope.institution.parentId).then(function(response){
 									$scope.institution.parentEntityId = response.data.entityId;
-									if($scope.states.length == 0) {
-										$scope.states.push({"entityId":$scope.institution.stateAbbreviation});
-									}
-									
 								});									
 							}else{
 								if(inputData) {
@@ -52,7 +48,6 @@ testreg.controller(	'InstitutionController',['$scope','$state','loadedData','Ins
 							};
 							
 							$scope.resetParent = function() {
-								$scope.institution.parentId = '';
 								$scope.institution.parentEntityId = '';
 							};
 							$scope.setParentInfoOnChange = function (parentId) { 
@@ -60,12 +55,9 @@ testreg.controller(	'InstitutionController',['$scope','$state','loadedData','Ins
 									if (parentEntity.id === parentId) {
 										$scope.institution.parentEntityId =  parentEntity.entityId;
 										$scope.institution.stateAbbreviation =  parentEntity.stateAbbreviation;
-										if($scope.states.length == 0) {
-											$scope.states.push({"entityId":parentEntity.stateAbbreviation});
-										}
 										return;
 									}
-								});
+								} ) 
 							};
 							$scope.save = function(institution) {
 								$scope.savingIndicator = true;

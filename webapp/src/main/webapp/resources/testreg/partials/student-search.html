@@ -123,10 +123,10 @@
                     <th data-sort-on-click data-sort-column="stateAbbreviation" class="fixedWidth100" scope="col" id="stateAbbrevHeader" title="State Abbreviation">{{xwalk('State Abbreviation')}}</th>
                     <th data-sort-on-click data-sort-column="lastName" scope="col" id="lastNameHeader" title="Last Name">{{xwalk('Last Name')}}</th>
                     <th data-sort-on-click data-sort-column="firstName" scope="col" id="firstNameHeader" title="First Name">{{xwalk('First Name')}}</th>
-                    <th scope="col" id="middleNameHeader" title="Middle Name">{{xwalk('Middle Name')}}</th>
-                    <th class="fixedWidth50" scope="col" id="sexHeader" title="Sex">{{xwalk('Sex')}}</th>
-                    <th class="fixedWidth80" scope="col" id="birthDateHeader" title="Birth Date">{{xwalk('Birth Date')}}</th>
-                    <th scope="col" id="gradeLevelHeader" title="Grade Level When Assessed">{{xwalk('Grade Level When Assessed')}}</th>                   
+                    <th data-sort-on-click data-sort-column="middleName" scope="col" id="middleNameHeader" title="Middle Name">{{xwalk('Middle Name')}}</th>
+                    <th data-sort-on-click data-sort-column="gender" class="fixedWidth50" scope="col" id="sexHeader" title="Sex">{{xwalk('Sex')}}</th>
+                    <th data-sort-on-click data-sort-column="birthDate" class="fixedWidth80" scope="col" id="birthDateHeader" title="Birth Date">{{xwalk('Birth Date')}}</th>
+                    <th data-sort-on-click data-sort-column="gradeLevelWhenAssessed" scope="col" id="gradeLevelHeader" title="Grade Level When Assessed">{{xwalk('Grade Level When Assessed')}}</th>                   
                     <th scope="col" id="actionHeader" title="Edit"></th>
                 </tr>
                 <tr data-ng-repeat="student in searchResponse.searchResults" role="row">
