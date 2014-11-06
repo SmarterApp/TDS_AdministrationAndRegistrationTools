@@ -31,6 +31,25 @@
 	    </table>
     </div>
     <div data-ng-show = "!hasGlobalErrors">
+    <div data-ng-repeat="validationResult in validationResults">
+        <table class="dataTable" role="grid" data-ng-show="validationResult.fatalErrorsTotalCount > 0 || validationResult.recordErrorsTotalCount > 0 || validationResult.warningsTotalCount > 0">
+         <colgroup>
+             <col>                 
+         </colgroup>
+         <tr role="row">
+             <th scope="col" id="validationMessageHeader" title="Validation Message">A high volume of validation errors/warning were encountered. A partial list is displayed below.</th>
+         </tr>
+         <tr role="row" data-ng-show="validationResult.fatalErrorsTotalCount > 0">
+            <td role="gridcell" aria-labelledby="validationMessageHeader">A total of {{validationResult.fatalErrorsTotalCount}} fatal errors were encountered.</td>
+         </tr>
+         <tr role="row" data-ng-show="validationResult.recordErrorsTotalCount > 0">
+            <td role="gridcell" aria-labelledby="validationMessageHeader">A total of {{validationResult.recordErrorsTotalCount}} record errors were encountered.</td>
+            </tr>
+            <tr role="row" data-ng-show="validationResult.warningsTotalCount > 0">
+            <td role="gridcell" aria-labelledby="validationMessageHeader">A total of {{validationResult.warningsTotalCount}} warnings were encountered.</td>
+            </tr>                
+        </table>
+    </div>
     <tabset vertical="false" >
         <tab  ng-repeat="validationResult in validationResults" heading="{{validationResult.formatType}}" >
             <table class="dataTable" role="grid">
@@ -86,7 +105,7 @@
             <span class="btnIcon icon_sprite icon_cancel2" aria-hidden="true"></span>
             <span class="btnText">Cancel</span>
         </button>
-        <div data-ng-show="savingIndicator" class="dirtynag">* Please wait... Save in process. You will be redirected to another page once complete.</div>
+        <div data-ng-show="savingIndicator" class="dirtynag">* Please wait... Save in progress. You will be redirected to another page once complete.</div>
 </div>         
 </div>  
 
