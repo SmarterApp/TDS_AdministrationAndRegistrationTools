@@ -68,8 +68,13 @@ testreg.controller('StudentGroupSearchController', ['$scope', '$state','$window'
 			StudentGroupService.deleteStudentGroup(studentGroupId).then(function(response){
 				$scope.errors = response.errors;
 				if($scope.errors.length == 0){
-					$state.current.searchParams = '';
-					$window.location.reload();
+					$state.current.searchParams = $scope.searchParams;
+					for (var i=$scope.searchResponse.searchResults.length; i--; ) {
+					   if ($scope.searchResponse.searchResults[i].id === studentGroupId) {
+						   $scope.searchResponse.searchResults.splice(i, 1);
+						   return;
+					   }
+					}
 				}
 			});
 		};

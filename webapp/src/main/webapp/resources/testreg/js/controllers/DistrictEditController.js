@@ -53,6 +53,9 @@ testreg.controller('DistrictEditController',['$scope','$state', 'loadedData', 'D
 		};
 		
 		$scope.setParentInfoOnChange = function (parentEntityId) { 
+			if (!parentEntityId || parentEntityId ==='') {
+				$scope.district.parentEntityId = '';
+			}
 			angular.forEach($scope.selectedParentEntities.$$v, function(parentEntity){
 				if (parentEntity.id === parentEntityId) {
 					$scope.district.parentEntityId =  parentEntity.entityId;

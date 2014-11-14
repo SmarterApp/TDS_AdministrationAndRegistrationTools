@@ -54,9 +54,10 @@
                 </span>
             </li>            
             <li>
-                <span> 
-                    <label class="control-label-required" for="schedule.doNotScheduleWeekends" >Do Not Schedule Weekends:</label>
-                     <input type="checkbox" name="schedule.doNotScheduleWeekends" data-ng-model="schedule.doNotScheduleWeekends" checked="checked"/>
+                <span>
+                     <label class="control-label-required" for="schedule.doNotScheduleWeekends" >Schedule Weekends:</label>
+                  <select  data-ng-model="schedule.doNotScheduleWeekends" data-ng-options="o.name as o.name for o in weekends" title="DoNotScheduleWeekedns" tabindex="0">
+                 </select>
                 </span>
             </li>
         </ul>  
@@ -73,8 +74,8 @@
                 </colgroup>
                 <tbody>
                     <tr>
-                        <th>Type</th>
-                        <th>Value</th>
+                        <th data-ng-class="{'control-label-required':schedule.affinities && schedule.affinities.length > 0}">Type</th>
+                        <th data-ng-class="{'control-label-required':schedule.affinities && schedule.affinities.length > 0}">Value</th>
                         <th>Strict</th>
                         <th>
                             <div class="tableButtonGroup">
@@ -84,12 +85,12 @@
                     </tr>
                     <tr data-ng-repeat="affinity in schedule.affinities">
                         <td>
-                            <select  data-ng-model="affinity.type"  data-ng-change="setAffinities($index, affinity.type)" data-ng-options="affinityType.id as affinityType.id for affinityType in affinityTypes" >
+                            <select data-ng-model="affinity.type"  data-ng-change="setAffinities($index, affinity.type)" data-ng-options="affinityType.id as affinityType.id for affinityType in affinityTypes" >
                                 <option value="">Select...</option>
                             </select>
                         </td>
-                        <td>
-                            <select  data-ng-model="affinity.value"  data-ng-options="affinityValue.id as affinityValue.name for affinityValue in affinityValues[$index]" >
+                        <td >
+                            <select data-ng-model="affinity.value"  data-ng-options="affinityValue.id as affinityValue.name for affinityValue in affinityValues[$index]" >
                                 <option value="">Select...</option>
                             </select>
                         </td>      

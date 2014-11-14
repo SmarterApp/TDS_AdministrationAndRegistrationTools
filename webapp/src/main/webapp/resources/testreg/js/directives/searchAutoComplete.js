@@ -183,7 +183,7 @@ testreg.directive("assessementSearchAutoComplete", function(AssessmentService, $
         transclude : false,
         controller : function($scope, $attrs) {
             $scope.filterAssessments = function(searchVal, pageSize,searchBy) {   
-                return AssessmentService.findAssessmentBySearchVal(searchVal, pageSize,searchBy).then(
+                return AssessmentService.findAssessmentBySearchValAndTenantId(searchVal, pageSize,searchBy).then(
                         function(loadedData) {
                             return loadedData.data.searchResults;
                         }

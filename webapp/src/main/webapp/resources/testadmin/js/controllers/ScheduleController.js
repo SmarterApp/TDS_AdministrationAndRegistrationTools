@@ -1,7 +1,7 @@
 
 testreg.controller('ScheduleController',['$scope','$state', '$window','$timeout','loadedData', 'ScheduleService', 'AssessmentService', 
-                                         'SubjectService', 'StudentGroupService','StudentService', 'StateService',
-    function($scope, $state, $window, $timeout, loadedData, ScheduleService, AssessmentService, SubjectService, StudentGroupService,StudentService, StateService) {
+                                         'SubjectService', 'StudentGroupService','StudentService', 'StateService', 'CurrentUserService',
+    function($scope, $state, $window, $timeout, loadedData, ScheduleService, AssessmentService, SubjectService, StudentGroupService,StudentService, StateService, CurrentUserService) {
 		$scope.domain = "schedule";
 		$scope.savingIndicator = false;
 		$scope.errors = [];
@@ -15,6 +15,11 @@ testreg.controller('ScheduleController',['$scope','$state', '$window','$timeout'
 		$scope.schedule = loadedData.data;
 		$scope.studentGroups = [];
 		$scope.states=[];
+
+		$scope.weekends = [
+			         	{name:"NO",description:"NO"},
+			         	{name:"YES",description:"YES"},
+			         	];
 		
     	StateService.loadStates().then(function(loadedData) {
     		$scope.states = loadedData.data;
@@ -61,7 +66,12 @@ testreg.controller('ScheduleController',['$scope','$state', '$window','$timeout'
         };
         
 		if($scope.schedule && $scope.schedule.id){
-			$scope.formAction = 'Edit';			
+			$scope.formAction = 'Edit';					
+			if($scope.schedule.doNotScheduleWeekends === true) {
+				$scope.schedule.doNotScheduleWeekends = "NO";
+			}else{
+				$scope.schedule.doNotScheduleWeekends = "YES";
+			}
 			$timeout(function() {
 				if($scope.schedule.affinities) {
 					for(var i=0; i<$scope.schedule.affinities.length; i++){
@@ -80,7 +90,9 @@ testreg.controller('ScheduleController',['$scope','$state', '$window','$timeout'
 					
 				}
 			},300);
-		} 
+		}  else {
+			$scope.schedule.doNotScheduleWeekends = "NO";
+		}
 		
 		
 		$scope.xwalk   = function(label) {
@@ -102,7 +114,7 @@ testreg.controller('ScheduleController',['$scope','$state', '$window','$timeout'
 
 		};
 		$scope.addAffinity = function (schedule) {
-			if($scope.schedule && !$scope.schedule.id) {
+			if($scope.schedule && !$scope.schedule.id && !$scope.schedule.affinities) {
 				$scope.schedule.affinities =[];
 			}
 			$scope.schedule.affinities.push({type:null,rule:"NONSTRICT",value:""});
@@ -121,6 +133,7 @@ testreg.controller('ScheduleController',['$scope','$state', '$window','$timeout'
 		};
 				
 		$scope.saveSchedule = function(schedule){
+			$scope.schedule.tenantId = CurrentUserService.getTenantId();
 			$scope.savingIndicator = true;
 			ScheduleService.save(schedule).then(
 				function(response) {

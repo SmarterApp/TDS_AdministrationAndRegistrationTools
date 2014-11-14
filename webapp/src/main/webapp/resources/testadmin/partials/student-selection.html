@@ -36,7 +36,7 @@
 			            <li>
 			                <span> 
 			                    <label class="control-label" for="searchParams.grade">{{xwalk('Entry Grade Level')}}:</label>
-			                     <select  data-ng-model="searchParams['student.gradeLevelWhenAssessed']" data-ng-options="grade.gradeName as grade.gradeName + '  - ' + grade.gradeId  for grade in grades" >
+			                     <select  data-ng-model="searchParams['student.gradeLevelWhenAssessed']" data-ng-options="grade.text as grade.text + '  - ' + grade.gradeId  for grade in grades" >
 			                      <option value="">Select...</option>
 			                    </select>
 			                </span>

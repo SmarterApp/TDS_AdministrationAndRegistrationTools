@@ -30,7 +30,7 @@
 			                     <td style="text-align:center"><input class="addSeat" type="text" data-ng-model="selectedConfigurations[$index].numberOfSeats"/>
 			                     <td>{{seatConfig.numberOfSeats}}</td>
 			                     <td>{{seatConfig.testPlatform}}</td>
-			                     <td>{{seatConfig.accessibilityEquipments}}</td>
+			                     <td>{{seatConfig.accessibilityEquipments | joinBy}}</td>
 			                </tr>
 			            </table> 
 				    </div>

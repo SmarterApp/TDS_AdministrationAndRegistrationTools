@@ -8,12 +8,8 @@
     <logger name="log4j.logger.org.springframework.security.saml" level="DEBUG" />
     <logger name="log4j.logger.org.opensaml" level="DEBUG" />
     
-    <logger name="PERFORMANCE_CONTROLLER" additivity="false" level="debug">
-        <appender-ref ref="MDCAppender" />
-    </logger>
-    <logger name="PERFORMANCE_REST" additivity="false" level="ERROR"/>
-    <logger name="PERFORMANCE_PERSISTENCE" additivity="false" level="ERROR"/>
-    <logger name="PERFORMANCE_SERVICE" additivity="false" level="ERROR"/>
+    <!-- uncomment the following line to stop logging the rest layer performance metric to mna -->
+    <!--  <logger name="PERFORMANCE_REST" additivity="false" level="ERROR"/>-->
 
     <logger name="net.sf.ehcache" level="ALL"/>
 
@@ -30,8 +26,6 @@
     <!-- trace level will also log a representation of the uber cache tree -->
     <!-- <logger name="org.opentestsystem.delivery.testreg.service.TestRegUberEntityRelationshipService" level="trace" /> -->
     
-    <!-- stop logging the persistence performance log -->
-    <!-- <logger name="PERFORMANCE_PERSISTENCE" level="error" /> -->
     
     <!-- stop logging search request debug statements -->
     <!-- <logger name="org.opentestsystem.delivery.testreg.domain.search.AbstractTestRegSearchRequest" level="error" /> -->

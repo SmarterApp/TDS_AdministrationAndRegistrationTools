@@ -514,6 +514,14 @@ $stateProvider
 	});
 }]);
 
+
+testreg.filter('joinBy', function () {
+    return function (input,delimiter) {
+        return (input || []).join(delimiter || ',');
+    };
+});
+
+
 var previewFileResolver = ['$stateParams','PreviewFileService', function ($stateParams, PreviewFileService) {
 	if($stateParams.fileId) {
 		return PreviewFileService.previewFile($stateParams.fileId); 	

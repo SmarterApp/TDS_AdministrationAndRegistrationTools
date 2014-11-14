@@ -12,7 +12,7 @@
 
     <bean id="validator" class="org.springframework.validation.beanvalidation.LocalValidatorFactoryBean"/>
     
-    <bean id="scriptEnginewrapper" class="org.opentestsystem.delivery.testreg.domain.constraintvalidators.JexlScriptEngineWrapper"/>
+    <bean id="scriptEngineWrapper" class="org.opentestsystem.delivery.testreg.domain.constraintvalidators.JexlScriptEngineWrapper"/>
     
     <bean id="scriptEngineManager" class="javax.script.ScriptEngineManager" scope="singleton">
         <property name="bindings" ref="globalScriptEngineBindings"/>

@@ -1,4 +1,4 @@
-testreg.factory("AssessmentService", function($http){
+testreg.factory("AssessmentService", function($http, CurrentUserService){
 	
 	return {
     	assessmentData : [],
@@ -201,7 +201,16 @@ testreg.factory("AssessmentService", function($http){
 	            params:params,
 	   	    }).then(this.successHandler, this.errorHandler);
 	    },	 
+	    findAssessmentBySearchValAndTenantId : function(searchVal,pageSize,searchBy) {
+	    	var tenantId = CurrentUserService.getTenantId();
+	    	var params = JSON.parse( '{ "'+searchBy+'": "'+searchVal+'","tenantId": "'+tenantId+'", "pageSize":"'+pageSize+'", "sortKey": "'+ searchBy +'","sortDir":"asc","currentPage":"0" }' );
 	    
+	    	return $http({
+	            method: 'GET',
+	            url: baseUrl + 'assessment',
+	            params:params,
+	   	    }).then(this.successHandler, this.errorHandler);
+	    },
 	    findAssessmentByTenantId : function(searchVal,pageSize,searchBy) {
 	    	var params = JSON.parse( '{ "'+searchBy+'": "'+searchVal+'", "pageSize":"'+pageSize+'", "sortKey": "'+ searchBy +'","sortDir":"asc","currentPage":"0" }' );
 	    	return $http({

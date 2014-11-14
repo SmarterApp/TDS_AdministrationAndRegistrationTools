@@ -99,7 +99,13 @@ testreg.controller('SubjectSearchController', ['$scope', '$state','$window', '$t
 						SubjectService.deleteSubject(subject.id).then(function(response){
 							$scope.errors = response.errors;
 							if($scope.errors.length == 0){
-								window.location.reload();
+								$state.current.searchParams = $scope.searchParams;
+								for (var i=$scope.searchResponse.searchResults.length; i--; ) {
+								   if ($scope.searchResponse.searchResults[i].id === subject.id) {
+									   $scope.searchResponse.searchResults.splice(i, 1);
+									   return;
+								   }
+								}
 							}
 						});
 					}

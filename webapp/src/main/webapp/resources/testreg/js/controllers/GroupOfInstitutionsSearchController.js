@@ -54,7 +54,13 @@ testreg.controller('GroupOfInstitutionsSearchController', ['$scope', '$state','$
 		GroupOfInstitutionsService.deleteGroupOfInstitutions(groupofInstitutionsId).then(function(response){
 			$scope.errors = response.errors;
 			if($scope.errors.length == 0){
-				window.location.reload();
+				$state.current.searchParams = $scope.searchParams;
+				for (var i=$scope.searchResponse.searchResults.length; i--; ) {
+				   if ($scope.searchResponse.searchResults[i].id === groupofInstitutionsId) {
+					   $scope.searchResponse.searchResults.splice(i, 1);
+					   return;
+				   }
+				}
 			}
 		});
 	};

@@ -93,7 +93,7 @@
                          <span data-ng-repeat="affinity in facilityTime.timeSlot.affinities">{{affinity.type}} : {{affinity.value | assessmentNameFilter:affinity.type:assessments}} : {{affinity.rule}}<span data-ng-show="!$last"><br></span></span>
                          </td>
 	                     <td><button data-ng-click="addSeats($index)" class="btnAddSeat" ><span data-ng-show="!selectedConfigurations[$index] || selectedConfigurations[$index].length == 0">Add</span><span data-ng-show="selectedConfigurations[$index].length > 0">Edit</span></button>
-	                     <span data-ng-repeat="seatConfig in selectedConfigurations[$index]">Seats: {{seatConfig.numberOfSeats}}, Test Platform: {{seatConfig.testPlatform}}, Equipment: {{seatConfig.accessibilityEquipments}}<span data-ng-show="!$last"><br></span></span></td>                        
+	                     <span data-ng-repeat="seatConfig in selectedConfigurations[$index]">Seats: {{seatConfig.numberOfSeats}}, Test Platform: {{seatConfig.testPlatform}}, Equipment: {{seatConfig.accessibilityEquipments | joinBy}}<span data-ng-show="!$last"><br></span></span></td>                        
 	                     <td><div class="tableButtonGroup">
 	                                <button data-ng-click="removeTimeSlot($index)" class="boxBtn"><span class="btnIcon icon_sprite icon_delete2"></span></button>
 	                         </div>                                 

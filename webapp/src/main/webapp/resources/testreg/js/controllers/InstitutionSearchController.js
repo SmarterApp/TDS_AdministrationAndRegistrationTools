@@ -10,7 +10,7 @@ testreg.controller('InstitutionSearchController', ['$scope', '$state','$window',
 	}
 
 		$scope.searchResponse = {};
-		StateService.loadStates().then(function(loadedData) {
+		StateService.loadAllStates().then(function(loadedData) {
 			$scope.states = loadedData.data;
 		});
 
@@ -55,8 +55,13 @@ testreg.controller('InstitutionSearchController', ['$scope', '$state','$window',
 		InstitutionService.deleteInstitution(institutionId).then(function(response){
 			$scope.errors = response.errors;
 			if($scope.errors.length == 0){
-				$state.current.searchParams = '';
-				window.location.reload();
+				$state.current.searchParams = $scope.searchParams;
+				for (var i=$scope.searchResponse.searchResults.length; i--; ) {
+				   if ($scope.searchResponse.searchResults[i].id === institutionId) {
+					   $scope.searchResponse.searchResults.splice(i, 1);
+					   return;
+				   }
+				}
 			}
 		});
 	};

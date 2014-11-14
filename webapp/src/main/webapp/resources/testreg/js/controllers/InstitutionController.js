@@ -56,6 +56,10 @@ testreg.controller(	'InstitutionController',['$scope','$state','loadedData','Ins
 								$scope.institution.parentEntityId = '';
 							};
 							$scope.setParentInfoOnChange = function (parentId) { 
+								if (!parentId || parentId ==='') {
+									$scope.institution.parentEntityId = '';
+								}
+
 								angular.forEach($scope.selectedParentEntities.$$v, function(parentEntity){
 									if (parentEntity.id === parentId) {
 										$scope.institution.parentEntityId =  parentEntity.entityId;

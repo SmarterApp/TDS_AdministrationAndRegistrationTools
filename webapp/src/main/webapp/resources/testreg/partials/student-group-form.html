@@ -16,16 +16,17 @@
                     <input type="text" name="studentGroup.studentGroupName" data-ng-model="studentGroup.studentGroupName" alt="Student Group Name" tabindex="0" />
                 </span>
             </li>
+            <li><span></span></li>
             <li>
                 <span> 
                     <label class="control-label-required" for="studentGroup.ownerEmail" title="User">{{xwalk('User')}}:</label>
                     <!-- <input type="text" name="studentGroup.ownerEmail" data-ng-model="studentGroup.ownerEmail" /> -->
                      <select  data-ng-model="studentGroup.ownerEmail" 
-                     data-ng-options="user.email as user.lastName + ', ' + user.firstName for user in users" title="User" tabindex="0">
+                     data-ng-options="user.email as user.lastName + ', ' + user.firstName + ' (' + user.email + ')' for user in users" title="User" tabindex="0">
                       <option value="">Select...</option>
                     </select>                    
                 </span>
-            </li>
+                </li><li><span></span></li>
            <li>
                 <span> 
                     <label class="control-label-required" for="studentGroup.stateAbbreviation" title="State Abbreviation">{{xwalk('State Abbreviation')}}:</label>

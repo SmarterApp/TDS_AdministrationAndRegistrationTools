@@ -21,6 +21,7 @@
     <int:channel id="assessmentModificationEventsInbound"/>
     <int:channel id="explicitEligibilityModificationEventsInbound"/>
     <int:channel id="studentModificationEventsInbound"/>
+	<int:channel id="batchStudentModificationEventsInbound"/>
     
     <int:channel id="failedEvents"/>
     <int:channel id="failedEventNotify">
@@ -30,8 +31,7 @@
     <int:logging-channel-adapter id="logger" level="INFO" log-full-message="true"/>
     <int:logging-channel-adapter id="errorLogger" level="ERROR" log-full-message="true"/>
     
-    <int:wire-tap channel="logger"
-                      pattern="eventsOutbound,eventsInbound"/>
+    <int:wire-tap channel="logger" pattern="eventsOutbound,eventsInbound"/>
                       
     <int:wire-tap channel="errorLogger" pattern="failedEvents"/>
     <int:wire-tap channel="failedEventNotify" pattern="failedEvents"/>
@@ -44,6 +44,7 @@
         <int:mapping type="org.opentestsystem.delivery.testreg.domain.event.AssessmentModificationEvent" channel="assessmentModificationEventsInbound" />
         <int:mapping type="org.opentestsystem.delivery.testreg.domain.event.ExplicitEligibilityModificationEvent" channel="explicitEligibilityModificationEventsInbound" />
         <int:mapping type="org.opentestsystem.delivery.testreg.domain.event.StudentModificationEvent" channel="studentModificationEventsInbound" />
+		<int:mapping type="org.opentestsystem.delivery.testreg.domain.event.BatchStudentModificationEvent" channel="batchStudentModificationEventsInbound" />
     </int:payload-type-router>
     
     <!-- service activator is annotated on the methods of EligibilityEvaluatorImpl

@@ -69,8 +69,13 @@ testreg.controller('StudentSearchController', ['$scope', '$state','$window', 'St
   			StudentService.deleteStudent(studentId).then(function(response){
 				$scope.errors = response.errors;
 				if($scope.errors.length == 0){
-					$state.current.searchParams = '';
-					$window.location.reload();
+					$state.current.searchParams = $scope.searchParams;
+					for (var i=$scope.searchResponse.searchResults.length; i--; ) {
+					   if ($scope.searchResponse.searchResults[i].id === studentId) {
+						   $scope.searchResponse.searchResults.splice(i, 1);
+						   return;
+					   }
+					}
 				}
 			});
   		};

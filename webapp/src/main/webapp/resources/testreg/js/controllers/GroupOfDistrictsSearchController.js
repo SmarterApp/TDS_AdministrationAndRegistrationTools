@@ -53,8 +53,13 @@ testreg.controller('GroupOfDistrictsSearchController', ['$scope', '$state','$win
   			GroupOfDistrictsService.deleteGroupOfDistricts(groupOfDistrictsId).then(function(response){
 				$scope.errors = response.errors;
 				if($scope.errors.length == 0){
-					$state.current.searchParams = '';
-					$window.location.reload();
+					$state.current.searchParams = $scope.searchParams;
+					for (var i=$scope.searchResponse.searchResults.length; i--; ) {
+					   if ($scope.searchResponse.searchResults[i].id === groupOfDistrictsId) {
+						   $scope.searchResponse.searchResults.splice(i, 1);
+						   return;
+					   }
+					}
 				}
 			});
   		};

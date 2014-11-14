@@ -1253,3 +1253,9 @@ th.control-label-required:before {
 .assessmentFont {
       font-size: 1.00em;
 }
+.fieldGroup li span.layoutDisplayOnly {
+	float: none;
+	text-align: left;
+	width: 140px;
+	margin-left: 0.7em;
+}

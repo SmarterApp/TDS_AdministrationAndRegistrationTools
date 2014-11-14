@@ -28,11 +28,17 @@ testreg.controller('StateSearchController', ['$scope', '$state',  '$window','Sta
 		$state.transitionTo("entities.editState", {stateId:state.id});
 	};
 	$scope.deleteItem = function(stateId) {
+		
 		StateService.deleteState(stateId).then(function(response){
 			$scope.errors = response.errors;
 			if($scope.errors.length == 0){
-				$state.current.searchParams = '';
-				$window.location.reload();
+				$state.current.searchParams = $scope.searchParams;
+				for (var i=$scope.searchResponse.searchResults.length; i--; ) {
+				   if ($scope.searchResponse.searchResults[i].id === stateId) {
+					   $scope.searchResponse.searchResults.splice(i, 1);
+					   return;
+				   }
+				}
 			}
 		});
 	};
