@@ -30,6 +30,16 @@
     
     <bean id="clientServiceImpl" class="org.opentestsystem.delivery.testreg.service.impl.ClientServiceImpl"/>
 
+    
+    <bean id="studentConverter" class="org.opentestsystem.delivery.testreg.xstream.converters.StudentPackageStudentConverter">
+        <constructor-arg name="sb11EntityRepositoryService" ref="entityService"/>
+        <property name="converter" ref="reflectionConverter"/>
+    </bean>
+
+    <bean id="assessmentConverter" class="org.opentestsystem.delivery.testreg.xstream.converters.AssessmentConverter">
+        <property name="converter" ref="reflectionConverter"/>
+    </bean>
+
     <util:map id="entityRepositoryMap">
         <entry key="#{T(org.opentestsystem.delivery.testreg.domain.FormatType).CLIENT}" value-ref="clientEntityRepository"/>
         <entry key="#{T(org.opentestsystem.delivery.testreg.domain.FormatType).STATE}" value-ref="stateEntityRepository"/>
@@ -66,9 +76,11 @@
     	<constructor-arg name="fieldDictionary" ref="fieldDictionary"/>
     </bean>
 
-    <bean id="xstream" class="com.thoughtworks.xstream.XStream">
+    <bean id="xstream" class="org.opentestsystem.delivery.testreg.xstream.custom.TestRegXstream">
     	<constructor-arg name="reflectionProvider"       ref="reflectionProvider"/>
         <constructor-arg name="hierarchicalStreamDriver" ref="staxDriver"/>
+        <property name="studentConverter" ref="studentConverter"/>
+        <property name="assessmentConverter" ref="assessmentConverter"/>
     </bean>
 
     <util:list id="hierarchyLevels" value-type="org.opentestsystem.delivery.testreg.domain.HierarchyLevel">

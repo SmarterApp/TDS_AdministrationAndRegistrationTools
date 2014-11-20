@@ -29,9 +29,10 @@
     <!-- Unsecured pages -->
     <security:http security="none" pattern="/saml/web/**"/>
     <security:http security="none" pattern="/thankyou"/>
-    <security:http security="none" pattern="/favicon.ico"/>
+    <security:http security="none" pattern="/favicon.ico"/>   
     <security:http security="none" pattern="/api"/>
     <security:http security="none" pattern="/version"/>
+    
     <security:http security="none" pattern="/resources/dtd/**"/>
 
     <!-- Secured pages -->

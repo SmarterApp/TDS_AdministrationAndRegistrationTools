@@ -303,9 +303,9 @@ There are many other properties that need to be set in Program Management so tha
 
 #### MNA Properties
 * `testreg.mna.description` - Component name string to pass to M&A
-* `testreg.mna.healthMetricIntervalInSeconds` - How often to send heartbeat metric in seconds
 * `mna.mnaUrl` - The URL of the M&A REST api (/rest/)
-* `testreg.mna.availability.metric.email` - Default email to send alerts to
+* `mna.oauth.batch.account` - Username (email address) of MNA client user used for authenticating into MNA and logging metrics information 
+* `mna.oauth.batch.password` - Password of MNA client user 
 
 #### RabbitMq Properties
 * `rabbitmq.vhost` - The name of the RabbitMq ghost to connect to.  The default vhost is "/", but RabbitMq could be configured to use something different.

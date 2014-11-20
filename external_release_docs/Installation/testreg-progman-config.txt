@@ -21,6 +21,8 @@ gpgKeyring.secret.location=/path/to/tomcat/resources/testreg/.gnupg/secring.gpg
 mna.mnaUrl=http://mna.url/rest/
 mna.oauth.client.id=
 mna.oauth.client.secret=
+mna.oauth.batch.account=mna-client-user-account-name
+mna.oauth.batch.password=mna-client-user-account-password
 oauth.access.url=https://sso.url/auth/oauth2/access_token?realm=/sbac
 oauth.tsb.client.secret=
 oauth.tsb.client=tsb
