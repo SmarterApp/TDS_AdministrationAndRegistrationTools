@@ -80,7 +80,7 @@ testreg.controller('StudentEditController',['$scope','$state', '$filter', '$time
 			StudentService.loadStudentEligibleAssessments($scope.student.id).then(function(loadedData) {
 	  			$scope.eligibleAssessments = loadedData.data;				
 	  			angular.forEach($scope.eligibleAssessments, function(assessment){
-					params = {"studentId":$scope.student.id,"stateAbbreviation":$scope.student.stateAbbreviation,"assessmentId":assessment.id,"currentPage": '0', "pageSize":"1000000","sortKey":"opportunity", "sortDir":"asc"};
+					params = {"studentId":$scope.student.entityId,"stateAbbreviation":$scope.student.stateAbbreviation,"assessmentId":assessment.id,"currentPage": '0', "pageSize":"1000000","sortKey":"opportunity", "sortDir":"asc"};
 					TestStatusService.search(params).then(function(response) {
 						if (response.data.searchResults && response.data.searchResults.length > 0) {
 							teststatus =  response.data.searchResults.pop();
@@ -167,7 +167,19 @@ testreg.controller('StudentEditController',['$scope','$state', '$filter', '$time
 			if (student.birthDate === undefined) {
 				$scope.errors.push("The Birthdate is invalid: the valid format is YYYY-MM-DD, and the range should be between '1900 <= YYYY <=9999'");
 				$scope.savingIndicator = false;
-			}		
+			}
+			if (student.firstEntryDateIntoUsSchool === undefined) {
+				$scope.errors.push("Invalid date or invalid date format for First Entry Date Into US School. Valid format is YYYY-MM-DD");
+				$scope.savingIndicator = false;
+			}
+			if (student.lepEntryDate === undefined) {
+				$scope.errors.push("Invalid date or invalid date format for Limited English Proficiency Entry Date. Valid format is YYYY-MM-DD");
+				$scope.savingIndicator = false;
+			}
+			if (student.lepExitDate === undefined) {
+				$scope.errors.push("Invalid date or invalid date format for LEP Exit Date. Valid format is YYYY-MM-DD");
+				$scope.savingIndicator = false;
+			}
 			$scope.formatDateFields(true);
 			if ($scope.errors.length == 0) {
 				StudentService.saveStudent(student).then(function(response) {
@@ -178,7 +190,7 @@ testreg.controller('StudentEditController',['$scope','$state', '$filter', '$time
 						angular.forEach($scope.eligibleAssessments, function(assessment){
 							status = $scope.studentTestStatuses[assessment.id];
 							if(status && status === "OPTED_OUT") {
-								testStatus = {"studentId" : student.id, "stateAbbreviation" : student.stateAbbreviation, "assessmentId":assessment.id, "status" : "OPTED_OUT", "opportunity" :0};
+								testStatus = {"studentId" : student.entityId, "stateAbbreviation" : student.stateAbbreviation, "assessmentId":assessment.id, "status" : "OPTED_OUT", "opportunity" :1};
 								TestStatusService.save(testStatus);
 							}
 						});

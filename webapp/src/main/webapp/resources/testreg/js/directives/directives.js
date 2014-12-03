@@ -1309,3 +1309,112 @@ testreg.filter("testStatusFilter", function(){
         return status;
     };
 });
+
+testreg.directive('userParentEntitySelect', function($compile, EntityService) {
+	  return {
+		    scope: {
+		    	method:'=',
+		    	currentRole:'=',
+		    	index:'@index',
+		    },
+		    template: "<div id='associatedEntityDiv{{index}}' ui-select2='select2Options' ng-model='roleAssociation.associatedEntityMongoId'></div>",
+		    compile: function compile(tElement, tAttrs, transclude) {
+		      return {
+		        /**
+		         * this is one of the rare cases where I had to use preLink,
+		         * this is due to a select2 issue
+		         */
+		        pre: function preLink(scope, iElement, iAttrs) {
+		          var PAGE_SIZE = 100;
+
+		          /**
+		           * The query handler integrates select2 with our data, 
+		           * it gets invoked each time a search is performed on the select2
+		           */
+		          var queryHandler = function(query) {
+		            if (!angular.isDefined(query.page)) {
+		              query.page = 1;
+		            }
+		            if(angular.isDefined(scope.currentRole.level)) {
+		            scope.method(query.term, query.page, PAGE_SIZE, scope.currentRole.level)
+		              .then(function(results) {
+			            	  if (scope.currentRole.level === "CLIENT") {	
+			            		    searchResults =[];
+			            		    searchResults.push(results.data);
+				                    query.callback({
+					                      results: searchResults,
+					                      more: more
+					                    });
+			            	  } else {
+				                  if (angular.isDefined(results.data.searchResults) && results.data.searchResults.length > 0) {
+				                    var more = false;
+				                    //see if there are more results to page...
+				                    if (results.data.totalCount > ((query.page) * results.data.searchResults.length)) {
+				                      more = true;
+				                    }
+				                    query.callback({
+				                      results: results.data.searchResults,
+				                      more: more
+				                    });
+				                  } else {
+					                  query.callback({
+						                    results: [],
+						                    more: false
+						                  });
+				                  }
+			            	  }
+			           },
+		                //terminate the query in case if error
+		                function() {
+		                  query.callback({
+		                    results: [],
+		                    more: false
+		                  });
+		                });
+		              	}
+		          };
+
+		          var entityFormatResult = function(entity) {
+		        	if (scope.currentRole.level != 'CLIENT' && scope.currentRole.level != 'GROUPOFSTATES' && scope.currentRole.level != 'STATE') {
+		            	return entity.entityId + " - " + entity.entityName + " (" + entity.stateAbbreviation + ")";
+		          	} else {
+		          		return entity.entityId + " - " + entity.entityName;
+		          	}
+		          };
+
+		          var entityFormatSelection = function(entity) {
+		        	scope.currentRole.associatedEntityMongoId = entity.id;
+		        	scope.currentRole.associatedEntityId = entity.entityId;
+		        	if (scope.currentRole.level != 'CLIENT' && scope.currentRole.level != 'GROUPOFSTATES' && scope.currentRole.level != 'STATE') {
+		        		scope.currentRole.stateAbbreviation = entity.stateAbbreviation;
+		        		return entity.entityId + " - " + entity.entityName + " (" + entity.stateAbbreviation + ")";
+		        	} else {
+		        		scope.currentRole.stateAbbreviation = "";
+		        		return entity.entityId + " - " + entity.entityName;
+		        	}
+		          };
+		          
+		          var noMatch = function(term) {
+		        	  return "<span style='color:red'><b>No matches found for : '" + term + "'</b></span>";
+		          };
+		          scope.selected = {};
+		          scope.select2Options = {
+		            data: [],
+		            formatResult: entityFormatResult,
+		            formatSelection: entityFormatSelection,
+		            multiple: false,
+		            query: queryHandler,
+		            formatNoMatches:noMatch,
+		            initSelection : function (element, callback) {
+		            	if (scope.currentRole.associatedEntityMongoId) {
+			            	EntityService.getEntity(scope.currentRole.level, scope.currentRole.associatedEntityMongoId).then(function(loadedData) {
+			            		 callback(loadedData.data);
+			                });
+		            	}
+		            }
+		          };
+		        }
+		      };
+		    }
+		  };
+		});

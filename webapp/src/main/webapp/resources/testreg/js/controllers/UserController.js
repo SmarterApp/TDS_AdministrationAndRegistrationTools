@@ -11,8 +11,6 @@ testreg.controller(	'UserController',['$scope','$state','$timeout','loadedData',
 						    $scope.roles = roles.data;
 						    
 						    $scope.entities = [];
-						    $scope.entityIds = [];
-                            $scope.parentEntityIds = [];
                             $scope.selectedParentId = [];
                             $scope.selectedParentDBId= [];
 							$scope.actionButton = '';
@@ -24,27 +22,7 @@ testreg.controller(	'UserController',['$scope','$state','$timeout','loadedData',
 					    	StateService.loadStates().then(function(loadedData) {
 					    		$scope.states = loadedData.data;
 					    	});
-                            $scope.filteredEntityIds = function(index, entityType, parentId){
-                            	if (parentId) {
-                            		$scope.entityIds[index] = EntityService.loadEntitiesMatchingParent(entityType, parentId);
-                            	} else {
-                            		$scope.entityIds[index] = EntityService.loadParentEntities(entityType);
-                            	}
-                            };
-					    	$scope.getStateAbbreviation= function(entityIds,roleAssociation){
-						    	angular.forEach(entityIds, function(entity){
-						    		if (entity.id == roleAssociation.associatedEntityMongoId) {
-						    			roleAssociation.associatedEntityId = entity.entityId;
-							    		 if (entity.formatType == 'STATE' || entity.formatType == 'GROUPOFSTATES' || entity.formatType == 'CLIENT') {
-							    			 roleAssociation.stateAbbreviation ="";						    			 
-							    		 } else {
-							    			 roleAssociation.stateAbbreviation = entity.stateAbbreviation;
-							    		 }		
-							    		 return;
-						    		}
-						    	});
-					    	};
-					    	
+
 					    	$scope.getAssociatedEntity = function(index,entities){
 					    		return entities[index].entityId;
 					    	};
@@ -63,8 +41,6 @@ testreg.controller(	'UserController',['$scope','$state','$timeout','loadedData',
 											}
 										}
 						    		}
-                                    $scope.entityIds[j] = EntityService.loadParentEntities($scope.user.roleAssociations[j].level);
-                                    $scope.parentEntityIds[j] = EntityService.loadTheRealParentEntities($scope.user.roleAssociations[j].level);
 						    	}		
 							}else{
 								if(inputData) {
@@ -72,13 +48,15 @@ testreg.controller(	'UserController',['$scope','$state','$timeout','loadedData',
 									$scope.user.stateAbbreviation = inputData.stateAbbreviation;
 								}							
 							}
-							$scope.getAssociatedEntityIds = function(entity, index) {
-								if(!$scope.entityIds) {
-									$scope.entityIds = [];
-								}
-								$scope.user.roleAssociations[index].associatedEntityId = "";
-                                $scope.entityIds[index] = EntityService.loadParentEntities(entity);
-                                $scope.parentEntityIds[index] = EntityService.loadTheRealParentEntities(entity);
+							$scope.resetAssociatedEntities = function(currentRole, index) {	
+								var $select2 = $('#associatedEntityDiv'+index);
+								$select2.select2('data',null);
+                                currentRole.associatedEntityId ='';
+                                currentRole.associatedEntityMongoId='';
+                                currentRole.stateAbbreviation ='';
+							};
+							$scope.getParentEntities = function(term, page, pageSize, entityType) {	
+                                return EntityService.loadParentEntitiesBySearch(term,--page,pageSize, entityType);
 							};
 							$scope.getEntities = function(roleName, index) {
 								if(!$scope.entities) {
@@ -95,7 +73,6 @@ testreg.controller(	'UserController',['$scope','$state','$timeout','loadedData',
 							$scope.removeRoleAssociation = function (index) {
 								$scope.user.roleAssociations.splice(index,1);
 								$scope.entities.splice(index,1);
-								$scope.entityIds.splice(index,1);
 								$scope.userForm.$dirty=true;
 							};			
 							

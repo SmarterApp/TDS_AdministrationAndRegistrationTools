@@ -22,7 +22,7 @@
                     <label class="control-label-required" for="studentGroup.ownerEmail" title="User">{{xwalk('User')}}:</label>
                     <!-- <input type="text" name="studentGroup.ownerEmail" data-ng-model="studentGroup.ownerEmail" /> -->
                      <select  data-ng-model="studentGroup.ownerEmail" 
-                     data-ng-options="user.email as user.lastName + ', ' + user.firstName + ' (' + user.email + ')' for user in users" title="User" tabindex="0">
+                     data-ng-options="user.email as user.lastName + ', ' + user.firstName + ' (' + user.email + ')' for user in users | orderBy:'lastName'" title="User" tabindex="0">
                       <option value="">Select...</option>
                     </select>                    
                 </span>

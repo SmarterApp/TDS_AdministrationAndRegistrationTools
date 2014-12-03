@@ -185,7 +185,20 @@ testreg.directive("assessementSearchAutoComplete", function(AssessmentService, $
             $scope.filterAssessments = function(searchVal, pageSize,searchBy) {   
                 return AssessmentService.findAssessmentBySearchValAndTenantId(searchVal, pageSize,searchBy).then(
                         function(loadedData) {
-                            return loadedData.data.searchResults;
+                        	if (loadedData.data && searchBy === 'subjectCode') {
+                        		distinctAssessmentBySubject = [];
+                        		subjectList = [];
+                				angular.forEach(loadedData.data.searchResults, function(assessment, index) {
+                					if (subjectList.indexOf(assessment.subjectCode) == -1 ) {
+                						distinctAssessmentBySubject.push(assessment);
+                						subjectList.push(assessment.subjectCode);
+                					}
+                				});
+                				return distinctAssessmentBySubject;
+                        	} else {
+                        		 return loadedData.data.searchResults;	
+                        	}
+                           
                         }
                     );
                 };            	

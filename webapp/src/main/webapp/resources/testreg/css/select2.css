@@ -613,3 +613,7 @@ disabled look for disabled choices in the results dropdown
       background-position: 100% -21px !important;
   }
 }
+
+.select2-container {
+  width: 350px;  
+}

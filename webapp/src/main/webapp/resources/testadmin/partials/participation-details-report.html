@@ -73,7 +73,7 @@
                 <li>
                 <span> 
                     <label class="control-label" for="participationReport.assessmentId" > Test Name :</label>
-                  <select  data-ng-model="participationReport.testName"  data-ng-options="entity.testName as entity.testName for entity in assessments" data-ng-change="selectedTestName(participationReport.testName)" >
+                  <select  data-ng-model="participationReport.assessmentId"  data-ng-options="entity.id as entity.testName for entity in assessments" data-ng-change="selectedTestName(participationReport.testName)" >
                         <option value="">Select...</option>
                     </select>
                 </span>

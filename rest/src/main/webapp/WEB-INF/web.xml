@@ -38,6 +38,11 @@
         <servlet-name>appServlet</servlet-name>
         <url-pattern>/</url-pattern>
     </servlet-mapping>
+    
+    <!-- Session Configuration -->
+    <session-config>
+        <session-timeout>120</session-timeout>
+    </session-config>
 
     <filter>
       <filter-name>springSecurityFilterChain</filter-name>

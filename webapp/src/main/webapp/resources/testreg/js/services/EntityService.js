@@ -6,6 +6,9 @@ testreg.factory("EntityService", function($http, $rootScope, CurrentUserService)
 	var endpointsForQueryById = {"CLIENT":"clients","STATE":"state", "GROUPOFSTATES":"groupofstates", "DISTRICT":"district", 
 			"GROUPOFDISTRICTS":"groupofdistricts", "INSTITUTION":"institution", "GROUPOFINSTITUTIONS":"groupofinstitutions"};
 	
+	var endpointsForQueryBySearch = {"CLIENT":"client","STATE":"state", "GROUPOFSTATES":"groupofstate", "DISTRICT":"district", 
+			"GROUPOFDISTRICTS":"groupofdistrict", "INSTITUTION":"institution", "GROUPOFINSTITUTIONS":"groupofinstitution"};
+	
     return {
     	getExportLimit : function(){
     		var url= baseUrl + "client/exportConfig";
@@ -14,10 +17,26 @@ testreg.factory("EntityService", function($http, $rootScope, CurrentUserService)
 			});
     	},
     	loadParentEntities : function(entityType) {
-    		   	var url = baseUrl + endpoints[entityType] + '/?pageSize=999999&_=' + Math.random();
+    		   	var url = baseUrl + endpoints[entityType] + '/?pageSize=50&_=' + Math.random();
 		    	return $http.get(url, {headers: {'Accept': 'text/html'}}).then(this.successHandler, this.errorHandler).then(function(loadedData) {
 						return loadedData.data;
 				});
+    	},
+    	loadParentEntitiesBySearch : function(term, page, pageSize, entityType) {
+    		var url;
+    		if (entityType === "CLIENT") {
+    			url = baseUrl + endpointsForQueryBySearch[entityType];
+    		} else {
+    			searchValues = term.split("-");
+    			if(angular.isDefined(searchValues[1])) {
+    				params = 'entityId='+searchValues[0].trim()+'&entityName='+searchValues[1].trim()+'&pageSize=' + pageSize +'&currentPage='+page+'&sortKey=entityId&sortDir=asc';
+    			} else {
+    				params = 'entityId='+term+'&pageSize=' + pageSize +'&currentPage='+page+'&sortKey=entityId&sortDir=asc';
+    			}
+    			url = baseUrl + endpointsForQueryBySearch[entityType] + '/?'+params+'&_=' + Math.random();
+    		}
+    		console.log(url);
+	    	return $http.get(url).then(this.successHandler, this.errorHandler);
     	},
         loadEntitiesMatchingParent : function(entityType, parentId) {
             var url = baseUrl + endpoints[entityType] + '/?pageSize=999999&parentId=' + parentId + '&_=' + Math.random();
