@@ -333,6 +333,16 @@ There are many other properties that need to be set in Program Management so tha
 * `testreg.minJs` - Flag for JavaScript minification, true to minify
 * `testreg.rest.context.root` - The server relative context root for the ART REST WAR.  Should start and end with a slash.
 
+#### Clustered Environment properties
+These are *optional* properties which are used when configuring a clustered environment behind a load balancer (LB). To activate clustered environment support, simply change the active profile setenv as follows: change `spring.profiles.active` from `server.singleinstance` to `server.loadbalanced`. Furthermore, you will need to set these key/value pairs appropriately: 
+
+* `testreg.loadbalanced.url.scheme` - {this should be http or https} 
+* `testreg.loadbalanced.server.name` - {the loadbalancer’s name} 
+* `testreg.loadbalanced.server.port` - {if your server requires a port, include it here, otherwise put 80 in as the default} 
+* `testreg.loadbalanced.includeServerPortInRequestURL` - {boolean true/false value which indicates if the port should be included to resolve the server} 
+* `testreg.loadbalanced.server.rest.contextpath` - {REST context name. e.g.: "/testreg.rest"} 
+* `testreg.loadbalanced.server.webapp.contextpath` - {webapp context name. e.g.: "/testreg.webapp". Leave this blank if you are using ROOT as webapp context name} 
+
 ### RabbitMq Installation
 RabbitMq is used as a message queueing solution to queue events relating to eligibility so that eligibility calculations can occur asynchronously in the background.
 
