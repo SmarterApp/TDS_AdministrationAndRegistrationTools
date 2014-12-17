@@ -781,6 +781,8 @@ testreg.directive('dateParser', function($filter){
 		            			return new Date(res);
 		            		} 
 		            	}
+					} else if (viewValue.length === 0) {
+						return null;
 					}
             	}
             });		

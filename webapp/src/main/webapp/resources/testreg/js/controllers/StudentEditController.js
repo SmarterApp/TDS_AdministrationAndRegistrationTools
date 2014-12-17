@@ -92,6 +92,9 @@ testreg.controller('StudentEditController',['$scope','$state', '$filter', '$time
 	  		});
 		} else {
 			$scope.student.birthDate = null;
+			$scope.student.firstEntryDateIntoUsSchool = null;
+			$scope.student.lepEntryDate = null;
+			$scope.student.lepExitDate = null;
 			$scope.student.americanIndianOrAlaskaNative = "NO";
 			$scope.student.hispanicOrLatino = "NO";		
 			$scope.student.asian = "NO";
