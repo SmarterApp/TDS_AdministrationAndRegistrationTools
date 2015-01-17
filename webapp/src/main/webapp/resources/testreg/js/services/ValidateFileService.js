@@ -22,7 +22,7 @@ testreg.factory("ValidateFileService", function($http){
 	    
 	    validateFile : function(fileId) {
 	    		var url = baseUrl + 'validateFile/'+ fileId + '/?_=' + Math.random();
-   				return $http.get(url).then(this.successHandler, this.errorHandler);
+   				return $http.get(url, {timeout:300000}).then(this.successHandler, this.errorHandler);
 	    }
     };
 });
