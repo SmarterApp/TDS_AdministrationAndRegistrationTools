@@ -4,7 +4,7 @@
   <parent>
     <groupId>org.opentestsystem.delivery</groupId>
     <artifactId>test-reg-parent</artifactId>
-    <version>R01.00.18</version>
+    <version>R01.00.20</version>
   </parent>
   
   <artifactId>test-reg-domain</artifactId>

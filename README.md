@@ -332,6 +332,7 @@ There are many other properties that need to be set in Program Management so tha
 * `language.codes` - Comma delimited list of valid language codes
 * `testreg.minJs` - Flag for JavaScript minification, true to minify
 * `testreg.rest.context.root` - The server relative context root for the ART REST WAR.  Should start and end with a slash.
+* `testreg.userguide.location` - The full URL to the ART user guide
 
 #### Clustered Environment properties
 These are *optional* properties which are used when configuring a clustered environment behind a load balancer (LB). To activate clustered environment support, simply change the active profile setenv as follows: change `spring.profiles.active` from `server.singleinstance` to `server.loadbalanced`. Furthermore, you will need to set these key/value pairs appropriately: 

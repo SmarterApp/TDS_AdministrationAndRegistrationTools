@@ -1387,6 +1387,7 @@ testreg.directive('userParentEntitySelect', function($compile, EntityService) {
 		          var entityFormatSelection = function(entity) {
 		        	scope.currentRole.associatedEntityMongoId = entity.id;
 		        	scope.currentRole.associatedEntityId = entity.entityId;
+		        	scope.currentRole.associatedEntityName = entity.entityName;
 		        	if (scope.currentRole.level != 'CLIENT' && scope.currentRole.level != 'GROUPOFSTATES' && scope.currentRole.level != 'STATE') {
 		        		scope.currentRole.stateAbbreviation = entity.stateAbbreviation;
 		        		return entity.entityId + " - " + entity.entityName + " (" + entity.stateAbbreviation + ")";

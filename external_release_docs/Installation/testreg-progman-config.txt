@@ -59,4 +59,5 @@ testreg.sso.filename.suffix=
 testreg.student.group.max=2
 testreg.user.export.frequency.milliseconds=120000
 testreg.webapp.saml.metadata.filename=SP-FILENAME.xml
+testreg.userguide.location=http://www.smarterapp.org/documents/Administration_and_Registration_Tools_User_Guide.pdf
 tsb.tsbUrl=https://TSB-URL/rest/
