@@ -3,7 +3,7 @@
   <parent>
     <groupId>org.opentestsystem.delivery</groupId>
     <artifactId>test-reg-parent</artifactId>
-    <version>R01.00.23</version>
+    <version>01.00.24</version>
   </parent>
   <artifactId>testreg.webapp</artifactId>
   <packaging>war</packaging>

@@ -45,7 +45,6 @@ testreg.controller(	'UserController',['$scope','$state','$timeout','loadedData',
 							}else{
 								if(inputData) {
 									$scope.user.entityId = inputData.entityId;
-									$scope.user.entityName = inputData.entityName;
 									$scope.user.stateAbbreviation = inputData.stateAbbreviation;
 								}							
 							}
@@ -53,7 +52,6 @@ testreg.controller(	'UserController',['$scope','$state','$timeout','loadedData',
 								var $select2 = $('#associatedEntityDiv'+index);
 								$select2.select2('data',null);
                                 currentRole.associatedEntityId ='';
-                                currentRole.associatedEntityName='';
                                 currentRole.associatedEntityMongoId='';
                                 currentRole.stateAbbreviation ='';
 							};
@@ -82,7 +80,7 @@ testreg.controller(	'UserController',['$scope','$state','$timeout','loadedData',
 								if(!$scope.user.roleAssociations) {
 									$scope.user.roleAssociations=[];
 								} 
-								$scope.user.roleAssociations.push({"role":"","level":null,"associatedEntityId":"","associatedEntityName":"","stateAbbreviation":"",});
+								$scope.user.roleAssociations.push({"role":"","level":null,"associatedEntityId":"","stateAbbreviation":"",});
 								$scope.userForm.$dirty=true;						
 							};
 
