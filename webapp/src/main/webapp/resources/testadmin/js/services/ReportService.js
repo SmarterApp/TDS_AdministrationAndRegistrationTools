@@ -20,7 +20,7 @@ testadmin.factory("ReportService", function($http,$filter,EntityService){
 			status.push({id:'SCHEDULED',name:'NOT_STARTED'});
 			status.push({id:'STARTED',name:'STARTED'});
 			status.push({id:'COMPLETED',name:'COMPLETED'});
-			status.push({id:'OPTED_OUT',name:'OPTED_OUT'});
+			status.push({id:'OPTED_OUT',name:'NON_PARTICIPANT'});
 		    return status;
 		    
 		},
