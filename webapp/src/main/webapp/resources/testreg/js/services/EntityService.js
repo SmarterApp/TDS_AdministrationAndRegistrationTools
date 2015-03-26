@@ -17,7 +17,8 @@ testreg.factory("EntityService", function($http, $rootScope, CurrentUserService)
 			});
     	},
     	loadParentEntities : function(entityType) {
-    		   	var url = baseUrl + endpoints[entityType] + '/?pageSize=50&_=' + Math.random();
+    		    //SB-1190 fix - change pageSize from 50 to 99999
+    		   	var url = baseUrl + endpoints[entityType] + '/?pageSize=99999&_=' + Math.random();
 		    	return $http.get(url, {headers: {'Accept': 'text/html'}}).then(this.successHandler, this.errorHandler).then(function(loadedData) {
 						return loadedData.data;
 				});
