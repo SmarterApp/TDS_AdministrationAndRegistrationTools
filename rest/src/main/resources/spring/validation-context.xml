@@ -26,8 +26,8 @@
     			<entry key="GROUPOFINSTITUTIONS"    value-ref="groupOfInstitutionsFileValidator"/>
                 <entry key="USER"                   value-ref="userFileValidator"/>
                 <entry key="STUDENT"                value-ref="studentFileValidator"/>
-                <entry key="STUDENTGROUP"           value-ref="studentGroupFileValidator"/>
-                <entry key="ACCOMMODATIONS"         value-ref="accommodationsFileValidator"/>
+                <entry key="STUDENTGROUP"           					value-ref="studentGroupFileValidator"/>
+                <entry key="DESIGNATEDSUPPORTSANDACCOMMODATIONS"         value-ref="accommodationsFileValidator"/>
                 <entry key="EXPLICITELIGIBILITY"  	value-ref="eligibilityFileValidator"/>
     		</map>
     	</property>
@@ -80,7 +80,7 @@
     </bean>
         
     <bean id="accommodationsFileValidator" class="org.opentestsystem.delivery.testreg.upload.validator.fileformat.FileDataValidator">
-        <constructor-arg name="datasetName" value="ACCOMMODATIONS"/>
+        <constructor-arg name="datasetName" value="DESIGNATEDSUPPORTSANDACCOMMODATIONS"/>
         <property name="headers" ref="accommodations"/>
     </bean>
  

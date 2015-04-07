@@ -57,6 +57,9 @@ testreg.factory("AccommodationService", function($http){
 			return  [
 			         	{name:"TDS_PoD_Stim",description:"Stimuli"},
 			         	{name:"TDS_PoD0",description:"None"},
+			         	{name:"TDS_PoD_Items",description:"Items"},
+			         	{name:"TDS_PoD_Stim&TDS_PoD_Items",description:"Stimuli and Items"},
+			         	
 					];
 	    },
 
@@ -72,8 +75,8 @@ testreg.factory("AccommodationService", function($http){
 
 	    streamlinedInterface : function() {
 	    	return [
-	    	        	{name:"TDS_TS_Modern",description:"Standard"},
-	    	        	{name:"TDS_TS_Accessibility",description:"Streamlined"}
+	    	        	{name:"TDS_SLM0",description:"Off"},
+	    	        	{name:"TDS_SLM1",description:"On"}
 	    	       ];
 	    },
 
@@ -96,7 +99,7 @@ testreg.factory("AccommodationService", function($http){
 			         	{name:"TDS_WL_MandarinGloss",description:"Mandarin"},
 			         	{name:"TDS_WL_PunjabiGloss",description:"Punjabi"},
 			         	{name:"TDS_WL_RussianGloss",description:"Russian"},
-			         	{name:"TDS_WL_TagalGloss",description:"Filipino"},
+			         	{name:"TDS_WL_TagalGloss",description:"Filipino (Ilokano and Tagalog)"},
 			         	{name:"TDS_WL_UkrainianGloss",description:"Ukrainian"}, 
 			         	{name:"TDS_WL_VietnameseGloss",description:"Vietnamese"},
 			         	{name:"TDS_WL_Glossary&TDS_WL_ArabicGloss",description:"English & Arabic"}, 
@@ -106,7 +109,7 @@ testreg.factory("AccommodationService", function($http){
 			         	{name:"TDS_WL_Glossary&TDS_WL_MandarinGloss",description:"English & Mandarin"}, 
 			         	{name:"TDS_WL_Glossary&TDS_WL_PunjabiGloss",description:"English & Punjabi"},
 			         	{name:"TDS_WL_Glossary&TDS_WL_RussianGloss",description:"English & Russian"},
-			         	{name:"TDS_WL_Glossary&TDS_WL_TagalGloss",description:"English & Filipino"}, 
+			         	{name:"TDS_WL_Glossary&TDS_WL_TagalGloss",description:"English & Filipino (Ilokano and Tagalog)"}, 
 			         	{name:"TDS_WL_Glossary&TDS_WL_UkrainianGloss",description:"English & Ukrainian"}, 
 			         	{name:"TDS_WL_Glossary&TDS_WL_VietnameseGloss",description:"English & Vietnamese"},
 			         	{name:"TDS_WL0",description:"None"},				         	
@@ -120,13 +123,14 @@ testreg.factory("AccommodationService", function($http){
 	    	        	{name:"NEDS_CC",description:"Color Contrast"},
 	    	        	{name:"NEDS_CO",description:"Color Overlay"},
 	    	        	{name:"NEDS_Mag",description:"Magnification"},
+	    	        	{name:"NEDS_NoiseBuf",description:"Noise Buffer"},
 	    	        	{name:"NEDS_RA_Items",description:"Read Aloud Items"},
 	    	        	{name:"NEDS_SC_Items",description:"Scribe Items (Non-Writing)"},
 	    	        	{name:"NEDS_SS",description:"Separate Setting"},
 	    	        	{name:"NEDS_TransDirs",description:"Translated Test Directions"},
 	    	        	{name:"NEDS_TArabic",description:"Glossary - Arabic"},
 	    	        	{name:"NEDS_TCantonese",description:"Glossary - Cantonese"},
-	    	        	{name:"NEDS_TFilipino",description:"Glossary - Filipino"},
+	    	        	{name:"NEDS_TFilipino",description:"Glossary - Filipino (Ilokano and Tagalog)"},
 	    	        	{name:"NEDS_TKorean",description:"Glossary - Korean"},
 	    	        	{name:"NEDS_TMandarin",description:"Glossary - Mandarin"},
 	    	        	{name:"NEDS_TPunjabi",description:"Glossary - Punjabi"},
@@ -147,10 +151,11 @@ testreg.factory("AccommodationService", function($http){
 			         	{name:"NEA_Abacus",description:"Abacus"},
 			         	{name:"NEA_Calc",description:"Calculator"},
 			         	{name:"NEA_MT",description:"Multiplication Table"},
-			        	{name:"NEA_NoiseBuf",description:"Noise Buffer"},
+			        	
 					];
 	    }, 
 	    
+	    	    
     	errorHandler : function (response) {
     		var returnVal = {
     				data : {},

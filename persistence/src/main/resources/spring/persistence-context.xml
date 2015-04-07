@@ -76,7 +76,7 @@
 	   			<entry key="#{T(org.opentestsystem.delivery.testreg.domain.FormatType).STATE}" 			value-ref="studentStateVerifier"/>
 	   			<entry key="#{T(org.opentestsystem.delivery.testreg.domain.FormatType).DISTRICT}" 		value-ref="studentDistrictVerifier"/>
 				<entry key="#{T(org.opentestsystem.delivery.testreg.domain.FormatType).INSTITUTION}" 	value-ref="studentInstitutionVerifier"/>
-				<entry key="#{T(org.opentestsystem.delivery.testreg.domain.FormatType).ACCOMMODATIONS}" value-ref="accommodationVerifier"/>
+				<entry key="#{T(org.opentestsystem.delivery.testreg.domain.FormatType).DESIGNATEDSUPPORTSANDACCOMMODATIONS}" value-ref="accommodationVerifier"/>
 	   		</map>
     	</constructor-arg>
     </bean>

@@ -13,20 +13,20 @@
 
 
 	<util:map id="defaultCrosswalkMap" key-type="org.opentestsystem.delivery.testreg.domain.FormatType">
-		<entry key="STATE"     				value-ref="stateDisplay"/>
-		<entry key="DISTRICT"		    	value-ref="districtDisplay"/>
-   		<entry key="INSTITUTION"		   	value-ref="institutionDisplay"/>
-   		<entry key="GROUPOFSTATES"		   	value-ref="groupOfStatesDisplay"/>
-   		<entry key="GROUPOFDISTRICTS"		value-ref="groupOfDistrictsDisplay"/>
-   		<entry key="GROUPOFINSTITUTIONS"	value-ref="groupOfInstitutionsDisplay"/>
-   		<entry key="USER"		   			value-ref="userDisplay"/>
-   		<entry key="STUDENT"		   		value-ref="studentDisplay"/>
-   		<entry key="ACCOMMODATIONS"		  	value-ref="accommodationsDisplay"/>
-   		<entry key="EXPLICITELIGIBILITY"   	value-ref="eligibilityDisplay"/>
-   		<entry key="STUDENTGROUP"		   	value-ref="studentGroupDisplay"/>
-   		<entry key="ASSESSMENT"		   		value-ref="assessmentDisplay"/>
-   		<entry key="CLIENT"		   			value-ref="clientDisplay"/>
-   		<entry key="NULL"		   			value-ref="nullDisplay"/>
+		<entry key="STATE"     								value-ref="stateDisplay"/>
+		<entry key="DISTRICT"		    					value-ref="districtDisplay"/>
+   		<entry key="INSTITUTION"		   					value-ref="institutionDisplay"/>
+   		<entry key="GROUPOFSTATES"		   					value-ref="groupOfStatesDisplay"/>
+   		<entry key="GROUPOFDISTRICTS"						value-ref="groupOfDistrictsDisplay"/>
+   		<entry key="GROUPOFINSTITUTIONS"					value-ref="groupOfInstitutionsDisplay"/>
+   		<entry key="USER"		   							value-ref="userDisplay"/>
+   		<entry key="STUDENT"		   						value-ref="studentDisplay"/>
+   		<entry key="DESIGNATEDSUPPORTSANDACCOMMODATIONS"    value-ref="accommodationsDisplay"/>
+   		<entry key="EXPLICITELIGIBILITY"   					value-ref="eligibilityDisplay"/>
+   		<entry key="STUDENTGROUP"		   					value-ref="studentGroupDisplay"/>
+   		<entry key="ASSESSMENT"		   						value-ref="assessmentDisplay"/>
+   		<entry key="CLIENT"		   							value-ref="clientDisplay"/>
+   		<entry key="NULL"		   							value-ref="nullDisplay"/>
 	</util:map>
 
 	<util:list id="stateDisplay">
@@ -131,7 +131,7 @@
     	<value>Masking</value>
     	<value>Permissive Mode</value>
     	<value>Print On Demand</value>
-    	<value>Print Size</value>
+    	<value>Zoom</value>
     	<value>Streamlined Interface</value>
     	<value>Text to Speech</value>
     	<value>Translation</value>

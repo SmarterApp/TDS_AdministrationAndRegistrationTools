@@ -346,7 +346,7 @@ testreg.factory("EntityService", function($http, $rootScope, CurrentUserService)
          	entitiesValues.push({entityName: "Student"});
          	entitiesValues.push({entityName: "StudentGroup"});
          	entitiesValues.push({entityName: "User"});
-         	entitiesValues.push({entityName: "Accommodations"});
+         	entitiesValues.push({entityName: "DesignatedSupportsAndAccommodations"});
          	entitiesValues.push({entityName: "ExplicitEligibility"});
     	    return entitiesValues;
 	    },

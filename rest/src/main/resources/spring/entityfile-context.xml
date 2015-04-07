@@ -53,7 +53,7 @@
    		<entry key="USER"		   			value-ref="user"/>
    		<entry key="STUDENT"		   		value-ref="student"/>
         <entry key="STUDENTGROUP"           value-ref="studentGroup"/>
-   		<entry key="ACCOMMODATIONS"		  	value-ref="accommodations"/>
+   		<entry key="DESIGNATEDSUPPORTSANDACCOMMODATIONS"		  	value-ref="accommodations"/>
    		<entry key="EXPLICITELIGIBILITY"   	value-ref="explicitEligibility"/>
    </util:map>
     

@@ -1,6 +1,6 @@
 
 <div class="tableWrapper"> 
-    <h5 class="h5Accommodations" tabindex="-1">{{entityNameLabels['Accommodations']}}</h5>
+    <h5 class="h5Accommodations" tabindex="-1">{{getEntityNameLabel(entityNameLabels['DesignatedSupportsAndAccommodations'])}}</h5>
     <table class="accommodationTable" role="grid">
            <colgroup>
                <col class="actionColumn">
@@ -29,7 +29,7 @@
                <th scope="col" id="maskingHeader" title="Masking">{{accommodationXwalk('Masking')}}</th>
                <th scope="col" id="permissiveHeader" title="Permissive Mode">{{accommodationXwalk('Permissive Mode')}}</th>
                <th scope="col" id="printDemandHeader" title="Print on Demand">{{accommodationXwalk('Print On Demand')}}</th>
-               <th scope="col" id="printSizeHeader" title="Print Size">{{accommodationXwalk('Print Size')}}</th>
+               <th scope="col" id="printSizeHeader" title="Print Size">{{accommodationXwalk('Zoom')}}</th>
                <th scope="col" id="inferfaceHeader" title="Streamlined Interface">{{accommodationXwalk('Streamlined Interface')}}</th>
                <th scope="col" id="textSpeechHeader" title="Text to Speech">{{accommodationXwalk('Text to Speech')}}</th>
                <th scope="col" id="translationHeader" title="Translation">{{accommodationXwalk('Translation')}}</th>
@@ -107,13 +107,13 @@
                     </select> 
                </td>
                <td role="gridcell" aria-labelledby="embedSupportsHeader">                     
-                    <select  data-ng-model="accommodation.nonEmbeddedDesignatedSupports" data-ng-options="supports.name as supports.description for supports in nonEmbeddedDesignatedSupports" title="Non-Embedded Designated Supports" tabindex="0">
-                      <option value="">Select...</option>
+                    <select data-ui-select2="select2Config" multiple="multiple" data-ng-change="nonEmbeddedDesignatedSupportsChange($index)" data-ng-model="accommodation.nonEmbeddedDesignatedSupports"  title="Non-Embedded Designated Supports" tabindex="0">
+                      <option data-ng-repeat="supports in nonEmbeddedDesignatedSupports" data-ng-bind="supports.description" value="{{supports.name}}"></option>
                     </select> 
                </td>
                <td role="gridcell" aria-labelledby="embedAccommodationHeader">                     
-                    <select  data-ng-model="accommodation.nonEmbeddedAccommodations" data-ng-options="nonembedaccomm.name as nonembedaccomm.description for nonembedaccomm in nonEmbeddedAccommodations" title="Non-Embedded Accommodations" tabindex="0">
-                      <option value="">Select...</option>
+                    <select  data-ui-select2="select2Config" multiple="multiple" data-ng-change="nonEmbeddedAccommodationsChange($index)" data-ng-model="accommodation.nonEmbeddedAccommodations"  title="Non-Embedded Accommodations" tabindex="0">
+                      <option data-ng-repeat="nonembedaccomm in nonEmbeddedAccommodations" data-ng-bind="nonembedaccomm.description" value="{{nonembedaccomm.name}}"></option>
                     </select> 
                </td>
                <td role="gridcell" aria-labelledby="otherHeader">

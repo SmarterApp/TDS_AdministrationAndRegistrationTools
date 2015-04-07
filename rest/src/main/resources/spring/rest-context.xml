@@ -71,7 +71,7 @@
     <entry key="GROUPOFDISTRICTS"  value="Group Of Districts Identifier, Group Of Districts Name, Parent Entity Type, Parent Entity Name, State Abbreviation"/>
     <entry key="GROUPOFINSTITUTIONS"    value="Group Of Institutions Identifier, Group Of Institutions Name, Parent Entity Type, Parent Entity Name, State Abbreviation"/>
     <entry key="USER"           value="First Name, Last Or Surname, Email Address, Telephone Number, Role, Associated Entity Name, Level, State Abbreviation"/>
-    <entry key="ACCOMMODATIONS"   value="Student Identifier,State Abbreviation,Subject,American Sign Language,Color Contrast,Closed Captioning,Language,Masking,Permissive Mode,Print On Demand,Print Size,Streamlined Interface,Text to Speech,Translation,Non Embedded Designated Supports,Non Embedded Accommodations,Other"/>
+    <entry key="DESIGNATEDSUPPORTSANDACCOMMODATIONS"   value="Student Identifier,State Abbreviation,Subject,American Sign Language,Color Contrast,Closed Captioning,Language,Masking,Permissive Mode,Print On Demand,Print Size,Streamlined Interface,Text to Speech,Translation,Non Embedded Designated Supports,Non Embedded Accommodations,Other"/>
     <entry key="STUDENT" 		 value="State Abbreviation, Responsible District Identifier, Responsible Institution Identifier, Last Or Surname, First Name, Middle Name, Birth Date, SSID, Alternate SSID, Grade Level When Assessed, Sex, Hispanic Or Latino Ethnicity, American Indian Or Alaska Native, Asian, 
     								Black Or African American, White, Native Hawaiian Or Other Pacific Islander, Demographic Race Two Or More Races, IDEA Indicator, 
     								LEP Status, Section 504 Status, Economic Disadvantage Status, Language Code, English Language Proficiency Level, Migrant Status, 

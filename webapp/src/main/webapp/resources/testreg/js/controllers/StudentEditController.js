@@ -63,6 +63,9 @@ testreg.controller('StudentEditController',['$scope','$state', '$filter', '$time
 					if ($scope.student.accommodations[i].textToSpeech == "TDS_TTS_StimAndTDS_TTS_Item") {
 						$scope.student.accommodations[i].textToSpeech = "TDS_TTS_Stim&TDS_TTS_Item";
 					}
+					if ($scope.student.accommodations[i].printOnDemand == "TDS_PoD_StimAndTDS_PoD_Items") {
+						$scope.student.accommodations[i].printOnDemand = "TDS_PoD_Stim&TDS_PoD_Items";
+					}
 					if ($scope.student.accommodations[i].language == "ENUBraille") {
 						$scope.student.accommodations[i].language = "ENU-Braille";
 					}

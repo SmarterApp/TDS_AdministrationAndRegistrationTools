@@ -599,6 +599,12 @@ testreg.directive("accommodationEditor", function(AccommodationService){
 			$scope.isDisabled = false; 
 			$scope.onloadSubjectData= [];
 			$scope.loaded = false;
+			$scope.select2Config = {
+					'placeholder': "Select...",
+					'allowClear': true,
+					'multiple': true,
+					'width' :'resolve',
+			};
 			//While loading Filtert the subjects
 
 			$scope.loadSelected = function () {
@@ -632,6 +638,10 @@ testreg.directive("accommodationEditor", function(AccommodationService){
 				 $scope.subjectData= response.data;
 				 $scope.loadSelected();
 			 });
+			 
+			 $scope.getEntityNameLabel = function(name){
+				 return name.replace(/([a-z])([A-Z])/g, '$1 $2').replace(/And/g,'and');
+			 }
 	
 		    $scope.removeAccommodation = function (index) {
 				if (!confirm("Are you sure you want to delete this item?")) {
@@ -692,7 +702,61 @@ testreg.directive("accommodationEditor", function(AccommodationService){
 			    		});
 		    		}
 		    	});
-			};			
+			};
+			
+			$scope.noneSupportSelected = false;
+			$scope.nonEmbeddedDesignatedSupportsChange = function(index){
+				if($scope.student.accommodations[index].nonEmbeddedDesignatedSupports.length == 1){
+					if($scope.student.accommodations[index].nonEmbeddedDesignatedSupports.indexOf('NEDS0')!= -1){
+						$scope.noneSupportSelected = true;
+					} else{
+						$scope.noneSupportSelected = false;
+					}
+				} else if($scope.student.accommodations[index].nonEmbeddedDesignatedSupports.length >= 2){
+					if($scope.noneSupportSelected){
+						$scope.student.accommodations[index].nonEmbeddedDesignatedSupports = [];
+						$scope.student.accommodations[index].nonEmbeddedDesignatedSupports.push('NEDS0');
+					} else{
+						if($scope.student.accommodations[index].nonEmbeddedDesignatedSupports.indexOf('NEDS0')!= -1){
+							var temp1=[];
+							for(var i=0;i<$scope.student.accommodations[index].nonEmbeddedDesignatedSupports.length;i++){
+								if($scope.student.accommodations[index].nonEmbeddedDesignatedSupports[i]!='NEDS0'){
+									temp1.push($scope.student.accommodations[index].nonEmbeddedDesignatedSupports[i]);
+								}
+							}
+							$scope.student.accommodations[index].nonEmbeddedDesignatedSupports = [];
+							angular.copy(temp1, $scope.student.accommodations[index].nonEmbeddedDesignatedSupports);
+						}
+					}
+				}
+			};
+			
+			$scope.noneSelected = false; 
+			$scope.nonEmbeddedAccommodationsChange = function(index){
+				if($scope.student.accommodations[index].nonEmbeddedAccommodations.length == 1){
+					if($scope.student.accommodations[index].nonEmbeddedAccommodations.indexOf('NEA0')!= -1){
+						$scope.noneSelected = true;
+					} else{
+						$scope.noneSelected = false;
+					}
+				} else if($scope.student.accommodations[index].nonEmbeddedAccommodations.length >= 2){
+					if($scope.noneSelected){
+						$scope.student.accommodations[index].nonEmbeddedAccommodations = [];
+						$scope.student.accommodations[index].nonEmbeddedAccommodations.push('NEA0');
+					} else{
+						if($scope.student.accommodations[index].nonEmbeddedAccommodations.indexOf('NEA0')!= -1){
+							var temp=[];
+							for(var i=0;i<$scope.student.accommodations[index].nonEmbeddedAccommodations.length;i++){
+								if($scope.student.accommodations[index].nonEmbeddedAccommodations[i]!='NEA0'){
+									temp.push($scope.student.accommodations[index].nonEmbeddedAccommodations[i]);
+								}
+							}
+							$scope.student.accommodations[index].nonEmbeddedAccommodations = [];
+							angular.copy(temp, $scope.student.accommodations[index].nonEmbeddedAccommodations);
+						}
+					}
+				}
+			};
 
 			$scope.resetSubject = function(index,subject){
 				angular.forEach($scope.selectedSubject, function (existingSubject,subindex){
