@@ -186,6 +186,25 @@ testreg.controller('StudentEditController',['$scope','$state', '$filter', '$time
 				$scope.errors.push("Invalid date or invalid date format for LEP Exit Date. Valid format is YYYY-MM-DD");
 				$scope.savingIndicator = false;
 			}
+			if(student.accommodations != null){
+				for(var i=0;i<student.accommodations.length;i++){
+					if(student.accommodations[i].colorContrast == '' || student.accommodations[i].colorContrast == null){
+						student.accommodations[i].colorContrast = 'TDS_CC0';
+					}
+					if(student.accommodations[i].language == '' || student.accommodations[i].language == null){
+						student.accommodations[i].language = 'ENU';
+					}
+					if(student.accommodations[i].streamlinedInterface == '' || student.accommodations[i].streamlinedInterface == null){
+						student.accommodations[i].streamlinedInterface = 'TDS_SLM0';
+					}
+					if(student.accommodations[i].nonEmbeddedAccommodations.length == 0){
+						student.accommodations[i].nonEmbeddedAccommodations = ['NEA0'];
+					}
+					if(student.accommodations[i].nonEmbeddedDesignatedSupports.length == 0){
+						student.accommodations[i].nonEmbeddedDesignatedSupports = ['NEDS0'];
+					}
+				}
+			}
 			$scope.formatDateFields(true);
 			if ($scope.errors.length == 0) {
 				StudentService.saveStudent(student).then(function(response) {

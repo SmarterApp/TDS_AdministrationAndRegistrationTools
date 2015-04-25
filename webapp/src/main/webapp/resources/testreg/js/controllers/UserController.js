@@ -87,6 +87,10 @@ testreg.controller(	'UserController',['$scope','$state','$timeout','loadedData',
 							$scope.save = function(User) {
 								$scope.errors = [];
 								$scope.savingIndicator = true;
+								if(User.roleAssociations === undefined || User.roleAssociations.length === 0){
+									$scope.errors.push("At least one role is required");
+									$scope.savingIndicator = false;
+								}
 								if ($scope.errors.length == 0) {
 									UserService.saveUser(User).then(
 										function(response) {
