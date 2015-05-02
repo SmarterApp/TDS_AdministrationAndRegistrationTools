@@ -4,7 +4,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.opentestsystem.delivery</groupId>
     <artifactId>test-reg-parent</artifactId>
-    <version>R01.00.52</version>
+    <version>R01.00.53</version>
     <name>Smarter Balanced #11 Test Registration - Parent Project</name>
     <packaging>pom</packaging>
 

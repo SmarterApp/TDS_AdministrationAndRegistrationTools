@@ -57,8 +57,8 @@ testreg.factory("AccommodationService", function($http){
 			return  [
 			         	{name:"TDS_PoD_Stim",description:"Stimuli"},
 			         	{name:"TDS_PoD0",description:"None"},
-			         	{name:"TDS_PoD_Items",description:"Items"},
-			         	{name:"TDS_PoD_Stim&TDS_PoD_Items",description:"Stimuli and Items"},
+			         	{name:"TDS_PoD_Item",description:"Items"},
+			         	{name:"TDS_PoD_Stim&TDS_PoD_Item",description:"Stimuli and Items"},
 			         	
 					];
 	    },
