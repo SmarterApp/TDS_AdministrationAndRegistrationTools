@@ -640,9 +640,11 @@ testreg.directive("accommodationEditor", function(AccommodationService){
 			 });
 			 
 			 $scope.getEntityNameLabel = function(name){
-				 return name.replace(/([a-z])([A-Z])/g, '$1 $2').replace(/And/g,'and');
-			 }
-	
+				 if(name){
+					 return name.replace(/([a-z])([A-Z])/g, '$1 $2').replace(/And/g,'and');
+				 }
+			 };
+			 
 		    $scope.removeAccommodation = function (index) {
 				if (!confirm("Are you sure you want to delete this item?")) {
 					event.preventDefault();
@@ -704,8 +706,8 @@ testreg.directive("accommodationEditor", function(AccommodationService){
 		    	});
 			};
 			
-			$scope.noneSupportSelected = false;
 			$scope.nonEmbeddedDesignatedSupportsChange = function(index){
+				$scope.noneSupportSelected = false;
 				if($scope.student.accommodations[index].nonEmbeddedDesignatedSupports.length == 1){
 					if($scope.student.accommodations[index].nonEmbeddedDesignatedSupports.indexOf('NEDS0')!= -1){
 						$scope.noneSupportSelected = true;
@@ -731,8 +733,8 @@ testreg.directive("accommodationEditor", function(AccommodationService){
 				}
 			};
 			
-			$scope.noneSelected = false; 
 			$scope.nonEmbeddedAccommodationsChange = function(index){
+				$scope.noneSelected = false; 
 				if($scope.student.accommodations[index].nonEmbeddedAccommodations.length == 1){
 					if($scope.student.accommodations[index].nonEmbeddedAccommodations.indexOf('NEA0')!= -1){
 						$scope.noneSelected = true;

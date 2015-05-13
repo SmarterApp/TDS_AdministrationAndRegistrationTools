@@ -108,7 +108,7 @@
     <!--
         Use the following for interpreting RelayState coming from unsolicited response as redirect URL:
     -->
-    <bean id="successRedirectHandler" class="org.springframework.security.saml.SAMLRelayStateSuccessHandler">
+    <bean id="successRedirectHandler" class="org.opentestsystem.delivery.testreg.service.impl.UserAuthenticationSuccessHandler">
        <property name="defaultTargetUrl" value="/api" />
     </bean>
    
