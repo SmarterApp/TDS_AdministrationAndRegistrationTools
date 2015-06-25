@@ -16,18 +16,45 @@ testreg.controller('AssessmentEditController',['$scope','$state', '$filter', 'lo
 		$scope.tsbFlag = tsbNav;
 		
 		$scope.dateTimeFields   = AssessmentService.loadDateTimeFields(); //Used just below
-		$scope.formatDateFields = function(flag, assessment) {
+		$scope.formatDateFieldsEdit = function(flag, assessment) {
 			if (flag) {
 				
 				for (var i = 0; i < assessment.implicitEligibilityRules.length; i ++) {
 					if ($scope.dateTimeFields.indexOf(assessment.implicitEligibilityRules[i].field) > -1) {
+						assessment.implicitEligibilityRules[i].value = StudentService.getFormattedDate(assessment.implicitEligibilityRules[i].value);
+					}
+				} 
+			}
+		};
+		
+		$scope.formatDateFields = function(flag, assessment) {
+			if (flag) {
+				
+				for (var i = 0; i < assessment.implicitEligibilityRules.length; i ++) {
+					if ($scope.dateTimeFields.indexOf(assessment.implicitEligibilityRules[i].field) > -1 && $scope.assessmentForm['implicitEligibilityRulesEntry.value'].$dirty) {
 						assessment.implicitEligibilityRules[i].value = $filter('date')(assessment.implicitEligibilityRules[i].value, $scope.format);
 					}
 				} 
 			}
 		};
 		
-		
+		$scope.formatOperators = function(assessment) {
+			if(assessment.implicitEligibilityRules){
+				for (var i = 0; i < assessment.implicitEligibilityRules.length; i ++) {
+					if (assessment.implicitEligibilityRules[i].operatorType == "LESS_THAN_EQUALS") {
+						assessment.implicitEligibilityRules[i].operatorType = "<=";
+					}else if (assessment.implicitEligibilityRules[i].operatorType == "LESS_THAN") {
+						assessment.implicitEligibilityRules[i].operatorType = "<";
+					}else if (assessment.implicitEligibilityRules[i].operatorType == "GREATER_THAN_EQUALS") {
+						assessment.implicitEligibilityRules[i].operatorType = ">=";
+					}else if (assessment.implicitEligibilityRules[i].operatorType == "GREATER_THAN") {
+						assessment.implicitEligibilityRules[i].operatorType = ">";
+					}else if (assessment.implicitEligibilityRules[i].operatorType == "EQUALS"){
+						assessment.implicitEligibilityRules[i].operatorType = "=";
+					}
+				}
+			}
+		};
 		StateService.loadStates().then(function(loadedData) {
 			$scope.states = loadedData.data;	
 		});		
@@ -56,7 +83,9 @@ testreg.controller('AssessmentEditController',['$scope','$state', '$filter', 'lo
 					$scope.publishTestWindowDateWatchers(index);
 					
 					if ($scope.assessment.implicitEligibilityRules.length > 0) {
-						$scope.formatDateFields(true, $scope.assessment);
+						$scope.formatOperators($scope.assessment);
+						$scope.formatDateFieldsEdit(true, $scope.assessment);
+						
 					}
 				});
 			}

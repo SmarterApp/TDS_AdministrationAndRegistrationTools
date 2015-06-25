@@ -15,12 +15,27 @@ testreg.controller('StudentEditController',['$scope','$state', '$filter', '$time
 		found = false;
 		angular.forEach($scope.testStatuses, function(testStatus){
 			if(testStatus.assessmentId === assessmentId) {
-				found = true;
-				return;
+				if(testStatus.statusValue == "NON PARTICIPANT" || testStatus.statusValue == "NOT STARTED")
+						found = false;
+					else 
+						found = true;
+					return;
 			}
 		});
 		return found;
 	};
+	
+	$scope.getStatus = function(assessmentId, testStatuses){
+		var status = "";
+		angular.forEach(testStatuses, function(testStatus){
+			if(testStatus.assessmentId === assessmentId) {
+				status = testStatus.status;
+				return;
+			}
+		});
+		return status;
+	};
+	
 	$scope.savingIndicator = false;
 		$scope.errors = loadedData.errors;
 		$scope.student = loadedData.data;
@@ -58,6 +73,7 @@ testreg.controller('StudentEditController',['$scope','$state', '$filter', '$time
 			if ($scope.student.section504Status == "CANNOTPROVIDE") {
 				$scope.student.section504Status = "CANNOT PROVIDE";
 			}
+
 			if ($scope.student.accommodations) {
 				for (var i = 0; i < $scope.student.accommodations.length; i++) {
 					if ($scope.student.accommodations[i].textToSpeech == "TDS_TTS_StimAndTDS_TTS_Item") {
@@ -81,7 +97,8 @@ testreg.controller('StudentEditController',['$scope','$state', '$filter', '$time
 			}
 			
 			StudentService.loadStudentEligibleAssessments($scope.student.id).then(function(loadedData) {
-	  			$scope.eligibleAssessments = loadedData.data;				
+	  			$scope.eligibleAssessments = loadedData.data;
+	  			
 	  			angular.forEach($scope.eligibleAssessments, function(assessment){
 					params = {"studentId":$scope.student.entityId,"stateAbbreviation":$scope.student.stateAbbreviation,"assessmentId":assessment.id,"currentPage": '0', "pageSize":"1000000","sortKey":"opportunity", "sortDir":"asc"};
 					TestStatusService.search(params).then(function(response) {
@@ -106,7 +123,6 @@ testreg.controller('StudentEditController',['$scope','$state', '$filter', '$time
 			$scope.student.nativeHawaiianOrPacificIsland = "NO";
 			$scope.student.twoOrMoreRaces = "NO";
 		}
-		
 		
 		$scope.section504Status = StudentService.section504Status();
 		$scope.title3ProgramType = StudentService.title3ProgramType();
@@ -211,13 +227,20 @@ testreg.controller('StudentEditController',['$scope','$state', '$filter', '$time
 					$scope.savingIndicator = false;
 					$scope.errors = response.errors;
 					if($scope.errors.length == 0){
-						//save optout test statuses if any
 						angular.forEach($scope.eligibleAssessments, function(assessment){
 							status = $scope.studentTestStatuses[assessment.id];
-							if(status && status === "OPTED_OUT") {
-								testStatus = {"studentId" : student.entityId, "stateAbbreviation" : student.stateAbbreviation, "assessmentId":assessment.id, "status" : "OPTED_OUT", "opportunity" :1};
-								TestStatusService.save(testStatus);
+							for(var i=0;i<$scope.testStatuses.length;i++){
+								if(status && status == "OPTED_OUT" && $scope.testStatuses[i].assessmentId == assessment.id) {
+									testStatus = {"id": $scope.testStatuses[i].id, "studentId" : student.entityId, "stateAbbreviation" : student.stateAbbreviation, "assessmentId":assessment.id, "status" : status, "opportunity" :1};
+									TestStatusService.save(testStatus);
+									break;
+								}else if(status == "SCHEDULED" && $scope.testStatuses[i].assessmentId == assessment.id){
+									testStatus = {"id": $scope.testStatuses[i].id, "studentId" : student.entityId, "stateAbbreviation" : student.stateAbbreviation, "assessmentId":assessment.id, "status" : status, "opportunity" :1};
+									TestStatusService.save(testStatus);
+									break;
+								}
 							}
+							status='';
 						});
 						$scope.studentForm.$setPristine();
 						$scope.student = response.data;

@@ -38,7 +38,6 @@ testreg.factory("AssessmentService", function($http, CurrentUserService){
     				data : {},
     				errors : []
     		};
-    		
     		for(var field in response.data.messages){
              	for(var messages in response.data.messages[field]) {
              		returnVal.errors.push(response.data.messages[field][messages]);
@@ -219,7 +218,10 @@ testreg.factory("AssessmentService", function($http, CurrentUserService){
 	            params:params,
 	   	    }).then(this.successHandler, this.errorHandler);
 	    },	 
-	    
+	    loadAssessmentsByTenantId: function(tenantId) {
+	    	var url = baseUrl + 'assessmentsByTenantId/'+ tenantId + '/?_=' + Math.random();
+			return $http.get(url).then(this.successHandler, this.errorHandler);
+	    },
 	    findAllImportedAssessments : function() { 	
 		   	var url = baseUrl + "assessments" + '/?pageSize=9999&_=' + Math.random();
 	    	return $http.get(url, {headers: {'Accept': 'text/html'}}).then(this.successHandler, this.errorHandler);

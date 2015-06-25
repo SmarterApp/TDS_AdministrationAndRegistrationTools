@@ -275,7 +275,7 @@
                 <td role="gridcell" aria-labelledby="versionHeader">{{assessment.version}}</td>
                 <td role="gridcell" aria-labelledby="subjectCodeHeader">{{assessment.subjectCode}}</td>
                 <td role="gridcell" aria-labelledby="statusHeader">{{assessment.id | testStatusFilter:testStatuses}}</td>
-                <td role="gridcell" aria-labelledby="optoutHeader"><input style="width:80px;" data-ng-show="!hasStatus(assessment.id)" type="checkbox" data-ng-model="studentTestStatuses[assessment.id]" data-ng-true-value="OPTED_OUT" data-ng-false-value="" alt="Student Test Statuses" tabindex="0" /> </td>
+                <td role="gridcell" aria-labelledby="optoutHeader"><input style="width:80px;" data-ng-show="!hasStatus(assessment.id)" type="checkbox" data-ng-checked="getStatus(assessment.id, testStatuses) == 'OPTED_OUT'" data-ng-model="studentTestStatuses[assessment.id]" data-ng-true-value="OPTED_OUT" data-ng-false-value="SCHEDULED" alt="Student Test Statuses" tabindex="0" /> </td>
             </tr>
         </table>
         </div>

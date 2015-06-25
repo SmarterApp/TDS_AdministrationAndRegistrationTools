@@ -131,14 +131,15 @@
                     		</select>
                     	</td>
                     	<td role="gridcell" aria-labelledby="operatorHeader"><select name="implicitEligibilityRulesEntry.operatorType" data-ng-model="implicitEligibilityRulesEntry.operatorType" data-ng-show="implicitEligibilityRulesEntry.field.indexOf('Date') > -1" title="Implicit Rules Entry Operator Type" tabindex="0">
-                                <option data-ng-class="{'hide': implicitEligibilityRulesEntry.field.indexOf('Date') == -1}" data-ng-selected="ot.operatorName == implicitEligibilityRulesEntry.operatorType" data-ng-repeat="ot in operatorTypes | orderBy:'order'">{{ot.operatorId}}</option>
+                                <option data-ng-class="{'hide': implicitEligibilityRulesEntry.field.indexOf('Date') == -1}" data-ng-bind="ot.operatorId"  data-ng-repeat="ot in operatorTypes | orderBy:'order'">{{ot.operatorId}}</option>
                             </select><input type="text" name="implicitEligibilityRulesEntry.operatorType"  data-ng-hide="implicitEligibilityRulesEntry.field.indexOf('Date') > -1"                        
                                 data-ng-model="defaultOperatorType" data-ng-disabled="operatorTypeMuted" alt="Impact Eligibility Rules Entry" tabindex="0" />                            
-                    	</td>
+                    	</td> 
 	                	<td  class="normalSpace" role="gridcell" aria-labelledby="valueHeader">
 	                		<div class="datepicker" data-ng-show="dateTimeFields.indexOf(implicitEligibilityRulesEntry.field)>-1" >
 	                		<span class="datepicker icon-chevron-calendar"></span>
-	                			<input type="text"  name="implicitEligibilityRulesEntry.value"	                			     
+	                			<input type="text"  name="implicitEligibilityRulesEntry.value"
+	                					data-date-parser	                			     
 	                					data-datepicker-popup="{{format}}"  
 	                					data-show-weeks="false" 
 	                					readonly="readonly" 

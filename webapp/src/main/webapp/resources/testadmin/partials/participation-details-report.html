@@ -63,7 +63,7 @@
 
              <li data-ng-show="reportTypeFlag('INSTITUTION')" >
                 <span > 
-                    <label class="control-label" for="participationReport.institutionsId" > {{entityNameLabels['Institution']}}:</label>
+                    <label class="control-label-required" for="participationReport.institutionsId" > {{entityNameLabels['Institution']}}:</label>
                   <select  data-ng-model="participationReport.institutionsId"  data-ng-options="entity.id as entity.entityId + ' - ' + entity.entityName for entity in institutions" data-ng-change="selectedEntityType(participationReport.institutionsId,'INSTITUTION')" data-ng-hide="(userEntityType=='INSTITUTION')" >
                         <option value="">Select...</option>
                     </select>
@@ -88,7 +88,7 @@
             </li>   
             <li>
                 <span> 
-                    <label class="control-label" for="participationReport.opportunity" > Opportunity :</label>
+                    <label class="control-label-required" for="participationReport.opportunity" > Opportunity :</label>
                   <select  data-ng-model="participationReport.opportunity"  data-ng-options="opportunity for opportunity in opportunities" >
                         <option value="">Select...</option>
                    </select>

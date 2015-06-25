@@ -43,8 +43,14 @@ testadmin.controller('ReportController',['$scope','$state','$window','ReportServ
 			$scope.reportLevels = EntityService.loadReportEntities(response.data);
 		});	 
      var tenantType = CurrentUserService.getTenantType();
-
-     ReportService.findEntityById(CurrentUserService.getTenantName(),CurrentUserService.getTenantType()).then(function(loadData){
+     var tenantId = "" ;
+     if(tenantType=="CLIENT"||tenantType=="STATE"){
+        tenantId = CurrentUserService.getTenantName();
+     }else{
+    	 tenantId = CurrentUserService.getTenantId();
+     }
+     
+     ReportService.findEntityById(tenantId,CurrentUserService.getTenantType()).then(function(loadData){
     	 var selectedData=loadData.data;
     	 $scope.entityType = CurrentUserService.getTenantType();
     	 $scope.participationReport.reportLevel= CurrentUserService.getTenantType();
@@ -53,6 +59,12 @@ testadmin.controller('ReportController',['$scope','$state','$window','ReportServ
     	 $scope.selectedEntityId = selectedData[0].id;
     	 $scope.populateChildValues(selectedData[0].id,CurrentUserService.getTenantType());
     	 $scope.setAccessFlag($scope.entityType);
+    	 if(CurrentUserService.getTenantType() != "STATE" && CurrentUserService.getTenantType() !="CLIENT"){
+    		 //get the assessments by tenant type
+    		 AssessmentService.loadAssessmentsByTenantId(CurrentUserService.getTenantId()).then(function(response){
+    			 $scope.assessments=response.data; 
+    		 });
+    	 }
 
      });
      $scope.testStatuses= ReportService.loadTestStatus();
@@ -90,10 +102,12 @@ testadmin.controller('ReportController',['$scope','$state','$window','ReportServ
     	 return false;
      };
      $scope.groupOfInstitutionsFlag = function(){
-    	 if(! $scope.clientConfig.groupOfInstitutions){
-    		 return true;
+    	 if($scope.clientConfig){
+    		 if(! $scope.clientConfig.groupOfInstitutions){
+    			 return true;
+    		 }
+    		 return false;
     	 }
-    	 return false;
      };
 	 $scope.populateChildValues = function(parentId,parentType){
 		 var childArrays= ReportService.loadChildHierarchy(parentType,$scope.clientConfig);
@@ -107,12 +121,17 @@ testadmin.controller('ReportController',['$scope','$state','$window','ReportServ
 	 };
 
 	 var assessmentSearchValue = "";
-	if(CurrentUserService.getTenantType() !="CLIENT"){
-		assessmentSearchValue =CurrentUserService.getTenantId();
-	}
-	 AssessmentService.findAssessmentByTenantId(assessmentSearchValue,'9999','tenantId').then(function(response){
-		 $scope.assessments=response.data;
-	 });
+	 if(CurrentUserService.getTenantType() == "STATE"){
+		 assessmentSearchValue = CurrentUserService.getTenantId();
+	 }
+		
+	 if(CurrentUserService.getTenantType() == "STATE" || CurrentUserService.getTenantType() == "CLIENT"){
+		 AssessmentService.findAssessmentByTenantId(assessmentSearchValue,'9999','tenantId').then(function(response){
+			 $scope.assessments=response.data;
+		 });
+	 }
+	 
+	
 	 
 
      $scope.setAccessFlag = function(selectedReportType){
