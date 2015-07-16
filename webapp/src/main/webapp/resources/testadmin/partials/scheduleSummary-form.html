@@ -61,8 +61,8 @@
         <h5 style="width:70% ;margin:auto">{{_.getEntityLabel('Students')}} </h5>
         <div>
         	<span style="padding: 20px"><b>Total Capacity:</b> {{totalCapacity}} </span> 
-        	<span style="padding: 20px"><b>Scheduled:</b> {{timeSlot.seats.length}} </span> 
-        	<span style="padding: 20px"><b>Available:</b> {{totalCapacity-timeSlot.seats.length}}</span> 
+        	<span style="padding: 20px"><b>Scheduled:</b> {{getCount(timeSlot)}} </span> 
+        	<span style="padding: 20px"><b>Available:</b> {{totalCapacity-getCount(timeSlot)}}</span> 
         </div>
         <div class="tableWrapper" style="width:70%; margin:auto; table-layout: fixed;">
 	     	<table class="dataTable">
@@ -92,7 +92,7 @@
 		                <tr data-ng-repeat="seat in timeSlot.seats | filter:_.isSeatScheduledInSystem">
 		                	<td class="normalSpace">
 	                   			<div class="tableButtonGroup">
-	                        		<button data-ng-click="removeStudent($index)" class="boxBtn" ><span class="btnIcon icon_sprite icon_delete2"></span></button>
+	                        		<button data-ng-click="removeStudent($index,,seat.student.entityId)" class="boxBtn" ><span class="btnIcon icon_sprite icon_delete2"></span></button>
 	                   			</div>
 	               			</td> 
 		                	<td>{{seat.student.lastName}} &#44; {{seat.student.firstName}} </td>
@@ -107,7 +107,7 @@
 		                	<td>{{seat.testPlatform}}</td>
 		                	<td>{{_.getAccessibilityEquipmentText(seat.accessibilityEquipments)}}</td>	
 		                	<td class="normalSpace"><div class="tableButtonGroup">
-				                   <button data-ng-click="selectSeatConfig($index, seat.seatNumber, seat.testPlatform, seat.accessibilityEquipments)" 
+				                   <button data-ng-click="selectSeatConfig($index, seat.seatNumber, seat.testPlatform, seat.accessibilityEquipments, seat.student.entityId)" 
 				                   	class="boxBtn"><span class="btnIcon icon_sprite icon_edit2"></span></button>
 				                                      
 				               </div>

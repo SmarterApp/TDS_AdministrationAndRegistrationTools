@@ -180,10 +180,15 @@ testadmin.directive("scheduleSearch", function(EntityNameService, EntityService,
 
  			//Find Tenant Type and Tenant Name. They are needed for limiting the dropdown values
  			var tenantType = CurrentUserService.getTenantType();
- 			var tenantName = CurrentUserService.getTenantName();
+ 			var tenantId = "" ;
+ 		     if(tenantType=="CLIENT"||tenantType=="STATE"){
+ 		        tenantId = CurrentUserService.getTenantName();
+ 		     }else{
+ 		    	 tenantId = CurrentUserService.getTenantId();
+ 		     }
 	          
  			//Start with Tenant Type and load the entity data first and then populate child values
- 			ScheduleSummaryReportService.findEntityById(tenantName,tenantType).then(function(loadData){
+ 			ScheduleSummaryReportService.findEntityById(tenantId,tenantType).then(function(loadData){
  				var selectedData=loadData.data;
 	        	 $scope.entityType = tenantType;
 	        	//This is localized scope and fine if we just pollute(or populate if you wish) the values. Not going to affect other scope boundaries
@@ -200,8 +205,8 @@ testadmin.directive("scheduleSearch", function(EntityNameService, EntityService,
  					var params = {parentId:parentId,parentEntityType:parentType};
 	        			 
  					if(parentType == "INSTITUTION") {
+ 						$scope.institutionId = parentId;
  						params.institutionEntityMongoId 		= parentId;
- 						params.stateAbbreviation   			= ScheduleSummaryReportService.getStateAbbreviation($scope.states, $scope.stateId);
  					}
 	        			 
  					ScheduleSummaryReportService.loadParents(entityType, params).then(function(loadData) {
@@ -209,6 +214,7 @@ testadmin.directive("scheduleSearch", function(EntityNameService, EntityService,
  						$scope[entityName(entityType)] = data;
         			 });
         		 });
+ 				
         	 };
 	        	 
         	 $scope.resetChildValues = function(parentType) {

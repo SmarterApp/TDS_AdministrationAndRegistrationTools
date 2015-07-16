@@ -42,9 +42,20 @@ testreg.controller('ScheduleController',['$scope','$state', '$window','$timeout'
 		    });
         };
 		
-		AssessmentService.findAllImportedAssessments().then(function(response){
-			$scope.assessments = response.data;
-		});
+		var assessmentSearchValue = "";
+	   	 if(CurrentUserService.getTenantType() == "STATE"){
+	   		 assessmentSearchValue = CurrentUserService.getTenantId();
+	   	 }
+	   		
+	   	 if(CurrentUserService.getTenantType() == "STATE" || CurrentUserService.getTenantType() == "CLIENT"){
+	   		 AssessmentService.findAssessmentByTenantId(assessmentSearchValue,'9999','tenantId').then(function(response){
+	   			 $scope.assessments=response.data;
+	   		 });
+	   	 }else {
+    		 AssessmentService.loadAssessmentsByTenantId(CurrentUserService.getTenantId()).then(function(response){
+    			 $scope.assessments=response.data; 
+    		 });
+    	 }
 		
 		SubjectService.findAll().then(function(loadedData) {
 			$scope.subjects = loadedData.data;
@@ -72,24 +83,6 @@ testreg.controller('ScheduleController',['$scope','$state', '$window','$timeout'
 			}else{
 				$scope.schedule.doNotScheduleWeekends = "YES";
 			}
-			$timeout(function() {
-				if($scope.schedule.affinities) {
-					for(var i=0; i<$scope.schedule.affinities.length; i++){
-						if ($scope.schedule.affinities[i].type === "ASSESSMENT") {
-							$scope.affinityValues[i] = $scope.convertAssessmentsToAffinityValue($scope.assessments);
-						} else if ($scope.schedule.affinities[i].type === "SUBJECT") {
-							$scope.affinityValues[i] = $scope.convertSubjectsToAffinityValue($scope.subjects);
-						} else if ($scope.schedule.affinities[i].type === "GRADE") {
-							$scope.affinityValues[i] = $scope.convertGradesToAffinityValue($scope.grades);
-						} else if ($scope.schedule.affinities[i].type === "STUDENTGROUP") {
-							$scope.affinityValues[i] = $scope.convertStudentGroupToAffinityValue($scope.studentGroups);
-						} else {
-							$scope.affinityValues[i] =[];
-						}
-					}
-					
-				}
-			},300);
 		}  else {
 			$scope.schedule.doNotScheduleWeekends = "NO";
 		}
@@ -114,7 +107,7 @@ testreg.controller('ScheduleController',['$scope','$state', '$window','$timeout'
 
 		};
 		$scope.addAffinity = function (schedule) {
-			if($scope.schedule && !$scope.schedule.id && !$scope.schedule.affinities) {
+			if($scope.schedule && !$scope.schedule.affinities) {
 				$scope.schedule.affinities =[];
 			}
 			$scope.schedule.affinities.push({type:null,rule:"NONSTRICT",value:""});

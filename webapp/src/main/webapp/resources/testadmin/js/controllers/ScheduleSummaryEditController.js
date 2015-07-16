@@ -11,7 +11,6 @@ testadmin.controller('ScheduleSummaryEditController',['$scope','$state','$window
 			S.actionButton = '';
 			S.formAction = 'Edit';
 			
-			
 			if(S.schedule) {
 				EntityService.getEntity("INSTITUTION", S.schedule.institutionId).then(function(response){
 					S.institution = response.data;
@@ -20,6 +19,16 @@ testadmin.controller('ScheduleSummaryEditController',['$scope','$state','$window
 				S.scheduledDay  = _.getFormattedDate(S.schedule.scheduledDays[0].day, "yyyy-MM-dd");
 				S.timeSlot 		= S.schedule.scheduledDays[0].facilities[0].timeSlots[parseInt(timeSlotNum, 10)];
 				S.timeSlotText  = _.getTimeSlotText(S.timeSlot.startTime, S.timeSlot.endTime);
+				S.studentScheduledd = S.schedule.creationInfo.studentsNotScheduled;
+				S.getCount = function(timeSlot){
+					var count=0;
+					for(var i=0;i<timeSlot.seats.length;i++){
+						if(timeSlot.seats[i].student){
+							count++;
+						}
+					}
+					return count;
+				};
 				
 				ProctorService.getProctorsForInstitution(S.schedule.institutionId).then(function(response) {
 					var users = [];
@@ -55,13 +64,32 @@ testadmin.controller('ScheduleSummaryEditController',['$scope','$state','$window
 									
 						
 			//------All Button Functions
-			S.removeStudent = function(index) {				
-				S.timeSlot.seats.splice(index, 1);	           
-				S.scheduleSummaryForm.$dirty = true;
+			S.removeStudent = function(index,stdId) {			
+				if(S.timeSlot.seats[index].student != null){
+					var studentId = S.timeSlot.seats[index].student.entityId;
+					S.timeSlot.seats.splice(index, 1);	  
+					var asIndex = S.timeSlot.assignedStudents.indexOf(studentId);
+					S.timeSlot.assignedStudents.splice(asIndex, 1);	
+					S.scheduleSummaryForm.$dirty = true;
+				}else{
+					for(var i=0;i<S.timeSlot.seats.length;i++){
+						if(S.timeSlot.seats[i].student != null){
+								var studentId = S.timeSlot.seats[i].student.entityId;
+								if(studentId == stdId){
+								S.timeSlot.seats.splice(i, 1);	  
+								var asIndex = S.timeSlot.assignedStudents.indexOf(studentId);
+								S.timeSlot.assignedStudents.splice(asIndex, 1);	
+								S.scheduleSummaryForm.$dirty = true;
+								break;
+							}
+								
+						}
+					}
+				}
 			};
 			
 						
-			S.selectSeatConfig = function(seatArrayIndex, seatNumber, testPlatform, accessibilityEquipments) {			
+			S.selectSeatConfig = function(seatArrayIndex, seatNumber, testPlatform, accessibilityEquipments, stdId) {			
 				dlg = $dialogs.create(
 						'resources/testadmin/partials/scheduleSummary-seat-selection.html','ScheduleSummarySeatSelectionController',
 						{seatConfigurations: seatConfigsAvailableForSchedule, 
@@ -70,10 +98,15 @@ testadmin.controller('ScheduleSummaryEditController',['$scope','$state','$window
 						{key: false,back: 'static'});
 				dlg.result.then(function(selectedSeat) {
 					if(selectedSeat.testPlatform != testPlatform || _.getAsText(accessibilityEquipments) != _.getAsText(selectedSeat.accessibilityEquipments)) {
-						var seatScheduled = S.timeSlot.seats[seatArrayIndex];
-						seatScheduled.testPlatform = selectedSeat.testPlatform;
-						seatScheduled.accessibilityEquipments = _.getAccessibilityEquipmentList(selectedSeat.accessibilityEquipments);
-						seatScheduled.manuallyScheduled = true;
+						for(var i=0; i<S.timeSlot.seats.length; i++){
+							if(S.timeSlot.seats[i].student != null && S.timeSlot.seats[i].student.entityId === stdId) {
+								var seatScheduled = S.timeSlot.seats[i];
+								seatScheduled.testPlatform = selectedSeat.testPlatform;
+								seatScheduled.accessibilityEquipments = _.getAccessibilityEquipmentList(selectedSeat.accessibilityEquipments);
+								seatScheduled.manuallyScheduled = true;
+								break;
+							}
+						}
 						S.scheduleSummaryForm.$dirty = true;
 					}
 				});
@@ -83,12 +116,25 @@ testadmin.controller('ScheduleSummaryEditController',['$scope','$state','$window
 				dlg = $dialogs.create(
 						'resources/testadmin/partials/student-selection.html','StudentSelectionDialogController',
 						{institutionIdentifier:S.institution.entityId, 
-						 stateAbbreviation: S.institution.stateAbbreviation},{key: false,back: 'static'});
-				
+						 stateAbbreviation: S.institution.stateAbbreviation,
+						 scheduleNotStudent: S.schedule.creationInfo,
+						 scheduleStudentList : S.schedule.scheduledDays[0].facilities[0].timeSlots[parseInt(timeSlotNum, 10)].assignedStudents},{key: false,back: 'static'});
 				dlg.result.then(function(selectedEligibleStudents) {
-					angular.forEach(selectedEligibleStudents, function(selectedEligibleStudent) {						
+					angular.forEach(selectedEligibleStudents, function(selectedEligibleStudent) {	
 						S.eligibleAssessments.push({id: selectedEligibleStudent.student.id, assessments: selectedEligibleStudent.assessments});
-						S.timeSlot.seats.push({manuallyScheduled:true, student:selectedEligibleStudent.student, testPlatformObj:{}, assessment: {}, accessibilityEquipmentObjs: []});						
+						var checkCount = 0;
+						for(var i=0; i<S.timeSlot.seats.length; i++){
+							if(S.timeSlot.seats[i].student == null) {
+								S.timeSlot.seats.splice(i, 1);
+								S.timeSlot.seats.push({manuallyScheduled:true, student:selectedEligibleStudent.student, testPlatformObj:{}, assessment: {}, accessibilityEquipmentObjs: []});
+								checkCount ++;
+								break;
+							}
+						}
+						if(checkCount == 0){
+							S.timeSlot.seats.push({manuallyScheduled:true, student:selectedEligibleStudent.student, testPlatformObj:{}, assessment: {}, accessibilityEquipmentObjs: []});
+						}
+						S.timeSlot.assignedStudents.push(selectedEligibleStudent.student.entityId);	
 					});					 
 		            },function(){
 		              //no selection made
@@ -102,6 +148,7 @@ testadmin.controller('ScheduleSummaryEditController',['$scope','$state','$window
 		
 			S.save = function() {
 				S.savingIndicator = true;
+				
 				S.schedule.scheduledDays[0].facilities[0].timeSlots[parseInt(timeSlotNum, 10)] = S.timeSlot;
 				_.updateScheduleDay(S.schedule.id, S.schedule.scheduledDays[0]).then(
 					function(response) {

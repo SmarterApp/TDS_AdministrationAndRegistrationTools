@@ -319,9 +319,11 @@ var eligibleAssessmentResolver = ['$stateParams', 'ScheduleSummaryService', 'Stu
 	scheduleSummaryResolver[2]($stateParams, ScheduleSummaryService).then(function(response){
 		var timeSlot = response.data.scheduledDays[0].facilities[0].timeSlots[$stateParams.timeSlotNum];		
 		angular.forEach(timeSlot.seats, function(seat){
-			StudentService.loadStudentEligibleAssessments(seat.student.id).then(function(response) {
-				eligibleAssessmentsMap.push({id: seat.student.id, assessments: response.data});
-	  		});			
+		    if(seat.student != null){
+				StudentService.loadStudentEligibleAssessments(seat.student.id).then(function(response) {
+					eligibleAssessmentsMap.push({id: seat.student.id, assessments: response.data});
+				});
+			}
 		});
 	});
 	return eligibleAssessmentsMap;

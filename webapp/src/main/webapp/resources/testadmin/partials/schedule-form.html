@@ -90,9 +90,18 @@
                             </select>
                         </td>
                         <td >
-                            <select data-ng-model="affinity.value"  data-ng-options="affinityValue.id as affinityValue.name for affinityValue in affinityValues[$index]" >
-                                <option value="">Select...</option>
-                            </select>
+                            <select  data-ng-show="affinity.type =='ASSESSMENT'" data-ng-model="affinity.value"  data-ng-options="assessment.id as assessment.testName for assessment in assessments" >
+								<option value="">Select...</option>
+							</select>
+							<select data-ng-show="affinity.type =='SUBJECT'" data-ng-model="affinity.value"  data-ng-options="subject for subject in subjects" >
+								<option value="">Select...</option>
+							</select>
+							<select data-ng-show="affinity.type =='GRADE'" data-ng-model="affinity.value"  data-ng-options="grade.id as grade.text for grade in grades" >
+								<option value="">Select...</option>
+							</select>
+							<select data-ng-show="affinity.type =='STUDENTGROUP'" data-ng-model="affinity.value"  data-ng-options="studentGroup.id as studentGroup.studentGroupName for studentGroup in studentGroups" >
+								<option value="">Select...</option>
+							</select>
                         </td>      
                                              
                         <td>

@@ -36,7 +36,7 @@
 			            <li>
 			                <span> 
 			                    <label class="control-label" for="searchParams.grade">{{xwalk('Entry Grade Level')}}:</label>
-			                     <select  data-ng-model="searchParams['student.gradeLevelWhenAssessed']" data-ng-options="grade.text as grade.text + '  - ' + grade.gradeId  for grade in grades" >
+			                     <select  data-ng-model="searchParams['student.gradeLevelWhenAssessed']" data-ng-options="grade.id as grade.text for grade in grades" >
 			                      <option value="">Select...</option>
 			                    </select>
 			                </span>
@@ -83,7 +83,7 @@
                     <td>{{eligibleStudentCollection.student.gradeLevelWhenAssessed}}</td> 
                     <td class="normalSpace">
                         <div class="tableButtonGroup">
-                        	<input type="checkbox" data-ng-model="studentSelected" data-ng-change="addStudent(eligibleStudentCollection)"/>
+                        	<input data-ng-show="!hasStudentNotScheduled(eligibleStudentCollection.student.entityId)" type="checkbox" data-ng-model="studentSelected" data-ng-change="addStudent(eligibleStudentCollection)"/>
                         </div>
                     </td>                                       
                 </tr>
@@ -91,7 +91,7 @@
         </div>
         <div class="modal-footer" style=" text-align:center;">
         		<button type="button" type="button" class="boxBtn" data-ng-click="assignStudents()">
-                		<span class="btnIcon icon_sprite icon_cancel2 ng-class:{ajax_indicator:activeIndicator}"></span>
+                		<span class="btnIcon icon_sprite icon_save2 ng-class:{ajax_indicator:savingIndicator}" ></span>
                 		<span class="btnText">Assign Students</span>
             		</button>
         		<button type="button" type="button" class="boxBtn" data-ng-click="cancel()">
