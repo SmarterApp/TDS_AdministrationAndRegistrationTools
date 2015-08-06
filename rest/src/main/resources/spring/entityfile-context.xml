@@ -204,7 +204,7 @@
     	<value>Masking</value>
     	<value>PermissiveMode</value>
     	<value>PrintOnDemand</value>
-    	<value>PrintSize</value>
+    	<value>Zoom</value>
     	<value>StreamlinedInterface</value>
         <value>TexttoSpeech</value>
         <value>Translation</value>

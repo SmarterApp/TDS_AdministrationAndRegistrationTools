@@ -92,7 +92,7 @@
 		                <tr data-ng-repeat="seat in timeSlot.seats | filter:_.isSeatScheduledInSystem">
 		                	<td class="normalSpace">
 	                   			<div class="tableButtonGroup">
-	                        		<button data-ng-click="removeStudent($index,,seat.student.entityId)" class="boxBtn" ><span class="btnIcon icon_sprite icon_delete2"></span></button>
+	                        		<button data-ng-click="removeStudent($index,seat.student.entityId)" class="boxBtn" ><span class="btnIcon icon_sprite icon_delete2"></span></button>
 	                   			</div>
 	               			</td> 
 		                	<td>{{seat.student.lastName}} &#44; {{seat.student.firstName}} </td>
