@@ -53,7 +53,7 @@
     </int:header-value-router>
         
     <bean id="dwHeader" class="java.lang.String">
-        <constructor-arg><value>StateName,StateAbbreviation,ResponsibleDistrictIdentifier,OrganizationName,ResponsibleInstitutionIdentifier,
+        <constructor-arg><value>StateName,StateAbbreviation,ResponsibleDistrictIdentifier,OrganizationName,ResponsibleSchoolIdentifier,
         NameOfInstitution,StudentIdentifier,ExternalSSID,FirstName,MiddleName,LastOrSurname,Sex,Birthdate,
         GradeLevelWhenAssessed,HispanicOrLatinoEthnicity,AmericanIndianOrAlaskaNative,Asian,BlackOrAfricanAmerican,
         NativeHawaiianOrOtherPacificIslander,White,IDEAIndicator,LEPStatus,Section504Status,EconomicDisadvantageStatus,MigrantStatus,
