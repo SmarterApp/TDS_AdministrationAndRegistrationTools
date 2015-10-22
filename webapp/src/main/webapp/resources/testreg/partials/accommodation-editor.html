@@ -1,6 +1,7 @@
 
 <div class="tableWrapper"> 
     <h5 class="h5Accommodations" tabindex="-1">{{getEntityNameLabel(entityNameLabels['DesignatedSupportsAndAccommodations'])}}</h5>
+	<p class="note">{{accommodationMessage}}</p>
     <table class="accommodationTable" role="grid">
            <colgroup>
                <col class="actionColumn">
@@ -21,105 +22,34 @@
                         <button data-ng-click="addItem()" class="boxBtn" data-ng-disabled="isDisabled" tabindex="0"><span class="btnIcon icon_sprite icon_saveAdd2" aria-hidden="true"></span></button>
                    </div>
                </th>
-               <th scope="col" id="accommodationHeader" title="Accommodations" data-ng-class="{'control-label-required' : student.accommodations && student.accommodations.length > 0}">{{accommodationXwalk('Subject')}}</th>
-               <th scope="col" id="signLanguageHeader" title="American Sign Language">{{accommodationXwalk('American Sign Language')}}</th>
-               <th scope="col" id="contrastHeader" title="Color Contrast">{{accommodationXwalk('Color Contrast')}}</th>
-               <th scope="col" id="ccHeader" title="Closed Captioning">{{accommodationXwalk('Closed Captioning')}}</th>
-               <th scope="col" id="languageHeader" title="Language">{{accommodationXwalk('Language')}}</th>
-               <th scope="col" id="maskingHeader" title="Masking">{{accommodationXwalk('Masking')}}</th>
-               <th scope="col" id="permissiveHeader" title="Permissive Mode">{{accommodationXwalk('Permissive Mode')}}</th>
-               <th scope="col" id="printDemandHeader" title="Print on Demand">{{accommodationXwalk('Print On Demand')}}</th>
-               <th scope="col" id="printSizeHeader" title="Print Size">{{accommodationXwalk('Zoom')}}</th>
-               <th scope="col" id="inferfaceHeader" title="Streamlined Interface">{{accommodationXwalk('Streamlined Interface')}}</th>
-               <th scope="col" id="textSpeechHeader" title="Text to Speech">{{accommodationXwalk('Text to Speech')}}</th>
-               <th scope="col" id="translationHeader" title="Translation">{{accommodationXwalk('Translation')}}</th>
-               <th scope="col" id="embeddedSupportsHeader" title="Non-Embedded Designated Supports">{{accommodationXwalk('Non-Embedded Designated Supports')}}</th>
-               <th scope="col" id="embedAccommodationHeader" title="Non-Embedded Accommodations">{{accommodationXwalk('Non-Embedded Accommodations')}}</th>
-               <th scope="col" id="otherHeader" title="Other">{{accommodationXwalk('Other')}}</th>
+               <th data-ng-repeat="header in headerNames">{{accommodationXwalk(header)}}</th>
            </tr>
            
            <tr data-ng-repeat="accommodation in student.accommodations" role="row">              
-               <td class="normalSpace" role="gridcell" aria-labelledby="actionHeader">
+               <td class="normalSpace" role="gridcell" aria-labelledby="actionHeader" ng-init="parentIndex=$index">
                    <div class="tableButtonGroup">
                         <button data-ng-click="removeAccommodation($index)" class="boxBtn" tabindex="0"><span class="btnIcon icon_sprite icon_delete2" aria-hidden="true"></span></button>
                    </div>
                </td>           
-               <td role="gridcell" aria-labelledby="accommodationHeader">                     
+                <td>                  
                     <input type="hidden" aria-hidden="true" data-ng-model="accommodation.studentId" value={{student.entityId}} alt="Student ID" />
                     <input type="hidden" aria-hidden="true" data-ng-model="accommodation.stateAbbreviation" value="{{student.stateAbbreviation}}" alt="State Abbreviation" />
-                    <select  data-ng-model="accommodation.subject" data-ng-options="subject for subject in subjects[$index]" data-ng-change="refreshSubject(accommodation.subject,$index)" title="Subject" tabindex="0">
+                    <select  data-ng-model="accommodation.subject" data-ng-options="subject for subject in subjects[$index]" data-ng-change="refreshSubject(accommodation.subject,$index,accommodation)" title="subject" tabindex="0">
                       <option value="">Select...</option>
-                    </select> 
+                    </select>
                </td>
-               <td role="gridcell" aria-labelledby="signLanguageHeader">                     
-                    <select  data-ng-model="accommodation.americanSignLanguage" data-ng-options="asl.name as asl.description for asl in americanSignLanguage" title="American Sign Language" tabindex="0">
-                      <option value="">Select...</option>
-                    </select> 
-               </td>
-               <td role="gridcell" aria-labelledby="contrastHeader">                     
-                    <select  data-ng-model="accommodation.colorContrast" data-ng-options="color.name as color.description for color in colorContrast" title="Color Contrast" tabindex="0">
-                      <option value="">Select...</option>
-                    </select> 
-               </td>
-               <td role="gridcell" aria-labelledby="ccHeader">                     
-                    <select  data-ng-model="accommodation.closedCaptioning" data-ng-options="caption.name as caption.description for caption in closedCaptioning" title="Closed Captioning" tabindex="0">
-                      <option value="">Select...</option>
-                    </select> 
-               </td>   
-               <td role="gridcell" aria-labelledby="languageHeader">                     
-                    <select  data-ng-model="accommodation.language" data-ng-options="lang.name as lang.description for lang in language" title="Language" tabindex="0">
-                      <option value="">Select...</option>
-                    </select> 
-               </td>
-               <td role="gridcell" aria-labelledby="maskingHeader">                     
-                    <select  data-ng-model="accommodation.masking" data-ng-options="mask.name as mask.description for mask in masking" title="Masking" tabindex="0">
-                      <option value="">Select...</option>
-                    </select> 
-               </td>
-               <td role="gridcell" aria-labelledby="permissiveHeader">                     
-                    <select  data-ng-model="accommodation.permissiveMode" data-ng-options="permissive.name as permissive.description for permissive in permissiveMode" title="Permissive Mode" tabindex="0">
-                      <option value="">Select...</option>
-                    </select> 
-               </td>
-               <td role="gridcell" aria-labelledby="printDemandHeader">                     
-                    <select  data-ng-model="accommodation.printOnDemand" data-ng-options="printDem.name as printDem.description for printDem in printOnDemand" title="Print on Demand" tabindex="0">
-                      <option value="">Select...</option>
-                    </select> 
-               </td>
-               <td role="gridcell" aria-labelledby="printSizeHeader">                     
-                    <select  data-ng-model="accommodation.printSize" data-ng-options="prntSize.name as prntSize.description for prntSize in printSize" title="Print Size" tabindex="0">
-                      <option value="">Select...</option>
-                    </select> 
-               </td>
-               <td role="gridcell" aria-labelledby="interfaceHeader">                     
-                    <select  data-ng-model="accommodation.streamlinedInterface" data-ng-options="stream.name as stream.description for stream in streamlinedInterface" title="Streamlined Interface" tabindex="0">
-                      <option value="">Select...</option>
-                    </select> 
-               </td>
-               <td role="gridcell" aria-labelledby="textSpeechHeader">                     
-                    <select  data-ng-model="accommodation.textToSpeech" data-ng-options="tts.name as tts.description for tts in textToSpeech" title="Text to Speech" tabindex="0">
-                      <option value="">Select...</option>
-                    </select> 
-               </td>   
-               <td role="gridcell" aria-labelledby="translationHeader">                     
-                    <select  data-ng-model="accommodation.translation" data-ng-options="translate.name as translate.description for translate in translation" title="Translation" tabindex="0">
-                      <option value="">Select...</option>
-                    </select> 
-               </td>
-               <td role="gridcell" aria-labelledby="embedSupportsHeader">                     
-                    <select data-ui-select2="select2Config" multiple="multiple" data-ng-change="nonEmbeddedDesignatedSupportsChange($index)" data-ng-model="accommodation.nonEmbeddedDesignatedSupports"  title="Non-Embedded Designated Supports" tabindex="0">
-                      <option data-ng-repeat="supports in nonEmbeddedDesignatedSupports" data-ng-bind="supports.description" value="{{supports.name}}"></option>
-                    </select> 
-               </td>
-               <td role="gridcell" aria-labelledby="embedAccommodationHeader">                     
-                    <select  data-ui-select2="select2Config" multiple="multiple" data-ng-change="nonEmbeddedAccommodationsChange($index)" data-ng-model="accommodation.nonEmbeddedAccommodations"  title="Non-Embedded Accommodations" tabindex="0">
-                      <option data-ng-repeat="nonembedaccomm in nonEmbeddedAccommodations" data-ng-bind="nonembedaccomm.description" value="{{nonembedaccomm.name}}"></option>
-                    </select> 
-               </td>
-               <td role="gridcell" aria-labelledby="otherHeader">
-                    <input type="text" data-ng-model="accommodation.other" alt="Other" tabindex="0" />
-               </td>
-                                                                                                                                                    
-           </tr>
+               <td data-ng-repeat="field in accommodationResourceData[$index]" data-ng-switch data-on="field.resourceType"> 
+               <select  data-ng-switch-when='MultiSelectResource' data-ui-select2="select2Config" data-ng-model="accommodation[field.code]" data-ng-change="mutuallyExclusiveOptions(parentIndex,field.code,accommodation[field.code],field)" multiple data-ng-show="hasDisabled(field)" tabindex="0" >
+                      <option data-ng-repeat="option in field.options" data-ng-bind="option.text[0].label" value="{{option.code}}" ></option>
+               </select> 
+                
+               <input type="text" data-ng-switch-when='EditResource' data-ng-model="accommodation[field.code]" data-ng-show="hasDisabled(field)" tabindex="0" />
+               
+               <select data-ng-switch-when='SingleSelectResource' data-ng-change="modifyMessage(field, accommodation[field.code])" tabindex="0" data-ng-options="option.code as option.text[0].label for option in field.options" data-ng-model="accommodation[field.code]" data-ng-show="hasDisabled(field)">
+                      <option value=""> Select...</option>
+               </select>
+               </td>                                                                                                                             
+           </tr>  
     </table>
 </div>
+

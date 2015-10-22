@@ -105,7 +105,7 @@
                 <span> 
                     <label class="control-label-required" for="student.gradeLevelWhenAssessed" title="Grade Level When Assessed">{{xwalk('Grade Level When Assessed')}}:</label>
                      <select  data-ng-model="student.gradeLevelWhenAssessed" 
-                     		  data-ng-options="grade.id as grade.text for grade in grades" title="Grade Level When Assessed" tabindex="0">
+                     		  data-ng-options="grade.id as grade.text for grade in grades" data-ng-change="resetAccommodationEntities(student)" tabindex="0">
                       <option value="">Select...</option>
                     </select>
                 </span>
@@ -254,7 +254,7 @@
         <br>
         
         <div data-ng-show="eligibleAssessments.length > 0">
-        <h5 class="h5Accommodations" tabindex="-1">Eligible {{entityNameLabels['Assessments']}}</h5>
+        <h5 class="h5eligibility"  tabindex="-1">Eligible {{entityNameLabels['Assessments']}}</h5>
         <table class="dataTable" role="grid">
            <colgroup>
                <col style="width:60%">
@@ -280,7 +280,7 @@
         </table>
         </div>
         <div data-ng-hide="eligibleAssessments.length > 0">
-            <h5 class="h5Accommodations" tabindex="-1">Not Eligible for any {{entityNameLabels['Assessments']}}</h5>
+            <h5 class="h5eligibility" tabindex="-1">Not Eligible for any {{entityNameLabels['Assessments']}}</h5>
         </div>
         
         <br>

@@ -447,6 +447,16 @@ td {
     color: #ffffff;
     width: auto;
 }
+
+@media only screen and (max-width: 1024px) {
+.title h1 {
+font-size: .9em;
+font-weight:normal;
+width: 10em;
+}
+}
+
+
 .setupBtn button, .homeBtn button {
     width: auto;
     float: right;
@@ -667,7 +677,7 @@ button span.btnText.btndbl {
 }
 .fieldGroup li {
   display: inline-block;
-  padding: 0.7em 0.2em;
+  padding: 0.25em 0.2em;
   text-align: center;
   width: 48%;
 }
@@ -678,8 +688,6 @@ button span.btnText.btndbl {
 
 .fieldGroup label {
   font-weight: normal;
-  text-align: right;
-  width: 10em;
 }
 .fieldGroup select, .fieldGroup input {
     padding: 0.1em;

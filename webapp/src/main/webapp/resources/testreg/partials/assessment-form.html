@@ -198,89 +198,15 @@
 		                				data-ng-model="implicitEligibilityRulesEntry.value" data-ng-options="disabilityType.name as disabilityType.name for disabilityType in primaryDisabilityType" title="Primary Disability Type" tabindex="0">
 	                       		<option value="" >Select...</option>
 	                    	</select>
-	                    	
-	                    	<select name="implicitEligibilityRulesEntry.value"  
-		                				data-ng-show="implicitEligibilityRulesEntry.field=='americanSignLanguage'" 
-		                				data-ng-model="implicitEligibilityRulesEntry.value" data-ng-options="aslVideo.name as aslVideo.description for aslVideo in americanSignLanguage" title="American Sign Language" tabindex="0">
+	                    	<select name="implicitEligibilityRulesEntry.value"   
+		                				data-ng-show="loadSingleSelectFields.indexOf(implicitEligibilityRulesEntry.field)>-1"
+		                				data-ng-model="implicitEligibilityRulesEntry.value" data-ng-options="accommodationResource.name as accommodationResource.description for accommodationResource in masterAccommodations[implicitEligibilityRulesEntry.field]" tabindex="0">
 	                       		<option value="" >Select...</option>
 	                    	</select>
 	                    	
-	                    	<select name="implicitEligibilityRulesEntry.value"  
-                                        data-ng-show="implicitEligibilityRulesEntry.field=='colorContrast'" 
-                                        data-ng-model="implicitEligibilityRulesEntry.value" data-ng-options="color.name as color.description for color in colorContrast" title="Color Contrast" tabindex="0">
-                                <option value="" >Select...</option>
-                            </select>
-	                    	
-	                    	<select name="implicitEligibilityRulesEntry.value"  
-		                				data-ng-show="implicitEligibilityRulesEntry.field=='closedCaptioning'" 
-		                				data-ng-model="implicitEligibilityRulesEntry.value" data-ng-options="caption.name as caption.description for caption in closedCaptioning" title="Closed Captioning" tabindex="0">
-	                       		<option value="" >Select...</option>
-	                    	</select>
-	                    	
-	                    	<select name="implicitEligibilityRulesEntry.value"  
-                                        data-ng-show="implicitEligibilityRulesEntry.field=='language'" 
-                                        data-ng-model="implicitEligibilityRulesEntry.value" data-ng-options="lang.name as lang.description for lang in language" title="Language" tabindex="0">
-                                <option value="" >Select...</option>
-                            </select>
-                            
-                            <select name="implicitEligibilityRulesEntry.value"  
-                                        data-ng-show="implicitEligibilityRulesEntry.field=='masking'" 
-                                        data-ng-model="implicitEligibilityRulesEntry.value" data-ng-options="mask.name as mask.description for mask in masking" title="Masking" tabindex="0">
-                                <option value="" >Select...</option>
-                            </select>
-                            
-                            <select name="implicitEligibilityRulesEntry.value"  
-                                        data-ng-show="implicitEligibilityRulesEntry.field=='permissiveMode'" 
-                                        data-ng-model="implicitEligibilityRulesEntry.value" data-ng-options="permMode.name as permMode.description for permMode in permissiveMode" title="Permissive Mode" tabindex="0">
-                                <option value="" >Select...</option>
-                            </select>
-	                    	
-	                    	<select name="implicitEligibilityRulesEntry.value"  
-                                        data-ng-show="implicitEligibilityRulesEntry.field=='printOnDemand'" 
-                                        data-ng-model="implicitEligibilityRulesEntry.value" data-ng-options="printDem.name as printDem.description for printDem in printOnDemand" title="Print on Demand" tabindex="0">
-                                <option value="" >Select...</option>
-                            </select>
-                            
-                            <select name="implicitEligibilityRulesEntry.value"  
-                                        data-ng-show="implicitEligibilityRulesEntry.field=='printSize'" 
-                                        data-ng-model="implicitEligibilityRulesEntry.value" data-ng-options="prntSize.name as prntSize.description for prntSize in printSize" title="Print Size" tabindex="0">
-                                <option value="" >Select...</option>
-                            </select>
-	                    	
-	                    	<select name="implicitEligibilityRulesEntry.value"  
-                                        data-ng-show="implicitEligibilityRulesEntry.field=='streamlinedInterface'" 
-                                        data-ng-model="implicitEligibilityRulesEntry.value" data-ng-options="stream.name as stream.description for stream in streamlinedInterface" title="Streamlined Interface" tabindex="0">
-                                <option value="" >Select...</option>
-                            </select>
-	                    	
-	                    	<select name="implicitEligibilityRulesEntry.value"  
-		                				data-ng-show="implicitEligibilityRulesEntry.field=='textToSpeech'" 
-		                				data-ng-model="implicitEligibilityRulesEntry.value" data-ng-options="tts.name as tts.description for tts in textToSpeech" title="Text to Speech" tabindex="0">
-	                       		<option value="" >Select...</option>
-	                    	</select>
-	                    	
-	                    	<select name="implicitEligibilityRulesEntry.value"  
-		                				data-ng-show="implicitEligibilityRulesEntry.field=='translation'" 
-		                				data-ng-model="implicitEligibilityRulesEntry.value" data-ng-options="translate.name as translate.description for translate in translation" title="Translation" tabindex="0">
-	                       		<option value="" >Select...</option>
-	                    	</select>
-	                    	
-	                    	<select name="implicitEligibilityRulesEntry.value"  
-		                				data-ng-show="implicitEligibilityRulesEntry.field=='nonEmbeddedDesignatedSupports'" 
-		                				data-ng-model="implicitEligibilityRulesEntry.value" data-ng-options="supports.name as supports.description for supports in nonEmbeddedDesignatedSupports" title="Non-Embedded Designated Supports" tabindex="0">
-	                       		<option value="" >Select...</option>
-	                    	</select>
-	                    	
-	                    	<select name="implicitEligibilityRulesEntry.value"  
-                                        data-ng-show="implicitEligibilityRulesEntry.field=='nonEmbeddedAccommodations'" 
-                                        data-ng-model="implicitEligibilityRulesEntry.value" data-ng-options="nonembed.name as nonembed.description for nonembed in nonEmbeddedAccommodations" title="Non-Embedded Accommodations" tabindex="0">
-                                <option value="" >Select...</option>
-                            </select>
-                            
-                            <input type="text" name="implicitEligibilityRulesEntry.value"
-                                data-ng-show="implicitEligibilityRulesEntry.field=='other'"   
+	                    	<input type="text" name="implicitEligibilityRulesEntry.value"
+                                data-ng-show="loadEditFields.indexOf(implicitEligibilityRulesEntry.field)>-1"   
                                 data-ng-model="implicitEligibilityRulesEntry.value" alt="Implicit Eligibility Rules Entry Value" tabindex="0" />
-	                    	
 	                	</td>
 	                	<td role="gridcell" aria-labelledby="ruleTypeHeader"><select name="implicitEligibilityRulesEntry.ruleType" data-ng-model="implicitEligibilityRulesEntry.ruleType" data-ng-options="id.ruleId as id.ruleId for id in ruleTypes | orderBy:'ruleId'" data-ng-disabled=" assessment.eligibilityType != 'IMPLICIT' " title="Rule Type" tabindex="0">
                        			<option value="" >Select...</option>

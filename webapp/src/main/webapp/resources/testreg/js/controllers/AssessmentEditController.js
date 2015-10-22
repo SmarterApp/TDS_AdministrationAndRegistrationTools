@@ -4,6 +4,8 @@ testreg.controller('AssessmentEditController',['$scope','$state', '$filter', 'lo
 	 $state.$current.self.name = prevActiveLink;
 	 $scope.languages = [];
 	 $scope.subjects =[];
+	 $scope.accommodationResourceData = [];
+	 $scope.masterAccommodations = [];
 
 	 $scope.isActiveLink = function(link){
 			return  $scope.activeLink.indexOf(link) == 0; 
@@ -20,7 +22,7 @@ testreg.controller('AssessmentEditController',['$scope','$state', '$filter', 'lo
 			if (flag) {
 				
 				for (var i = 0; i < assessment.implicitEligibilityRules.length; i ++) {
-					if ($scope.dateTimeFields.indexOf(assessment.implicitEligibilityRules[i].field) > -1) {
+					if ($scope.dateTimeFields.indexOf(assessment.implicitEligibilityRules[i].field) > -1 ) {
 						assessment.implicitEligibilityRules[i].value = StudentService.getFormattedDate(assessment.implicitEligibilityRules[i].value);
 					}
 				} 
@@ -123,7 +125,6 @@ testreg.controller('AssessmentEditController',['$scope','$state', '$filter', 'lo
 			if (assessment.eligibilityType == "IMPLICIT" && assessment.implicitEligibilityRules.length > 0) {
 				$scope.formatDateFields(true, assessment);
 			}
-			
 			AssessmentService.saveAssessment(assessment).then(function(response){
 				$scope.savingIndicator = false;
 				$scope.errors = response.errors;
@@ -186,6 +187,9 @@ testreg.controller('AssessmentEditController',['$scope','$state', '$filter', 'lo
 		$scope.textFields 		= AssessmentService.loadTextFields();
 		$scope.genders 			= AssessmentService.loadGenders();
 		
+		$scope.loadSingleSelectFields = [];
+		$scope.loadEditFields = [];
+		
 		//Student based dropdowns
 		$scope.section504Status 		= StudentService.section504Status();
 		$scope.title3ProgramType 		= StudentService.title3ProgramType();
@@ -194,19 +198,41 @@ testreg.controller('AssessmentEditController',['$scope','$state', '$filter', 'lo
 		SubjectService.findAll().then(function(response){
 			$scope.subjects = response.data;
 		});
-		$scope.americanSignLanguage 			= AccommodationService.americanSignLanguage();
-		$scope.colorContrast 					= AccommodationService.colorContrast();
-		$scope.closedCaptioning 				= AccommodationService.closedCaptioning();
-		$scope.language 						= AccommodationService.language();
-		$scope.masking 							= AccommodationService.masking();
-		$scope.permissiveMode			 		= AccommodationService.permissiveMode();
-		$scope.printOnDemand 					= AccommodationService.printOnDemand();
-		$scope.printSize 						= AccommodationService.printSize();
-		$scope.streamlinedInterface 			= AccommodationService.streamlinedInterface();
-		$scope.textToSpeech 					= AccommodationService.textToSpeech();
-		$scope.translation 						= AccommodationService.translation();
-		$scope.nonEmbeddedDesignatedSupports 	= AccommodationService.nonEmbeddedDesignatedSupports();
-		$scope.nonEmbeddedAccommodations 		= AccommodationService.nonEmbeddedAccommodations();
+		
+		//getting all options from masterResourceAccommodation
+		AccommodationService.findAll().then(function(response){
+			$scope.accommodationResourceData = response.data;
+			var accommodationFamily = $scope.accommodationResourceData;
+    		if(accommodationFamily !=null){
+				for(var i=0;i<accommodationFamily.length;i++){
+					$scope.tempOptionArray = [];
+						for(var j = 0; j < accommodationFamily[i].options.length;j++){
+							for(var k = 0; k < accommodationFamily[i].options[j].text.length;k++){
+								if(accommodationFamily[i].options[j].text[k].language == 'eng'){
+									//preparing Json the format we need to display the options 
+									$scope.tempOptionArray.push({"name": accommodationFamily[i].options[j].code,"description": accommodationFamily[i].options[j].text[k].label });
+								}
+							}
+						}
+						
+						for(var l = 0;l< accommodationFamily[i].header.length;l++){
+							if(accommodationFamily[i].header[l].language == 'eng'){
+								$scope.fields.push({fieldId: accommodationFamily[i].header[l].label, fieldValue: $scope.lowerCaseFirstLetter(accommodationFamily[i].code), segment: "Accommodation"});
+							}
+						}
+						if(accommodationFamily[i].resourceType == 'SingleSelectResource' || accommodationFamily[i].resourceType == 'MultiSelectResource'){
+						$scope.loadSingleSelectFields.push($scope.lowerCaseFirstLetter(accommodationFamily[i].code));
+						}else if(accommodationFamily[i].resourceType == 'EditResource'){
+							$scope.loadEditFields.push($scope.lowerCaseFirstLetter(accommodationFamily[i].code));
+						}
+						$scope.masterAccommodations[$scope.lowerCaseFirstLetter(accommodationFamily[i].code)] = $scope.tempOptionArray;
+				}
+    		}
+		});
+		
+		$scope.lowerCaseFirstLetter = function(value){
+			return value.charAt(0).toLowerCase() + value.slice(1);
+		};
 		
 		$scope.defaultOperatorType = "=";
 		$scope.operatorTypeMuted = true;

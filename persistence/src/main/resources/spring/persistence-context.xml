@@ -126,8 +126,9 @@
     <bean id="accommodationVerifierMap" class="java.util.HashMap">
         <constructor-arg>
             <map>
-                <entry key="accommodationSubject"    value-ref="accommodationSubjectVerifier"/>
-                <entry key="accommodationStudent"    value-ref="accommodationStudentVerifier"/>
+                <entry key="accommodationSubject"     value-ref="accommodationSubjectVerifier"/>
+                <entry key="accommodationStudent"     value-ref="accommodationStudentVerifier"/>
+                <entry key="accommodationOptionsCode" value-ref="accommodationOptionsCodeVerifier"/>
             </map>
         </constructor-arg>
     </bean>

@@ -6,7 +6,37 @@ testreg.factory("AccommodationService", function($http){
     		var url = baseUrl + 'subjects' + '/?_=' + Math.random();
 			return $http.get(url).then(this.successHandler, this.errorHandler);
 	    },
-
+	    
+	    accommodationOptions : function(grade,subject) {
+    		var url = baseUrl + 'accomodationResource' + '/' + grade + '/' + subject;
+			return $http.get(url).then(this.successHandler, this.errorHandler);
+	    },
+	    
+	    getHeaderNames : function(){
+	    	var url = baseUrl + 'accomodationResourceHeaderNames';
+			return $http.get(url).then(this.successHandler, this.errorHandler);
+	    },
+	    
+	    getHeaderCodes : function(){
+	    	var url = baseUrl + 'accomodationResourceCodes';
+			return $http.get(url).then(this.successHandler, this.errorHandler);
+	    },
+	    
+	    getMultiSelectCodes : function(){
+	    	var url = baseUrl + 'accomodationMultiSelectTypes';
+			return $http.get(url).then(this.successHandler, this.errorHandler);
+	    },
+	    
+	    getMasterAccommodationsExclusiveOptions : function(){
+	    	var url = baseUrl + 'mutuallyExclusiveOptions';
+			return $http.get(url).then(this.successHandler, this.errorHandler);
+	    },
+	    
+	    findAll : function() {
+    		var url = baseUrl + 'defaultaccommodations'+ '/?_=' + Math.random();
+				return $http.get(url).then(this.successHandler, this.errorHandler);
+	    },
+	    
 	    americanSignLanguage : function() {
 			return  [
 			         	{name:"TDS_ASL0",description:"Do not show ASL videos"},

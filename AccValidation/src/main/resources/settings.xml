@@ -3,4 +3,9 @@
 <properties>
 	<entry key="XmlValidation.configFilePath">${configFilePath}</entry>
 	<entry key="XmlValidation.xsdFilePath">${xsdFilePath}</entry>
+	<entry key="mongo.hostname">${mongo.host}</entry>
+	<entry key="mongo.username">${mongo.user}</entry>
+	<entry key="mongo.password">${mongo.pwd}</entry>
+	<entry key="mongo.databasename">${mongo.db_name}</entry>
+	<entry key="mongo.portNumber">${mongo.port}</entry>
 </properties>

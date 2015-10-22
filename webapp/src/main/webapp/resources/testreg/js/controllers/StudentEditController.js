@@ -7,10 +7,24 @@ testreg.controller('StudentEditController',['$scope','$state', '$filter', '$time
 	 $scope.grades =[];
 	 $scope.testStatuses = [];
 	 $scope.studentTestStatuses =[];
+	 $scope.headerNames = [];
+	 $scope.selectedOptions = [];
+	 $scope.MultiSelectCodes = [];
+		
 	 $scope.isActiveLink = function(link){
 		return  $scope.activeLink.indexOf(link) == 0; 
 	 };
-
+	 
+	 //to dynamically generate header names
+	 AccommodationService.getHeaderNames().then(function (response){
+		 $scope.headerNames = response.data;	
+	});
+	 
+	 //getting multi-select code values
+	 AccommodationService.getMultiSelectCodes().then(function (response){
+		 $scope.MultiSelectCodes = response.data;
+	});
+	 
 	$scope.hasStatus = function (assessmentId) {
 		found = false;
 		angular.forEach($scope.testStatuses, function(testStatus){
@@ -73,28 +87,6 @@ testreg.controller('StudentEditController',['$scope','$state', '$filter', '$time
 			if ($scope.student.section504Status == "CANNOTPROVIDE") {
 				$scope.student.section504Status = "CANNOT PROVIDE";
 			}
-
-			if ($scope.student.accommodations) {
-				for (var i = 0; i < $scope.student.accommodations.length; i++) {
-					if ($scope.student.accommodations[i].textToSpeech == "TDS_TTS_StimAndTDS_TTS_Item") {
-						$scope.student.accommodations[i].textToSpeech = "TDS_TTS_Stim&TDS_TTS_Item";
-					}
-					if ($scope.student.accommodations[i].printOnDemand == "TDS_PoD_StimAndTDS_PoD_Item") {
-						$scope.student.accommodations[i].printOnDemand = "TDS_PoD_Stim&TDS_PoD_Item";
-					}
-					if ($scope.student.accommodations[i].language == "ENUBraille") {
-						$scope.student.accommodations[i].language = "ENU-Braille";
-					}
-					if ($scope.student.accommodations[i].translation !=null 
-							&& $scope.student.accommodations[i].translation.indexOf("And") > 0) {
-						var andIdx = $scope.student.accommodations[i].translation.indexOf("And");
-						var newVal = $scope.student.accommodations[i].translation.substring(0, andIdx);
-						newVal += "&";
-						newVal += $scope.student.accommodations[i].translation.substring(andIdx + 3);
-						$scope.student.accommodations[i].translation = newVal;
-					}
-				}
-			}
 			
 			StudentService.loadStudentEligibleAssessments($scope.student.id).then(function(loadedData) {
 	  			$scope.eligibleAssessments = loadedData.data;
@@ -104,9 +96,8 @@ testreg.controller('StudentEditController',['$scope','$state', '$filter', '$time
 					TestStatusService.search(params).then(function(response) {
 						if (response.data.searchResults && response.data.searchResults.length > 0) {
 							teststatus =  response.data.searchResults.pop();
-							$scope.testStatuses.push(teststatus);
-						}
-						
+						    $scope.testStatuses.push(teststatus);
+						}	
 					});
 	  			});
 	  		});
@@ -162,6 +153,24 @@ testreg.controller('StudentEditController',['$scope','$state', '$filter', '$time
 			$scope.states = loadedData.data;
 		});
 		
+		$scope.grdStudent = $scope.student.gradeLevelWhenAssessed;
+		
+		$scope.resetAccommodationEntities = function(student) {
+			
+			if($scope.grdStudent !=null && student.accommodations.length > 0){
+				if(!confirm("Changing the student's grade will cause their accommodations to be deleted. Are you sure you want to continue?")){
+					$scope.student.gradeLevelWhenAssessed = $scope.grdStudent;
+				}else{
+					$scope.grdStudent = $scope.student.gradeLevelWhenAssessed;
+					if(student.accommodations.length > 0){
+						student.accommodations.splice(0,student.accommodations.length);
+					}
+				}
+			}else{
+				$scope.grdStudent = $scope.student.gradeLevelWhenAssessed;
+			}
+		};
+		
 		//DatePicker format
 		$scope.format = "yyyy-MM-dd";
 		$scope.formatDateFields = function(flag) {
@@ -185,6 +194,7 @@ testreg.controller('StudentEditController',['$scope','$state', '$filter', '$time
 		$scope.save = function(student) {
 			$scope.errors =[];
 			$scope.savingIndicator = true;
+			
 			//if date is undefined then it means the entered date is not a valid date
 			if (student.birthDate === undefined) {
 				$scope.errors.push("The Birthdate is invalid: the valid format is YYYY-MM-DD, and the range should be between '1900 <= YYYY <=9999'");
@@ -202,22 +212,16 @@ testreg.controller('StudentEditController',['$scope','$state', '$filter', '$time
 				$scope.errors.push("Invalid date or invalid date format for LEP Exit Date. Valid format is YYYY-MM-DD");
 				$scope.savingIndicator = false;
 			}
-			if(student.accommodations != null){
-				for(var i=0;i<student.accommodations.length;i++){
-					if(student.accommodations[i].colorContrast == '' || student.accommodations[i].colorContrast == null){
-						student.accommodations[i].colorContrast = 'TDS_CC0';
+			if(student.accommodations){
+				
+				for(var i=0; i<student.accommodations.length; i++){
+					
+					if(student.accommodations[i].studentId == '' || student.accommodations[i].studentId == null && student.entityId  != null){
+						student.accommodations[i].studentId = student.entityId;
 					}
-					if(student.accommodations[i].language == '' || student.accommodations[i].language == null){
-						student.accommodations[i].language = 'ENU';
-					}
-					if(student.accommodations[i].streamlinedInterface == '' || student.accommodations[i].streamlinedInterface == null){
-						student.accommodations[i].streamlinedInterface = 'TDS_SLM0';
-					}
-					if(student.accommodations[i].nonEmbeddedAccommodations.length == 0){
-						student.accommodations[i].nonEmbeddedAccommodations = ['NEA0'];
-					}
-					if(student.accommodations[i].nonEmbeddedDesignatedSupports.length == 0){
-						student.accommodations[i].nonEmbeddedDesignatedSupports = ['NEDS0'];
+					
+					if(student.accommodations[i].stateAbbreviation == '' || student.accommodations[i].stateAbbreviation == null && student.stateAbbreviation  != null){
+						student.accommodations[i].stateAbbreviation = student.stateAbbreviation;
 					}
 				}
 			}

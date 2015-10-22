@@ -96,22 +96,7 @@ testreg.factory("AssessmentService", function($http, CurrentUserService){
 			       {fieldId: "Limited English Proficiency EntryDate", fieldValue: "lepEntryDate", segment: "Student"},
 			       {fieldId: "LEP ExitDate", fieldValue: "lepExitDate", segment: "Student"},
 			       {fieldId: "TitleIII Language Instruction Program Type", fieldValue: "title3ProgramType", segment: "Student"},
-			       {fieldId: "Primary Disability Type", fieldValue: "primaryDisabilityType", segment: "Student"},
-			       {fieldId: "American Sign Language", fieldValue: "americanSignLanguage", segment: "Accommodation"},
-			       {fieldId: "Color Contrast", fieldValue: "colorContrast", segment: "Accommodation"},
-			       {fieldId: "Closed Captioning", fieldValue: "closedCaptioning", segment: "Accommodation"},
-			       {fieldId: "Language", fieldValue: "language", segment: "Accommodation"},
-			       {fieldId: "Masking", fieldValue: "masking", segment: "Accommodation"},
-			       {fieldId: "Permissive Mode", fieldValue: "permissiveMode", segment: "Accommodation"},
-			       {fieldId: "Print on Demand", 	fieldValue: "printOnDemand", segment: "Accommodation"},
-			       {fieldId: "Print Size", 	fieldValue: "printSize", segment: "Accommodation"},
-			       {fieldId: "Streamlined Interface", fieldValue: "streamlinedInterface", segment: "Accommodation"},
-			       {fieldId: "Subject", fieldValue: "subject", segment: "Accommodation"},
-			       {fieldId: "Text to Speech", fieldValue: "textToSpeech", segment: "Accommodation"},
-			       {fieldId: "Translation", fieldValue: "translation", segment: "Accommodation"},
-			       {fieldId: "Non-Embedded Designated Supports", fieldValue: "nonEmbeddedDesignatedSupports", segment: "Accommodation"},
-			       {fieldId: "Non-Embedded Accommodations", fieldValue: "nonEmbeddedAccommodations", segment: "Accommodation"},
-			       {fieldId: "Other", fieldValue: "other", segment: "Accommodation"}
+			       {fieldId: "Primary Disability Type", fieldValue: "primaryDisabilityType", segment: "Student"}
 			];
 		},
 		

@@ -571,41 +571,113 @@ testreg.directive("institutionAutoCompleteStudentGroup", function(InstitutionSer
     };
 });
 
-testreg.directive("accommodationEditor", function(AccommodationService){
+testreg.directive("accommodationEditor", function(AccommodationService,$parse){
 	return {
 		restrict:"A",
 		scope: true,
 		templateUrl: 'resources/testreg/partials/accommodation-editor.html',
 		controller: function($scope, $attrs) {	
-			$scope.americanSignLanguage 			= AccommodationService.americanSignLanguage();
-			$scope.colorContrast 					= AccommodationService.colorContrast();
-			$scope.closedCaptioning 				= AccommodationService.closedCaptioning();
-			$scope.language 						= AccommodationService.language();
-			$scope.masking 							= AccommodationService.masking();
-			$scope.permissiveMode			 		= AccommodationService.permissiveMode();
-			$scope.printOnDemand 					= AccommodationService.printOnDemand();
-			$scope.printSize 						= AccommodationService.printSize();
-			$scope.streamlinedInterface 			= AccommodationService.streamlinedInterface();
-			$scope.textToSpeech 					= AccommodationService.textToSpeech();
-			$scope.translation 						= AccommodationService.translation();
-			$scope.nonEmbeddedDesignatedSupports 	= AccommodationService.nonEmbeddedDesignatedSupports();
-			$scope.nonEmbeddedAccommodations 		= AccommodationService.nonEmbeddedAccommodations();
+		
+			//getting studentID,stateAbbreviation and grade from student
 			$scope.accommodationStudentId = $scope.$parent.student.entityId;
 			$scope.accommodationStateId = $scope.$parent.student.stateAbbreviation;
-		
+			$scope.gradeForAccomo = $scope.$parent.student.gradeLevelWhenAssessed;
+			
+			$scope.accommodationResourceData = [[]];
+			$scope.accommodationOptions = [[]];
+			$scope.multiSelectOptions = [[]];
+			
 			$scope.selectedSubject = [];
 			$scope.subjects = [[]];
 			$scope.rowNumber = 0;
 			$scope.isDisabled = false; 
 			$scope.onloadSubjectData= [];
 			$scope.loaded = false;
+			$scope.accommodationMessage;
+			$scope.mutualOptions;
+			$scope.indicator = [[]];
+			$scope.multiSelect = [];
+			$scope.optionsSelected = [[]];
+			
 			$scope.select2Config = {
 					'placeholder': "Select...",
 					'allowClear': true,
 					'multiple': true,
 					'width' :'resolve',
+				
 			};
-			//While loading Filtert the subjects
+			
+			//dynamic message in ui based on selection of option
+			$scope.modifyMessage = function(field, selectedValue){
+				for(var i=0; i<field.options.length;i++){
+					if(field.options[i].code == selectedValue){
+						$scope.accommodationMessage = field.options[i].text[0].message;
+						return;
+					}
+				}
+			};
+			
+			$scope.hasDisabled = function(field){
+				if(field.disabled || field.options.length == 0 && field.resourceType != "EditResource"){
+					return false;
+				}else if(field.disabled && field.resourceType == "EditResource"){
+					return false;
+				}else
+					return true;
+			};
+			
+			$scope.setDifferences = function(a1,a2){
+				var a=[], diff=[];
+				  for(var i=0;i<a1.length;i++)
+				    a[a1[i]]=true;
+				  for(var i=0;i<a2.length;i++)
+				    if(a[a2[i]]) delete a[a2[i]];
+				    else a[a2[i]]=true;
+				  for(var k in a)
+				    diff.push(k);
+				  return diff;
+			};
+			
+			//dynamic message in ui based on selection of option for multi-select
+			$scope.modifyMessages = function(field, selectedValue,index,selectedName){
+				if(selectedValue.length == 1){
+					$scope.optionsSelected[[selectedName,index]] = selectedValue;
+					$scope.modifyMessage(field,selectedValue);
+				}else if(selectedValue.length >= 2){
+					var selectedOption = selectedValue.toString().split(',');
+					var temp1 = $scope.setDifferences(selectedOption,$scope.optionsSelected[[selectedName,index]]);
+					$scope.optionsSelected[[selectedName,index]] = selectedValue;
+					$scope.multiSelect = temp1.pop();
+					$scope.modifyMessage(field,$scope.multiSelect);
+				}
+			};
+			
+			//mutally exclusive options 
+			$scope.mutuallyExclusiveOptions = function(index, selectedValue, selectedOption, field){
+				angular.forEach($scope.mutualOptions, function(value,key){
+					if(selectedValue == key){
+						$scope.nonEmbeddedAccommodationsChange(index,selectedValue,value,field);
+					}
+				});
+				
+			};
+			
+			//getting the code values from masterAccommodation to build accommodationJson
+			AccommodationService.getHeaderCodes().then(function(response){
+				$scope.accommoHeaders = response.data;
+			});
+			
+			//getting exclusive optionCode along with the masterResourceCode
+			AccommodationService.getMasterAccommodationsExclusiveOptions().then(function(response){
+				$scope.mutualOptions = response.data;
+			});
+			 
+			//loading accommodations into accommodationResourceData based on subject,grade and index
+			$scope.loadAccommodationResources = function(grade,subject,index){	
+				AccommodationService.accommodationOptions(grade,subject).then(function (response){
+		    		$scope.accommodationResourceData[index] = response.data;
+				 });
+			};
 
 			$scope.loadSelected = function () {
 				angular.forEach($scope.student.accommodations, function(accommodation,index){
@@ -613,14 +685,16 @@ testreg.directive("accommodationEditor", function(AccommodationService){
 					accommodation.subject = accommodation.subject.toUpperCase();
 					$scope.onloadSubjectData.push(accommodation.subject);
 				});
-	
+				//unselected subjects 
+				var temp = $scope.setDifferences($scope.subjectData,$scope.onloadSubjectData);
 				angular.forEach($scope.student.accommodations, function(accommodation,index){
 					$scope.subjects[index] = [];
-					
-					   angular.forEach($scope.subjectData, function(subjectVal,elementIndex){
+					//populating subject for corresponding index
+					var modifySubjects = angular.copy(temp);
+					modifySubjects.push(accommodation.subject);
+					angular.forEach(modifySubjects, function(subjectVal,elementIndex){
 						   $scope.subjects[index].push(subjectVal);
-					   });
-					   
+					});
 					   function isSubjectCachedForDisplay(subjectToCheck) {
 						   angular.forEach($scope.subjects, function(subjectCached){
 							   if(subjectToCheck == subjectCached) {
@@ -633,6 +707,13 @@ testreg.directive("accommodationEditor", function(AccommodationService){
 					   $scope.rowNumber = index+1;
 				});
 			};
+			
+			if($scope.$parent.student.accommodations != null){
+				for(var i=0;i<$scope.$parent.student.accommodations.length;i++){
+					$scope.loadAccommodationResources($scope.$parent.student.gradeLevelWhenAssessed, $scope.$parent.student.accommodations[i].subject , i);
+				}
+				
+			}
 
 			 AccommodationService.subjects($scope.accommodationStudentId,$scope.accommodationStateId).then(function (response){
 				 $scope.subjectData= response.data;
@@ -664,6 +745,9 @@ testreg.directive("accommodationEditor", function(AccommodationService){
 						});
 						$scope.subjects=subjectArray;
 						$scope.student.accommodations.splice(index,1);
+						if($scope.student.accommodations.length == 0){
+							$scope.accommodationMessage = "";
+						}
 						
 					}
 				   
@@ -689,7 +773,7 @@ testreg.directive("accommodationEditor", function(AccommodationService){
 				return changedSubject;
 			};
 			
-			$scope.refreshSubject = function(subject,index){
+			$scope.refreshSubject = function(subject,index,accommo){
 				var changedSubject = $scope.removeSelectedSubject(index,subject);
 				$scope.selectedSubject.push({"rowNum":index,"subjectObj":subject});
 		    	angular.forEach($scope.subjects, function(subjectArray,parentIndex){
@@ -704,60 +788,44 @@ testreg.directive("accommodationEditor", function(AccommodationService){
 			    		});
 		    		}
 		    	});
+		    	
+		    	if(accommo != null){
+		    		//refreshing everthing except studentId,stateAbbrevieation,subject in accommodation when user changes subject
+		    		for(var i = 3; i< $scope.accommoHeaders.length;i++){
+		    			accommo[$scope.accommoHeaders[i]] = '';
+		    		}
+		    	}
+		    	//loading accommodations options based on grade and subject
+		    	$scope.loadAccommodationResources($scope.$parent.student.gradeLevelWhenAssessed, subject , index);
 			};
 			
-			$scope.nonEmbeddedDesignatedSupportsChange = function(index){
-				$scope.noneSupportSelected = false;
-				if($scope.student.accommodations[index].nonEmbeddedDesignatedSupports.length == 1){
-					if($scope.student.accommodations[index].nonEmbeddedDesignatedSupports.indexOf('NEDS0')!= -1){
-						$scope.noneSupportSelected = true;
-					} else{
-						$scope.noneSupportSelected = false;
-					}
-				} else if($scope.student.accommodations[index].nonEmbeddedDesignatedSupports.length >= 2){
-					if($scope.noneSupportSelected){
-						$scope.student.accommodations[index].nonEmbeddedDesignatedSupports = [];
-						$scope.student.accommodations[index].nonEmbeddedDesignatedSupports.push('NEDS0');
-					} else{
-						if($scope.student.accommodations[index].nonEmbeddedDesignatedSupports.indexOf('NEDS0')!= -1){
-							var temp1=[];
-							for(var i=0;i<$scope.student.accommodations[index].nonEmbeddedDesignatedSupports.length;i++){
-								if($scope.student.accommodations[index].nonEmbeddedDesignatedSupports[i]!='NEDS0'){
-									temp1.push($scope.student.accommodations[index].nonEmbeddedDesignatedSupports[i]);
+			$scope.nonEmbeddedAccommodationsChange = function(index,selectedValue,defaultOption,field){ 
+				for(var k=0;k<defaultOption.length;k++){
+					if($scope.student.accommodations[index][selectedValue].length == 1){
+						if($scope.student.accommodations[index][selectedValue].indexOf(defaultOption[k])!= -1){
+							$scope.indicator[[defaultOption[k],index]] = true;
+						} else{
+							$scope.indicator[[defaultOption[k],index]] = false;
+						}
+					} else if($scope.student.accommodations[index][selectedValue].length >= 2){
+						if($scope.indicator[[defaultOption[k], index]]){
+							$scope.student.accommodations[index][selectedValue] = [];
+							$scope.student.accommodations[index][selectedValue].push(defaultOption[k]);
+						} else{
+							if($scope.student.accommodations[index][selectedValue].indexOf(defaultOption[k])!= -1){
+								var temp=[];
+								for(var i=0;i<$scope.student.accommodations[index][selectedValue].length;i++){
+									if($scope.student.accommodations[index][selectedValue][i]!=defaultOption[k]){
+										temp.push($scope.student.accommodations[index][selectedValue][i]);
+									}
 								}
+								$scope.student.accommodations[index][selectedValue] = [];
+								angular.copy(temp, $scope.student.accommodations[index][selectedValue]);
 							}
-							$scope.student.accommodations[index].nonEmbeddedDesignatedSupports = [];
-							angular.copy(temp1, $scope.student.accommodations[index].nonEmbeddedDesignatedSupports);
 						}
 					}
 				}
-			};
-			
-			$scope.nonEmbeddedAccommodationsChange = function(index){
-				$scope.noneSelected = false; 
-				if($scope.student.accommodations[index].nonEmbeddedAccommodations.length == 1){
-					if($scope.student.accommodations[index].nonEmbeddedAccommodations.indexOf('NEA0')!= -1){
-						$scope.noneSelected = true;
-					} else{
-						$scope.noneSelected = false;
-					}
-				} else if($scope.student.accommodations[index].nonEmbeddedAccommodations.length >= 2){
-					if($scope.noneSelected){
-						$scope.student.accommodations[index].nonEmbeddedAccommodations = [];
-						$scope.student.accommodations[index].nonEmbeddedAccommodations.push('NEA0');
-					} else{
-						if($scope.student.accommodations[index].nonEmbeddedAccommodations.indexOf('NEA0')!= -1){
-							var temp=[];
-							for(var i=0;i<$scope.student.accommodations[index].nonEmbeddedAccommodations.length;i++){
-								if($scope.student.accommodations[index].nonEmbeddedAccommodations[i]!='NEA0'){
-									temp.push($scope.student.accommodations[index].nonEmbeddedAccommodations[i]);
-								}
-							}
-							$scope.student.accommodations[index].nonEmbeddedAccommodations = [];
-							angular.copy(temp, $scope.student.accommodations[index].nonEmbeddedAccommodations);
-						}
-					}
-				}
+				$scope.modifyMessages(field,$scope.student.accommodations[index][selectedValue],index,selectedValue);
 			};
 
 			$scope.resetSubject = function(index,subject){
@@ -773,6 +841,11 @@ testreg.directive("accommodationEditor", function(AccommodationService){
 			};
 			
 			$scope.addItem = function(){
+				if(!$scope.student.accommodations ||$scope.student.accommodations.length == 0) {
+					$scope.rowNumber = 0;
+					$scope.student.accommodations=[];
+					$scope.selectedSubject = [];
+				}
 				var accSub = new Array();
 				angular.forEach($scope.student.accommodations, function(accommodation,index){
 					accSub[index] = accommodation.subject;
@@ -787,21 +860,35 @@ testreg.directive("accommodationEditor", function(AccommodationService){
 		    			}		
 					});
 
-				}		
+				}
+				if(!$scope.$parent.student.gradeLevelWhenAssessed) {
+					if(!confirm("A grade must be selected in order to create accommodations.")){
+	    				event.preventDefault();
+	    			}
+				}
 				
-				if($scope.subjectData.length !=0 && $scope.rowNumber < $scope.subjectData.length){
-						if(!$scope.student.accommodations) {
-							$scope.student.accommodations=[];
-						} 
-						$scope.student.accommodations.push({"studentId":$scope.student.entityId,"stateAbbreviation":$scope.student.stateAbbreviation,
-							"subject":"","americanSignLanguage":"", "colorContrast":"","closedCaptioning":"","language":"","masking":"","permissiveMode":"",
-							"printOnDemand":"", "printSize":"","streamlinedInterface":"","textToSpeech":"","translation":"","nonEmbeddedDesignatedSupports":"",
-							"nonEmbeddedAccommodations":"", "other":""});
+				if($scope.subjectData.length !=0 && $scope.rowNumber < $scope.subjectData.length && $scope.$parent.student.gradeLevelWhenAssessed){
+						//dynamic accommodation Json is pushed into student.accommodations
+						var test = $scope.accommoHeaders;
+						var accommodationJson = {};
+						$scope.optionValue;
+						for(var i=0;i<test.length;i++){
+							var objName = test[i];
+							var objValue = "";
+							if(objName == 'studentId' && $scope.student.entityId != null){
+								accommodationJson[objName] = $scope.student.entityId;
+							}
+							else if(objName == 'stateAbbreviation'){
+								accommodationJson[objName] = $scope.student.stateAbbreviation;
+							}else{
+							accommodationJson[objName] = objValue;
+							}
+						}
+						$scope.student.accommodations.push(accommodationJson);
 						$scope.rowNumber++;
 						$scope.studentForm.$dirty=true;
 				}
 			};
-
         },
 		link:function(scope, element, attrs){
 		
