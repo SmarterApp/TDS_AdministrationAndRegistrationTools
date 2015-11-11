@@ -41,7 +41,7 @@ If Not Exist "%~1" (
 )
 
 REM read in config file
-for /f %%x in (%1) do (
+for /f "eol=# delims=" %%x in (%1) do (
 set %%x
 )
 
