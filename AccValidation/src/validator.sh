@@ -16,6 +16,7 @@
 # See usage {} function for a description of available parameters
 # This script reads a config file named config_file_name that provides the following parameters:
 # basedir=(the base directory for the files and output log)
+# validatorjar=(the full name of the validator jar file including the extension)
 # accomconfig=(the filename of the ART accommodations XML file)
 # xsd=(the filename of the XSD against which the XML will be validated)
 # mongohost=(FQDN of the host running Mongo DB)
@@ -42,6 +43,7 @@ function usage {
     echo " -h|--help         = Show usage information for this script"
     echo "This script reads a config file named config_file_name that provides the following parameters:"
     echo "  basedir=(the base directory for the files and output log)"
+    echo "  validatorjar=(the full name of the validator jar file including the extension)"
     echo "  accomconfig=(the filename of the ART accommodations XML file)"
     echo "  xsd=(the filename of the XSD against which the XML will be validated)"
     echo "  mongohost=(FQDN of the host running Mongo DB)"
@@ -55,7 +57,6 @@ function usage {
 # Set defaults here
 configfile=validator.conf
 basedir="."
-jarfile=AccommodationValidator-0.0.1.jar
 controller=org.opentestsystem.delivery.AccValidator.handlers.AccController
 
 # parse command line
@@ -98,6 +99,14 @@ while IFS="=" read -r key value; do
 		echo "** ERROR: directory $value not found."
 		error=1
 	    fi 
+	    ;;
+	"validatorjar")
+	    if [ -e $basedir/$value ] ; then
+		validatorjar="$value"
+	    else
+		echo "** ERROR: Validator jar file $basedir/$value not found."
+		error=1
+	    fi
 	    ;;
 	"accomconfig")
 	    if [ -e $basedir/$value ] ; then
@@ -171,10 +180,10 @@ fi
 # testing only
 cat <<EOF
 Command to be executed: 
-java -DconfigFilePath="$basedir/$accomconfig" -DxsdFilePath="$basedir/$xsd" -DlogFilePath="$basedir/logs" -Dmongo.host="$mongohost" -Dmongo.user="$mongouser" -Dmongo.pwd="$mongopwd" -Dmongo.db_name="$mongodbname" -Dmongo.port="$mongoport" -cp "$jarfile" $controller
+java -DconfigFilePath="$basedir/$accomconfig" -DxsdFilePath="$basedir/$xsd" -DlogFilePath="$basedir/logs" -Dmongo.host="$mongohost" -Dmongo.user="$mongouser" -Dmongo.pwd="$mongopwd" -Dmongo.db_name="$mongodbname" -Dmongo.port="$mongoport" -cp "$validatorjar" $controller
 
 EOF
 
-java -DconfigFilePath="$basedir/$accomconfig" -DxsdFilePath="$basedir/$xsd" -DlogFilePath="$basedir/logs" -Dmongo.host="$mongohost" -Dmongo.user="$mongouser" -Dmongo.pwd="$mongopwd" -Dmongo.db_name="$mongodbname" -Dmongo.port="$mongoport" -cp "$jarfile" $controller
+java -DconfigFilePath="$basedir/$accomconfig" -DxsdFilePath="$basedir/$xsd" -DlogFilePath="$basedir/logs" -Dmongo.host="$mongohost" -Dmongo.user="$mongouser" -Dmongo.pwd="$mongopwd" -Dmongo.db_name="$mongodbname" -Dmongo.port="$mongoport" -cp "$validatorjar" $controller
 
 
