@@ -1,0 +1,71 @@
+<div data-ng-repeat="error in errors">
+     <div><span class="icon_sprite icon_error error"></span>{{error}}</div>
+</div>
+           
+<div data-ng-form="scheduleForm" class="formWrapper">
+    <div data-ng-show="scheduleForm.$dirty" class="dirtynag">* Warning: You have unsaved changes</div>
+    <div class="fieldGroup">
+    <h5 tabindex="-1">{{formAction}} Schedule Information<span class="control-label-required">Indicates required field</span></h5>
+        <ul>
+            <li>
+                <span> 
+                    <label class="control-label-required" for="schedule.stateAbbreviation" title="State Abbreviation">State Abbreviation:</label>
+                    <select data-ng-model="schedule.stateAbbreviation" data-ng-options="id.entityId as id.entityId for id in states | orderBy:'entityId'" title="State Abbreviation" tabindex="0">
+                       <option value="" >Select...</option>
+                    </select>
+                </span>
+            </li>               
+            <li>
+                <span class="district-auto-complete">
+                    <label class="control-label-required" for="schedule.institutionIdentifier" title="Institution">Institution:</label>
+                    <input data-institution-auto-complete-schedule type="text" 
+                    placeholder="Search..." 
+                    data-ng-model="institution"
+                    data-typeahead="entity as entity.entityId + ' - ' + entity.entityName for entity in filterInstitutions($viewValue, schedule.stateAbbreviation, 10)" 
+                    data-typeahead-wait-ms="200" 
+                    data-typeahead-editable="true" 
+                    data-typeahead-input-formatter="formatInstitutionLabel($model)"
+                    data-typeahead-on-select="changeInstitution({institution:$item})" 
+                    alt="Institution" 
+                    tabindex="0" />  
+                 </span>               
+            </li>         
+            <li>
+             <span  class="datepicker"> 
+                    <label class="control-label-required" for="schedule.startDate" title="Begin Date">Begin Date:</label>
+                    <span class="icon-chevron-calendar" style="width:14px"></span>
+                    <input type="text" name="schedule.startDate"  data-date-parser data-datepicker-popup="{{format}}" 
+                      data-is-open="startDate.opened" data-show-weeks="false"  data-ng-model="schedule.startDate" alt="Begin Date" tabindex="0" />
+             </span>                  
+            </li>  
+            <li>
+             <span  class="datepicker"> 
+                    <label class="control-label-required" for="schedule.endDate" title="End Date">End Date:</label>
+                    <span class="icon-chevron-calendar" style="width:14px"></span>
+                    <input type="text" name="schedule.endDate"  data-date-parser data-datepicker-popup="{{format}}" 
+                      data-is-open="endDate.opened" data-show-weeks="false" data-ng-model="schedule.endDate" alt="End Date" tabindex="0" />
+             </span>
+            </li> 
+            <li>
+                <span> 
+                    <label class="control-label-required" for="schedule.scheduleName" title="Name">Name:</label>
+                     <input type="text" name="schedule.scheduleName" data-ng-model="schedule.scheduleName" alt="Name" tabindex="0" />
+                </span>
+            </li>            
+        </ul>  
+
+        <button type="button" class="boxBtn" data-ng-show="scheduleForm.$dirty" data-ng-click="schedule(schedule)" tabindex="0">
+            <span class="btnIcon icon_sprite icon_save2 ng-class:{ajax_indicator:savingIndicator}" aria-hidden="true"></span>
+            <span class="btnText">Schedule</span>
+        </button>
+     
+        <button type="button" class="boxBtn" data-ng-click="cancel()" tabindex="0">
+            <span class="btnIcon icon_sprite icon_cancel2" aria-hidden="true"></span>
+            <span class="btnText">Cancel</span>
+        </button>
+    </div>
+
+</div>
+<div class="clear"></div>
+
+ 

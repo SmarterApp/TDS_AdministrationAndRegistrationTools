@@ -1,0 +1,222 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <parent>
+    <groupId>org.opentestsystem.delivery</groupId>
+    <artifactId>test-reg-parent</artifactId>
+    <version>R01.00.69</version>
+  </parent>
+  <artifactId>testreg.rest</artifactId>
+  <packaging>war</packaging>
+  
+  <name>Smarter Balanced #11 Test Registration Component - REST</name>
+  
+    <dependencies>
+
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-webmvc</artifactId>
+            <version>${spring.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.springframework</groupId>
+                    <artifactId>spring-aop</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-web</artifactId>
+            <version>${spring.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>commons-fileupload</groupId>
+            <artifactId>commons-fileupload</artifactId>
+            <version>${commons-fileupload.version}</version>
+        </dependency>
+
+        <!-- need this for @Configuration -->
+        <dependency>
+            <groupId>cglib</groupId>
+            <artifactId>cglib</artifactId>
+            <version>${cglib.version}</version>
+        </dependency>
+
+        <!-- intra-project dependencies -->
+        <dependency>
+            <groupId>org.opentestsystem.delivery</groupId>
+            <artifactId>test-reg-domain</artifactId>
+            <version>${project.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.springframework</groupId>
+                    <artifactId>spring-aop</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        
+        <dependency>
+            <groupId>org.opentestsystem.delivery</groupId>
+            <artifactId>test-reg-persistence</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        
+        <dependency>
+            <groupId>org.opentestsystem.shared</groupId>
+            <artifactId>rest-api-generator</artifactId>
+            <version>${rest-api-generator.version}</version>
+            <type>jar</type>
+        </dependency>
+
+        <dependency>
+            <groupId>org.opentestsystem.shared</groupId>
+            <artifactId>rest-api-generator</artifactId>
+            <version>${rest-api-generator.version}</version>
+            <type>test-jar</type>
+            <scope>test</scope>
+        </dependency>
+       
+        <dependency>
+            <groupId>org.opentestsystem.shared</groupId>
+            <artifactId>prog-mgmnt-client</artifactId>
+            <version>${progman-client.version}</version>
+        </dependency>
+        
+        <dependency>
+            <groupId>org.opentestsystem.shared</groupId>
+            <artifactId>prog-mgmnt-client-null-impl</artifactId>
+            <version>${progman-client.version}</version>
+        </dependency>
+        
+        <dependency>
+            <groupId>javax.servlet</groupId>
+            <artifactId>jstl</artifactId>
+            <version>${jstl.library.version}</version>
+        </dependency>
+		<dependency>
+		    <groupId>com.lowagie</groupId>
+		    <artifactId>itext</artifactId>
+		    <version>2.1.7</version>
+            
+            <exclusions>
+                <exclusion>
+                    <groupId>bouncycastle</groupId>
+                    <artifactId>bcmail-jdk14</artifactId>
+                </exclusion>
+                
+                <exclusion>
+                    <groupId>bouncycastle</groupId>
+                    <artifactId>bcprov-jdk14</artifactId>
+                </exclusion>
+                
+                <exclusion>
+                    <groupId>bouncycastle</groupId>
+                    <artifactId>bctsp-jdk14</artifactId>
+                </exclusion>
+            
+            </exclusions>
+            
+		</dependency>
+        
+ 		<!-- POI for @Excel parsing -->
+        <dependency>
+            <groupId>org.apache.poi</groupId>
+            <artifactId>poi</artifactId>
+            <version>${apache-poi.version}</version>
+        </dependency>
+         <dependency>
+            <groupId>org.apache.poi</groupId>
+            <artifactId>poi-excelant</artifactId>
+            <version>${apache-poi.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.poi</groupId>
+            <artifactId>poi-ooxml</artifactId>
+            <version>${apache-poi.version}</version>
+        </dependency>
+ 
+ 
+      	<!-- guava utility -->
+        <dependency>
+            <groupId>com.google.guava</groupId>
+            <artifactId>guava</artifactId>
+            <version>${guava.version}</version>
+        </dependency>                   
+    		<!-- OPEN CSV -->
+        <dependency>
+            <groupId>net.sf.opencsv</groupId>
+            <artifactId>opencsv</artifactId>
+            <version>${open-csv.version}</version>
+        </dependency>  
+        
+        <dependency>
+            <groupId>org.opentestsystem.shared</groupId>
+            <artifactId>monitoring-alerting.client-interfaces</artifactId>
+            <version>${sb11-mna-client.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.opentestsystem.shared</groupId>
+            <artifactId>monitoring-alerting.client-null-impl</artifactId>
+            <version>${sb11-mna-client.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.opentestsystem.shared</groupId>
+            <artifactId>monitoring-alerting.client</artifactId>
+            <version>${sb11-mna-client.version}</version>
+            <type>test-jar</type>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.opentestsystem.shared</groupId>
+            <artifactId>monitoring-alerting.client</artifactId>
+            <version> ${sb11-mna-client.version}</version>
+        </dependency>
+               
+    </dependencies>
+
+    <build>
+        <plugins>
+
+            <!-- tell maven to build both WAR and JAR. We pull JAR in the integration-test project. use <classifier>classes</classifier> in a dependency to pull JAR file in to another project. -->
+            <plugin>
+                <artifactId>maven-war-plugin</artifactId>
+                <version>${maven-war-plugin.version}</version>
+                <configuration>
+                    <attachClasses>true</attachClasses>
+                    <classesClassifier>classes</classesClassifier>
+	                <archive>
+	                    <manifest>
+	                        <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
+	                    </manifest>
+	                    <manifestEntries>
+	                        <Specification-Version>${project.version}</Specification-Version>
+	                        <Implementation-Version>${BUILD_NUMBER}</Implementation-Version>
+	                        <Implementation-Date>${BUILD_ID}</Implementation-Date>
+	                        <Implementation-Identifier>${GIT_COMMIT}</Implementation-Identifier>
+	                        <Implementation-Url>${BUILD_URL}</Implementation-Url>
+	                    </manifestEntries>
+	                </archive>
+                </configuration>
+            </plugin>
+            
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <configuration>
+                  <argLine>-Xmx1024m</argLine>
+                </configuration>
+            </plugin>
+        </plugins>
+
+        <resources>
+            <resource>
+                <directory>src/main/resources</directory>
+            </resource>
+        </resources>
+    </build>
+  
+</project>

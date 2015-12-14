@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:mongo="http://www.springframework.org/schema/data/mongo" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xmlns:int="http://www.springframework.org/schema/integration"
+    xsi:schemaLocation="
+                http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+                http://www.springframework.org/schema/data/mongo http://www.springframework.org/schema/data/mongo/spring-mongo-1.1.xsd
+                http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
+                http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd
+                http://www.springframework.org/schema/integration http://www.springframework.org/schema/integration/spring-integration-3.0.xsd">
+
+    <bean id="restPropertyConfigurer" class="org.springframework.context.support.PropertySourcesPlaceholderConfigurer">
+        <!-- this allows for missing resources files, specifically the ones defined in env vars -->
+        <property name="ignoreResourceNotFound" value="true"/>
+        <!-- this allows blank entries  in the specified .properties files -->
+        <property name="ignoreUnresolvablePlaceholders" value="true"/>
+        <property name="locations">
+            <list>
+                <value>classpath:gpg.properties</value>
+                <value>classpath:dwgen.properties</value>
+                <value>classpath:mongo-dw.properties</value>
+            </list>
+        </property>
+    </bean>
+    
+    <int:bridge input-channel="dataWarehouseOutputSbac"
+                output-channel="testChannelSbac"/>
+                
+    <int:bridge input-channel="dataWarehouseOutputLocal"
+                output-channel="testChannelLocal"/>
+
+    <int:channel id="testChannelSbac">
+            <int:queue/>
+    </int:channel>
+    
+    <int:channel id="testChannelLocal">
+            <int:queue/>
+    </int:channel>
+    
+    <bean id="objectMapper" class="org.springframework.http.converter.json.Jackson2ObjectMapperFactoryBean" >
+        <property name="indentOutput" value="true"/>
+        <property name="simpleDateFormat" value="yyyy-MM-dd'T'HH:mm:ss.SSSZ"/>
+    </bean>
+    
+    <aop:aspectj-autoproxy proxy-target-class="false"/>
+    <context:annotation-config/>
+
+    <mongo:db-factory id="mongoDbFactory" dbname="test" host="localhost" port="55556" />
+
+    <!-- placeholder for testing -->
+    <mongo:mongo id="testreg-mongo" />
+    
+    <bean id="validator" class="org.springframework.validation.beanvalidation.LocalValidatorFactoryBean"/>
+    
+    <bean id="alertBeacon" class="org.opentestsystem.delivery.testreg.transformer.MockAlertBeacon"/>
+    
+</beans>

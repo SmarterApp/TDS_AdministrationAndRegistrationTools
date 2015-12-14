@@ -1,0 +1,109 @@
+<span class="boxIcon icon_sprite icon_view1"></span>
+<div data-ng-repeat="error in errors">
+    <div><span class="icon_sprite icon_error error"></span>{{error}}</div>
+</div>
+
+
+<div class="boxTitle"><h2 tabindex="-1">{{entityNameLabels['District']}} Search</h2></div>
+<div>
+    <div data-searchable data-search-url="'district'" data-search-params="searchParams"  data-search-response="searchResponse">
+        <div class="fieldGroup">
+            <h5 tabindex="-1">Search Filters</h5>
+            <ul class="entityLayout">
+                
+             <li>
+
+                <span class="district-auto-complete">
+                   <label class="control-label" for="searchParams.entityId" title="Local Education Agency Identifier">{{xwalk('District ID')}}:</label>
+                   <input district-search-auto-complete type="text" 
+                    placeholder="Search..." 
+                    data-ng-model="entityId"
+                    data-typeahead="entity as entity.entityId+ ' - ' + entity.entityName for entity in filterDistricts($viewValue, 20, true)" 
+                    data-typeahead-wait-ms="200" 
+                    data-typeahead-editable="true" 
+                    data-typeahead-input-formatter="formatDistrictLabelId($model)"
+                    data-typeahead-on-select="changeDistrictId($item)"  
+                    alt="Local Education Agency Identifier" 
+                    tabindex="0" />  
+                 </span>                              
+            </li>
+            <li>
+              <span class="district-auto-complete">
+                   <label class="control-label" for="searchParams.entityName" title="Organization Name">{{xwalk('District Name')}}:</label>
+                   <input district-search-auto-complete type="text" 
+                    placeholder="Search..." 
+                    data-ng-model="entityName"
+                    data-typeahead="entity as entity.entityName+ ' - ' + entity.entityId for entity in filterDistricts($viewValue, 20, false)" 
+                    data-typeahead-wait-ms="200" 
+                    data-typeahead-editable="true" 
+                    data-typeahead-input-formatter="formatDistrictLabelName($model)"
+                    data-typeahead-on-select="changeDistrictName($item)" 
+                    alt="Organization Name" 
+                    tabindex="0" />  
+                 </span>                             
+            </li>
+
+            <!-- using size of 3 which includes the "Select..." -->
+            <div data-ng-hide="states.length < 3">
+                <li>
+                    <span>
+                        <label class="control-label" for="searchParams.stateAbbreviation" title="State Abbreviation">{{xwalk('State Abbreviation')}}:</label>
+                         <select  data-ng-model="searchParams.stateAbbreviation" data-ng-options="state.entityId as state.entityId for state in states | orderBy:'entityId'" title="State Abbreviation" tabindex="0">
+                             <option value="">Select...</option>
+                         </select>
+                    </span>
+                </li>
+            </div>
+
+            </ul>
+            <button type="button" type="button" class="boxBtn" data-search-on-click  data-active-indicator="searchResponse.searching" tabindex="0">
+                <span class="btnIcon icon_sprite icon_reTry2 ng-class:{ajax_indicator:activeIndicator}" aria-hidden="true"></span>
+                <span class="btnText">Search</span>
+            </button>
+            <button type="button" type="button" class="boxBtn"  data-ng-click="createNew()" tabindex="0">
+                <span class="btnIcon icon_sprite icon_saveAdd2" aria-hidden="true"></span> <span class="btnText">New</span>
+            </button>	
+            <div data-export="districts"></div>	            
+        </div>
+        
+        <div data-pageable data-paging-info="searchResponse"  data-search-params="searchParams" data-change-page="changePage()">
+            <table class="dataTable" data-accessible-table role="grid">
+                <colgroup>
+                    <col>
+                    <col>
+                    <col>
+                    <col>
+                    <col>
+                    <col>
+                    <col class="doubleActionColumn">                    
+                </colgroup>
+                <tr role="row">
+                   
+                    <th data-sort-on-click data-sort-column="entityId" class="headerSortUp" scope="col" id="districtIdHeader" title="District ID" >{{xwalk('District ID')}}</th>
+                    <th data-sort-on-click data-sort-column="entityName" scope="col" id="districtNameHeader" title="District Name" >{{xwalk('District Name')}}</th>
+                    <th data-sort-on-click data-sort-column="nationwideIdentifier" scope="col" id="ncesleaidHeader" title="NCESLEAID" >{{xwalk('NCESLEAID')}}</th>
+                    <th data-sort-on-click data-sort-column="parentEntityType" scope="col" id="parentEntityTypeHeader" title="Parent Entity Type" >{{xwalk('Parent Entity Type')}}</th>
+                    <th data-sort-on-click data-sort-column="parentEntityId" scope="col" id="parentEntityNameHeader" title="Parent Entity Name" >{{xwalk('Parent Entity Name')}}</th>
+                    <th data-sort-on-click data-sort-column="stateAbbreviation" scope="col" id="stateAbbrevHeader" title="State Abbreviation" >{{xwalk('State Abbreviation')}}</th>
+                    <th scope="col" id="actionHeader" title="Edit"></th>
+                </tr>
+                <tr data-ng-repeat="district in searchResponse.searchResults" role="row">
+                    <td role="gridcell" aria-labelledby="districtIdHeader">{{district.entityId}}</td>
+                    <td role="gridcell" aria-labelledby="districtNameHeader">{{district.entityName}}</td>
+                    <td role="gridcell" aria-labelledby="ncesleaidHeader">{{district.nationwideIdentifier}}</td>
+                    <td role="gridcell" aria-labelledby="parentEntityTypeHeader">{{entityNameLabels[entityHierarchyRef[district.parentEntityType]]}}</td>
+                    <td class="ng-class:{ajax_indicator:savingIndicator}" role="gridcell" aria-labelledby="parentEntityNameHeader">{{district.parentId | parentNameFilter:district.parentEntityType:parentEntities}}</td>
+                    <td role="gridcell" aria-labelledby="stateAbbrevHeader">{{district.stateAbbreviation}}</td>
+                    <td class="normalSpace" role="gridcell" aria-labelledby="actionHeader">
+                        <div class="tableButtonGroup">
+                            <button data-ng-click="edit(district)" class="boxBtn" tabindex="0"><span class="btnIcon icon_sprite icon_edit2" aria-hidden="true"></span></button>
+                            <button data-delete-confirmation="{{district.id}}" class="boxBtn" tabindex="0"><span class="btnIcon icon_sprite icon_delete2" aria-hidden="true"></span></button>
+                        </div>
+                    </td>                    
+                </tr>
+            </table>
+        </div>
+        <div data-load-parent-names></div>
+    </div>
+</div>
+<div class="clear"></div>

@@ -1,0 +1,66 @@
+<div data-ng-repeat="error in errors">
+    <div><span class="icon_sprite icon_error error"></span>{{error}}</div>
+</div>
+           
+<div data-ng-form="districtForm" class="formWrapper">
+    <div data-ng-show="districtForm.$dirty" class="dirtynag">* Warning: You have unsaved changes</div>
+    <div class="fieldGroup">
+    <h5 tabindex="-1">{{formAction}} {{entityNameLabels['District']}} Information <span class="control-label-required">Indicates required field</span></h5>
+        <ul class="entityLayout">
+            <li>
+                <span> 
+                    <label class="control-label-required" for="district.entityId" title="District ID">{{xwalk('District ID')}}:</label>
+                    <input type="text" name="district.entityId" data-ng-model="district.entityId" alt="District ID" tabindex="0" />
+                </span>
+            </li>
+            <li>
+                <span> 
+                    <label class="control-label-required" for="district.entityName" title="District Name">{{xwalk('District Name')}}:</label>
+                    <input type="text" name="district.entityName" data-ng-model="district.entityName" alt="District Name" tabindex="0" />
+                </span>
+            </li>
+                    
+            <li>
+                <span>
+                    <label class="control-label-required" for="district.parentEntityType" title="Parent Entity Type">{{xwalk('Parent Entity Type')}}:</label>
+                     <select  data-ng-model="district.parentEntityType" data-load-parent-entities="{{district.parentEntityType}}" data-ng-options="entity.entityId as entity.entityName for entity in entities" title="Parent Entity Type" tabindex="0">
+                      <option value="">Select...</option>
+                    </select>
+                </span>
+            </li>
+            <li>
+                <span>
+                    <label class="control-label-required" for="district.parentEntityId" title="Parent External Id">{{xwalk('Parent External Id')}}:</label>
+                     <select  data-ng-model="district.parentId" data-ng-options="entity.id as entity.entityId + ' - ' + entity.entityName for entity in selectedParentEntities | orderBy:'entityId'"  data-ng-change="setParentInfoOnChange(district.parentId)" title="Parent External Id" tabindex="0">
+                      <option value="">Select...</option>
+                    </select>
+                </span>
+            </li>    
+             <li>
+                <span> 
+                    <label class="control-label" for="district.nationwideIdentifier" title="NCESLEAID">{{xwalk('NCESLEAID')}}:</label>
+                    <input type="text" name="district.nationwideIdentifier" data-ng-model="district.nationwideIdentifier" alt="NCESLEAID" tabindex="0" />                
+                </span>
+            </li>
+            <li>
+                <span> 
+                    <label class="control-label-required" for="district.stateAbbreviation" title="State Abbreviation">{{xwalk('State Abbreviation')}}:</label>
+                     <select  data-ng-model="district.stateAbbreviation" data-ng-options="state.entityId as state.entityId for state in states | orderBy:'entityId'" title="State Abbreviation" tabindex="0">
+                      <option value="">Select...</option>
+                    </select>
+                </span>
+            </li>   
+        </ul>  
+        <button type="button" class="boxBtn" data-ng-show="districtForm.$dirty" data-ng-click="save(district)" tabindex="0">
+            <span class="btnIcon icon_sprite icon_save2 ng-class:{ajax_indicator:savingIndicator}" aria-hidden="true"></span>
+            <span class="btnText">Save</span>
+        </button>
+        <button type="button" class="boxBtn" data-ng-click="cancel()" tabindex="0">
+            <span class="btnIcon icon_sprite icon_cancel2" aria-hidden="true"></span>
+            <span class="btnText">Cancel</span>
+        </button>
+    </div>
+</div>
+
+
+ 

@@ -1,0 +1,73 @@
+
+<div class="modal">
+	<div class="modal-dialog" style="width:750px">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h4 class="modal-title">
+					<span class="glyphicon glyphicon-star"></span> Add/Edit Affinities
+				</h4>
+			</div>
+			 <div data-ng-repeat="error in errors">
+                <div><span class="icon_sprite icon_error error"></span>{{error}}</div>
+            </div>
+			<div class="modal-body">
+				<ng-form name="affinityDialogForm">
+        <div class="tableWrapper">
+            <table class="assessmentTable" style="width:80%;margin:auto">
+                <colgroup>
+                        <col>
+                        <col>
+                        <col style="width:10%"> 
+                        <col class="actionColumn">
+                </colgroup>
+                <tbody>
+                    <tr>
+                        <th>Type</th>
+                        <th>Value</th>
+                        <th>Strict</th>
+                        <th>
+                            <div class="tableButtonGroup">
+                              <button data-ng-click="addAffinity()" class="boxBtn" ><span class="btnIcon icon_sprite icon_saveAdd2"></span></button>
+                            </div>
+                        </th>
+                    </tr>
+                    <tr data-ng-repeat="affinity in affinities">
+                        <td>
+                            <div class="affinityDiv"> 
+	                            <select  data-ng-model="affinity.type"  data-ng-change="setAffinities($index, affinity.type)" data-ng-options="affinityType.id as affinityType.id for affinityType in affinityTypes" >
+	                                <option value="">Select...</option>
+	                            </select>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="affinityDiv"> 
+	                            <select  style="width:180px" data-ng-model="affinity.value"  data-ng-options="affinityValue.id as affinityValue.name for affinityValue in affinityValues[$index]" >
+	                                <option value="">Select...</option>
+	                            </select>
+                            </div>
+                        </td>      
+                                             
+                        <td>
+                            <div class="affinityDiv"> 
+                                <input type="checkbox" data-ng-model="affinity.rule" data-ng-true-value="STRICT" data-ng-false-value="NONSTRICT" /> 
+                            </div>
+                        </td>
+                        <td><div class="tableButtonGroup">
+                                <button data-ng-click="removeAffinity($index)" class="boxBtn"><span class="btnIcon icon_sprite icon_delete2"></span></button>
+                         </div> 
+                         </td>
+                    </tr>
+              </tbody>
+            </table>
+        </div>
+
+				</ng-form>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-default" data-ng-click="cancel()">Cancel</button>
+				<button type="button" class="btn btn-default" data-ng-click="addAffinities()">OK</button>
+			</div>
+		</div>
+	</div>
+</div>
+'

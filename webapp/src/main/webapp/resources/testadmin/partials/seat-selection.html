@@ -1,0 +1,46 @@
+
+<div class="modal">
+	<div class="modal-dialog" style="width:750px">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h4 class="modal-title">
+					<span class="glyphicon glyphicon-star"></span> Add Seat Configuration
+				</h4>
+			</div>
+			 <div data-ng-repeat="error in errors">
+                <div><span class="icon_sprite icon_error error"></span>{{error}}</div>
+            </div>
+			<div class="modal-body">
+				<ng-form name="seatDialogForm">
+			        <div class="tableWrapper">
+			            <table class="dataTable" style="width:100%;margin:auto">
+			                <colgroup>	                
+			                    <col style="width:20%">
+			                    <col style="width:20%">
+                                <col style="width:20%">
+                                <col>			                    
+			                </colgroup>
+			                <tr>
+			                    <th>Required Number of Seats</th>
+			                    <th>Available Number of Seats</th>
+			                    <th>Test Platform</th>
+			                    <th>Accessibility Equipment</th>
+			                </tr>
+			                <tr data-ng-repeat="seatConfig in seatConfigurations">
+			                     <td style="text-align:center"><input class="addSeat" type="text" data-ng-model="selectedConfigurations[$index].numberOfSeats"/>
+			                     <td>{{seatConfig.numberOfSeats}}</td>
+			                     <td>{{seatConfig.testPlatform}}</td>
+			                     <td>{{seatConfig.accessibilityEquipments | joinBy}}</td>
+			                </tr>
+			            </table> 
+				    </div>
+				</ng-form>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-default" data-ng-click="cancel()">Cancel</button>
+				<button type="button" class="btn btn-default" data-ng-click="selectSeats()">OK</button>
+			</div>
+		</div>
+	</div>
+</div>
+'

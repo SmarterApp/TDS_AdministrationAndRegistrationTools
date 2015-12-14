@@ -1,0 +1,13 @@
+#placeholder for email settings - note: do not check in real credentials
+testreg.email.active=false
+testreg.email.address.from=user@domain.com
+testreg.email.subject.prefix=DEV EMAIL ONLY - 
+testreg.email.host=
+testreg.email.port=465
+testreg.email.user=user
+testreg.email.password=pass
+testreg.email.smtp.starttls.enable=true
+testreg.email.transport.protocol=smtp
+testreg.email.smtp.auth=true
+testreg.email.smtp.ssl.enable=true
+

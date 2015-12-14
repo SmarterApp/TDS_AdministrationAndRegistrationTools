@@ -1,0 +1,141 @@
+<br><br><br> 
+<div data-ng-repeat="error in errors">
+     <div><span class="icon_sprite icon_error error"></span>{{error}}</div>
+</div>          
+<div data-ng-form="proctorForm" class="formWrapper">
+    <div data-ng-show="proctorForm.$dirty" class="dirtynag">* Warning: You have unsaved changes</div>
+    <div class="fieldGroup">
+    <h5 tabindex="-1">Proctor Information<span class="control-label-required">Indicates required field</span></h5>
+    
+    <div class="home"><div class="testslot"><h2 tabindex="-1">Proctor Affinity</h2></div></div>
+        <div class="tableWrapper">
+            <table class="assessmentTable" style="width:50%;margin:auto" role="grid">
+                <colgroup>
+                        <col>
+                        <col>
+                        <col> 
+                        <col class="actionColumn">
+                </colgroup>
+                <tbody>
+                    <tr role="row">
+                        <th scope="col" id="typeHeader" title="Type">Type</th>
+                        <th scope="col" id="valueHeader" title="Value">Value</th>
+                        <th scope="col" id="strictHeader" title="Strict">Strict</th>
+                        <th scope="col" id="actionHeader" title="Add">
+                            <div class="tableButtonGroup">
+                              <button data-ng-click="addAffinity()" class="boxBtn" tabindex="0"><span class="btnIcon icon_sprite icon_saveAdd2" aria-hidden="true"></span></button>
+                            </div>
+                        </th>
+                    </tr>
+                    <tr data-ng-repeat="affinity in proctor.affinities" role="row">
+                        <td role="gridcell" aria-labelledby="typeHeader">
+                            <select  data-ng-model="affinity.type"  data-ng-change="setAffinities($index, affinity.type)" data-ng-options="affinityType.id as affinityType.id for affinityType in affinityTypes" title="Affinity Type" tabindex="0">
+                                <option value="">Select...</option>
+                            </select>
+                        </td>
+                        <td role="gridcell" aria-labelledby="valueHeader">
+                            <select  data-ng-model="affinity.value"  data-ng-options="affinityValue.id as affinityValue.name for affinityValue in affinityValues[$index]" title="Affinity Value" tabindex="0">
+                                <option value="">Select...</option>
+                            </select>
+                        </td>      
+                                             
+                        <td role="gridcell" aria-labelledby="strictHeader">
+                            <input type="checkbox" data-ng-model="affinity.rule" data-ng-true-value="STRICT" data-ng-false-value="NONSTRICT" alt="Affinity Rule" tabindex="0" /> 
+                        </td>
+                        <td role="gridcell" aria-labelledby="actionHeader"><div class="tableButtonGroup">
+                                <button data-ng-click="removeAffinity($index)" class="boxBtn" tabindex="0"><span class="btnIcon icon_sprite icon_delete2" aria-hidden="true"></span></button>
+                         </div> 
+                         </td>
+                    </tr>
+              </tbody>
+            </table>
+        </div>
+    
+     <div class="home"><div class="testslot"><hr/></div></div>
+        <div class="home"><div class="testslot"><h2 tabindex="-1">Availability Time Periods</h2></div></div>
+        <div class="tableWrapper">
+        	<table class="assessmentTable" style="width:75%;margin:auto">
+        		<colgroup>
+	                    <col>
+	                    <col>
+	                    <col> 
+	                    <col>
+	                    <col>
+	                    <col class="actionColumn">
+	            </colgroup>
+	            <tbody>
+	            	<tr>
+	                    <th style="width:30%" data-ng-class="{'control-label-required' : proctor.availabilityWindow && proctor.availabilityWindow.length > 0}">Start Time</th>
+	                    <th style="width:30%" data-ng-class="{'control-label-required' : proctor.availabilityWindow && proctor.availabilityWindow.length > 0}">End Time</th>
+	                    <th style="width:20%" data-ng-class="{'control-label-required' : proctor.availabilityWindow && proctor.availabilityWindow.length > 0}">Availability</th>
+	                    <th>
+		                    <div class="tableButtonGroup">
+	                          <button data-ng-click="addAvailabilityWindow()" class="boxBtn" tabindex="0"><span class="btnIcon icon_sprite icon_saveAdd2" aria-hidden="true"></span></button>
+	                        </div>
+		                </th>
+	                </tr>
+	                <tr data-ng-repeat="(index, availabilityWindow) in proctor.availabilityWindow">
+	                	<td>
+	                		<div class="centerDiv datepicker"><span class="icon-chevron-calendar"></span>
+		                		<input style="width:150px"
+		                			type="text"  
+		                			name="proctor.availabilityWindow[$index].startDateComponent"  
+		                			data-datepicker-popup="{{format}}"  
+		                			data-show-weeks="false" 
+		                			data-is-open="proctor.availabilityWindow[$index].startDateComponentOpened" 
+		                			data-ng-model="proctor.availabilityWindow[$index].startDateComponent" 
+		                			alt="Start Date" 
+		                			tabindex="0" />
+	                		</div>
+	                		<div class="centerDiv">
+	                			<input style="width:80px" data-ng-model="proctor.availabilityWindow[$index].startTimeComponent" data-ui-timepicker alt="Start Time" tabindex="0" />
+	                		</div>
+	                	</td>
+	                	<td>
+	                		<div class="centerDiv datepicker"><span class="icon-chevron-calendar"></span>
+	                			<input style="width:150px"
+	                				type="text" 
+	                				name="proctor.availabilityWindow[$index].endDateComponent"     
+	                				data-datepicker-popup="{{format}}"  
+	                				data-show-weeks="false" 
+	                				data-is-open="proctor.availabilityWindow[$index].endDateComponentOpened" 
+	                				data-ng-model="proctor.availabilityWindow[$index].endDateComponent" 
+	                				alt="End Date" 
+	                				tabindex="0" />
+               				</div>
+               				<div class="centerDiv">
+	                			<input style="width:80px" data-ng-model="proctor.availabilityWindow[$index].endTimeComponent" data-ui-timepicker alt="End Time" tabindex="0" />
+	                		</div>
+             			</td>
+	                	
+	                	<td><div class="centerDiv">
+	                		<select name="proctor.availabilityWindow[$index].availability" data-ng-model="proctor.availabilityWindow[$index].availability" data-ng-options="availability.id as availability.name for availability in availabilityChoices | orderBy:'id'" title="Availability" tabindex="0">
+                       			<option value="" >Select...</option>
+                    		</select>
+	                		</div>
+	                	</td>
+	                	<td><div class="tableButtonGroup">
+                                <button data-ng-click="removeAvailabilityWindow($index)" class="boxBtn" tabindex="0"><span class="btnIcon icon_sprite icon_delete2" aria-hidden="true"></span></button>
+                         </div> 
+                         </td>
+	                </tr>
+	          </tbody>
+        	</table>
+        </div>
+      <button type="button" class="boxBtn" data-ng-show="proctorForm.$dirty" data-ng-click="save(proctor)" tabindex="0">
+            <span class="btnIcon icon_sprite icon_save2 ng-class:{ajax_indicator:savingIndicator}" aria-hidden="true"></span>
+            <span class="btnText">Save</span>
+        </button>
+     
+        <button type="button" class="boxBtn" data-ng-click="cancel()" tabindex="0">
+            <span class="btnIcon icon_sprite icon_cancel2" aria-hidden="true"></span>
+            <span class="btnText">Cancel</span>
+        </button>
+        </div>
+        
+        
+
+</div>
+<div class="clear"></div>
+
+ 

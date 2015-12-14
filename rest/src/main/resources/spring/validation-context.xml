@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:task="http://www.springframework.org/schema/task"
+    xmlns:aop="http://www.springframework.org/schema/aop" 
+    xmlns:mvc="http://www.springframework.org/schema/mvc"
+    xmlns:util="http://www.springframework.org/schema/util"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+    http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task-3.0.xsd
+    http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd 
+    http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-3.0.xsd 
+    http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-3.2.xsd">
+    
+    <mvc:annotation-driven/> 
+    
+    <import resource="classpath:/spring/entityfile-context.xml" />
+    
+    <bean id="fileUploadValidator" class="org.opentestsystem.delivery.testreg.upload.validator.FileUploadValidator">
+    	<property name="formatValidatorMap">
+    		<map>
+    			<entry key="STATE" 					value-ref="stateFileValidator"/>
+    			<entry key="DISTRICT" 				value-ref="districtFileValidator"/>
+    			<entry key="INSTITUTION" 			value-ref="institutionFileValidator"/>
+    			<entry key="GROUPOFSTATES"  		value-ref="groupOfStatesFileValidator"/>
+    			<entry key="GROUPOFDISTRICTS"   	value-ref="groupOfDistrictsFileValidator"/>
+    			<entry key="GROUPOFINSTITUTIONS"    value-ref="groupOfInstitutionsFileValidator"/>
+                <entry key="USER"                   value-ref="userFileValidator"/>
+                <entry key="STUDENT"                value-ref="studentFileValidator"/>
+                <entry key="STUDENTGROUP"           					value-ref="studentGroupFileValidator"/>
+                <entry key="DESIGNATEDSUPPORTSANDACCOMMODATIONS"         value-ref="accommodationsFileValidator"/>
+                <entry key="EXPLICITELIGIBILITY"  	value-ref="eligibilityFileValidator"/>
+    		</map>
+    	</property>
+    </bean>
+           
+    <!-- Format Validators -->
+    <bean id="stateFileValidator" class="org.opentestsystem.delivery.testreg.upload.validator.fileformat.FileDataValidator">
+    	<constructor-arg name="datasetName" value="STATE"/>
+    	<property name="headers" ref="state"/>
+    </bean>
+    
+    <bean id="districtFileValidator" class="org.opentestsystem.delivery.testreg.upload.validator.fileformat.FileDataValidator">
+    	<constructor-arg name="datasetName" value="DISTRICT"/>
+    	<property name="headers" ref="district"/>
+    </bean>
+    
+    <bean id="institutionFileValidator" class="org.opentestsystem.delivery.testreg.upload.validator.fileformat.FileDataValidator">
+    	<constructor-arg name="datasetName" value="INSTITUTION"/>
+    	<property name="headers" ref="institution"/>
+    </bean>
+    
+    <bean id="groupOfStatesFileValidator" class="org.opentestsystem.delivery.testreg.upload.validator.fileformat.FileDataValidator">
+    	<constructor-arg name="datasetName" value="GROUPOFSTATES"/>
+    	<property name="headers" ref="groupOfStates"/>
+    </bean>
+    
+    <bean id="groupOfDistrictsFileValidator" class="org.opentestsystem.delivery.testreg.upload.validator.fileformat.FileDataValidator">
+    	<constructor-arg name="datasetName" value="GROUPOFDISTRICTS"/>
+    	<property name="headers" ref="groupofDistricts"/>
+    </bean>
+    
+    <bean id="groupOfInstitutionsFileValidator" class="org.opentestsystem.delivery.testreg.upload.validator.fileformat.FileDataValidator">
+    	<constructor-arg name="datasetName" value="GROUPOFINSTITUTIONS"/>
+    	<property name="headers" ref="groupOfInstitutions"/>
+    </bean>
+    
+    <bean id="userFileValidator" class="org.opentestsystem.delivery.testreg.upload.validator.fileformat.FileDataValidator">
+        <constructor-arg name="datasetName" value="USER"/>
+        <property name="headers" ref="user"/>
+    </bean>
+    
+    <bean id="studentFileValidator" class="org.opentestsystem.delivery.testreg.upload.validator.fileformat.FileDataValidator">
+        <constructor-arg name="datasetName" value="STUDENT"/>
+        <property name="headers" ref="student"/>
+    </bean>
+
+    <bean id="studentGroupFileValidator" class="org.opentestsystem.delivery.testreg.upload.validator.fileformat.FileDataValidator">
+        <constructor-arg name="datasetName" value="STUDENTGROUP"/>
+        <property name="headers" ref="studentGroup"/>
+    </bean>
+        
+    <bean id="accommodationsFileValidator" class="org.opentestsystem.delivery.testreg.upload.validator.fileformat.FileDataValidator">
+        <constructor-arg name="datasetName" value="DESIGNATEDSUPPORTSANDACCOMMODATIONS"/>
+        <property name="headers" ref="accommodations"/>
+    </bean>
+ 
+  	<bean id="eligibilityFileValidator" class="org.opentestsystem.delivery.testreg.upload.validator.fileformat.FileDataValidator">
+        <constructor-arg name="datasetName" value="EXPLICITELIGIBILITY"/>
+        <property name="headers" ref="explicitEligibility"/>
+    </bean> 
+          
+    <bean id="excelUtils"			    class="org.opentestsystem.delivery.testreg.upload.ExcelUtils"/>
+    
+</beans>

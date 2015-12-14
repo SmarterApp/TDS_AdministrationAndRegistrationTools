@@ -1,0 +1,104 @@
+
+<span class="boxIcon icon_sprite icon_view1"></span>
+<div data-ng-repeat="error in errors">
+    <div><span class="icon_sprite icon_error error"></span>{{error}}</div>
+</div>
+
+<div class="boxTitle"><h2>{{entityNameLabels['GroupOfDistricts']}} Search</h2></div>
+<div>
+    <div data-searchable data-search-url="'groupofdistrict'" data-search-params="searchParams" data-search-response="searchResponse">
+        <div class="fieldGroup">
+            <h5 tabindex="-1">Search Filters</h5>
+            <ul class="entityLayout">
+	         <li>
+                <span class="entity-auto-complete">
+                   <label class="control-label" for="searchParams.entityId" title="Group Of Districts Identifier">{{xwalk('Group Of Districts Identifier')}}:</label>
+                   <input group-of-districts-search-auto-complete type="text" 
+                    placeholder="Search..." 
+                    data-ng-model="entityId"
+                    data-typeahead="entity as entity.entityId+ ' - ' + entity.entityName for entity in filterGroupofDistricts($viewValue, 20, true)" 
+                    data-typeahead-wait-ms="200" 
+                    data-typeahead-editable="true" 
+                    data-typeahead-input-formatter="formatGroupofDistrictsLabelId($model)"
+                    data-typeahead-on-select="changeGroupofDistrictsId($item)" 
+                    alt="Group Of Districts Identifier" 
+                    tabindex="0" />  
+                 </span>                              
+            </li>
+            <li>
+              <span class="entity-auto-complete">
+                   <label class="control-label" for="searchParams.entityName" title="Group Of Districts Name">{{xwalk('Group Of Districts Name')}}:</label>
+                   <input group-of-districts-search-auto-complete type="text" 
+                    placeholder="Search..." 
+                    data-ng-model="entityName"
+                    data-typeahead="entity as entity.entityName+ ' - ' + entity.entityId for entity in filterGroupofDistricts($viewValue, 20, false)" 
+                    data-typeahead-wait-ms="200" 
+                    data-typeahead-editable="true" 
+                    data-typeahead-input-formatter="formatGroupofDistrictsLabelName($model)"
+                    data-typeahead-on-select="changeGroupofDistrictsName($item)" 
+                    alt="Group Of Districts Name" 
+                    tabindex="0" />  
+                 </span>                             
+            </li>
+
+            <!-- using size of 3 which includes the "Select..." -->
+            <div data-ng-hide="states.length < 3">
+                <li>
+                <span>
+                    <label class="control-label" for="searchParams.stateAbbreviation" title="State Abbreviation">{{xwalk('State Abbreviation')}}:</label>
+                     <select  data-ng-model="searchParams.stateAbbreviation" data-ng-options="state.entityId as state.entityId for state in states | orderBy:'entityId'" title="State Abbreviation" tabindex="0">
+                         <option value="">Select...</option>
+                     </select>
+                </span>
+                </li>
+            </div>
+
+            </ul>
+            <button type="button" type="button" class="boxBtn" data-search-on-click  data-active-indicator="searchResponse.searching" tabindex="0">
+                <span class="btnIcon icon_sprite icon_reTry2 ng-class:{ajax_indicator:activeIndicator}" aria-hidden="true"></span>
+                <span class="btnText">Search</span>
+            </button>
+            <button type="button" type="button" class="boxBtn"  data-ng-click="createNew()" tabindex="0">
+                <span class="btnIcon icon_sprite icon_saveAdd2" aria-hidden="true"></span> <span class="btnText">New</span>
+            </button>
+            <div data-export="groupofdistricts"></div>
+        </div>
+        
+        <div data-pageable data-paging-info="searchResponse"  data-search-params="searchParams" data-change-page="changePage()">
+            <table class="dataTable" data-accessible-table role="grid">
+                <colgroup>
+                    <col>
+                    <col>
+                    <col>
+                    <col>
+                    <col>       
+                    <col class="doubleActionColumn">            
+                </colgroup>
+                <tr role="row">
+                    <th data-sort-on-click data-sort-column="entityId" class="headerSortUp" scope="col" id="idHeader" title="Group Of Districts Identifier">{{xwalk('Group Of Districts Identifier')}}</th>
+                    <th data-sort-on-click data-sort-column="entityName" scope="col" id="nameHeader" title="Group Of Districts Name">{{xwalk('Group Of Districts Name')}}</th>
+                    <th data-sort-on-click data-sort-column="parentEntityType" scope="col" id="entityTypeHeader" title="Parent Entity Type">{{xwalk('Parent Entity Type')}}</th>
+                    <th data-sort-on-click data-sort-column="parentEntityId" scope="col" id="entityNameHeader" title="Parent Entity Name">{{xwalk('Parent Entity Name')}}</th>
+                    <th data-sort-on-click data-sort-column="stateAbbreviation" scope="col" id="stateAbbrevHeader" title="State Abbreviation">{{xwalk('State Abbreviation')}}</th>
+                    <th scope="col" id="actionHeader" title="Edit"></th>
+                </tr>
+                <tr data-ng-repeat="groupOfDistricts in searchResponse.searchResults" role="row">
+                    <td role="gridcell" aria-labelledby="idHeader">{{groupOfDistricts.entityId}}</td>
+                    <td role="gridcell" aria-labelledby="nameHeader">{{groupOfDistricts.entityName}}</td>
+                    <td role="gridcell" aria-labelledby="entityTypeHeader">{{entityNameLabels[entityHierarchyRef[groupOfDistricts.parentEntityType]]}}</td>
+                    <td class="ng-class:{ajax_indicator:savingIndicator}" role="gridcell" aria-labelledby="entityNameHeader">{{groupOfDistricts.parentId | parentNameFilter:groupOfDistricts.parentEntityType:parentEntities}}</td>
+                    <td role="gridcell" aria-labelledby="stateAbbrevHeader">{{groupOfDistricts.stateAbbreviation}}</td>
+                    <td class="normalSpace" role="gridcell" aria-labelledby="actionHeader">
+                        <div class="tableButtonGroup">
+                            <button data-ng-click="edit(groupOfDistricts)" class="boxBtn" tabindex="0"><span class="btnIcon icon_sprite icon_edit2" aria-hidden="true"></span></button>
+                            <button data-delete-confirmation="{{groupOfDistricts.id}}" class="boxBtn" tabindex="0"><span class="btnIcon icon_sprite icon_delete2" aria-hidden="true"></span></button>
+                        </div>
+                    </td>                       
+                </tr>
+            </table>
+        </div>
+        <div data-load-parent-names></div>
+    </div>
+</div>
+
+<div class="clear"></div>

@@ -1,0 +1,89 @@
+<div  data-ng-include src='"resources/testadmin/partials/leftnav.html"'></div>
+<div class="secContent"> 
+
+<span class="boxIcon icon_sprite icon_view1"></span>
+<div data-ng-repeat="error in errors">
+     <div><span class="icon_sprite icon_error error"></span>{{error}}</div>
+</div>
+
+<div class="boxTitle"><h2> Facility  Search</h2></div>
+<div>
+	<div data-searchable data-search-url="'facility'"  data-search-params="searchParams" data-search-response="searchResponse">
+		<div class="fieldGroup">
+			<h5>Search Filters</h5>
+			<ul>
+	            <li>
+	                <span> 
+	                    <label class="control-label" for="facility.facilityName" >Name:</label>
+	                     <input type="text" name="facility.facilityName" data-ng-model="searchParams.facilityName" />
+	                </span>
+	            </li>
+	            <li>
+	                <span> 
+	                    <label class="control-label" for="facility.stateAbbreviation" title="State Abbreviation">State Abbreviation:</label>
+	                    <select data-ng-model="searchParams.stateAbbreviation" data-ng-options="id.entityId as id.entityId for id in states | orderBy:'entityId'" title="State Abbreviation" tabindex="0">
+	                       <option value="" >Select...</option>
+	                    </select>
+	                </span>
+	            </li>   	            
+	            <li>
+	                <span class="district-auto-complete">
+	                    <label class="control-label" for="facility.institutionIdentifier">{{xwalk('Institution Identifier')}}:</label>
+	                    <input data-institution-auto-complete-schedule type="text" 
+	                    placeholder="Search..." 
+	                    data-ng-model="institution"
+	                    data-typeahead="entity as entity.entityId + ' - ' + entity.entityName for entity in filterInstitutions($viewValue, searchParams.stateAbbreviation, 10)" 
+	                    data-typeahead-wait-ms="200" 
+	                    data-typeahead-editable="true" 
+	                    data-typeahead-input-formatter="formatInstitutionLabel($model)"
+	                    data-typeahead-on-select="changeInstitution({institution:$item})" />  
+	                 </span>               
+	            </li> 
+	            <li><span></span></li>	            
+			</ul>
+			<button type="button" type="button" class="boxBtn" data-search-on-click	data-active-indicator="searchResponse.searching">
+				<span class="btnIcon icon_sprite icon_reTry2 ng-class:{ajax_indicator:activeIndicator}"></span>
+				<span class="btnText">Search</span>
+			</button>
+			<button type="button" type="button" class="boxBtn"	data-ng-click="createNew()">
+				<span class="btnIcon icon_sprite icon_saveAdd2"></span> <span class="btnText">New</span>
+			</button>
+		</div>
+        
+		<div data-pageable data-paging-info="searchResponse"	data-search-params="searchParams" data-change-page="changePage()">
+			<table class="dataTable">
+				<colgroup>
+					<col>
+					<col>
+					<col>
+					<col>
+					<col>
+					<col class="doubleActionColumn">
+				</colgroup>
+				<tr>
+					<th data-sort-on-click data-sort-column="facilityName" class="headerSortUp">Name</th>
+					<th data-sort-on-click data-sort-column="institutionIdentifier" >{{xwalk('Institution Identifier')}}</th>
+                    <th data-sort-on-click data-sort-column="stateAbbreviation" >State Abbreviation</th>					
+					<th data-sort-on-click data-sort-column="location" >Location</th>
+					<th>Total Seats</th>
+                    <th></th>
+				</tr>
+				<tr data-ng-repeat="facility in searchResponse.searchResults" >
+					<td>{{facility.facilityName}}</td>
+					<td>{{facility.institutionIdentifier}}</td>
+					<td>{{facility.stateAbbreviation}}</td>
+					<td>{{facility.location}}</td>
+					<td>{{facility.seats.length}}</td>
+			      <td class="normalSpace">
+                        <div class="tableButtonGroup">
+                            <button data-ng-click="edit(facility)" class="boxBtn"><span class="btnIcon icon_sprite icon_edit2"></span></button>
+                            <button data-delete-confirmation="{{facility.id}}" class="boxBtn"><span class="btnIcon icon_sprite icon_delete2"></span></button>                          
+                        </div>
+                    </td>
+				</tr>
+			</table>
+		</div>
+	</div>
+</div>
+</div>
+<div class="clear"></div>

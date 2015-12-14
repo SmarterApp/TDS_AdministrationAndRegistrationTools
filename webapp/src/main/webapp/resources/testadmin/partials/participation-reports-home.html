@@ -1,0 +1,16 @@
+  <div  data-ng-include src='"resources/testreg/partials/leftnav.html"'></div>
+ 
+    <div class="secContent"> 
+    <h5>Participation Reports<span class="control-label-required">Indicates required field</span></h5>
+
+<div class="tabInfo">
+    <span><a data-ng-class="{selected : isActiveLink('participationReports.summary')}" data-ng-click="goToFormsPage('participationReports.summary')" data-enter="goToFormsPage('participationReports.summary')" tabindex="0">Summary</a> |</span>
+    <span><a  data-ng-class="{selected : isActiveLink('participationReports.detail')}" data-ng-click="goToFormsPage('participationReports.details')" data-enter="goToFormsPage('participationReports.details')" tabindex="0">Details</a> |</span>
+</div>
+   <div class="clear"></div>
+    <div data-ui-view="reportsview"></div>
+   </div> 
+</div>
+ 
+
+

@@ -1,0 +1,107 @@
+
+<div class="fieldGroup" >
+    <h5>Schedule Summary {{type}} Filter<span class="control-label-required">Indicates required field</span></h5>
+        <ul class="{{cssClass}}">
+           <li data-ng-show="type == 'Report'">
+                <span> 
+                    <label class="control-label" for="aggregateLevel" > Aggregate Level :</label>
+                  <select  
+                  			data-ng-model="aggregateLevel"  
+                  			data-ng-options="entity.id as entity.name for entity in aggregateLevels">
+                        <option value="">Select...</option>
+                    </select>                               
+                </span>
+            </li> 
+             <li data-ng-show="reportTypeFlag('STATE')">
+                <span > 
+                    <label class="control-label" for="stateId" >  {{getEntityLabel('State')}}:</label>                  
+                  	<select  
+                  			data-ng-model="stateId"  data-ng-options="entity.id as entity.entityId + ' - ' + entity.entityName for entity in states" 
+                  		    data-ng-change="selectedEntityType(stateId,'STATE')" 
+                  		    data-ng-hide="(userEntityType=='STATE')">
+                        <option value="">Select...</option>
+                    </select>
+                    <span class="viewSpanLeft" style="{{spanWidth}}">{{userEntityType=='STATE' && states[0].entityName || ''}}</span>                    
+                </span>
+            </li>
+            <li data-ng-show="reportTypeFlag('DISTRICT')">
+                <span > 
+                    <label class="control-label" for="districtId" > {{getEntityLabel('District')}}:</label>
+                    
+                  <select   
+                  			data-ng-model="districtId"  
+                  			data-ng-options="entity.id as entity.entityId + ' - ' + entity.entityName for entity in districts"  
+                  			data-ng-change="selectedEntityType(districtId,'DISTRICT')" 
+                  			data-ng-hide="(userEntityType=='DISTRICT')">
+                        <option value="">Select...</option>
+                    </select>
+                    {{userEntityType=='DISTRICT' && districts[0].entityName || '' }}
+                </span>
+            </li>                    
+            <li data-ng-show="reportTypeFlag('INSTITUTION')">
+                <span > 
+                    <label class="control-label" for="participationReport.institutionsId" > {{getEntityLabel('Institution')}}:</label>
+                    	
+                    <select  
+                    		data-ng-model="institutionId"  
+                    		data-ng-options="entity.id as entity.entityId + ' - ' + entity.entityName for entity in institutions" 
+                    		data-ng-change="selectedEntityType(institutionId,'INSTITUTION')"                    
+                    		data-ng-hide="(userEntityType=='INSTITUTION')">
+                        <option value="">Select...</option>
+                    </select>
+                     {{userEntityType=='INSTITUTION' && institutions[0].entityName || ''}}
+                </span>
+            </li>
+            <li data-ng-show="reportTypeFlag('INSTITUTION') && aggregateLevel == 'PROCTOR' || type == 'Search'">
+                <span > 
+                    <label class="control-label" for="facilityId" > Facility:</label>
+                    	
+                    <select  
+                    		data-ng-model="facilityId"  
+                    		data-ng-options="entity.facilityName as entity.facilityName + ' - ' + entity.facilityName for entity in facilities">
+                        <option value="">Select...</option>
+                    </select>
+                </span>
+            </li>            
+            <li data-ng-show="reportTypeFlag('INSTITUTION') && aggregateLevel == 'Student'">
+                <span > 
+                    <label class="control-label" for="studentId" > {{getEntityLabel('Student')}}:</label>
+                    	
+                    <select  
+                    		data-ng-model="studentId"  
+                    		data-ng-options="entity.id as entity.entityId + ' - ' + entity.lastName + ', '+ entity.firstName for entity in students" 
+                    		         
+                    		>
+                        <option value="">Select...</option>
+                    </select>
+                </span>
+            </li>
+            <li>
+  	           <span  class="datepicker" >
+                        <label class="control-label" for="schduleDate" style="span: 3251px, 24px"> Schedule Date :</label>
+                        
+                        <span class="icon-chevron-calendar" style="width:14px"></span>
+                        <input                       		
+                        		type="text" 
+                        		name="scheduledDate"  
+                        		data-datepicker-popup="{{format}}"  
+                        		data-is-open="scheduledDate.opened" 
+                        		data-show-weeks="false" 
+                        		data-ng-model="scheduledDate"/>
+                        		</span>
+                    
+	            </li> 
+	            <li data-ng-show="aggregateLevel != 'Student'"></li>
+            </ul>
+
+        <button type="button" class="boxBtn"  
+        		data-ng-click="doAction()" 
+        		data-ng-show="isValuePresent(studentId) || isValuePresent(facilityId) && isDateValue(scheduledDate)">
+            <span class="btnIcon icon_sprite icon_save2" ></span>
+            <span class="btnText" data-ng-show="type == 'Report'">Create Report</span>
+            <span class="btnText" data-ng-show="type == 'Search'">Find Schedule</span>
+        </button>
+</div>
+ 
+
+ 

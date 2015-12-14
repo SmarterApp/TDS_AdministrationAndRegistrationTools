@@ -1,0 +1,203 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:task="http://www.springframework.org/schema/task"
+    xmlns:aop="http://www.springframework.org/schema/aop" 
+    xmlns:mvc="http://www.springframework.org/schema/mvc"
+    xmlns:util="http://www.springframework.org/schema/util"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+    http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task-3.0.xsd
+    http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd 
+    http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-3.0.xsd 
+    http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-3.2.xsd">
+
+
+	<util:map id="defaultCrosswalkMap" key-type="org.opentestsystem.delivery.testreg.domain.FormatType">
+		<entry key="STATE"     								value-ref="stateDisplay"/>
+		<entry key="DISTRICT"		    					value-ref="districtDisplay"/>
+   		<entry key="INSTITUTION"		   					value-ref="institutionDisplay"/>
+   		<entry key="GROUPOFSTATES"		   					value-ref="groupOfStatesDisplay"/>
+   		<entry key="GROUPOFDISTRICTS"						value-ref="groupOfDistrictsDisplay"/>
+   		<entry key="GROUPOFINSTITUTIONS"					value-ref="groupOfInstitutionsDisplay"/>
+   		<entry key="USER"		   							value-ref="userDisplay"/>
+   		<entry key="STUDENT"		   						value-ref="studentDisplay"/>
+   		<entry key="DESIGNATEDSUPPORTSANDACCOMMODATIONS"    value-ref="accommodationsDisplay"/>
+   		<entry key="EXPLICITELIGIBILITY"   					value-ref="eligibilityDisplay"/>
+   		<entry key="STUDENTGROUP"		   					value-ref="studentGroupDisplay"/>
+   		<entry key="ASSESSMENT"		   						value-ref="assessmentDisplay"/>
+   		<entry key="CLIENT"		   							value-ref="clientDisplay"/>
+   		<entry key="NULL"		   							value-ref="nullDisplay"/>
+	</util:map>
+
+	<util:list id="stateDisplay">
+   		<value>State Abbreviation</value>
+   		<value>State Name</value>
+   		<value>Parent Entity Type</value>
+   		<value>Parent Entity Name</value>
+   		<value>Parent External Id</value>
+    </util:list>
+
+	<util:list id="districtDisplay">
+   		<value>District ID</value>
+   		<value>District Name</value>
+   		<value>NCESLEAID</value>
+   		<value>Parent Entity Type</value>
+   		<value>Parent Entity Name</value>
+   		<value>State Abbreviation</value>
+   		<value>Parent External Id</value>
+    </util:list>
+
+	<util:list id="institutionDisplay">
+   		<value>Institution Identifier</value>
+   		<value>Name of Institution</value>
+   		<value>NCES Institution Id</value>
+   		<value>Parent Entity Type</value>
+   		<value>Parent Entity Name</value>
+   		<value>State Abbreviation</value>
+   		<value>Parent External Id</value>
+    </util:list>
+
+	<util:list id="groupOfStatesDisplay">
+   		<value>Group Of States Identifier</value>
+   		<value>Group Of States Name</value>
+   		<value>Parent Entity Type</value>
+   		<value>Parent Entity Name</value>
+   		<value>Parent External Id</value>
+    </util:list>
+
+	<util:list id="groupOfDistrictsDisplay">
+   		<value>Group Of Districts Identifier</value>
+   		<value>Group Of Districts Name</value>
+   		<value>Parent Entity Type</value>
+   		<value>Parent Entity Name</value>
+   		<value>State Abbreviation</value>
+   		<value>Parent External Id</value>
+    </util:list>
+    
+    <util:list id="groupOfInstitutionsDisplay">
+   		<value>Group Of Institutions Identifier</value>
+   		<value>Group Of Institutions Name</value>
+   		<value>Parent Entity Type</value>
+   		<value>Parent Entity Name</value>
+   		<value>State Abbreviation</value>
+   		<value>Parent External Id</value>
+    </util:list>
+    
+    <util:list id="studentDisplay">
+   		<value>SSID</value>
+   		<value>Organization Name</value>
+   		<value>Name of Institution</value>
+   		<value>State Abbreviation</value>
+   		<value>Last Name</value>
+   		<value>First Name</value>
+   		<value>Middle Name</value>
+   		<value>Sex</value>
+   		<value>Birth Date</value>
+   		<value>Entry Grade Level</value>
+   		<value>Institution Identifier</value>
+   		<value>District Identifier</value>
+   		<value>External SSID</value>
+   		<value>Confirmation Code</value>
+   		<value>Hispanic or Latino Ethnicity</value>
+   		<value>Grade Level When </value>
+   		<value>Grade Level When Assessed</value>
+   		<value>American Indian Or Alaska Native</value>
+   		<value>Sex</value>
+   		<value>Asian</value>
+   		<value>Language Code</value>
+   		<value>Black Or African American</value>
+   		<value>First Entry Date Into US School</value>
+   		<value>White</value>
+   		<value>Limited English Proficiency Entry Date</value>
+   		<value>Native Hawaiian Or Other Pacific Islander</value>
+   		<value>LEP Exit Date</value>
+   		<value>Demographic Race Two Or More Races</value>
+   		<value>Title III Language Instruction Program</value>
+   		<value>IDEA Indicator</value>
+   		<value>Primary Disability Type</value>
+   		<value>LEPStatus</value>
+   		<value>Section 504 Status</value>
+   		<value>Economic Disadvantage Status</value>
+   		<value>English Language Proficiency Level</value>
+   		<value>Migrant Status</value>
+    </util:list>
+    
+    <util:list id="accommodationsDisplay">
+    	<value>Subject</value>
+    	<value>American Sign Language</value>
+    	<value>Color Choices</value>
+    	<value>Closed Captioning</value>
+    	<value>Language</value>
+    	<value>Masking</value>
+    	<value>Permissive Mode</value>
+    	<value>Print On Demand</value>
+    	<value>Zoom</value>
+    	<value>Streamlined Interface</value>
+    	<value>Text to Speech</value>
+    	<value>Translation</value>
+    	<value>Non-Embedded Designated Supports</value>
+    	<value>Non-Embedded Accommodations</value>
+    	<value>Other</value>
+    </util:list>
+    
+    <util:list id="eligibilityDisplay"/>
+	
+	<util:list id="userDisplay">
+		<value>First Name</value>
+		<value>Last Name</value>
+		<value>Email Address</value>
+		<value>Telephone Number</value>
+		<value>Role</value>
+		<value>Associated Entity Name</value>
+		<value>Responsible Entity Type</value>
+		<value>Role Associations</value>
+		<value>State Abbreviation</value>
+		<value>Associated Entity Id</value>
+	</util:list>
+	
+	<util:list id="assessmentDisplay">
+		<value>Save</value>
+		<value>Assessment Name</value>
+		<value>Subject Code</value>
+		<value>Grade Level</value>
+		<value>Version</value>
+		<value>Update</value>
+		<value>Identifier</value>
+		<value>Name</value>
+		<value>Test Windows</value>
+		<value>Start Window</value>
+		<value>End Window</value>
+		<value>Opportunities</value>
+		<value>Total Global Opportunities</value>
+		<value>Delay Rule</value>
+		<value>Eligibility Type</value>
+		<value>Academic Year (yyyy)</value>
+		<value>Start Date</value>
+		<value>End Date</value>
+		<value>Total Opportunities</value>
+		<value>Rule Field</value>
+		<value>Operator</value>
+		<value>Value</value>
+		<value>Rule Type</value>
+		<value>Link Type</value>
+		<value>Flags</value>
+	</util:list>
+	
+	<util:list id="studentGroupDisplay">
+		<value>Name of Institution</value>
+		<value>Email</value>
+		<value>Student Group Name</value>
+		<value>State Abbreviation</value>
+		<value>Responsible District Identifier</value>
+		<value>Institution Identifier</value>
+		<value>Grades</value>
+		<value>First Name</value>
+		<value>Last Name</value>
+		<value>Student ID</value>
+		<value></value>
+	</util:list>
+	
+	<util:list id="clientDisplay"/>
+	<util:list id="nullDisplay"/>
+	
+</beans>

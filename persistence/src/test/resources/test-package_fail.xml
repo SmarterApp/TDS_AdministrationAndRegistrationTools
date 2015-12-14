@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testspecification publishdate="2013-12-17T14:52:07.591-06:00" publisher="SB" purpose="REGISTRATION" version="1.0">
+   <identifier uniqueid="52aa220f4c03d57b40a4a20f" />
+   <property label="label0" name="name0" sequence="sequence0" value="value0"/>
+   
+   <registration>
+      <registrationform>
+         <identifier uniqueid="id" label="label" name="name" version="version"/>
+         <poolproperty itemcount="itemcount0" label="label0" property="property0" value="value0">
+            <comment>comment0</comment>
+            <description>description0</description>
+         </poolproperty>
+         <property label="label0" name="name0" sequence="sequence0" value="value0"/>
+      </registrationform>
+      <registrationsegment position="1">
+         <identifier uniqueid="52aa220f4c03d57b40a4a210"/>
+      </registrationsegment>
+      <comment>comment</comment>
+      <poolproperty itemcount="itemcount0" label="label0" property="property0" value="value0">
+         <comment>comment0</comment>
+         <description>description0</description>
+      </poolproperty>
+   </registration>
+</testspecification>
