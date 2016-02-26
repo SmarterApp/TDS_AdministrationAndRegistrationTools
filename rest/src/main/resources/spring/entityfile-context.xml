@@ -88,6 +88,7 @@
    		<value>StateName</value>
    		<value>ParentEntityType</value>
    		<value>ParentExternalId</value>
+   		<value>ParentEntityName</value>
    		<value>Delete</value>
     </util:list>
     
@@ -97,6 +98,7 @@
    		<value>NCESLEAID</value>
    		<value>ParentEntityType</value>
    		<value>ParentExternalId</value>
+   		<value>ParentEntityName</value>
    		<value>StateAbbreviation</value>
    		<value>Delete</value>
     </util:list>
@@ -107,6 +109,7 @@
    		<value>ParentEntityType</value>
    		<value>NCESInstitutionId</value>
    		<value>ParentExternalId</value>
+   		<value>ParentEntityName</value>
    		<value>StateAbbreviation</value>
    		<value>Delete</value>
     </util:list>
@@ -116,6 +119,7 @@
     	<value>GroupOfStatesName</value>
     	<value>ParentEntityType</value>
     	<value>ParentExternalId</value>
+    	<value>ParentEntityName</value>
     	<value>Delete</value>
     </util:list>
     
@@ -124,6 +128,7 @@
      	<value>GroupOfDistrictsName</value>
      	<value>ParentEntityType</value>
      	<value>ParentExternalId</value>
+     	<value>ParentEntityName</value>
      	<value>StateAbbreviation</value>
      	<value>Delete</value>
      </util:list>
@@ -133,6 +138,7 @@
     	<value>GroupOfInstitutionsName</value>
     	<value>ParentEntityType</value>
     	<value>ParentExternalId</value>
+    	<value>ParentEntityName</value>
     	<value>StateAbbreviation</value>
     	<value>Delete</value>
     </util:list>
@@ -144,6 +150,7 @@
     	<value>TelephoneNumber</value>
     	<value>Role</value>
     	<value>AssociatedEntityID</value>
+    	<value>AssociatedEntityName</value>
     	<value>Level</value>
     	<value>StateAbbreviation</value>
     	<value>Delete</value>
@@ -197,20 +204,7 @@
     	<value>StudentIdentifier</value>
     	<value>StateAbbreviation</value>
     	<value>Subject</value>
-    	<value>AmericanSignLanguage</value>
-    	<value>ColorChoices</value>
-    	<value>ClosedCaptioning</value>
-    	<value>Language</value>
-    	<value>Masking</value>
-    	<value>PermissiveMode</value>
-    	<value>PrintOnDemand</value>
-    	<value>Zoom</value>
-    	<value>StreamlinedInterface</value>
-        <value>TexttoSpeech</value>
-        <value>Translation</value>
-        <value>NonEmbeddedDesignatedSupports</value>
-        <value>NonEmbeddedAccommodations</value>
-        <value>Other</value>
+    	<value>AccommodationCodes</value>
     </util:list>
     
     <util:list id="explicitEligibility">

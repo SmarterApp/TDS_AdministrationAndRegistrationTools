@@ -3,7 +3,7 @@
   <parent>
     <groupId>org.opentestsystem.delivery</groupId>
     <artifactId>test-reg-parent</artifactId>
-    <version>R01.00.72</version>
+    <version>0.0.1-SNAPSHOT</version>
   </parent>
   <artifactId>test-reg-persistence</artifactId>
   
@@ -60,7 +60,7 @@
         <dependency>
             <groupId>org.opentestsystem.authoring</groupId>
             <artifactId>test-spec-bank-client</artifactId>
-            <version>R01.00.72</version>
+            <version>${tsb-client.version}</version>
         </dependency>   
         <dependency>
             <groupId>org.springframework.data</groupId>
