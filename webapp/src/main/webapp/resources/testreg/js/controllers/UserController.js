@@ -70,10 +70,27 @@ testreg.controller(	'UserController',['$scope','$state','$timeout','loadedData',
 									}
 								}
 							};
+							
 							$scope.removeRoleAssociation = function (index) {
-								$scope.user.roleAssociations.splice(index,1);
-								$scope.entities.splice(index,1);
-								$scope.userForm.$dirty=true;
+								if($scope.user.roleAssociations.length != 0 && $scope.user.roleAssociations.length-1 > 0){
+									$scope.user.roleAssociations.splice(index,1);
+									$scope.entities.splice(index,1);
+									$scope.userForm.$dirty=true;
+								}else{
+									var confirm = prompt("WARNING: If you delete this role, user will be permanently deleted from ART. To confirm, please type DELETE here:");
+									if(confirm=='DELETE'){
+										$scope.user.roleAssociations.splice(index,1);
+										$scope.entities.splice(index,1);
+										if($scope.user.roleAssociations.length == 0 && angular.isDefined($scope.user.id)) {
+											UserService.deleteUser($scope.user.id).then(
+													function(response) {
+														$scope.userForm.$setPristine();
+														$state.transitionTo("searchUser");
+													});	
+										}
+										$scope.userForm.$dirty=true;
+									}
+								}
 							};			
 							
 							$scope.addRoleAssociation = function(){
@@ -111,28 +128,28 @@ testreg.controller(	'UserController',['$scope','$state','$timeout','loadedData',
                             $scope.sync = function () {
                                 UserService.syncUser($scope.user.id).then(
                                     function() {
-                                        confirm("A request to SYNC the user is in progress!")
+                                        confirm("A request to SYNC the user is in progress!");
                                     });
                             };
 
                             $scope.resetPassword = function () {
                                 UserService.resetPasswordUser($scope.user.id).then(
                                     function() {
-                                        confirm("A request to RESET the user's password is in progress!")
+                                        confirm("Your name will be provided to the user via email along with password reset request.");
                                     });
                             };
 
                             $scope.lock = function () {
                                 UserService.lockUser($scope.user.id).then(
                                     function() {
-                                        confirm("A request to LOCK the user is in progress!")
+                                        confirm("A request to LOCK the user is in progress!");
                                     });
                             };
 
                             $scope.unlock = function () {
                                 UserService.unlockUser($scope.user.id).then(
                                     function() {
-                                       confirm("A request to UNLOCK the user is in progress!")
+                                       confirm("A request to UNLOCK the user is in progress!");
                                     });
                             };
 
@@ -147,3 +164,4 @@ testreg.controller(	'UserController',['$scope','$state','$timeout','loadedData',
 												}
 											});
 						} ]);
+

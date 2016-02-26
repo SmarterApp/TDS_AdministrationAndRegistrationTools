@@ -151,12 +151,21 @@ testreg.factory("StudentService", function($http, $filter){
 					];
 	    },
 	    
+	    selectExportTypes : function() {
+			return  [
+			         	{name:"studentsPlusAccommodations",description:"Students Plus Accommodations"},
+			         	{name:"studentsOnly",description:"Students"},
+			         	{name:"accommodationsOnly",description:"Accommodations"},
+			         	{name:"explicitEligibility",description:"Explicit Eligibility"}
+					];
+	    },
+	    
 	    getFormattedDate : function (date) {
 	    	if (date) {
 	    		return date.split("T")[0];
 	    	} else {
 	    		return date;
 	    	}
-	    }
+	    }    
     };
 });
