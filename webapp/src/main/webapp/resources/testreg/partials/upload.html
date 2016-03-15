@@ -22,7 +22,7 @@
                       		<label class="control-label" title="Entity">Entity:</label>
                       		<div>                    		
                       		<label  data-ng-show="formatTypeDisabled" title="Format Type">{{formatType}}</label>
-                      		<select data-ng-model="formatType" data-ng-options="entity.entityName.toUpperCase() as entityNameLabels[entity.entityName] for entity in entities |  filter: {entityName: '!ExplicitEligibility'} | filter: {entityName: '!StudentGroup'}" data-ng-show="!formatTypeDisabled" title="Format Type" tabindex="0">
+                      		<select data-ng-model="formatType" data-ng-options="entity.entityName.toUpperCase() as entityNameLabels[entity.entityName] for entity in entities |  filter: {entityName: '!StudentGroup' && '!ExplicitEligibility'}" data-ng-show="!formatTypeDisabled" title="Format Type" tabindex="0">
                       		<option value="" >Select...</option>
                       		</select>
                       	</div>

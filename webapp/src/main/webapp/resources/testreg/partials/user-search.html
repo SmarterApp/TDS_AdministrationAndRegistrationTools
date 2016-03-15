@@ -81,16 +81,14 @@
             </li>
             <li><span></span></li>
 			</ul>
-			<div class="buttonRow">
 			<button type="button" type="button" class="boxBtn" data-search-on-click	data-active-indicator="searchResponse.searching" tabindex="0">
 				<span class="btnIcon icon_sprite icon_reTry2 ng-class:{ajax_indicator:activeIndicator}" aria-hidden="true"></span>
 				<span class="btnText">Search</span>
 			</button>
 			<button type="button" type="button" class="boxBtn"	data-ng-click="addUser()" tabindex="0">
-				<span class="btnIcon icon_sprite icon_saveAdd2" aria-hidden="true"></span> <span class="btnText">Add New User</span>
+				<span class="btnIcon icon_sprite icon_saveAdd2" aria-hidden="true"></span> <span class="btnText">New</span>
 			</button>	
-			 <div class="positioningContainer" data-export="users"></div>
-			</div>     				
+			 <div data-export="users"></div>     				
 		</div>
        
 		<div data-pageable data-paging-info="searchResponse"	data-search-params="searchParams" data-change-page="changePage()">
@@ -107,7 +105,7 @@
                     <col class="doubleActionColumn">                    
 				</colgroup>
 				<tr role="row">
-					<th rowspan="2" data-sort-on-click data-sort-column="firstName"  scope="col" id="firstNameHeader" title="First Name">{{xwalk('First Name')}}</th>
+					<th rowspan="2" data-sort-on-click data-sort-column="firstName" scope="col" id="firstNameHeader" title="First Name">{{xwalk('First Name')}}</th>
 					<th rowspan="2" data-sort-on-click data-sort-column="lastName" scope="col" id="lastNameHeader" title="Last Name">{{xwalk('Last Name')}}</th>
 					<th rowspan="2" data-sort-on-click data-sort-column="email" class="headerSortUp" scope="col" id="emailHeader" title="Email Address">{{xwalk('Email Address')}}</th>
 					<th rowspan="2" data-sort-on-click data-sort-column="phone" scope="col" id="phoneHeader" title="Telephone Number">{{xwalk('Telephone Number')}}</th>

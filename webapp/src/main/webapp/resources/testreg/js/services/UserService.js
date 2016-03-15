@@ -100,11 +100,6 @@ testreg.factory("UserService", function($http) {
             }).then(this.successHandler, this.errorHandler);
         },
 	    
-        getCurrentUser : function(){
-			var url = baseUrl + 'user/currentUser';
-		    return  $http.get(url).then(this.successHandler, this.errorHandler);
-    	},
-        
 	    findUserBySearchVal : function(searchVal,stateId,pageSize,searchBy) {
 
 	    	var params = JSON.parse( '{ "'+searchBy+'": "'+searchVal+'", "roleAssociations.stateAbbreviation":"'+stateId+'", "pageSize":"'+pageSize+'", "sortKey": "'+ searchBy +'","sortDir":"asc" }' );
