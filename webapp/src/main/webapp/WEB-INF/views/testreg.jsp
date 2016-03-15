@@ -21,7 +21,7 @@
   
 <body>
     <input type="hidden" id="baseUrl" value="${baseUrl}" />
-       <div class="container">
+       <div class="container" >
        <a id="skipNavigation" class="skipToContent" data-ng-click="#mainContent" href="#mainContent" target="_self">Skip to Main Content</a>
           <div class="header">
             <div class="info"  data-ng-controller="TenantUserController">
@@ -34,18 +34,15 @@
 	                        </ul>
 	                     </li>  
                      </security:authorize>
-                     <li id="systemsDropdown"><span class="sprite"></span>Resources
+                     <li id="systemsDropdown">Resources
                         <ul data-ng-controller="HomeController">
-                            <li class="submenu" data-ng-click="go('/downloadTemplate')" tabindex="0" data-ng-show="hasPermissionForDownloadTemplate()" >Download Templates</li>
+                            <li class="submenu" data-ng-click="go('/downloadTemplate')" tabindex="0">Download Templates</li>
                             <li class="submenu" data-ng-click="openUserGuide('${userguideLocation}')" tabindex="0">User Guide</li>
                         </ul>
                      </li>                                                          
-                     <li id="systemsDropdown"><span class="sprite"></span>${user}
-	                        <ul data-ng-controller="HomeController">
-	                            <li class="submenu" data-ng-click="editProfile()" tabindex="0" data-ng-show="hasPermissionForEditProfile()">Edit Profile</li>
-	                            <li class="submenu"><a href="saml/logout" class="submenu-option">Logout</a></li>
-	                        </ul>
-	                 </li> 
+                     <li>Logged in as: 
+                         ${user}
+                     </li>
                      <li>Tenant: 
                          <select data-ng-model="selectedTenant" data-ng-change="changeTenant()" data-ng-options="tenant.type + ' - ' + tenant.name for tenant in tenantContainer" tabindex="0">
                             
@@ -62,7 +59,6 @@
                 </div>
             </div>
         </div>
-        
         <div id="mainContent" data-ng-controller="HomeController" class="content" role="main" tabindex="-1">
                 <div data-ui-view="testregview"></div>
         </div>

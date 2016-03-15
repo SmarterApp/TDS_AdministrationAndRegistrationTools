@@ -161,15 +161,9 @@ testreg.directive("export", function($window, $timeout, EntityService){
 		scope:true,
 		templateUrl: 'resources/testreg/partials/export.html',
 		controller: function($scope, $attrs) {
-			$scope.IsVisible = false;
 	  		$scope.exportSearchResults = function(fileType) {
-	  			var  endpoint;
-	  			if($attrs.export=='students' && angular.isDefined($scope.mode)){
-	  				endpoint = $attrs.export + "/" + $scope.mode + "." + fileType;
-	  			}else if($attrs.export!='students'){
-	  				endpoint = $attrs.export + "." + fileType;
-	  			}
-	  			
+	  	
+	  			var  endpoint = $attrs.export + "." + fileType;
 	  			//Query URL for current page should less than one
 	  			$scope.searchParams.currentPage = $scope.searchParams.currentPage-1;
 	  			var paramValues = $.param($scope.searchParams);
@@ -184,39 +178,9 @@ testreg.directive("export", function($window, $timeout, EntityService){
                 $timeout(function() {
                 	$scope.searchParams.currentPage = '0';
     	  			var paramValues = $.param($scope.searchParams);
-    	  			var  endpoint;
-    	  			if($attrs.export=='students' && angular.isDefined($scope.mode)){
-    	  				endpoint = $attrs.export + "/" + $scope.mode + "." + fileType + '?pageSize='+$scope.pageLimit+"&"+paramValues;
-    	  			}else if($attrs.export!='students'){
-    	  				endpoint = $attrs.export + "." + fileType + '?pageSize='+$scope.pageLimit+"&"+paramValues;
-    	  			}
+    	  			var  endpoint = $attrs.export + "." + fileType + '?pageSize='+$scope.pageLimit+"&"+paramValues;
     	  			$window.open(baseUrl + endpoint);
                 }, 300);
-	  		};
-	  		
-	  		$scope.entityExport = function(){
-	  			$scope.IsVisible = $scope.IsVisible ? false : true;
-	  		};
-	  		
-	  		$scope.exportSResults = function(reportType,reportFormat) {
-	  			if(reportType == 'currentPage') {
-	  				$scope.exportSearchResults(reportFormat);
-	  			} else {
-	  				$scope.exportAllResults(reportFormat);
-	  			}
-	  		};
-	  		
-	  		$scope.isAllOptionsChecked = function(reportType,reportFormat) {
-	  			var isExportSaveVisible = false;
-	  			if(angular.isDefined(reportType) && angular.isDefined(reportFormat)){
-	  				isExportSaveVisible = true;
-	  			}
-	  			
-	  			return isExportSaveVisible;
-	  		};
-	  		
-	  		$scope.cancelContainer = function(reportType,reportFormat) {
-	  			$scope.IsVisible = false;
 	  		};
 		},
 		link:function(scope, element, attrs){}

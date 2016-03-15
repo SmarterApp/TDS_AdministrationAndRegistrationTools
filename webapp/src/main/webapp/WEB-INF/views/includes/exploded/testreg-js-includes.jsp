@@ -56,8 +56,6 @@
   	
   	<script src="resources/testreg/js/controllers/UserController.js"></script>
   	
-  	<script src="resources/testreg/js/controllers/UserProfileController.js"></script>
-  	
     <script src="resources/testreg/js/services/DistrictService.js"></script>  
     
     <script src="resources/testreg/js/services/InstitutionService.js"></script> 

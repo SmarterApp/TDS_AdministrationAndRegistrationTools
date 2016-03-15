@@ -59,7 +59,7 @@ $stateProvider
                 templateUrl: 'resources/testreg/partials/no-tenant.html'
             }
         }
-    })
+    })    
      .state('root', {
         url: "/", // root route
         views: {
@@ -358,25 +358,6 @@ $stateProvider
 	        }
 	    }
 	})
-	 .state('userProfile', {
-        url: "/user/profile",
-        resolve: {
-        	inputData: function ($state) {
-    			return $state.current.searchParams;
-        	}, 
-        	prevActiveLink: function ($state) {
-    			return $state.$current.self.name;
-        	},          	
-          	loadedData:sbacUserResolver,
-          	roles:rolesResolver,
-        },      
-        views: {
-            "testregview": {
-                templateUrl: 'resources/testreg/partials/profile-form.html',
-                controller: 'UserProfileController'
-            }
-         }
-     })
      .state('editUser', {
          url: "/user/{userId}", // root route
         resolve:{
@@ -453,7 +434,6 @@ $stateProvider
     			return $state.$current.self.name;
         	},          	
         	loadedData:studentResolver,
-        	
         },
 	    views: {
 	        "testregview": {
@@ -726,7 +706,6 @@ var assessmentResolver = ['$stateParams','AssessmentService', function ($statePa
 		};
 	}											
 	}];
-
 var importAssessmentResolver = ['$stateParams','AssessmentService', function ($stateParams, AssessmentService) {
 	return AssessmentService.getAssessmentData();
 	}];
@@ -734,11 +713,6 @@ var importAssessmentResolver = ['$stateParams','AssessmentService', function ($s
 var clientResolver = ['ClientService', function (ClientService) {
 			return ClientService.loadClient(); 
 	}];
-
-var sbacUserResolver = ['UserService', function (UserService) {
-	return UserService.getCurrentUser(); 
-}];
-
 var subjectResolver = ['$stateParams','SubjectService', function ($stateParams, SubjectService) {
 	
 	if($stateParams.subjectId) {
@@ -750,5 +724,3 @@ var subjectResolver = ['$stateParams','SubjectService', function ($stateParams, 
 		};
 	}											
 	}];
-
-

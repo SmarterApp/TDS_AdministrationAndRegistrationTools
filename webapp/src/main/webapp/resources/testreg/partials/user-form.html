@@ -14,25 +14,25 @@
              <li>
                 <span> 
                     <label class="control-label-required" for="user.firstName" title="First Name">{{xwalk('First Name')}}:</label>
-                    <input type="text" data-ng-model="user.firstName" alt="First Name" tabindex="0" data-ng-class="{'no-edit-allowed': user.hasRolesOutside}"/>
+                    <input type="text" data-ng-model="user.firstName" alt="First Name" tabindex="0" />
                 </span>
             </li>
              <li>
                 <span> 
                     <label class="control-label-required" for="user.lastName" title="Last Name">{{xwalk('Last Name')}}:</label>
-                    <input type="text" data-ng-model="user.lastName" alt="Last Name" tabindex="0" data-ng-class="{'no-edit-allowed': user.hasRolesOutside}"/>
+                    <input type="text" data-ng-model="user.lastName" alt="Last Name" tabindex="0" />
                </span>
             </li> 
              <li>
                 <span> 
                     <label class="control-label-required" for="user.email" title="Email Address">{{xwalk('Email Address')}}:</label>
-                    <input type="text" data-ng-model="user.email" alt="Email Address" tabindex="0" data-ng-class="{'no-edit-allowed': user.hasRolesOutside}"/>
+                    <input type="text" data-ng-model="user.email" alt="Email Address" tabindex="0" />
                </span>
             </li>  
              <li>
                 <span> 
                     <label class="control-label" for="user.phone" title="Telephone Number">{{xwalk('Telephone Number')}}:</label>
-                    <input type="text" data-ng-model="user.phone" alt="Telephone Number" tabindex="0" data-ng-class="{'no-edit-allowed': user.hasRolesOutside}"/>
+                    <input type="text" data-ng-model="user.phone" alt="Telephone Number" tabindex="0" />
                 </span>
             </li>  
         </ul>
@@ -40,10 +40,6 @@
         <div data-ng-hide="!user.changeEventExportError">
             This user was not successfully provisioned due to the following error(s):<br>
             <div class="user-error-alert">{{user.changeEventExportError}}</div>
-        </div>
-        
-        <div data-ng-show="user.hasRolesOutside" class="role-message">
-            This user has roles outside your jurisdiction, so you cannot edit their names, email and phone number.<br/>Please contact the user (or a higher-level administrator) and have them change this user's information.
         </div>
 
         <h5 tabindex="-1">Role Associations</h5>

@@ -1,4 +1,5 @@
  <div  data-ng-include src='"resources/testreg/partials/leftnav.html"'></div>
+
  <div class="secContent"> 
  <span class="boxIcon icon_sprite icon_view1"></span>
 <div data-ng-repeat="error in errors">
@@ -90,64 +91,14 @@
                 </span>
             </li> 
             </ul>
-
-				<div class="buttonRow">
-					<button type="button" type="button" class="boxBtn"
-						data-search-on-click
-						data-active-indicator="searchResponse.searching" tabindex="0">
-						<span
-							class="btnIcon icon_sprite icon_reTry2 ng-class:{ajax_indicator:activeIndicator}"
-							aria-hidden="true"></span> <span class="btnText">Search</span>
-					</button>
-					<button type="button" type="button" class="boxBtn"
-						data-ng-click="createNew()" tabindex="0">
-						<span class="btnIcon icon_sprite icon_saveAdd2" aria-hidden="true"></span>
-						<span class="btnText">Add New Student</span>
-					</button>
-					<div class="positioningContainer">
-						<button tabindex="0" 
-							class="boxBtn ng-isolate-scope ng-scope"
-							type="button" data-ng-click="studentExport()">
-							<span aria-hidden="true"
-								class="btnIcon icon_sprite icon_export ng-class:{ajax_indicator:activeIndicator}"></span>
-							<span class="btnText">Export</span>
-						</button>
-						
-						<ul class="exportContainer" data-ng-show="IsVisible">
-							<li id="this"><input type="radio" name="thisPage" data-ng-model = "reportType"
-								id="thisPage" tabindex="1" value="currentPage"> <label
-								for="thisPage"> Export Current page</label>
-								 <input type="radio" name="allResults" data-ng-model = "reportType" id="allResults" tabindex="1" value="allResults">
-								 <label for="allResults">
-									Export all results</label>
-							</li>
-							<li>
-							<select  data-ng-model="mode" data-ng-options="selectExportType.name as selectExportType.description for selectExportType in selectExportTypes" >
-									<option value="">Select...</option>
-							</select>
-							</li>
-							<li>
-							<input type="radio" name="asCSV" id="asCSV" tabindex="1" data-ng-model = "reportFormat"
-								value="csv"> <label for="asCSV "> As CSV &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-							</label> 
-							<input
-								type="radio" name="asExcel" id="asExcel" tabindex="1" data-ng-model = "reportFormat"
-								value="xls"> <label for="asExcel"> As Excel &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </label>
-								
-							</li>
-							<li>
-								<button class="boxBtn ng-isolate-scope ng-scope" data-ng-click="cancelContainer(reportType,mode,reportFormat)">
-									<span aria-hidden="true"
-										class="btnIcon icon_sprite icon_delete2"></span>Cancel
-								</button>
-								<button data-ng-show="isAllOptionsChecked(reportType,mode,reportFormat)" data-ng-click="exportSResults(reportType,mode,reportFormat)">
-									<span aria-hidden="true" class="btnIcon icon_sprite icon_save2" ></span>Submit
-								</button>
-							</li>
-							</ul>
-					</div>
-				</div>
-             </div>           
+            <button type="button" type="button" class="boxBtn" data-search-on-click  data-active-indicator="searchResponse.searching" tabindex="0">
+                <span class="btnIcon icon_sprite icon_reTry2 ng-class:{ajax_indicator:activeIndicator}" aria-hidden="true"></span>
+                <span class="btnText">Search</span>
+            </button>
+            <button type="button" type="button" class="boxBtn"  data-ng-click="createNew()" tabindex="0">
+                <span class="btnIcon icon_sprite icon_saveAdd2" aria-hidden="true"></span> <span class="btnText">New</span>
+            </button>	
+            <div data-export="students"></div>	            
         </div>
         
         <div data-pageable data-paging-info="searchResponse"  data-search-params="searchParams" data-change-page="changePage()">
@@ -200,8 +151,8 @@
         </div>
         <div data-load-parent-names></div>
     </div>
-    
-    </div>   
-<div class="clear"></div>
 </div>
-   
+</div>  
+
+</div>
+<div class="clear"></div>

@@ -64,23 +64,23 @@
 
 
 <util:map id="headersMap" key-type="java.lang.String" value-type="java.lang.String[]">
-    <entry key="STATE"          value="StateAbbreviation, StateName, ParentEntityType, ParentExternalId, ParentEntityName, Delete"/>
-    <entry key="DISTRICT"       value="LocalEducationAgencyIdentifier, OrganizationName, NCESLEAID, ParentEntityType, ParentExternalId, ParentEntityName, StateAbbreviation, Delete"/>
-    <entry key="INSTITUTION"    value="InstitutionIdentifier, NameofInstitution, ParentEntityType, NCESInstitutionId, ParentExternalId, ParentEntityName, StateAbbreviation, Delete"/>
-    <entry key="GROUPOFSTATES"  value="GroupOfStatesIdentifier, GroupOfStatesName, ParentEntityType, ParentExternalId, ParentEntityName, Delete"/>
-    <entry key="GROUPOFDISTRICTS"  value="GroupOfDistrictsIdentifier, GroupOfDistrictsName, ParentEntityType, ParentExternalId, ParentEntityName, StateAbbreviation, Delete"/>
-    <entry key="GROUPOFINSTITUTIONS"    value="GroupOfInstitutionsIdentifier, GroupOfInstitutionsName, ParentEntityType, ParentExternalId, ParentEntityName, StateAbbreviation, Delete"/>
-    <entry key="USER"           value="FirstName, LastOrSurname, ElectronicMailAddress, TelephoneNumber, Role, AssociatedEntityID, AssociatedEntityName, Level, StateAbbreviation, Delete"/>
-    <entry key="DESIGNATEDSUPPORTSANDACCOMMODATIONS"   value="Student Identifier,State Abbreviation,Subject, AccommodationCodes"/>
-    <entry key="STUDENT" 		 value="StateAbbreviation, ResponsibleDistrictIdentifier, ResponsibleInstitutionIdentifier, LastOrSurname, FirstName, MiddleName, BirthDate, SSID, AlternateSSID, GradeLevelWhenAssessed, Sex, HispanicOrLatinoEthnicity, AmericanIndianOrAlaskaNative, Asian, 
-    								BlackOrAfricanAmerican, White, NativeHawaiianOrOtherPacificIslander, DemographicRaceTwoOrMoreRaces, IDEAIndicator, 
-    								LEPStatus, Section504Status, EconomicDisadvantageStatus, LanguageCode, EnglishLanguageProficiencyLevel, MigrantStatus, 
-    								FirstEntryDateIntoUSSchool, LimitedEnglishProficiencyEntryDate, LEPExitDate, TitleIIILanguageInstructionProgramType, PrimaryDisabilityType,
-    								Subject, AccommodationCodes, Delete 
+    <entry key="STATE"          value="State Abbreviation, State Name, Parent Entity Type, Parent Entity Name"/>
+    <entry key="DISTRICT"       value="Local Education Agency Identifier, Organization Name, NCESLEAID, Parent Entity Type, Parent Entity Name, State Abbreviation"/>
+    <entry key="INSTITUTION"    value="Institution Identifier, Name of Institution, Parent Entity Type, NCES InstitutionId, Parent Entity Name, State Abbreviation"/>
+    <entry key="GROUPOFSTATES"  value="Group Of States Identifier, Group Of States Name, Parent Entity Type, Parent Entity Name"/>
+    <entry key="GROUPOFDISTRICTS"  value="Group Of Districts Identifier, Group Of Districts Name, Parent Entity Type, Parent Entity Name, State Abbreviation"/>
+    <entry key="GROUPOFINSTITUTIONS"    value="Group Of Institutions Identifier, Group Of Institutions Name, Parent Entity Type, Parent Entity Name, State Abbreviation"/>
+    <entry key="USER"           value="First Name, Last Or Surname, Email Address, Telephone Number, Role, Associated Entity Name, Level, State Abbreviation"/>
+    <entry key="DESIGNATEDSUPPORTSANDACCOMMODATIONS"   value="Student Identifier,State Abbreviation,Subject,American Sign Language,Color Choices,Closed Captioning,Language,Masking,Permissive Mode,Print On Demand,Zoom,Streamlined Interface,Text to Speech,Translation,Non Embedded Designated Supports,Non Embedded Accommodations,Other"/>
+    <entry key="STUDENT" 		 value="State Abbreviation, Responsible District Identifier, Responsible Institution Identifier, Last Or Surname, First Name, Middle Name, Birth Date, SSID, Alternate SSID, Grade Level When Assessed, Sex, Hispanic Or Latino Ethnicity, American Indian Or Alaska Native, Asian, 
+    								Black Or African American, White, Native Hawaiian Or Other Pacific Islander, Demographic Race Two Or More Races, IDEA Indicator, 
+    								LEP Status, Section 504 Status, Economic Disadvantage Status, Language Code, English Language Proficiency Level, Migrant Status, 
+    								First Entry Date Into US School, Limited English Proficiency Entry Date, LEP Exit Date, Title III Language Instruction Program Type, Primary Disability Type,
+    								Subject, American Sign Language, Color Choices, Closed Captioning, Language, Masking, Permissive Mode, Print On Demand, Zoom, Streamlined Interface, 
+    								Text to Speech, Translation, Non-Embedded Designated Supports, Non-Embedded Accommodations, Other  
     								"/>
-    <entry key="STUDENTGROUP"          value="InstitutionIdentifier, ElectronicMailAddress, StudentGroupName, StudentIdentifier, StateAbbreviation, ResponsibleDistrictIdentifier, Delete"/>   
-    <entry key="ASSESSMENT"		 value="AssessmentIdentifier, AssessmentName, AssessmentBeginWindow, AssessmentEndWindow, NumberOfTestOpportunities, SubjectCode, Version, DelayRule, NumberofGlobalOpportunities, EligibilityType, AcademicYear, Grade"/>
-    <entry key="EXPLICITELIGIBILITY"		 value="StudentIdentifier, AssessmentAdministrationAssessmentFamily, StateAbbreviation, ResponsibleDistrictIdentifier, Subject, TestName, TestVersion, TestForm, Delete"/>
+    <entry key="STUDENTGROUP"          value="Student Group Name, Organization Name, Name of Institution, Student Identifier, State Abbreviation, Email Address"/>   
+    <entry key="ASSESSMENT"		 value="Assessment Identifier, Assessment Name, Assessment Begin Window, Assessment End Window, Number Of Test Opportunities, Subject Code, Version, Delay Rule, Number of Global Opportunities, Eligibility Type, Academic Year, Grade"/>
 </util:map> 
 <util:map id="reportHeaders" key-type="java.lang.String" value-type="java.lang.String[]">
     <entry key="PARTICIPATION_CLIENT_REPORT"    value="No,Date,TestName,Test Label,Parent Entity Id,Parent Entity Name,Parent Type,ClientId,ClientName,Total Students,Students Not Started,% NotStarted,Students Started,% Started, Students Completed,% Completed,Students NonParticipant,% NonParticipant"/>
