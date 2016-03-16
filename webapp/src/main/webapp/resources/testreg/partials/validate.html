@@ -10,7 +10,7 @@
 
 <div class="successMessage" data-ng-show = "validationResults != null && validationResults.length == 0"><div class="icon_successMessage icon_sprite icon_save1"></div>No validation errors found. File can be saved.</div>
 <div data-ng-show = "validationResults != null && validationResults.length > 0">
-    <div class="icon_failMessage icon_sprite icon_close"></div><div class="failMessage">Error(s) of this type will cause the entire file upload to fail. Click Cancel, update your file and restart the upload process.</div>
+    <div class="icon_failMessage icon_sprite icon_close_img"></div><div class="failMessage">Error(s) of this type will cause the entire file upload to fail. Click Cancel, update your file and restart the upload process.</div>
     <div class="icon_errorMessage icon_sprite icon_error"></div><div class="errorMessage">File can be saved but records with this type of error will not be included. You may elect to fix the errors and re upload the file or add these records later using the administration option to manage this type of file records. </div>
     <div class="icon_warningMessage icon_sprite icon_warning"></div><div class="warningMessage">These are warnings. File can be saved. However, you are strongly encouraged to review the associated records. You may edit these records using the administration option to manage this type of file records.</div>    
 
@@ -69,7 +69,7 @@
 	            </tr>
 				<!-- Adjust record number for FormatType row here. Keep in mind that backend still assumes there is a FormatType row. -->
 	            <tr data-ng-repeat="error in validationResult.fatalErrors" role="row">
-	               <td role="gridcell" aria-labelledby="openCloseHeader"><span class="icon_sprite icon_close"></span></td>
+	               <td role="gridcell" aria-labelledby="openCloseHeader"><span class="icon_sprite icon_close_img"></span></td>
 	               <td role="gridcell" aria-labelledby="recordNumberHeader">{{error.recordNumber}}</td>
 	               <td role="gridcell" aria-labelledby="fieldNameHeader">{{error.fieldName}}</td>
 	               <td role="gridcell" aria-labelledby="fieldValueHeader">{{error.fieldValue}}</td>
