@@ -15,7 +15,7 @@
         <mongo:options
                 connections-per-host="100"
                 threads-allowed-to-block-for-connection-multiplier="1000"
-                connect-timeout="30"
+                connect-timeout="15000"
                 auto-connect-retry="true"
                 socket-keep-alive="false"
                 socket-timeout="120000"
