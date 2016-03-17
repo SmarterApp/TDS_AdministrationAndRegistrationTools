@@ -1,0 +1,225 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:task="http://www.springframework.org/schema/task"
+    xmlns:aop="http://www.springframework.org/schema/aop" 
+    xmlns:mvc="http://www.springframework.org/schema/mvc"
+    xmlns:util="http://www.springframework.org/schema/util"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+    http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task-3.0.xsd
+    http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd 
+    http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-3.0.xsd 
+    http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-3.2.xsd">
+    
+    <mvc:annotation-driven/> 
+    
+    <bean id="fileParserMap" class="java.util.HashMap">
+	   	<constructor-arg>
+	   		<map>
+	   			<entry key="#{T(org.opentestsystem.delivery.testreg.rest.FileType).XLS}" 	value-ref="excelParser"/>
+	   			<entry key="#{T(org.opentestsystem.delivery.testreg.rest.FileType).XLSX}" 	value-ref="excelParser"/>
+				<entry key="#{T(org.opentestsystem.delivery.testreg.rest.FileType).CSV}" 	value-ref="csvParser"/>
+				<entry key="#{T(org.opentestsystem.delivery.testreg.rest.FileType).TXT}" 	value-ref="tabDelimitedParser"/>
+	   		</map>
+    	</constructor-arg>
+    </bean>
+    
+    <!-- File Parsers -->
+    <bean id="excelParser" class="org.opentestsystem.delivery.testreg.upload.parser.ExcelFileUploadParser">
+    	<property name="strict" value="false"/>
+    	<property name="ignoreEmptyRows" value="true"/>
+    </bean>
+    <bean id="csvParser"   class="org.opentestsystem.delivery.testreg.upload.parser.TextFileUploadParser">
+        <!-- delimiter -->
+        <constructor-arg index="0" value="(\\t)|(,)(?=([^\&quot;]*\&quot;[^\&quot;]*\&quot;)*[^\&quot;]*$)"/>
+        <!-- disallowed header value -->
+        <constructor-arg index="1" value="\t"/>
+    </bean>
+    <bean id="tabDelimitedParser" class="org.opentestsystem.delivery.testreg.upload.parser.TextFileUploadParser">
+        <!-- delimiter -->
+        <constructor-arg index="0" value="\t"/>
+        <!-- disallowed header value -->
+        <constructor-arg index="1" value="(\\t)|(,)(?=([^\&quot;]*\&quot;[^\&quot;]*\&quot;)*[^\&quot;]*$)"/>
+    </bean>
+    
+    <!-- File Creators -->   
+    <util:map id="templateDownloadMap" key-type="org.opentestsystem.delivery.testreg.domain.FormatType">
+   		<entry key="STATE"     				value-ref="state"/>
+   		<entry key="DISTRICT"		    	value-ref="district"/>
+   		<entry key="INSTITUTION"		   	value-ref="institution"/>
+   		<entry key="GROUPOFSTATES"		   	value-ref="groupOfStates"/>
+   		<entry key="GROUPOFDISTRICTS"		value-ref="groupofDistricts"/>
+   		<entry key="GROUPOFINSTITUTIONS"	value-ref="groupOfInstitutions"/>
+   		<entry key="USER"		   			value-ref="user"/>
+   		<entry key="STUDENT"		   		value-ref="student"/>
+        <entry key="STUDENTGROUP"           value-ref="studentGroup"/>
+   		<entry key="DESIGNATEDSUPPORTSANDACCOMMODATIONS"		  	value-ref="accommodations"/>
+   		<entry key="EXPLICITELIGIBILITY"   	value-ref="explicitEligibility"/>
+   </util:map>
+    
+	<bean id="excel2003TemplateCreator" class="org.opentestsystem.delivery.testreg.rest.ExcelBasedTemplateCreator">
+			<constructor-arg name="fileType" value="XLS"/>
+	</bean>
+	
+	<bean id="excel2007TemplateCreator" class="org.opentestsystem.delivery.testreg.rest.ExcelBasedTemplateCreator">
+			<constructor-arg name="fileType" value="XLSX"/>
+	</bean>
+	
+	<bean id="csvTemplateCreator" class="org.opentestsystem.delivery.testreg.rest.TextBasedTemplateCreator">
+			<constructor-arg name="fileType" value="CSV"/>
+	</bean> 
+	
+	<bean id="tabTemplateCreator" class="org.opentestsystem.delivery.testreg.rest.TextBasedTemplateCreator">
+			<constructor-arg name="fileType" value="TXT"/>
+	</bean>
+   
+   
+   <util:map id="templateDownloadCreators" key-type="org.opentestsystem.delivery.testreg.rest.FileType" 
+   					value-type="org.opentestsystem.delivery.testreg.rest.TemplateCreator">
+   		<entry key="XLS"	value-ref="excel2003TemplateCreator"/>
+   		<entry key="XLSX"	value-ref="excel2007TemplateCreator"/>
+   		<entry key="CSV"	value-ref="csvTemplateCreator"/>
+   		<entry key="TXT"	value-ref="tabTemplateCreator"/>
+   </util:map>
+   
+    
+    <util:list id="state">
+   		<value>StateAbbreviation</value>
+   		<value>StateName</value>
+   		<value>ParentEntityType</value>
+   		<value>ParentExternalId</value>
+   		<value>ParentEntityName</value>
+   		<value>Delete</value>
+    </util:list>
+    
+    <util:list id="district">
+   		<value>LocalEducationAgencyIdentifier</value>
+   		<value>OrganizationName</value>
+   		<value>NCESLEAID</value>
+   		<value>ParentEntityType</value>
+   		<value>ParentExternalId</value>
+   		<value>ParentEntityName</value>
+   		<value>StateAbbreviation</value>
+   		<value>Delete</value>
+    </util:list>
+    
+    <util:list id="institution">
+   		<value>InstitutionIdentifier</value>
+   		<value>NameOfInstitution</value>
+   		<value>ParentEntityType</value>
+   		<value>NCESInstitutionId</value>
+   		<value>ParentExternalId</value>
+   		<value>ParentEntityName</value>
+   		<value>StateAbbreviation</value>
+   		<value>Delete</value>
+    </util:list>
+    	
+    <util:list id="groupOfStates">
+    	<value>GroupOfStatesIdentifier</value>
+    	<value>GroupOfStatesName</value>
+    	<value>ParentEntityType</value>
+    	<value>ParentExternalId</value>
+    	<value>ParentEntityName</value>
+    	<value>Delete</value>
+    </util:list>
+    
+     <util:list id="groupofDistricts">
+     	<value>GroupOfDistrictsIdentifier</value>
+     	<value>GroupOfDistrictsName</value>
+     	<value>ParentEntityType</value>
+     	<value>ParentExternalId</value>
+     	<value>ParentEntityName</value>
+     	<value>StateAbbreviation</value>
+     	<value>Delete</value>
+     </util:list>
+    
+    <util:list id="groupOfInstitutions">
+    	<value>GroupOfInstitutionsIdentifier</value>
+    	<value>GroupOfInstitutionsName</value>
+    	<value>ParentEntityType</value>
+    	<value>ParentExternalId</value>
+    	<value>ParentEntityName</value>
+    	<value>StateAbbreviation</value>
+    	<value>Delete</value>
+    </util:list>
+    
+    <util:list id="user">
+    	<value>FirstName</value>
+    	<value>LastOrSurname</value>
+    	<value>ElectronicMailAddress</value>
+    	<value>TelephoneNumber</value>
+    	<value>Role</value>
+    	<value>AssociatedEntityID</value>
+    	<value>AssociatedEntityName</value>
+    	<value>Level</value>
+    	<value>StateAbbreviation</value>
+    	<value>Delete</value>
+    </util:list>
+    
+    <util:list id="student">
+    	<value>StateAbbreviation</value>
+    	<value>ResponsibleDistrictIdentifier</value>
+    	<value>ResponsibleInstitutionIdentifier</value>
+    	<value>LastOrSurname</value>
+    	<value>FirstName</value>
+    	<value>MiddleName</value>
+    	<value>Birthdate</value>
+    	<value>SSID</value>
+    	<value>AlternateSSID</value>
+    	<value>GradeLevelWhenAssessed</value>
+    	<value>Sex</value>
+    	<value>HispanicOrLatinoEthnicity</value>
+    	<value>AmericanIndianOrAlaskaNative</value>
+    	<value>Asian</value>
+    	<value>BlackOrAfricanAmerican</value>
+    	<value>White</value>
+    	<value>NativeHawaiianOrOtherPacificIslander</value>
+    	<value>DemographicRaceTwoOrMoreRaces</value>
+    	<value>IDEAIndicator</value>
+    	<value>LEPStatus</value>
+    	<value>Section504Status</value>
+    	<value>EconomicDisadvantageStatus</value>
+    	<value>LanguageCode</value>
+    	<value>EnglishLanguageProficiencyLevel</value>
+    	<value>MigrantStatus</value>
+    	<value>FirstEntryDateIntoUSSchool</value>
+    	<value>LimitedEnglishProficiencyEntryDate</value>
+    	<value>LEPExitDate</value>
+    	<value>TitleIIILanguageInstructionProgramType</value>
+    	<value>PrimaryDisabilityType</value>
+    	<value>Delete</value>
+    </util:list>
+
+    <util:list id="studentGroup">
+        <value>InstitutionIdentifier</value>
+        <value>ElectronicMailAddress</value>
+        <value>StudentGroupName</value>
+        <value>StudentIdentifier</value>
+        <value>StateAbbreviation</value>
+        <value>ResponsibleDistrictIdentifier</value>
+        <value>Delete</value>
+    </util:list>
+        
+    <util:list id="accommodations">
+    	<value>StudentIdentifier</value>
+    	<value>StateAbbreviation</value>
+    	<value>Subject</value>
+    	<value>AccommodationCodes</value>
+    </util:list>
+    
+    <util:list id="explicitEligibility">
+    	<value>StudentIdentifier</value>
+    	<value>AssessmentAdministrationAssessmentFamily</value>
+    	<value>StateAbbreviation</value>
+    	<value>ResponsibleDistrictIdentifier</value>
+    	<value>Subject</value>
+    	<value>TestName</value>
+    	<value>TestVersion</value>
+    	<value>TestForm</value>
+    	<value>Delete</value>
+    </util:list>
+    
+          
+    <bean id="excelUtils"			    class="org.opentestsystem.delivery.testreg.upload.ExcelUtils"/>
+    
+</beans>

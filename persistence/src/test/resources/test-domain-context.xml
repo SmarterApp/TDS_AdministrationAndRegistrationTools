@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:mongo="http://www.springframework.org/schema/data/mongo" xmlns:util="http://www.springframework.org/schema/util" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="
+                http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+                http://www.springframework.org/schema/data/mongo http://www.springframework.org/schema/data/mongo/spring-mongo-1.1.xsd
+                http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-3.0.xsd">
+
+    <bean  id="propertyConfigurer" class="org.springframework.context.support.PropertySourcesPlaceholderConfigurer">
+        <property name="ignoreResourceNotFound" value="true"/>
+        <property name="ignoreUnresolvablePlaceholders" value="true"/>
+ <!--        <property name="clientId"   			value="TestClientId"/>
+        <property name="clientName" 			value="TestClient"/>
+        <property name="systemId"   			value="Blah-Blah-Blah"/>
+        <property name="student.identity.share" value="yes"/>
+ -->        <property name="locations">
+            <list>
+                 <value>classpath:language_codes.properties</value>
+                 <value>classpath:test_client.properties</value>
+ 			</list>
+        </property>
+    </bean>	
+    <bean id="stateMap"    class="java.util.HashMap">
+        <constructor-arg>
+            <map>
+                <entry key="AL" value="ALABAMA" />
+                <entry key="AK" value="ALASKA"/>
+                <entry key="AS" value="AMERICAN SAMOA"/>
+                <entry key="AZ" value="ARIZONA"/>
+                <entry key="AR" value="ARKANSAS"/>
+                <entry key="CA" value="CALIFORNIA"/>
+                <entry key="CO" value="COLORADO"/>
+                <entry key="CT" value="CONNECTICUT"/>
+                <entry key="DE" value="DELAWARE"/>
+                <entry key="DC" value="DISTRICT OF COLUMBIA"/>
+                <entry key="FL" value="FLORIDA"/>
+                <entry key="GA" value="GEORGIA"/>
+                <entry key="GU" value="GUAM"/>
+                <entry key="HI" value="HAWAII"/>
+                <entry key="ID" value="IDAHO"/>
+                <entry key="IL" value="ILLINOIS"/>
+                <entry key="IN" value="INDIANA"/>
+                <entry key="IA" value="IOWA"/>
+                <entry key="KS" value="KANSAS"/>
+                <entry key="KY" value="KENTUCKY"/>
+                <entry key="LA" value="LOUISIANA"/>
+                <entry key="ME" value="MAINE"/>
+                <entry key="MD" value="MARYLAND"/>
+                <entry key="MA" value="MASSACHUSETTS"/>
+                <entry key="MI" value="MICHIGAN"/>
+                <entry key="MN" value="MINNESOTA"/>
+                <entry key="MS" value="MISSISSIPPI"/>
+                <entry key="MO" value="MISSOURI"/>
+                <entry key="MT" value="MONTANA"/>
+                <entry key="NE" value="NEBRASKA"/>
+                <entry key="NV" value="NEVADA"/>
+                <entry key="NH" value="NEW HAMPSHIRE"/>
+                <entry key="NJ" value="NEW JERSEY"/>
+                <entry key="NM" value="NEW MEXICO"/>
+                <entry key="NY" value="NEW YORK"/>
+                <entry key="NC" value="NORTH CAROLINA"/>
+                <entry key="ND" value="NORTH DAKOTA"/>
+                <entry key="OH" value="OHIO"/>
+                <entry key="OK" value="OKLAHOMA"/>
+                <entry key="OR" value="OREGON"/>
+                <entry key="PA" value="PENNSYLVANIA"/>
+                <entry key="PR" value="PUERTO RICO"/>
+                <entry key="RI" value="RHODE ISLAND"/>
+                <entry key="SC" value="SOUTH CAROLINA"/>
+                <entry key="SD" value="SOUTH DAKOTA"/>
+                <entry key="TN" value="TENNESSEE"/>
+                <entry key="TX" value="TEXAS"/>
+                <entry key="UT" value="UTAH"/>
+                <entry key="VT" value="VERMONT"/>
+                <entry key="VI" value="VIRGIN ISLANDS"/>
+                <entry key="VA" value="VIRGINIA"/>
+                <entry key="WA" value="WASHINGTON"/>
+                <entry key="WV" value="WEST VIRGINIA"/>
+                <entry key="WI" value="WISCONSIN"/>
+                <entry key="WY" value="WYOMING"/>
+            </map>
+        </constructor-arg>
+    </bean>
+</beans>

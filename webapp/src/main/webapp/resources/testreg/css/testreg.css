@@ -1,0 +1,1415 @@
+
+
+.masterDetailContainer {
+    margin-top:20px;
+}
+.tsbSearch td{
+    background-color: #C0C0C0;
+}
+.masterDetailContainer .master{
+    width:30%;
+    float:left;
+    text-align:left;
+    padding-left:5px;
+}
+
+.master .header {
+    margin-top:10px;
+    border-bottom: 1px solid #18567E;
+    font-style: italic; 
+    color:1px solid #18567E
+}
+
+.master .boxBtn {
+    margin-top:25px;
+    width:120px;
+}
+
+.masterDetailContainer .detail{
+    width:65%;
+    float:left;
+    border: 1px inset silver;
+    padding:15px;
+}
+.fieldGroup ul.assessmentLayout {
+ 
+    padding: 0;
+    text-align: left;
+    max-width:90%;
+    width:90%;
+}
+.fieldGroup ul.entityLayout {
+ 
+    padding: 0;
+    text-align: left;
+    max-width:100%;
+    width:100%;
+}
+.fieldGroup ul.studentLayout {
+    margin: 0 auto 0 -5px;
+    padding: 0;
+    text-align: center;
+    max-width:105%;
+    width:112%;
+}
+.fieldGroup ul.clientLayout {
+    margin-left:-15em;
+    padding: 0;
+    text-align: right;
+    max-width:90%;
+    width:90%;
+
+}
+
+.fieldGroup ul.proctorLayout {
+    padding: 0;
+    text-align: left;
+    max-width:90%;
+    width:60%;
+
+}
+
+.fieldGroup ul.proctorLayout input{
+    width:40%;
+}
+.fieldGroup ul.proctorLayout select{
+    width:40%;
+}
+.fieldGroup ul.proctorLayout input[type="checkbox"]{
+    width:5%;
+}
+.fieldGroup ul.proctorLayout label{
+    width:60%;
+}
+
+.fieldGroup ul.proctorLayout li{
+    width:62%;
+}
+
+.fieldGroup ul.clientLayout input[type="checkbox"]{
+    width:20%;
+}
+
+.fieldGroup ul.clientLayout input{
+    width:40%;
+}
+.studentFormWrapper .fieldGroup {margin:0 2em;}
+.fieldGroup ul.clientLayout select{
+    width:40%;
+}
+.fieldGroup ul.clientLayout label{
+    width:60%;
+}
+.fieldGroup ul.clientLayout li ul.checkboxlist{
+      margin-left:18.0em;
+      margin-top:-0.7em;
+}
+.fieldGroup ul.clientLayout li ul.checkboxlist input{
+     margin-left:-1.0em;
+     width:18px;
+}
+
+.fieldGroup ul.clientLayout li ul.checkboxlist li{
+     width:50%;
+}
+
+.fieldGroup li span input.studentCheckBox {
+    width:3%;
+    margin-top:1em;
+    float:left;
+}
+.fieldGroup ul.clientLayout li{
+    width:62%;
+}
+
+.fieldGroup li{
+    white-space:nowrap;
+    vertical-align:top;
+}
+
+.fieldGroup li span{
+    text-align:right;
+    float:left;
+    width:80%;
+
+}
+.fieldGroup label {
+    display:inline-block;
+    float:left;
+    vertical-align:top;
+}
+
+.fieldGroup select{
+    display:inline-block;
+    vertical-align:top;
+    width:145px;
+}
+.fieldGroup input{
+    display:inline-block;
+    vertical-align:top;
+    width:140px;
+}
+
+.fieldGroup input[type="checkbox"] {
+    vertical-align:middle;
+}
+
+.fieldGroup li span.user-error-checkbox {
+    margin-top:-1em;
+    margin-left:-10em;
+    color:red;
+}
+.userErrorLabel{
+    margin-top:-1.5em;
+    margin-left:18em;   
+}
+.fieldGroup li span.student-acc-checkbox {
+    margin-top:-1em;
+    margin-left:-19em;
+    color:red;
+}
+.fieldGroup li span.student-acc-checkbox label{
+    margin-top:-1.5em;
+    margin-left:18em;   
+}
+
+ul.one-column li {
+    width:120%;
+}
+
+.fieldGroup li span.district-auto-complete, .fieldGroup li span.wide-fields {
+    width:80%;
+}
+.fieldGroup li span.district-auto-complete input {
+    width: 140px;
+    float:right;
+}
+.fieldGroup li span.entity-auto-complete, .fieldGroup li span.wide-fields {
+    width:80%;
+}
+.fieldGroup li span.entity-auto-complete input {
+    width: 140px;
+    float:right;
+}
+
+.fieldGroup a.fieldLink {
+    color: #0883B0;
+}
+
+.fieldGroup a.fieldLink:hover {
+    color: #CCCCCC;
+}
+
+.fieldGroup span.subGroup {
+    float: right; 
+    width: 300px; 
+    margin-left: 0; 
+    padding: 0.1em;
+}
+
+.dropdown-menu {
+    background-clip: padding-box;
+    background-color: #FFFFFF;
+    border-width: 1px;
+    border-style: solid;
+    border-color: #333; /* Fallback color for IE8 */
+    border-color: rgba(0, 0, 0, 0.2);
+    border-radius: 6px 6px 6px 6px;
+    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+    display: none;
+    float: left;
+    left: 0;
+    list-style: none outside none;
+    margin: 2px 0 0;
+    min-width: 160px;
+    padding: 5px 0;
+    position: absolute;
+    top: 100%;
+    z-index: 1000;
+}
+
+.dropdown-menu > li {
+    display: block;
+    width: 100%;
+    padding: 0;
+}
+
+.dropdown-menu > li > a {
+    clear: both;
+    color: #333333;
+    display: block;
+    font-weight: normal;
+    line-height: 20px;
+    padding: 3px 20px;
+    white-space: nowrap;
+    text-align: left;
+}
+
+.dropdown-menu > li > a:hover, .dropdown-menu > li > a:focus {
+    background-color: #0883B0;
+    color: #FFFFFF;
+    text-decoration: none;
+}
+
+/* dropdown fix only needed for IE 8 and below */
+.ie8 select.wide-select:focus { 
+    width:auto;  
+    max-width:none;
+}
+
+.previewTable, .accommodationTable{
+    margin-top: 5.25em; 
+}
+
+.assessmentTable {
+    margin-top:.5em;
+    width:100%;
+    table-layout:fixed;
+}
+.previewTable th, .accommodationTable th, .assessmentTable th{
+    background: none repeat scroll 0 0 #3DB11A;
+    border:1px solid #e4e4e4;
+    padding:0.3em;
+    vertical-align: middle;
+    color: #FFFFFF;
+}
+.previewTable td, .accommodationTable td, .assessmentTable td{
+    border:1px solid #e4e4e4;
+    padding:0.3em;
+    vertical-align: middle;
+    background:#f6f8f9;
+}
+
+.centerDiv{
+    text-align:center;
+    display:inline-block;
+    margin-left:auto;
+    margin-right:auto;
+    vertical-align:middle;
+}
+.dataTable {
+    table-layout:fixed;
+}
+.dataTable .centerText {
+    text-align:center;
+    float:none;
+}
+.dataTable td, .previewTable td, .accommodationTable td, .assessmentTable td{
+    white-space: pre;           /* CSS 2.0 */
+    white-space: pre-wrap;      /* CSS 2.1 */
+    white-space: pre-line;      /* CSS 3.0 */
+    white-space: -pre-wrap;     /* Opera 4-6 */
+    white-space: -o-pre-wrap;   /* Opera 7 */
+    white-space: -moz-pre-wrap; /* Mozilla */
+    white-space: -hp-pre-wrap;  /* HP Printers */
+    word-wrap: break-word;      /* IE 5+ */
+}
+
+.dataTable td.normalSpace, previewTable td.normalSpace, .accommodationTable td, .assessmentTable td{
+    white-space:normal;
+}
+
+.tableButtonGroup {
+    display:inline-table;
+    
+}
+.tableButtonGroup button{
+    border-right: 1px solid #ffffff;
+}
+
+
+.dataTable .boxBtn, .previewTable .boxBtn, .assessmentTable .boxBtn, .accommodationTable .boxBtn{
+    width:30px;
+    height:30px;
+    margin:0px;
+    padding:0px;
+}
+
+table .icon_sprite {
+    margin:0px;
+    padding:0px;
+}
+
+table .tripleActionColumn {
+    width:120px;
+    white-space:normal;    
+}
+
+table .doubleActionColumn {
+    width:80px;
+    white-space:normal; 
+}
+
+table .actionColumn {
+    width:40px;
+}
+
+#tableNav th {
+    width:50%;
+    border: 0px;
+}
+
+#tableNav input {
+    width:35px;
+    margin:0px;
+}
+
+#tableNav tr :first-child {
+    text-align:left;
+}
+
+#tableNav tr :last-child {
+    text-align:right;
+}
+
+.ajax_indicator {
+    background-position:0px 2px;
+    background-image:url(../images/ajax-indicator.gif);
+}
+
+td.ajax_indicator:before {
+   content:url(../images/ajax-indicator.gif);
+}
+
+.boxBtn:hover .ajax_indicator {
+    background-position:0px 2px;
+    background-image:url(../images/ajax-indicator-green.gif);
+}
+
+.tableWrapper {
+  width: 100%;
+  overflow: auto;
+}
+
+div.ng-dirty, form.ng-dirty form .ng-dirty {
+    border:1px dotted red;
+}
+
+div.studentFormWrapper div.fieldGroup div.ng-scope {position:relative;}
+
+ 
+
+textarea.large {
+    width:98%;
+    height:400px;
+}
+   
+.previewTable td div {
+    float:left;
+    text-align:left;
+}
+.previewTable td div div {
+    float:none;
+    padding-bottom: 3px;
+}
+
+.hiddenfile  {
+ width: 0px;
+ height: 0px;
+ overflow: hidden;
+}
+
+.formWrapper .dirtynag{
+    color:red;
+    text-align:left;
+    font-weight: bold;
+}
+.studentFormWrapper{
+    width:103%;
+    margin-left:-10px;
+}
+.studentFormWrapper .dirtynag {
+  color: red;
+  font-weight: bold;
+  text-align: left;
+  background: pink;
+  padding: 1em;
+}
+.h5Accommodations{
+    border-bottom:0px;
+}
+h5.h5Accommodations.ng-binding {
+left: 0;
+position: absolute;
+top: 0;
+}
+.h5eligibility{
+	border-bottom:0px;
+}
+.messageFormat{
+	text-align:center;
+	white-space: nowrap;
+	color: #0000FF;
+	font-family: verdana;
+	font-size: 14px;
+	
+}
+.previewFileLabel {
+    float:left;
+    text-align:left;
+    font-weight:bold;
+}
+.expander-closed {
+    background-position:bottom
+}
+
+.expander-open {
+    background-position:top
+}
+
+tr.expander td {
+       white-space: normal;
+}
+
+a.skipToContent {
+    padding: 6px;
+    position:absolute;
+    left:-10000px;
+    top:0px;
+    overflow:hidden;
+    border: 1px solid white;
+    color: white;
+    background: transparent;
+    -webkit-transition: top .1s ease-out, background .5s linear;
+    transition: top 1s ease-out, background 1s linear;
+    z-index: 100;
+}
+
+a.skipToContent:focus {
+    left:580px;
+    background:#3DB11A;
+    -webkit-transition: top .1s ease-in, background .5s linear;
+    transition: top .1s ease-in, background .5s linear;
+}
+
+a.skipToContent:blur {
+    left:-10000px;
+    -webkit-transition: top .1s ease-out, background .5s linear;
+    transition: top .1s ease-out, background .5s linear;
+}
+ 
+ul.propertyList {
+    list-style-type:none;
+    margin:0;
+}
+
+ul.propertyList li {
+    margin:0;
+    padding:2px;
+}
+
+.thumbnail {
+    margin: 0.1em;
+    padding: 0;
+    width: 11em;
+}
+
+.thumbnailColumn {
+    padding:0;
+    margin:0;
+    width: 12em;
+}
+
+.highlight {
+    background-color:#f4f4f4;
+}
+
+.assetGroupEditor {
+    float:left;
+    margin:0px;
+    padding:0px;
+}
+
+.assetPoolExpanded {
+    width:69%;
+}
+
+.informational {
+    text-align: left;
+}
+
+.assetPoolSelector {
+    width:29%;
+    border:1px solid #b8b7a4;
+    float:left;
+    padding:4px;
+}
+
+div.user-error-alert {
+    color:red;
+    text-align:center;
+    font-weight: normal;
+}
+
+div.two-section {
+    width:48%; 
+    float:left;
+}
+
+div.EQ {
+    background-color: #FFFFFF;
+    font-family: monospace;
+    font-size: larger;
+}
+
+div.ADD {
+    background-color: #A6FFC6;
+    font-family: monospace;
+    font-size: larger;
+}
+
+div.DEL {
+    background-color: #FFA6C4;
+    font-family: monospace;
+    font-size: larger;
+}
+div.globalErrors {
+    width:98%; 
+    float:left;
+    margin-left:3px;
+    text-align:center;
+    padding-left:6px;
+    padding-bottom:20px;
+}
+div.failMessage {
+    width:96%; 
+    height:50px;
+    float:left;
+    background-color: #df3939;
+    margin-left:3px;
+    text-align:left;
+    padding-left:6px;
+}
+div.errorMessage {
+    width:96%; 
+    height:50px;
+    float:left;
+    background-color: #f49999;
+    margin-left:1px;
+    text-align:left;
+    padding-left:6px;
+}
+div.warningMessage {
+    width:96%; 
+    height:50px;
+    float:left;
+    background-color: #FFFF99;
+    margin-left:3px;
+    margin-bottom: 30px;
+    text-align:left;
+    padding-left:6px;
+}
+div.successMessage {
+    width:96%; 
+    height:30px;
+    background-color: #78e572;
+    margin-left:0px;
+    margin-bottom: 10px;
+    text-align:left;
+    padding-left:6px;
+    font-weight:bold;
+}
+.icon_failMessage{
+    float:left;
+    display:block;
+}
+.icon_errorMessage{
+    float:left;
+    display:block;
+    clear:both;
+}
+.icon_warningMessage{
+    float:left;
+    display:block;
+    clear:both;
+}
+.icon_successMessage{
+    float:left;
+}
+div.uploadSummary{
+    float:left;
+    margin-left:3px;
+    text-align:left;
+    padding-left:6px;
+    font-weight:bold;
+}
+button.mediumWidthBtn {
+    margin-top:25px;
+    width:140px;
+}
+button.mediumWidthBtn:hover {
+    margin-top:25px;
+    width:140px;
+}
+button.mediumWidthBtn:hover .icon_saveAdd2 {
+    background-position: -50px -375px;
+}
+
+button.largeWidthBtn {
+    margin-top:25px;
+    width:230px;
+}
+button.largeWidthBtn:hover .icon_saveAdd2 {
+    background-position: -50px -375px;
+}
+button.uploadBtn {
+    margin-top:10px;
+    width:140px;
+}
+button.uploadBtn:hover .icon_save2 {
+       background-position: -50px -350px;
+}
+
+button.uploadBtn:hover .icon_cancel2 {
+    background-position: -50px -325px;
+}
+.excelImage { 
+    margin:2px;
+    background-image: url(../images/excel.png);
+    background-position:  0px 0px;
+    background-repeat: no-repeat;
+    display:inline-block;
+    vertical-align:middle;
+    width: 20x;
+    height: 20px;
+    border: 0px;
+
+}
+.csvImage { 
+    margin:2px;
+    background-image: url(../images/csv.png);
+    background-position:  0px 0px;
+    background-repeat: no-repeat;
+    display:inline-block;
+    vertical-align:middle;
+    width: 20x;
+    height: 20px;
+    border: 0px;
+
+} 
+div.tabInfo {
+    float:left;
+}
+div.tabInfo a {
+    color:#0883B0;
+}
+div.tabInfo a:hover {
+    text-decoration: underline;
+    color:#0883B0;
+    cursor:pointer;
+}
+div.tabInfo a.selected {
+    color:black;
+}  
+h3 {
+    text-align: center;
+    padding-bottom:20px;
+}
+
+h5 {
+    font-size: 1.15em;
+}
+
+h5 span{
+    float:right;
+    font-size:0.7em;
+    color: #333333;
+}
+.home .upload_assessments span {
+        background: url("../images/test_registration_icons.png") 0px 0px;
+        display: block;
+}
+.home .upload_assessments:hover span {
+        background: url("../images/test_registration_icons.png") -130px 0;
+        display: block;
+}
+.home .modify_assessments span {
+        background: url("../images/test_registration_icons.png") 0 -100px;
+        display: block;
+}
+
+.home .modify_assessments:hover span {
+        background: url("../images/test_registration_icons.png") -130px -100px;
+        display: block;
+}
+.home .participation_report span {
+        background: url("../images/test_registration_icons.png") 0 -200px;
+        display: block;
+}
+
+.home .participation_report:hover span {
+        background: url("../images/test_registration_icons.png") -130px -200px;
+        display: block;
+}
+
+.home .upload_entities span {
+        background: url("../images/test_registration_icons.png") 0 -285px;
+        display: block;
+}
+.home .upload_entities:hover span {
+        background: url("../images/test_registration_icons.png") -130px -285px;
+        display: block;
+}
+.home .modify_institutions span {
+        background: url("../images/test_registration_icons.png") 0 -365px;
+        display: block;
+}
+.home .modify_institutions:hover span {
+        background: url("../images/test_registration_icons.png") -130px -365px;
+        display: block;
+}
+
+.home .upload_studentEligibility span {
+        background: url("../images/test_registration_icons.png") 0 -580px;
+        display: block;
+}
+.home .upload_studentEligibility:hover span {
+        background: url("../images/test_registration_icons.png") -130px -580px;
+        display: block;
+}
+
+.home .upload_studentGroups span {
+        background: url("../images/test_registration_icons.png") 0 -660px;
+        display: block;
+}
+.home .upload_studentGroups:hover span {
+        background: url("../images/test_registration_icons.png") -130px -660px;
+        display: block;
+}
+.home .modify_studentGroups span {
+        background: url("../images/test_registration_icons.png") 0 -745px;
+        display: block;
+}
+.home .modify_studentGroups:hover span {
+        background: url("../images/test_registration_icons.png") -130px -745px;
+        display: block;
+}
+/** Test admin menu **/
+.home .proctor_roles span {
+        background: url("../images/test_administration_icons.png") 0 -10px;
+        display: block;
+}
+.home .proctor_roles:hover span {
+        background: url("../images/test_administration_icons.png") -130px -10px;
+        display: block;
+}
+.home .test_platform span {
+        background: url("../images/test_administration_icons.png") 0 -100px;
+        display: block;
+}
+.home .test_platform:hover span {
+        background: url("../images/test_administration_icons.png") -130px -100px;
+        display: block;
+}
+.home .accessibility_equipment span {
+        background: url("../images/test_administration_icons.png") 0 -180px;
+        display: block;
+}
+.home .accessibility_equipment:hover span {
+        background: url("../images/test_administration_icons.png") -130px -180px;
+        display: block;
+}
+.home .test_facility span {
+        background: url("../images/test_administration_icons.png") 0 -265px;
+        display: block;
+}
+.home .test_facility:hover span {
+        background: url("../images/test_administration_icons.png") -130px -265px;
+        display: block;
+}
+.home .test_time span {
+        background: url("../images/test_administration_icons.png") 0 -355px;
+        display: block;
+}
+.home .test_time:hover span {
+        background: url("../images/test_administration_icons.png") -130px -355px;
+        display: block;
+}
+.home .test_schedule span {
+        background: url("../images/test_administration_icons.png") 0 -450px;
+        display: block;
+}
+.home .test_schedule:hover span {
+        background: url("../images/test_administration_icons.png") -130px -450px;
+        display: block;
+}
+.home .schedule_result span {
+        background: url("../images/test_administration_icons.png") 0 -545px;
+        display: block;
+}
+.home .schedule_result:hover span {
+        background: url("../images/test_administration_icons.png") -130px -545px;
+        display: block;
+}
+.home .proctor_report span {
+        background: url("../images/test_administration_icons.png") 0 -635px;
+        display: block;
+}
+.home .proctor_report:hover span {
+        background: url("../images/test_administration_icons.png") -130px -635px;
+        display: block;
+}
+.home .student_report span {
+        background: url("../images/test_administration_icons.png") 0 -740px;
+        display: block;
+}
+.home .student_report:hover span {
+        background: url("../images/test_administration_icons.png") -130px -740px;
+        display: block;
+}
+
+.secondary .proctor_roles span {
+        background: url("../images/test_administration_icons_small.png") -2px 0;
+        display: block;
+}
+.secondary .proctor_roles:hover span {
+        background: url("../images/test_administration_icons_small.png") -67px 0;
+        display: block;
+}
+.secondary .test_platform span {
+        background: url("../images/test_administration_icons_small.png") 0 -40px;
+        display: block;
+}
+.secondary .test_platform:hover span {
+        background: url("../images/test_administration_icons_small.png") -65px -40px;
+        display: block;
+}
+.secondary .accessibility_equipment span {
+        background: url("../images/test_administration_icons_small.png") -2px -80px;
+        display: block;
+}
+.secondary .accessibility_equipment:hover span {
+        background: url("../images/test_administration_icons_small.png") -67px -80px;
+        display: block;
+}
+.secondary .test_facility span {
+        background: url("../images/test_administration_icons_small.png") -2px -130px;
+        display: block;
+}
+.secondary .test_facility:hover span {
+        background: url("../images/test_administration_icons_small.png") -67px -130px;
+        display: block;
+}
+.secondary .test_time span {
+        background: url("../images/test_administration_icons_small.png") -2px -170px;
+        display: block;
+}
+.secondary .test_time:hover span {
+        background: url("../images/test_administration_icons_small.png") -67px -170px;
+        display: block;
+}
+.secondary .test_schedule span {
+        background: url("../images/test_administration_icons_small.png") -2px -220px;
+        display: block;
+}
+.secondary .test_schedule:hover span {
+        background: url("../images/test_administration_icons_small.png") -67px -220px;
+        display: block;
+}
+.secondary .schedule_result span {
+        background: url("../images/test_administration_icons_small.png") -2px -270px;
+        display: block;
+}
+.secondary .schedule_result:hover span {
+        background: url("../images/test_administration_icons_small.png") -67px -270px;
+        display: block;
+}
+.secondary .proctor_report span {
+        background: url("../images/test_administration_icons_small.png") 0 -310px;
+        display: block;
+}
+.secondary .proctor_report:hover span {
+        background: url("../images/test_administration_icons_small.png") -65px -310px;
+        display: block;
+}
+.secondary .student_report span {
+        background: url("../images/test_administration_icons_small.png") 0 -365px;
+        display: block;
+}
+.secondary .student_report:hover span {
+        background: url("../images/test_administration_icons_small.png") -65px -365px;
+        display: block;
+}
+/** Test admin menu ends **/
+.secondary .upload_assessments span {
+    background: url("../images/test_registration_icons_small.png") 0 0;
+    display: block;
+}
+.secondary .upload_assessments:hover span {
+    background: url("../images/test_registration_icons_small.png") -60px 0;
+    display: block;
+}
+.secondary .modify_assessments span {
+    background: url("../images/test_registration_icons_small.png")  -3px -40px;
+    display: block;
+}
+.secondary .modify_assessments:hover span {
+     background: url("../images/test_registration_icons_small.png") -60px -40px;
+     display: block;
+    }
+
+.secondary .participation_report span {
+    background: url("../images/test_registration_icons_small.png")  0 -80px;
+    display: block;
+}
+.secondary .participation_report:hover span {
+     background: url("../images/test_registration_icons_small.png")  -60px -80px;
+     display: block;
+}    
+.secondary .upload_entities span {
+    background: url("../images/test_registration_icons_small.png")  0 -120px;
+    display: block;
+}
+.secondary .upload_entities:hover span {
+     background: url("../images/test_registration_icons_small.png") -60px -120px;
+     display: block;
+}    
+
+.secondary .modify_institutions span {
+    background: url("../images/test_registration_icons_small.png")  0 -160px;
+    display: block;
+}
+.secondary .modify_institutions:hover span {
+     background: url("../images/test_registration_icons_small.png") -60px -160px;
+     display: block;
+}    
+
+.secondary .modify_students span {
+    background: url("../images/test_registration_icons_small.png") 0 -190px;
+    display: block;
+}
+.secondary .modify_students:hover span {
+     background: url("../images/test_registration_icons_small.png") -60px -190px;
+     display: block;
+}  
+.secondary .modify_personnels span {
+    background: url("../images/test_registration_icons_small.png") 0 -220px;
+    display: block;
+}
+.secondary .modify_personnels:hover span {
+     background: url("../images/test_registration_icons_small.png") -60px -220px;
+     display: block;
+}  
+.secondary .upload_studentEligibility span {
+    background: url("../images/test_registration_icons_small.png") 0 -250px;
+    margin-top:-0.5em;
+    display: block;
+}
+.secondary .upload_studentEligibility:hover span {
+     background: url("../images/test_registration_icons_small.png") -60px -250px;
+     display: block;
+}
+.secondary .upload_studentGroups span {
+    background: url("../images/test_registration_icons_small.png") 2px -290px;
+    display: block;
+}
+.secondary .upload_studentGroups:hover span {
+     background: url("../images/test_registration_icons_small.png") -58px -290px;
+     display: block;
+}  
+.secondary .modify_studentGroups span {
+    background: url("../images/test_registration_icons_small.png") 0 -330px;
+    display: block;
+}
+.secondary .modify_studentGroups:hover span {
+     background: url("../images/test_registration_icons_small.png") -60px -330px;
+     display: block;
+}  
+.instructionDiv{
+    float:left;
+     vertical-align: top;
+     margin-left:-0.8em;
+     margin-top : -15.8em;
+     font: italic bold 0.8em/1.2 'Arial',sans-serif;
+}
+
+.home .modify_students span {
+      background: url("../images/test_registration_icons.png") 0 -455px;
+      margin-left:0.5em;
+      margin-top:-2.7em;
+      display: block;
+}
+.home .modify_students:hover span {
+      background: url("../images/test_registration_icons.png") -130px -455px;
+      margin-left:0.5em;
+      margin-top:-2.7em;
+      display: block;
+}
+
+.home .modify_personnels span {
+      background: url("../images/test_registration_icons.png") 0 -520px;
+      margin-left:0.5em;
+      margin-top:-2.7em;
+      display: block;
+}
+.home .modify_personnels:hover span {
+      background: url("../images/test_registration_icons.png") -130px -520px;
+      margin-left:0.5em;
+      margin-top:-2.7em;
+      display: block;
+}
+
+.home .studentPersonal_p {
+    margin-left:1em;
+    margin-top:-1em;
+}
+.choose_file{
+    position:relative;
+    display:inline-block;    
+    border:gray solid 1px;
+    width:120px; 
+    padding: 4px 6px 4px 8px;
+    font: normal 14px, Arial, Geneva, sans-serif;
+    background:#d3d3d3;
+    margin-top: -2px;
+
+}
+.choose_file:hover{
+     border:#00B2EE solid 1px;
+}
+.choose_file input[type="file"]{
+
+    -webkit-appearance:none; 
+    position:absolute;
+    top:0; left:0;
+    opacity:0; 
+}
+
+.studentGroupLegend {
+    margin-left:auto;
+    margin-right:auto;
+}
+
+div.select2-container {
+    border:none;
+    margin-left:.7em;
+}
+li.select2-search-choice {
+    width:auto!important;
+    margin: 3px 3px 3px 5px!important;
+}
+li.select2-search-choice div {
+    margin:0;
+    text-align:left;
+}
+li.select2-search-field input {
+    float:left;
+}
+
+.footer .footerText {
+    color: white;
+    padding-top: 4px;
+}
+
+label.control-label-required:after {
+    font-size: 20pt;  
+    text-align: center;  
+    color: rgb(211, 7, 7);  
+    position: relative;  
+    padding: 0 7px 0 0;
+    content: "*";
+    line-height: 30px;
+    vertical-align: top;
+}
+
+span.control-label-required:before {
+    font-size: 20pt;  
+    text-align: center;  
+    color: rgb(211, 7, 7);  
+    position: relative;  
+    padding: 0 7px 0 0;
+    content: "*";
+    vertical-align: -50%;
+}
+
+th.control-label-required:before {
+    font-size: 20pt;  
+    text-align: center;  
+    color: rgb(211, 7, 7);  
+    position: relative;  
+    padding: 0 7px 0 0;
+    content: "*";
+    vertical-align: -25%;
+}
+
+.fieldGroup li span .viewSpanLeft{
+    text-align: left;
+    display: inline-block;
+    margin-left:1em;
+    width:200px;
+}
+
+.fieldGroup li span .reportSpanLeft{
+    text-align: left;
+    display: inline-block;
+    width:200px;
+    padding-left:5px;
+}
+
+.width30Percent {
+    width:30%;
+}
+
+.dataTable .btnAddSeat {
+    width:100px;
+    height:30px;
+    margin:0;
+    padding:0;
+    float:right;
+}
+
+.dataTable input.addSeat{
+    display:inline-block;
+    vertical-align:top;
+    width:50px;
+}
+
+.navCore100Width {
+  margin: auto;
+  width: 91em;
+  list-style:none;
+ 
+}
+
+.home .navCore100Width hr {
+      height:1.5px;
+      background-color: #686868 ;
+      color: #686868;
+}
+
+.home .navCore100Width h2 {
+      font: italic bold 0.9em Arial,Helvetica,sans-serif;
+      text-align: left;
+      color: #686868;
+}
+.fieldGroup .time {
+    width:100px;
+}
+
+/*** Slider styles ****/
+.menuslide {
+    background: none repeat scroll 0 0 #3DB11A;
+    width: 98%;
+    margin-left:-25px;
+    height: 40px;
+    color: #FFFFFF;
+    font-size: 14px;
+    font-weight: normal;
+    padding-left:80px;
+    padding-top:3px;
+    display:block;
+    position:fixed;
+    top:50px; 
+}
+.menuslide div{
+    float:right;
+    color:#FFFFFF;
+    display:block;
+    font-size:14px;
+    margin-right:80px;
+    padding-top:7px;
+}
+.submenuslide {
+    background: none repeat scroll 0 0 #3DB11A;
+    width: 120px;
+    height: 20px;
+    color: #FFFFFF;
+    font-size:10px;
+    display:inline-block; 
+    position: fixed;
+    bottom: 0;
+    padding-left:100px;
+    
+}
+.submenuslideText {
+    width: 220px;
+    height: 20px;
+    color: #333333;
+    font-size:13px;
+    display:inline-block; 
+    position: fixed;
+    bottom: 25px;
+    left: 0;    
+    margin-left: 5px;
+}
+.submenuslideTestadmin {
+    background: none repeat scroll 0 0 #3DB11A;
+    width: 120px;
+    height: 20px;
+    color: #FFFFFF;
+    font-size:10px;
+    display:table-cell; 
+    top:50px;
+    position:fixed;
+    padding-left:100px;
+}
+.submenuslideTestadminText {
+    width: 220px;
+    height: 20px;
+    color: #333333;
+    font-size:13px;
+    display:block; 
+    margin-left: 5px;
+    margin-top: -10px;
+}
+.menuslide:hover {
+    cursor:pointer;
+}
+.submenuslide:hover {
+    cursor:pointer;
+}
+.submenuslideTestadmin:hover {
+    cursor:pointer;
+}
+/*** Slider styles end ***/
+.notenant {
+    top:4em;
+    position:relative;
+    margin-left:50px;
+}
+
+.fieldGroup label.control-label-summary{
+	float:left;
+	text-align:left;
+}
+.assessmentFont {
+      font-size: 1.00em;
+}
+.fieldGroup li span.layoutDisplayOnly {
+	float: none;
+	text-align: left;
+	width: 140px;
+	margin-left: 0.7em;
+}
+  
+p.note {
+  background: rgba(255, 255, 255, 0.75) none repeat scroll 0 0;
+  left: 0;
+  min-height: 2em;
+  outline: 3px solid #3DB11A;
+  position: absolute;
+  text-align: left;
+  top: 32px;
+  width: 99.9%;
+  z-index: 2;
+  vertical-align : middle;
+  line-height:2;
+  padding-left:0 .25em 1em;
+}
+
+p.note:before { 
+	border-top: 1em solid transparent; 
+	border-bottom: 1em solid transparent; 
+	content: ""; 
+	float: left; 
+	border-left: 1em solid #3DB11A; 
+	display: inline-block; 
+	padding-right: 1em; 
+}
+
+p.note.pNoteStyle {
+	line-height:1.25;
+}
+
+.hide {
+  display: none;
+}
+
+.no-edit-allowed {
+	background-color: #D8D8D8;
+	pointer-events: none;
+}
+
+.role-message {
+    color: red;
+    font-weight: bold;
+    text-align: center;
+}
+
+.sprite {
+    margin: 2px;
+    width: 1px;
+    height: 25px;
+    background-repeat: no-repeat;
+    display: inline-block;
+    vertical-align: middle;
+    padding: 0px!important;
+}
+
+.submenu-option {
+    font-size: 100%;
+    font-weight: normal;
+    text-decoration: none;
+	padding: 0px !important;
+}
+
+.table-center {
+	margin-left: auto;
+    margin-right: auto;  
+}
+
+.spacing {
+	padding: 5px;
+}
+
+.buttonRow > * {
+  display:inline;
+  
+}.positioningContainer {
+  position: relative;
+}
+
+.exportContainer {
+  	background: rgba(255, 255, 255, 0.9) none repeat scroll 0 0;
+    border: 5px solid #666;
+    left: 0;
+    list-style-type: none;
+    padding: 1em !important;
+    position: absolute;
+    text-align: left !important;
+    width: 291px;
+}
+
+.exportContainer input,
+.exportContainer label {
+  display: inline;
+  float: none;
+  margin: 0 0.5em 0 0;
+   width: auto;
+}
+
+.exportContainer li {
+  line-height: 2.25;
+  width: auto;
+}
+
+.exportContainer button {
+  margin: 0 .25em;
+  width: auto;
+}
+
+.exportContainer select {
+  border: 3px solid #ddd;
+  background: #fff;
+   width: auto;
+}
+.disabled, disabled:hover {
+  border: 1px solid #999;
+  color: #333;
+  cursor: default;
+  opacity: 0.5;
+}
+
+.exportContainer button span.btnIcon {
+	width:25px; 
+	float:none;
+}
+
+.icon_export {
+	background-position: -25px -523px
+}
+
+.disabled  .icon_save2, .disabled:hover .icon_save2 {
+  background-position: -100px -350px;
+}
+

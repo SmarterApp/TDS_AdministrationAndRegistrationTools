@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:int="http://www.springframework.org/schema/integration"
+       xmlns:task="http://www.springframework.org/schema/task"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:int-file="http://www.springframework.org/schema/integration/file"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+                           http://www.springframework.org/schema/integration http://www.springframework.org/schema/integration/spring-integration-3.0.xsd
+                           http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task-3.0.xsd
+                           http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd
+                           http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
+                           http://www.springframework.org/schema/integration/file http://www.springframework.org/schema/integration/file/spring-integration-file-3.0.xsd">
+
+    <aop:aspectj-autoproxy proxy-target-class="false"/>
+    <context:annotation-config/>
+    <context:component-scan base-package="org.opentestsystem.delivery.testreg.transformer,org.opentestsystem.delivery.testreg.transformer.domain" />
+
+    <!-- configuration for data warehouse data pipeline -->
+    <int:channel id="dataWarehouseInput"/>
+    <int:channel id="dataWarehouseSelector"/>
+    <int:channel id="dataWarehouseGeneration">
+        <int:dispatcher task-executor="taskExecutor" />
+    </int:channel>
+    <int:channel id="tarInput"/>
+    <int:channel id="compressInput"/>
+    <int:publish-subscribe-channel id="encryptInput"/>
+    <int:publish-subscribe-channel id="dataWarehouseOutput"/>
+    
+    <int:channel id="dataWarehouseOutputSbac"/>
+    <int:channel id="dataWarehouseOutputLocal"/>
+    
+    <int:gateway id="dwGateway" service-interface="org.opentestsystem.delivery.testreg.transformer.DwGenStarter" default-request-channel="dataWarehouseInput"/>
+    
+    <!-- need to use a transformer to add the necessary headers since we use one header to generate the other -->
+    <int:transformer input-channel="dataWarehouseInput" output-channel="dataWarehouseSelector" ref="dwHeaderGenerator"/>
+    
+    <int:splitter input-channel="dataWarehouseSelector" output-channel="dataWarehouseGeneration" ref="dataWarehouseSplitter"/>
+    
+    <!-- transformer to tar data, outputs directly to compressInput -->
+    <int:transformer input-channel="tarInput" output-channel="compressInput" ref="tarBundler"/>
+    
+    <!-- transformer to compress data, outputs directly to encryptInput -->
+    <int:transformer input-channel="compressInput" output-channel="encryptInput" ref="gZipCompressor"/>
+    
+    <!-- transformer to encrypt and sign data, outputs directly to the final data warehouse output channel -->
+    <int:transformer input-channel="encryptInput" output-channel="dataWarehouseOutput" ref="gpgEncryptor" order="2"/>
+    
+    <int:header-value-router input-channel="dataWarehouseOutput" header-name="dwConfigType">
+        <int:mapping value="SBAC" channel="dataWarehouseOutputSbac" />
+        <int:mapping value="LOCAL" channel="dataWarehouseOutputLocal" />
+    </int:header-value-router>
+        
+    <bean id="dwHeader" class="java.lang.String">
+        <constructor-arg><value>StateName,StateAbbreviation,ResponsibleDistrictIdentifier,OrganizationName,ResponsibleSchoolIdentifier,
+        NameOfInstitution,StudentIdentifier,ExternalSSID,FirstName,MiddleName,LastOrSurname,Sex,Birthdate,
+        GradeLevelWhenAssessed,HispanicOrLatinoEthnicity,AmericanIndianOrAlaskaNative,Asian,BlackOrAfricanAmerican,
+        NativeHawaiianOrOtherPacificIslander,White,IDEAIndicator,LEPStatus,Section504Status,EconomicDisadvantageStatus,MigrantStatus,
+        DemographicRaceTwoOrMoreRaces,LanguageCode,EnglishLanguageProficiencLevel,FirstEntryDateIntoUSSchool,
+        LimitedEnglishProficiencyEntryDate,LEPExitDate,TitleIIILanguageInstructionProgramType,PrimaryDisabilityType</value></constructor-arg>
+    </bean>
+    
+</beans>

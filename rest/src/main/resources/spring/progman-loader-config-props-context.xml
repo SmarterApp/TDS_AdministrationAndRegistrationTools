@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+    xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
+
+    <!-- Need to bootstrap Program Management Loader with a component name and environment 
+    Use -Ds to set active spring profile, base uri for progman, and progman locator
+      progman locator is a 2 or 3 comma seperated value  
+      1. a config name
+      2. a config environment
+      3. a config overlay name (which is optional)
+      Example:
+     -Dspring.profiles.active="progman.client.impl.integration, mna.client.null"
+     -Dprogman.baseUri=http://localhost:8089/prog-mgmnt.rest/ 
+     -Dprogman.locator=tib,dev[,overlay];
+    -->
+    <bean id="testregProgmanPropertyConfigurer" class="org.springframework.context.support.PropertySourcesPlaceholderConfigurer">
+        <property name="ignoreResourceNotFound" value="true"/>
+        <property name="ignoreUnresolvablePlaceholders" value="true"/>
+    </bean>
+
+</beans>

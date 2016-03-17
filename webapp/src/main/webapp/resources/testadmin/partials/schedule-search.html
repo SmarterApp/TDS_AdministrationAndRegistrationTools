@@ -1,0 +1,110 @@
+<div  data-ng-include src='"resources/testadmin/partials/leftnav.html"'></div>
+<div class="secContent"> 
+
+<span class="boxIcon icon_sprite icon_view1"></span>
+<div data-ng-repeat="error in errors">
+     <div><span class="icon_sprite icon_error error"></span>{{error}}</div>
+</div>
+
+<div class="boxTitle"><h2>Schedule  Search</h2></div>
+<div>
+	<div data-searchable data-search-url="'schedule'"  data-search-params="searchParams" data-search-response="searchResponse">
+		<div class="fieldGroup">
+			<h5>Search Filters</h5>
+			<ul>
+	            <li>
+	                <span> 
+	                    <label class="control-label" for="schedule.scheduleName" >Name:</label>
+	                     <input type="text" name="schedule.scheduleName" data-ng-model="searchParams.scheduleName" />
+	                </span>
+	            </li>
+                <li>
+                    <span> 
+                        <label class="control-label" for="schedule.stateAbbreviation" title="State Abbreviation">State Abbreviation:</label>
+                        <select data-ng-model="searchParams.stateAbbreviation" data-ng-options="id.entityId as id.entityId for id in states | orderBy:'entityId'" title="State Abbreviation" tabindex="0">
+                           <option value="" >Select...</option>
+                        </select>
+                    </span>
+                </li>  	            
+	            <li>
+	                <span class="district-auto-complete">
+	                    <label class="control-label" for="schedule.institutionIdentifier">{{xwalk('Institution Identifier')}}:</label>
+	                    <input data-institution-auto-complete-schedule type="text" 
+	                    placeholder="Search..." 
+	                    data-ng-model="institution"
+	                    data-typeahead="entity as entity.entityId + ' - ' + entity.entityName for entity in filterInstitutions($viewValue, searchParams.stateAbbreviation, 10)" 
+	                    data-typeahead-wait-ms="200" 
+	                    data-typeahead-editable="true" 
+	                    data-typeahead-input-formatter="formatInstitutionLabel($model)"
+	                    data-typeahead-on-select="changeInstitution({institution:$item})" />  
+	                 </span>               
+	            </li> 	     
+	            <li><span></span></li>       
+			</ul>
+			<button type="button" type="button" class="boxBtn" data-search-on-click	data-active-indicator="searchResponse.searching">
+				<span class="btnIcon icon_sprite icon_search ng-class:{ajax_indicator:activeIndicator}"></span>
+				<span class="btnText">Search</span>
+			</button>
+			<button type="button" type="button" class="boxBtn"	data-ng-click="createNew()">
+				<span class="btnIcon icon_sprite icon_saveAdd2"></span> <span class="btnText">New</span>
+			</button>
+		</div>
+        
+		<div data-pageable data-paging-info="searchResponse"	data-search-params="searchParams" data-change-page="changePage()">
+			<table class="dataTable">
+				<colgroup>
+					<col>
+					<col>
+					<col>
+					<col>
+					<col>
+					<col>
+					<col>
+					<col style="width:5%">
+					<col class="tripleActionColumn">
+				</colgroup>
+				<tr>
+					<th rowspan="2" data-sort-on-click data-sort-column="scheduleName" class="headerSortUp">Name</th>
+					<th rowspan="2" data-sort-on-click data-sort-column="institutionIdentifier" >{{xwalk('Institution Identifier')}}</th>
+					<th rowspan="2" data-sort-on-click data-sort-column="stateAbbreviation" >State Abbreviation</th>
+					<th rowspan="2" data-sort-on-click data-sort-column="startDate" >Start Date</th>
+					<th rowspan="2" data-sort-on-click data-sort-column="endDate" >End Date</th>
+					<th colspan="3">Schedule Rules</th>
+                    <th rowspan="2"></th>
+				</tr>
+				<tr>
+				    <th>Type</th>
+				    <th>Value</th>
+				    <th>Strict</th>
+				</tr>
+				<tbody data-ng-repeat="schedule in searchResponse.searchResults">
+					<tr>
+						<td rowspan="{{schedule.affinities.length+1}}">{{schedule.scheduleName}}</td>
+						<td rowspan="{{schedule.affinities.length+1}}">{{schedule.institutionIdentifier}}</td>
+						<td rowspan="{{schedule.affinities.length+1}}">{{schedule.stateAbbreviation}}</td>
+						<td rowspan="{{schedule.affinities.length+1}}">{{formatDate(schedule.startDate)}}</td>
+						<td rowspan="{{schedule.affinities.length+1}}">{{formatDate(schedule.endDate)}}</td>
+						<td>{{schedule.affinities[0].type}}</td>
+						<td>{{getValue(schedule.affinities[0])}}</td>
+						<td>{{getRule(schedule.affinities[0].rule)}}</td>
+				      <td rowspan="{{schedule.affinities.length+1}}" class="normalSpace">
+	                        <div class="tableButtonGroup">
+	                            <button data-ng-click="viewSummary(schedule)" class="boxBtn"><span class="btnIcon icon_sprite icon_preview2"></span></button>
+	                            <button data-ng-click="edit(schedule)" class="boxBtn"><span class="btnIcon icon_sprite icon_edit2"></span></button>
+	                            <button data-delete-confirmation="{{schedule.id}}" class="boxBtn"><span class="btnIcon icon_sprite icon_delete2"></span></button>                          
+	                        </div>
+	                  </td>
+					</tr>
+					<tr data-ng-repeat="affinity in schedule.affinities">
+	                    <td data-ng-show="$index > 0 ">{{affinity.type}}</td>
+		                <td data-ng-show="$index > 0 ">{{getValue(affinity)}}</td>
+		                <td data-ng-show="$index > 0 ">{{getRule(affinity.rule)}}</td>             
+		                          
+	                </tr>
+	           </tbody>
+			</table>
+		</div>
+	</div>
+</div>
+</div>
+<div class="clear"></div>

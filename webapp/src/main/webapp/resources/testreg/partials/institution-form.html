@@ -1,0 +1,74 @@
+<div data-ng-repeat="error in errors">
+    <div><span class="icon_sprite icon_error error"></span>{{error}}</div>
+</div>
+   
+<div data-ng-form="institutionForm" class="formWrapper">
+    <div data-ng-show="institutionForm.$dirty" class="dirtynag">* Warning: You have unsaved changes</div>
+    <div class="fieldGroup">
+    <h5 tabindex="-1">{{formAction}} {{entityNameLabels['Institution']}} Information <span class="control-label-required">Indicates required field</span></h5>
+        <ul class="entityLayout">
+             <li>
+                <span> 
+                    <label class="control-label-required" for="institution.entityId" title="Institution Identifier">{{xwalk('Institution Identifier')}}:</label>
+                    <input type="text" data-ng-model="institution.entityId" alt="Institution Identifier" tabindex="0" />
+                
+                </span>
+            </li>
+             <li>
+                <span> 
+                    <label class="control-label-required" for="institution.entityName" title="Name of Institution">{{xwalk('Name of Institution')}}:</label>
+                    <input type="text" data-ng-model="institution.entityName" alt="Name of Institution" tabindex="0" />
+                
+                </span>
+            </li>  
+            <li>
+                <span> 
+                    <label class="control-label-required" for="institution.parentEntityType" title="Parent Entity Type">{{xwalk('Parent Entity Type')}}:</label>
+                     <select  data-ng-model="institution.parentEntityType" data-load-parent-entities="{{institution.parentEntityType}}" data-ng-options="entity.entityId as entity.entityName for entity in entities" data-ng-change="loadStates(institution.parentEntityType)" title="Parent Entity Type" tabindex="0">
+                        <option value="">Select...</option>
+                    </select>
+                </span>
+            </li>
+            <li>
+                <span>
+                    <label class="control-label-required" for="institution.parentEntityId" title="Parent External Id">{{xwalk('Parent External Id')}}:</label>
+                    <select data-ng-model="institution.parentId" data-ng-options="entity.id as entity.entityId + ' - ' + entity.entityName for entity in selectedParentEntities | orderBy:'entityId'" data-ng-change="setParentInfoOnChange(institution.parentId)" title="Parent External Id" tabindex="0">
+                      <option value="">Select...</option>
+                    </select>
+                </span>
+            </li>  
+            <li>
+                <span> 
+                    <label class="control-label-required" for="institution.nationwideIdentifier" title="NCES Institution Id">{{xwalk('NCES Institution Id')}}:</label>
+                    <input type="text" data-ng-model="institution.nationwideIdentifier" alt="NCES Institution Id" tabindex="0" />
+                </span>
+            </li>                
+              
+            <li>
+                <span> 
+                    <label class="control-label-required" for="institution.stateAbbreviation" title="State Abbreviation">{{xwalk('State Abbreviation')}}:</label>
+                    <select data-ng-model="institution.stateAbbreviation" data-ng-options="id.entityId as id.entityId for id in states | orderBy:'entityId'" title="State Abbreviation" tabindex="0">
+                       <option value="" >Select...</option>
+                    </select>
+                </span>
+            </li>
+            <li>
+                <span>
+               </span>
+            </li>
+        </ul>  
+
+        <button type="button" class="boxBtn" data-ng-show="institutionForm.$dirty" data-ng-click="save(institution)" tabindex="0">
+            <span class="btnIcon icon_sprite icon_save2 ng-class:{ajax_indicator:savingIndicator}" aria-hidden="true"></span>
+            <span class="btnText">Save</span>
+        </button>
+     
+        <button type="button" class="boxBtn" data-ng-click="cancel()" tabindex="0">
+            <span class="btnIcon icon_sprite icon_cancel2" aria-hidden="true"></span>
+            <span class="btnText">Cancel</span>
+        </button>
+    </div>
+</div>
+<div class="clear"></div>
+
+ 

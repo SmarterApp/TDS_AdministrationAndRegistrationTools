@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" 
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:context="http://www.springframework.org/schema/context"
+    xmlns:util="http://www.springframework.org/schema/util"
+    xsi:schemaLocation="
+                http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+                http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
+                http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-3.0.xsd">
+
+    <context:component-scan base-package="org.opentestsystem.delivery.testreg.eligibility" />
+    <bean name="eligibilityDependencyResolver" class="org.mockito.Mockito" factory-method="mock">
+        <constructor-arg value="org.opentestsystem.delivery.testreg.persistence.criteria.dependencyresolvers.EligibilityDependencyResolver"/>
+    </bean>
+    <bean name="sb11EntityService" class="org.mockito.Mockito" factory-method="mock">
+        <constructor-arg value="org.opentestsystem.delivery.testreg.service.Sb11EntityRepositoryService"/>
+    </bean>
+    <bean name="sb11NonEntityService" class="org.mockito.Mockito" factory-method="mock">
+        <constructor-arg value="org.opentestsystem.delivery.testreg.service.Sb11NonEntityRepositoryService"/>
+    </bean>
+    <bean name="testRegPersister" class="org.mockito.Mockito" factory-method="mock">
+        <constructor-arg value="org.opentestsystem.delivery.testreg.service.TestRegPersister"/>
+    </bean>
+    
+</beans>

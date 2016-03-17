@@ -1,0 +1,1430 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Accessibility xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+	
+	<!-- ================================================================================================= -->
+	<!-- ================================================================================================= -->
+	<!-- MASTER RESOURCE FAMILY -->
+	<!-- ================================================================================================= -->
+	<!-- ================================================================================================= -->
+	
+	<MasterResourceFamily>
+
+		<SingleSelectResource>
+			<Code>AmericanSignLanguage</Code>
+			<Order>1</Order>
+			<DefaultSelection/>
+			<Text>
+				<Language>eng</Language>
+				<Label>American Sign Language</Label>
+			</Text>
+			<Selection>
+				<Code>TDS_ASL0</Code>
+				<Order>1</Order>
+				<Text>
+					<Language>eng</Language>
+					<Label>Do not show ASL videos</Label>
+				</Text>
+			</Selection>
+			<Selection>
+				<Code>TDS_ASL1</Code>
+				<Order>2</Order>
+				<Text>
+					<Language>eng</Language>
+					<Label>Show ASL videos</Label>
+					<Message>ELA PTs do not have listening stimuli</Message>
+				</Text>
+			</Selection>
+		</SingleSelectResource>
+
+		<SingleSelectResource>
+			<Code>ColorContrast</Code>
+			<Order>2</Order>
+			<DefaultSelection>TDS_CC0</DefaultSelection>
+			<Text>
+				<Language>eng</Language>
+				<Label>Color Choices</Label>
+			</Text>
+			<Selection>
+				<Code>TDS_CC0</Code>
+				<Order>1</Order>
+				<Text>
+					<Language>eng</Language>
+					<Label>Black on White</Label>
+				</Text>
+			</Selection>
+			<Selection>
+				<Code>TDS_CCInvert</Code>
+				<Order>2</Order>
+				<Text>
+					<Language>eng</Language>
+					<Label>Reverse Contrast</Label>
+				</Text>
+			</Selection>
+			<Selection>
+				<Code>TDS_CCMagenta</Code>
+				<Order>3</Order>
+				<Text>
+					<Language>eng</Language>
+					<Label>Black on Rose</Label>
+				</Text>
+			</Selection>
+			<Selection>
+				<Code>TDS_CCMedGrayLtGray</Code>
+				<Order>4</Order>
+				<Text>
+					<Language>eng</Language>
+					<Label>Medium Gray on Light Gray</Label>
+				</Text>
+			</Selection>
+			<Selection>
+				<Code>TDS_CCYellowB</Code>
+				<Order>5</Order>
+				<Text>
+					<Language>eng</Language>
+					<Label>Yellow on Blue</Label>
+				</Text>
+			</Selection>
+		</SingleSelectResource>
+
+		<SingleSelectResource>
+			<Code>ClosedCaptioning</Code>
+			<Order>3</Order>
+			<Text>
+				<Language>eng</Language>
+				<Label>Closed Captioning</Label>
+			</Text>
+			<Selection>
+				<Code>TDS_ClosedCap0</Code>
+				<Order>1</Order>
+				<Text>
+					<Language>eng</Language>
+					<Label>Closed Captioning Not Available</Label>
+				</Text>
+			</Selection>
+			<Selection>
+				<Code>TDS_ClosedCap1</Code>
+				<Order>2</Order>
+				<Text>
+					<Language>eng</Language>
+					<Label>Closed Captioning Available</Label>
+					<Message>ELA PTs do not have listening stimuli</Message>
+				</Text>
+			</Selection>
+		</SingleSelectResource>
+
+		<SingleSelectResource>
+			<Code>Language</Code>
+			<Order>4</Order>
+			<DefaultSelection>ENU</DefaultSelection>
+			<Text>
+				<Language>eng</Language>
+				<Label>Language</Label>
+			</Text>
+			<Selection>
+				<Code>ENU</Code>
+				<Order>1</Order>
+				<Text>
+					<Language>eng</Language>
+					<Label>English</Label>
+				</Text>
+			</Selection>
+			<Selection>
+				<Code>ENU-Braille</Code>
+				<Order>2</Order>
+				<Text>
+					<Language>eng</Language>
+					<Label>Braille</Label>
+				</Text>
+			</Selection>
+			<Selection>
+				<Code>ESN</Code>
+				<Order>3</Order>
+				<Text>
+					<Language>eng</Language>
+					<Label>Spanish (Stacked Translation)</Label>
+				</Text>
+			</Selection>
+		</SingleSelectResource>
+
+		<SingleSelectResource>
+			<Code>Masking</Code>
+			<Order>5</Order>
+			<Text>
+				<Language>eng</Language>
+				<Label>Masking</Label>
+			</Text>
+			<Selection>
+				<Code>TDS_Masking0</Code>
+				<Order>1</Order>
+				<Text>
+					<Language>eng</Language>
+					<Label>Masking Not Available</Label>
+				</Text>
+			</Selection>
+			<Selection>
+				<Code>TDS_Masking1</Code>
+				<Order>2</Order>
+				<Text>
+					<Language>eng</Language>
+					<Label>Masking Available</Label>
+				</Text>
+			</Selection>
+		</SingleSelectResource>
+
+		<SingleSelectResource>
+			<Code>PermissiveMode</Code>
+			<Order>6</Order>
+			<Text>
+				<Language>eng</Language>
+				<Label>Permissive Mode</Label>
+			</Text>
+			<Selection>
+				<Code>TDS_PM0</Code>
+				<Order>1</Order>
+				<Text>
+					<Language>eng</Language>
+					<Label>Permissive Mode Disabled</Label>
+				</Text>
+			</Selection>
+			<Selection>
+				<Code>TDS_PM1</Code>
+				<Order>2</Order>
+				<Text>
+					<Language>eng</Language>
+					<Label>Permissive Mode Enabled</Label>
+				</Text>
+			</Selection>
+		</SingleSelectResource>
+
+		<SingleSelectResource>
+			<Code>PrintOnDemand</Code>
+			<Order>7</Order>
+			<Text>
+				<Language>eng</Language>
+				<Label>Print On Demand</Label>
+			</Text>
+			<Selection>
+				<Code>TDS_PoD0</Code>
+				<Order>1</Order>
+				<Text>
+					<Language>eng</Language>
+					<Label>None</Label>
+				</Text>
+			</Selection>
+			<Selection>
+				<Code>TDS_PoD_Stim</Code>
+				<Order>2</Order>
+				<Text>
+					<Language>eng</Language>
+					<Label>Stimuli</Label>
+				</Text>
+			</Selection>
+			<Selection>
+				<Code>TDS_PoD_Item</Code>
+				<Order>3</Order>
+				<Text>
+					<Language>eng</Language>
+					<Label>Items</Label>
+				</Text>
+			</Selection>
+			<Selection>
+				<Code>TDS_PoD_Stim&amp;TDS_PoD_Item</Code>
+				<Order>4</Order>
+				<Text>
+					<Language>eng</Language>
+					<Label>Stimuli and Items</Label>
+				</Text>
+			</Selection>
+		</SingleSelectResource>
+
+		<SingleSelectResource>
+			<Code>PrintSize</Code>
+			<Order>8</Order>
+			<DefaultSelection>TDS_PS_L0</DefaultSelection>
+			<Text>
+				<Language>eng</Language>
+				<Label>Zoom</Label>
+			</Text>
+			<Selection>
+				<Code>TDS_PS_L0</Code>
+				<Order>1</Order>
+				<Text>
+					<Language>eng</Language>
+					<Label>No default zoom applied</Label>
+				</Text>
+			</Selection>
+			<Selection>
+				<Code>TDS_PS_L1</Code>
+				<Order>2</Order>
+				<Text>
+					<Language>eng</Language>
+					<Label>Level 1</Label>
+				</Text>
+			</Selection>
+			<Selection>
+				<Code>TDS_PS_L2</Code>
+				<Order>3</Order>
+				<Text>
+					<Language>eng</Language>
+					<Label>Level 2</Label>
+				</Text>
+			</Selection>
+			<Selection>
+				<Code>TDS_PS_L3</Code>
+				<Order>4</Order>
+				<Text>
+					<Language>eng</Language>
+					<Label>Level 3</Label>
+				</Text>
+			</Selection>
+			<Selection>
+				<Code>TDS_PS_L4</Code>
+				<Order>5</Order>
+				<Text>
+					<Language>eng</Language>
+					<Label>Level 4</Label>
+				</Text>
+			</Selection>
+		</SingleSelectResource>
+
+		<SingleSelectResource>
+			<Code>StreamlinedInterface</Code>
+			<Order>9</Order>
+			<DefaultSelection>TDS_SLM0</DefaultSelection>
+			<Text>
+				<Language>eng</Language>
+				<Label>Streamlined Interface</Label>
+			</Text>
+			<Selection>
+				<Code>TDS_SLM0</Code>
+				<Order>1</Order>
+				<Text>
+					<Language>eng</Language>
+					<Label>Standard</Label>
+				</Text>
+			</Selection>
+			<Selection>
+				<Code>TDS_SLM1</Code>
+				<Order>2</Order>
+				<Text>
+					<Language>eng</Language>
+					<Label>Streamlined</Label>
+				</Text>
+			</Selection>
+		</SingleSelectResource>
+
+		<SingleSelectResource>
+			<Code>TexttoSpeech</Code>
+			<Order>10</Order>
+			<Text>
+				<Language>eng</Language>
+				<Label>Text to Speech</Label>
+			</Text>
+			<Selection>
+				<Code>TDS_TTS0</Code>
+				<Order>1</Order>
+				<Text>
+					<Language>eng</Language>
+					<Label>None</Label>
+				</Text>
+			</Selection>
+			<Selection>
+				<Code>TDS_TTS_Item</Code>
+				<Order>2</Order>
+				<Text>
+					<Language>eng</Language>
+					<Label>Items Only</Label>
+				</Text>
+			</Selection>
+			<Selection>
+				<Code>TDS_TTS_Stim</Code>
+				<Order>3</Order>
+				<Text>
+					<Language>eng</Language>
+					<Label>Stimuli Only</Label>
+				</Text>
+			</Selection>
+			<Selection>
+				<Code>TDS_TTS_Stim&amp;TDS_TTS_Item</Code>
+				<Order>4</Order>
+				<Text>
+					<Language>eng</Language>
+					<Label>Stimuli and Items</Label>
+				</Text>
+			</Selection>
+		</SingleSelectResource>
+
+		<SingleSelectResource>
+			<Code>Translation</Code>
+			<Order>11</Order>
+			<Text>
+				<Language>eng</Language>
+				<Label>Translation</Label>
+			</Text>
+			<Selection>
+				<Code>TDS_WL_Glossary</Code>
+				<Order>1</Order>
+				<Text>
+					<Language>eng</Language>
+					<Label>English</Label>
+				</Text>
+			</Selection>
+			<Selection>
+				<Code>TDS_WL_ArabicGloss</Code>
+				<Order>2</Order>
+				<Text>
+					<Language>eng</Language>
+					<Label>Arabic</Label>
+				</Text>
+			</Selection>
+			<Selection>
+				<Code>TDS_WL_CantoneseGloss</Code>
+				<Order>3</Order>
+				<Text>
+					<Language>eng</Language>
+					<Label>Cantonese</Label>
+				</Text>
+			</Selection>
+			<Selection>
+				<Code>TDS_WL_ESNGlossary</Code>
+				<Order>4</Order>
+				<Text>
+					<Language>eng</Language>
+					<Label>Spanish</Label>
+				</Text>
+			</Selection>
+			<Selection>
+				<Code>TDS_WL_KoreanGloss</Code>
+				<Order>5</Order>
+				<Text>
+					<Language>eng</Language>
+					<Label>Korean</Label>
+				</Text>
+			</Selection>
+			<Selection>
+				<Code>TDS_WL_MandarinGloss</Code>
+				<Order>6</Order>
+				<Text>
+					<Language>eng</Language>
+					<Label>Mandarin</Label>
+				</Text>
+			</Selection>
+			<Selection>
+				<Code>TDS_WL_PunjabiGloss</Code>
+				<Order>7</Order>
+				<Text>
+					<Language>eng</Language>
+					<Label>Punjabi</Label>
+				</Text>
+			</Selection>
+			<Selection>
+				<Code>TDS_WL_RussianGloss</Code>
+				<Order>8</Order>
+				<Text>
+					<Language>eng</Language>
+					<Label>Russian</Label>
+				</Text>
+			</Selection>
+			<Selection>
+				<Code>TDS_WL_TagalGloss</Code>
+				<Order>9</Order>
+				<Text>
+					<Language>eng</Language>
+					<Label>Filipino (Ilokano and Tagalog)</Label>
+				</Text>
+			</Selection>
+			<Selection>
+				<Code>TDS_WL_UkrainianGloss</Code>
+				<Order>10</Order>
+				<Text>
+					<Language>eng</Language>
+					<Label>Ukrainian</Label>
+				</Text>
+			</Selection>
+			<Selection>
+				<Code>TDS_WL_VietnameseGloss</Code>
+				<Order>11</Order>
+				<Text>
+					<Language>eng</Language>
+					<Label>Vietnamese</Label>
+				</Text>
+			</Selection>
+			<Selection>
+				<Code>TDS_WL_ArabicGloss&amp;TDS_WL_Glossary</Code>
+				<Order>12</Order>
+				<Text>
+					<Language>eng</Language>
+					<Label>Arabic &amp; English</Label>
+				</Text>
+			</Selection>
+			<Selection>
+				<Code>TDS_WL_CantoneseGloss&amp;TDS_WL_Glossary</Code>
+				<Order>13</Order>
+				<Text>
+					<Language>eng</Language>
+					<Label>Cantonese &amp; English</Label>
+				</Text>
+			</Selection>
+			<Selection>
+				<Code>TDS_WL_ESNGlossary&amp;TDS_WL_Glossary</Code>
+				<Order>14</Order>
+				<Text>
+					<Language>eng</Language>
+					<Label>Spanish &amp; English</Label>
+				</Text>
+			</Selection>
+			<Selection>
+				<Code>TDS_WL_KoreanGloss&amp;TDS_WL_Glossary</Code>
+				<Order>15</Order>
+				<Text>
+					<Language>eng</Language>
+					<Label>Korean &amp; English</Label>
+				</Text>
+			</Selection>
+			<Selection>
+				<Code>TDS_WL_MandarinGloss&amp;TDS_WL_Glossary</Code>
+				<Order>16</Order>
+				<Text>
+					<Language>eng</Language>
+					<Label>Mandarin &amp; English</Label>
+				</Text>
+			</Selection>
+			<Selection>
+				<Code>TDS_WL_PunjabiGloss&amp;TDS_WL_Glossary</Code>
+				<Order>17</Order>
+				<Text>
+					<Language>eng</Language>
+					<Label>Punjabi &amp; English</Label>
+				</Text>
+			</Selection>
+			<Selection>
+				<Code>TDS_WL_RussianGloss&amp;TDS_WL_Glossar</Code>
+				<Order>18</Order>
+				<Text>
+					<Language>eng</Language>
+					<Label>Russian &amp; English</Label>
+				</Text>
+			</Selection>
+			<Selection>
+				<Code>TDS_WL_TagalGloss&amp;TDS_WL_Glossary</Code>
+				<Order>19</Order>
+				<Text>
+					<Language>eng</Language>
+					<Label>Filipino (Ilokano and Tagalog) and English</Label>
+				</Text>
+			</Selection>
+			<Selection>
+				<Code>TDS_WL_UkrainianGloss&amp;TDS_WL_Glossary</Code>
+				<Order>20</Order>
+				<Text>
+					<Language>eng</Language>
+					<Label>Ukrainian &amp; English</Label>
+				</Text>
+			</Selection>
+			<Selection>
+				<Code>TDS_WL_VietnameseGloss&amp;TDS_WL_Glossary</Code>
+				<Order>21</Order>
+				<Text>
+					<Language>eng</Language>
+					<Label>Vietnamese &amp; English</Label>
+				</Text>
+			</Selection>
+			<Selection>
+				<Code>TDS_WL0</Code>
+				<Order>22</Order>
+				<Text>
+					<Language>eng</Language>
+					<Label>None</Label>
+				</Text>
+			</Selection>
+		</SingleSelectResource>
+
+		<MultiSelectResource>
+			<Code>NonEmbeddedDesignatedSupports</Code>
+			<Order>12</Order>
+			<DefaultSelection>NEDS0</DefaultSelection>
+			<Text>
+				<Language>eng</Language>
+				<Label>Non-Embedded Designated Supports</Label>
+			</Text>
+			<Selection>
+				<Code>NEDS0</Code>
+				<Order>1</Order>
+				<MutuallyExclusive/>
+				<Text>
+					<Language>eng</Language>
+					<Label>None</Label>
+				</Text>
+			</Selection>
+			<Selection>
+				<Code>NEDS_BD</Code>
+				<Order>2</Order>
+				<Text>
+					<Language>eng</Language>
+					<Label>Bilingual Dictionary</Label>
+				</Text>
+			</Selection>
+			<Selection>
+				<Code>NEDS_CC</Code>
+				<Order>3</Order>
+				<Text>
+					<Language>eng</Language>
+					<Label>Color Contrast</Label>
+				</Text>
+			</Selection>
+			<Selection>
+				<Code>NEDS_CO</Code>
+				<Order>4</Order>
+				<Text>
+					<Language>eng</Language>
+					<Label>Color Overlay</Label>
+				</Text>
+			</Selection>
+			<Selection>
+				<Code>NEDS_Mag</Code>
+				<Order>5</Order>
+				<Text>
+					<Language>eng</Language>
+					<Label>Magnification</Label>
+				</Text>
+			</Selection>
+			<Selection>
+				<Code>NEDS_NoiseBuf</Code>
+				<Order>6</Order>
+				<Text>
+					<Language>eng</Language>
+					<Label>Noise buffers</Label>
+				</Text>
+			</Selection>
+			<Selection>
+				<Code>NEDS_RA_Items</Code>
+				<Order>7</Order>
+				<Text>
+					<Language>eng</Language>
+					<Label>Read Aloud Items-English</Label>
+				</Text>
+			</Selection>
+			<Selection>
+				<Code>NEDS_RA_Stimuli</Code>
+				<Order>8</Order>
+				<Text>
+					<Language>eng</Language>
+					<Label>Read Aloud PT Stimuli-English</Label>
+				</Text>
+			</Selection>
+			<Selection>
+				<Code>NEDS_RA_Items_ESN</Code>
+				<Order>9</Order>
+				<Text>
+					<Language>eng</Language>
+					<Label>Read Aloud Items-Spanish</Label>
+				</Text>
+			</Selection>
+			<Selection>
+				<Code>NEDS_RA_Stimuli_ESN</Code>
+				<Order>10</Order>
+				<Text>
+					<Language>eng</Language>
+					<Label>Read Aloud PT Stimuli-Spanish</Label>
+				</Text>
+			</Selection>
+			<Selection>
+				<Code>NEDS_SC_Items</Code>
+				<Order>11</Order>
+				<Text>
+					<Language>eng</Language>
+					<Label>Scribe Items (Non-Writing)</Label>
+				</Text>
+			</Selection>
+			<Selection>
+				<Code>NEDS_SS</Code>
+				<Order>12</Order>
+				<Text>
+					<Language>eng</Language>
+					<Label>Separate Setting</Label>
+				</Text>
+			</Selection>
+			<Selection>
+				<Code>NEDS_TArabic</Code>
+				<Order>13</Order>
+				<Text>
+					<Language>eng</Language>
+					<Label>Glossary - Arabic</Label>
+				</Text>
+			</Selection>
+			<Selection>
+				<Code>NEDS_TCantonese</Code>
+				<Order>14</Order>
+				<Text>
+					<Language>eng</Language>
+					<Label>Glossary - Cantonese</Label>
+				</Text>
+			</Selection>
+			<Selection>
+				<Code>NEDS_TFilipino</Code>
+				<Order>15</Order>
+				<Text>
+					<Language>eng</Language>
+					<Label>Glossary - Filipino (Ilokano and Tagalog)</Label>
+				</Text>
+			</Selection>
+			<Selection>
+				<Code>NEDS_TKorean</Code>
+				<Order>16</Order>
+				<Text>
+					<Language>eng</Language>
+					<Label>Glossary - Korean</Label>
+				</Text>
+			</Selection>
+			<Selection>
+				<Code>NEDS_TMandarin</Code>
+				<Order>17</Order>
+				<Text>
+					<Language>eng</Language>
+					<Label>Glossary - Mandarin</Label>
+				</Text>
+			</Selection>
+			<Selection>
+				<Code>NEDS_TPunjabi</Code>
+				<Order>18</Order>
+				<Text>
+					<Language>eng</Language>
+					<Label>Glossary - Punjabi</Label>
+				</Text>
+			</Selection>
+			<Selection>
+				<Code>NEDS_TRussianGta</Code>
+				<Order>19</Order>
+				<Text>
+					<Language>eng</Language>
+					<Label>Glossary - Russian</Label>
+				</Text>
+			</Selection>
+			<Selection>
+				<Code>NEDS_TSpanish</Code>
+				<Order>20</Order>
+				<Text>
+					<Language>eng</Language>
+					<Label>Glossary - Spanish</Label>
+				</Text>
+			</Selection>
+			<Selection>
+				<Code>NEDS_TUkrainian</Code>
+				<Order>21</Order>
+				<Text>
+					<Language>eng</Language>
+					<Label>Glossary - Ukrainian</Label>
+				</Text>
+			</Selection>
+			<Selection>
+				<Code>NEDS_TVietnamese</Code>
+				<Order>22</Order>
+				<Text>
+					<Language>eng</Language>
+					<Label>Glossary - Vietnamese</Label>
+				</Text>
+			</Selection>
+			<Selection>
+				<Code>NEDS_TransDirs</Code>
+				<Order>23</Order>
+				<Text>
+					<Language>eng</Language>
+					<Label>Translated test directions</Label>
+				</Text>
+			</Selection>
+		</MultiSelectResource>
+
+		<MultiSelectResource>
+			<Code>NonEmbeddedAccommodations</Code>
+			<Order>13</Order>
+			<DefaultSelection>NEA0</DefaultSelection>
+			<Text>
+				<Language>eng</Language>
+				<Label>Non-Embedded Accommodations</Label>
+			</Text>
+			<Selection>
+				<Code>NEA0</Code>
+				<Order>1</Order>
+				<MutuallyExclusive/>
+				<Text>
+					<Language>eng</Language>
+					<Label>None</Label>
+				</Text>
+			</Selection>
+			<Selection>
+				<Code>NEA_AR</Code>
+				<Order>2</Order>
+				<Text>
+					<Language>eng</Language>
+					<Label>Alternate Response Options</Label>
+				</Text>
+			</Selection>
+			<Selection>
+				<Code>NEA_RA_Stimuli</Code>
+				<Order>3</Order>
+				<Text>
+					<Language>eng</Language>
+					<Label>Read Aloud CAT Reading Passages</Label>
+				</Text>
+			</Selection>
+			<Selection>
+				<Code>NEA_SC_WritItems</Code>
+				<Order>4</Order>
+				<Text>
+					<Language>eng</Language>
+					<Label>Scribe Items (Writing)</Label>
+				</Text>
+			</Selection>
+			<Selection>
+				<Code>NEA_STT</Code>
+				<Order>5</Order>
+				<Text>
+					<Language>eng</Language>
+					<Label>Speech-to-Text</Label>
+				</Text>
+			</Selection>
+			<Selection>
+				<Code>NEA_Abacus</Code>
+				<Order>6</Order>
+				<Text>
+					<Language>eng</Language>
+					<Label>Abacus</Label>
+				</Text>
+			</Selection>
+			<Selection>
+				<Code>NEA_Calc</Code>
+				<Order>7</Order>
+				<Text>
+					<Language>eng</Language>
+					<Label>Calculator</Label>
+				</Text>
+			</Selection>
+			<Selection>
+				<Code>NEA_MT</Code>
+				<Order>8</Order>
+				<Text>
+					<Language>eng</Language>
+					<Label>Multiplication Table</Label>
+				</Text>
+			</Selection>
+		</MultiSelectResource>
+		
+		<EditResource>
+			<Code>Other</Code>
+			<Order>14</Order>
+			<Text>
+				<Language>eng</Language>
+				<Label>Other</Label>
+			</Text>
+		</EditResource>
+
+	</MasterResourceFamily>
+
+	<!-- ================================================================================================= -->
+	<!-- ================================================================================================= -->
+	<!-- RESOURCE FAMILY FOR ELA ALL GRADES -->
+	<!-- ================================================================================================= -->
+	<!-- ================================================================================================= -->
+
+	<ResourceFamily>
+
+		<Subject>
+			<Code>ELA</Code>
+			<Name>English Language Arts</Name>
+		</Subject>
+		<Grade>03</Grade>
+		<Grade>04</Grade>
+		<Grade>05</Grade>
+		<Grade>06</Grade>
+		<Grade>07</Grade>
+		<Grade>08</Grade>
+		<Grade>09</Grade>
+		<Grade>10</Grade>
+		<Grade>11</Grade>
+		<Grade>12</Grade>
+
+		<!-- Eliminate Spanish -->		
+		<SingleSelectResource>
+			<Code>Language</Code>
+			<Selection>
+				<Code>ENU</Code>
+			</Selection>
+			<Selection>
+				<Code>ENU-Braille</Code>
+			</Selection>
+			<!--
+			<Selection>
+				<Code>ESN</Code>
+			</Selection>
+			-->
+		</SingleSelectResource>
+
+		<!-- Change some labels -->
+		<SingleSelectResource>
+			<Code>PrintOnDemand</Code>
+			<Selection>
+				<Code>TDS_PoD0</Code>
+			</Selection>
+			<Selection>
+				<Code>TDS_PoD_Stim</Code>
+				<Text>
+					<Language>eng</Language>
+					<!-- <Label>Stimuli</Label> -->
+					<Label>PT Stimuli and CAT Reading Passages</Label>
+				</Text>
+			</Selection>
+			<Selection>
+				<Code>TDS_PoD_Item</Code>
+			</Selection>
+			<Selection>
+				<Code>TDS_PoD_Stim&amp;TDS_PoD_Item</Code>
+				<Text>
+					<Language>eng</Language>
+					<!-- <Label>Stimuli and Items</Label> -->
+					<Label>PT Stimuli and CAT Reading Passages and Items</Label>
+				</Text>
+			</Selection>
+		</SingleSelectResource>
+
+		<!-- Change some labels-->
+		<SingleSelectResource>
+			<Code>TexttoSpeech</Code>
+			<Selection>
+				<Code>TDS_TTS0</Code>
+			</Selection>
+			<Selection>
+				<Code>TDS_TTS_Item</Code>
+			</Selection>
+			<Selection>
+				<Code>TDS_TTS_Stim</Code>
+				<Text>
+					<Language>eng</Language>
+					<!-- <Label>Stimuli Only</Label> -->
+					<Label>PT Stimuli and CAT Reading Passages Only</Label>
+				</Text>
+			</Selection>
+			<Selection>
+				<Code>TDS_TTS_Stim&amp;TDS_TTS_Item</Code>
+				<Text>
+					<Language>eng</Language>
+					<!-- <Label>Stimuli and Items</Label> -->
+					<Label>PT Stimuli and CAT Reading Passages and Items</Label>
+				</Text>
+			</Selection>
+		</SingleSelectResource>
+
+		<!-- Eliminate all the glossaries except for English and None -->
+		<SingleSelectResource>
+			<Code>Translation</Code>
+			<Selection>
+				<Code>TDS_WL0</Code>
+			</Selection>
+			<Selection>
+				<Code>TDS_WL_Glossary</Code>
+			</Selection>
+		</SingleSelectResource>
+
+		<!-- Eliminate two Read Aloud Spanish codes and all glossaries -->
+		<MultiSelectResource>
+			<Code>NonEmbeddedDesignatedSupports</Code>
+			<Selection>
+				<Code>NEDS0</Code>
+			</Selection>
+			<Selection>
+				<Code>NEDS_BD</Code>
+			</Selection>
+			<Selection>
+				<Code>NEDS_CC</Code>
+			</Selection>
+			<Selection>
+				<Code>NEDS_CO</Code>
+			</Selection>
+			<Selection>
+				<Code>NEDS_Mag</Code>
+			</Selection>
+			<Selection>
+				<Code>NEDS_NoiseBuf</Code>
+			</Selection>
+			<Selection>
+				<Code>NEDS_RA_Items</Code>
+			</Selection>
+			<Selection>
+				<Code>NEDS_RA_Stimuli</Code>
+			</Selection>
+			<!--
+      <Selection>
+        <Code>NEDS_RA_Items_ESN</Code>
+      </Selection>
+      <Selection>
+        <Code>NEDS_RA_Stimuli_ESN</Code>
+      </Selection>
+       -->
+			<Selection>
+				<Code>NEDS_SC_Items</Code>
+			</Selection>
+			<Selection>
+				<Code>NEDS_SS</Code>
+			</Selection>
+			<!-- 
+      <Selection>
+        <Code>NEDS_TArabic</Code>
+      </Selection>
+      <Selection>
+        <Code>NEDS_TCantonese</Code>
+      </Selection>
+      <Selection>
+        <Code>NEDS_TFilipino</Code>
+      </Selection>
+      <Selection>
+        <Code>NEDS_TKorean</Code>
+      </Selection>
+      <Selection>
+        <Code>NEDS_TMandarin</Code>
+      </Selection>
+      <Selection>
+        <Code>NEDS_TPunjabi</Code>
+      </Selection>
+      <Selection>
+        <Code>NEDS_TRussianGta</Code>
+      </Selection>
+      <Selection>
+        <Code>NEDS_TSpanish</Code>
+      </Selection>
+      <Selection>
+        <Code>NEDS_TUkrainian</Code>
+      </Selection>
+      <Selection>
+        <Code>NEDS_TVietnamese</Code>
+      </Selection>
+      -->
+			<Selection>
+				<Code>NEDS_TransDirs</Code>
+			</Selection>
+		</MultiSelectResource>
+
+		<MultiSelectResource>
+			<Code>NonEmbeddedAccommodations</Code>
+			<Selection>
+				<Code>NEA0</Code>
+			</Selection>
+			<Selection>
+				<Code>NEA_AR</Code>
+			</Selection>
+			<Selection>
+				<Code>NEA_RA_Stimuli</Code>
+			</Selection>
+			<Selection>
+				<Code>NEA_SC_WritItems</Code>
+			</Selection>
+			<Selection>
+				<Code>NEA_STT</Code>
+			</Selection>
+		</MultiSelectResource>
+
+	</ResourceFamily>
+
+	<!-- ================================================================================================= -->
+	<!-- ================================================================================================= -->
+	<!-- RESOURCE FAMILY FOR math GRADE 3 -->
+	<!-- ================================================================================================= -->
+	<!-- ================================================================================================= -->
+
+	<ResourceFamily>
+
+		<Subject>
+			<Code>MATH</Code>
+			<Name>Mathematics</Name>
+		</Subject>
+		<Grade>03</Grade>
+	
+		<!-- "Eliminate" Closed Captioning by getting rid of all its options. It will still be present 
+         so that the columns are consistent, but will not be selectable -->
+		<SingleSelectResource>
+			<Code>ClosedCaptioning</Code>
+			<Disabled/>
+		</SingleSelectResource>
+
+		<!-- Eliminate Bilingual Dictionary -->
+		<MultiSelectResource>
+			<Code>NonEmbeddedDesignatedSupports</Code>
+			<Selection>
+				<Code>NEDS0</Code>
+			</Selection>
+			<!-- 
+			<Selection>
+				<Code>NEDS_BD</Code>
+			</Selection>
+			-->
+			<Selection>
+				<Code>NEDS_CC</Code>
+			</Selection>
+			<Selection>
+				<Code>NEDS_CO</Code>
+			</Selection>
+			<Selection>
+				<Code>NEDS_Mag</Code>
+			</Selection>
+			<Selection>
+				<Code>NEDS_NoiseBuf</Code>
+			</Selection>
+			<Selection>
+				<Code>NEDS_RA_Items</Code>
+			</Selection>
+			<Selection>
+				<Code>NEDS_RA_Stimuli</Code>
+			</Selection>
+			<Selection>
+				<Code>NEDS_RA_Items_ESN</Code>
+			</Selection>
+			<Selection>
+				<Code>NEDS_RA_Stimuli_ESN</Code>
+			</Selection>
+			<Selection>
+				<Code>NEDS_SC_Items</Code>
+			</Selection>
+			<Selection>
+				<Code>NEDS_SS</Code>
+			</Selection>
+			<Selection>
+				<Code>NEDS_TArabic</Code>
+			</Selection>
+			<Selection>
+				<Code>NEDS_TCantonese</Code>
+			</Selection>
+			<Selection>
+				<Code>NEDS_TFilipino</Code>
+			</Selection>
+			<Selection>
+				<Code>NEDS_TKorean</Code>
+			</Selection>
+			<Selection>
+				<Code>NEDS_TMandarin</Code>
+			</Selection>
+			<Selection>
+				<Code>NEDS_TPunjabi</Code>
+			</Selection>
+			<Selection>
+				<Code>NEDS_TRussianGta</Code>
+			</Selection>
+			<Selection>
+				<Code>NEDS_TSpanish</Code>
+			</Selection>
+			<Selection>
+				<Code>NEDS_TUkrainian</Code>
+			</Selection>
+			<Selection>
+				<Code>NEDS_TVietnamese</Code>
+			</Selection>
+			<Selection>
+				<Code>NEDS_TransDirs</Code>
+			</Selection>
+		</MultiSelectResource>
+
+		<!-- Eliminate several options -->
+		<MultiSelectResource>
+			<Code>NonEmbeddedAccommodations</Code>
+			<Selection>
+				<Code>NEA0</Code>
+			</Selection>
+			<Selection>
+				<Code>NEA_AR</Code>
+			</Selection>
+			<!-- 
+			<Selection>
+				<Code>NEA_RA_Stimuli</Code>
+			</Selection>
+			<Selection>
+				<Code>NEA_SC_WritItems</Code>
+			</Selection>
+			-->
+			<Selection>
+				<Code>NEA_STT</Code>
+			</Selection>
+			<Selection>
+				<Code>NEA_Abacus</Code>
+			</Selection>
+			<!-- 
+			<Selection>
+				<Code>NEA_Calc</Code>
+			</Selection>
+			<Selection>
+				<Code>NEA_MT</Code>
+			</Selection>
+			-->
+
+		</MultiSelectResource>
+
+	</ResourceFamily>
+
+
+	<!-- ================================================================================================= -->
+	<!-- ================================================================================================= -->
+	<!-- RESOURCE FAMILY FOR math GRADE 4-5 -->
+	<!-- ================================================================================================= -->
+	<!-- ================================================================================================= -->
+
+	<ResourceFamily>
+
+		<Subject>
+			<Code>MATH</Code>
+			<Name>Mathematics</Name>
+		</Subject>
+		<Grade>04</Grade>
+		<Grade>05</Grade>
+			
+		<!-- "Eliminate" Closed Captioning by getting rid of all its options. It will still be present 
+         so that the columns are consistent, but will not be selectable -->
+		<SingleSelectResource>
+			<Code>ClosedCaptioning</Code>
+			<Disabled/>
+		</SingleSelectResource>
+
+		<!-- Eliminate Bilingual Dictionary -->
+		<MultiSelectResource>
+			<Code>NonEmbeddedDesignatedSupports</Code>
+			<Selection>
+				<Code>NEDS0</Code>
+			</Selection>
+			<!-- 
+			<Selection>
+				<Code>NEDS_BD</Code>
+			</Selection>
+			-->
+			<Selection>
+				<Code>NEDS_CC</Code>
+			</Selection>
+			<Selection>
+				<Code>NEDS_CO</Code>
+			</Selection>
+			<Selection>
+				<Code>NEDS_Mag</Code>
+			</Selection>
+			<Selection>
+				<Code>NEDS_NoiseBuf</Code>
+			</Selection>
+			<Selection>
+				<Code>NEDS_RA_Items</Code>
+			</Selection>
+			<Selection>
+				<Code>NEDS_RA_Stimuli</Code>
+			</Selection>
+			<Selection>
+				<Code>NEDS_RA_Items_ESN</Code>
+			</Selection>
+			<Selection>
+				<Code>NEDS_RA_Stimuli_ESN</Code>
+			</Selection>
+			<Selection>
+				<Code>NEDS_SC_Items</Code>
+			</Selection>
+			<Selection>
+				<Code>NEDS_SS</Code>
+			</Selection>
+			<Selection>
+				<Code>NEDS_TArabic</Code>
+			</Selection>
+			<Selection>
+				<Code>NEDS_TCantonese</Code>
+			</Selection>
+			<Selection>
+				<Code>NEDS_TFilipino</Code>
+			</Selection>
+			<Selection>
+				<Code>NEDS_TKorean</Code>
+			</Selection>
+			<Selection>
+				<Code>NEDS_TMandarin</Code>
+			</Selection>
+			<Selection>
+				<Code>NEDS_TPunjabi</Code>
+			</Selection>
+			<Selection>
+				<Code>NEDS_TRussianGta</Code>
+			</Selection>
+			<Selection>
+				<Code>NEDS_TSpanish</Code>
+			</Selection>
+			<Selection>
+				<Code>NEDS_TUkrainian</Code>
+			</Selection>
+			<Selection>
+				<Code>NEDS_TVietnamese</Code>
+			</Selection>
+			<Selection>
+				<Code>NEDS_TransDirs</Code>
+			</Selection>
+		</MultiSelectResource>
+
+		<!-- Eliminate several options -->
+		<MultiSelectResource>
+			<Code>NonEmbeddedAccommodations</Code>
+			<Selection>
+				<Code>NEA0</Code>
+			</Selection>
+			<Selection>
+				<Code>NEA_AR</Code>
+			</Selection>
+			<!-- 
+			<Selection>
+				<Code>NEA_RA_Stimuli</Code>
+			</Selection>
+			<Selection>
+				<Code>NEA_SC_WritItems</Code>
+			</Selection>
+			-->
+			<Selection>
+				<Code>NEA_STT</Code>
+			</Selection>
+			<Selection>
+				<Code>NEA_Abacus</Code>
+			</Selection>
+			<!-- 
+			<Selection>
+				<Code>NEA_Calc</Code>
+			</Selection>
+			-->
+			<Selection>
+				<Code>NEA_MT</Code>
+			</Selection>
+
+		</MultiSelectResource>
+
+	</ResourceFamily>
+
+	<!-- ================================================================================================= -->
+	<!-- ================================================================================================= -->
+	<!-- RESOURCE FAMILY FOR math GRADE 6-11 -->
+	<!-- ================================================================================================= -->
+	<!-- ================================================================================================= -->
+
+	<ResourceFamily>
+
+		<Subject>
+			<Code>MATH</Code>
+			<Name>Mathematics</Name>
+		</Subject>
+		<Grade>06</Grade>
+		<Grade>07</Grade>
+		<Grade>08</Grade>
+		<Grade>09</Grade>
+		<Grade>10</Grade>
+		<Grade>11</Grade>
+			
+		<!-- "Eliminate" Closed Captioning by getting rid of all its options. It will still be present 
+         so that the columns are consistent, but will not be selectable -->
+		<SingleSelectResource>
+			<Code>ClosedCaptioning</Code>
+			<Disabled/>
+		</SingleSelectResource>
+
+		<!-- Eliminate Bilingual Dictionary -->
+		<MultiSelectResource>
+			<Code>NonEmbeddedDesignatedSupports</Code>
+			<Selection>
+				<Code>NEDS0</Code>
+			</Selection>
+			<!-- 
+			<Selection>
+				<Code>NEDS_BD</Code>
+			</Selection>
+			-->
+			<Selection>
+				<Code>NEDS_CC</Code>
+			</Selection>
+			<Selection>
+				<Code>NEDS_CO</Code>
+			</Selection>
+			<Selection>
+				<Code>NEDS_Mag</Code>
+			</Selection>
+			<Selection>
+				<Code>NEDS_NoiseBuf</Code>
+			</Selection>
+			<Selection>
+				<Code>NEDS_RA_Items</Code>
+			</Selection>
+			<Selection>
+				<Code>NEDS_RA_Stimuli</Code>
+			</Selection>
+			<Selection>
+				<Code>NEDS_RA_Items_ESN</Code>
+			</Selection>
+			<Selection>
+				<Code>NEDS_RA_Stimuli_ESN</Code>
+			</Selection>
+			<Selection>
+				<Code>NEDS_SC_Items</Code>
+			</Selection>
+			<Selection>
+				<Code>NEDS_SS</Code>
+			</Selection>
+			<Selection>
+				<Code>NEDS_TArabic</Code>
+			</Selection>
+			<Selection>
+				<Code>NEDS_TCantonese</Code>
+			</Selection>
+			<Selection>
+				<Code>NEDS_TFilipino</Code>
+			</Selection>
+			<Selection>
+				<Code>NEDS_TKorean</Code>
+			</Selection>
+			<Selection>
+				<Code>NEDS_TMandarin</Code>
+			</Selection>
+			<Selection>
+				<Code>NEDS_TPunjabi</Code>
+			</Selection>
+			<Selection>
+				<Code>NEDS_TRussianGta</Code>
+			</Selection>
+			<Selection>
+				<Code>NEDS_TSpanish</Code>
+			</Selection>
+			<Selection>
+				<Code>NEDS_TUkrainian</Code>
+			</Selection>
+			<Selection>
+				<Code>NEDS_TVietnamese</Code>
+			</Selection>
+			<Selection>
+				<Code>NEDS_TransDirs</Code>
+			</Selection>
+		</MultiSelectResource>
+
+		<!-- Eliminate several options -->
+		<MultiSelectResource>
+			<Code>NonEmbeddedAccommodations</Code>
+			<Selection>
+				<Code>NEA0</Code>
+			</Selection>
+			<Selection>
+				<Code>NEA_AR</Code>
+			</Selection>
+			<!-- 
+			<Selection>
+				<Code>NEA_RA_Stimuli</Code>
+			</Selection>
+			<Selection>
+				<Code>NEA_SC_WritItems</Code>
+			</Selection>
+			-->
+			<Selection>
+				<Code>NEA_STT</Code>
+			</Selection>
+			<Selection>
+				<Code>NEA_Abacus</Code>
+			</Selection>
+			<Selection>
+				<Code>NEA_Calc</Code>
+			</Selection>
+			<Selection>
+				<Code>NEA_MT</Code>
+			</Selection>
+
+		</MultiSelectResource>
+
+	</ResourceFamily>
+
+</Accessibility>

@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+    xmlns:mongo="http://www.springframework.org/schema/data/mongo"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="
+                http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+                http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd
+                http://www.springframework.org/schema/data/mongo http://www.springframework.org/schema/data/mongo/spring-mongo-1.1.xsd
+                http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-3.0.xsd
+                http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
+
+    <mongo:repositories base-package="org.opentestsystem.delivery.testreg.persistence,org.opentestsystem.delivery.testadmin.persistence" factory-class="org.opentestsystem.shared.search.persistence.SearchableRepositoryFactoryBean" />
+
+    <mongo:mongo id="testreg-mongo" replica-set="${testreg.mongo.hostname}">
+        <mongo:options
+                connections-per-host="100"
+                threads-allowed-to-block-for-connection-multiplier="1000"
+                connect-timeout="15000"
+                auto-connect-retry="true"
+                socket-keep-alive="false"
+                socket-timeout="120000"
+                slave-ok="false"
+                write-number="1"
+                write-timeout="0"
+                write-fsync="true"/>
+    </mongo:mongo>
+
+</beans>

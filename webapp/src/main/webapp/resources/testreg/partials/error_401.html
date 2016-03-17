@@ -1,0 +1,67 @@
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+<meta http-equiv="Pragma" content="no-cache" />
+<meta http-equiv="Expires" content="0" />
+<link href="../../../resources/testreg/css_sbac/core.css" rel="stylesheet"> 
+<!-- <script type="text/javascript">
+function setCookie(cname,cvalue,exdays) {
+    var d = new Date();
+    d.setTime(d.getTime() + (exdays*24*60*60*1000));
+    var expires = "expires=" + d.toGMTString();
+    document.cookie = cname+"="+cvalue+"; "+expires;
+}
+
+function getCookie(cname) {
+    var name = cname + "=";
+    var ca = document.cookie.split(';');
+    for(var i=0; i<ca.length; i++) {
+        var c = ca[i].trim();
+        if (c.indexOf(name) == 0) return c.substring(name.length, c.length);
+    }
+    return "";
+}
+
+function checkCookie() {
+    var user=getCookie("username");
+    if (user != "") {
+        alert("Welcome again " + user);
+    } else {
+       user = prompt("Please enter your name:","");
+       if (user != "" && user != null) {
+           setCookie("username", user, 30);
+       }
+    }
+}
+
+function clearJSESSIONCookie() {
+	
+	//setCookie("JSESSIONID", getCookie("JSESSIONID"), -1);
+	//alert(getCookieO("JSESSIONID"));
+	//alert("FRIDAY");
+	//window.location.assign("http://localhost:8080/testreg.webapp/thankyou");
+	 window.open('','_self',''); 
+     window.close(); 
+}
+
+</script> -->
+
+<div class="container" >
+		  <div class="header">
+					<div class="banner" data-ng-controller="HomeController">                           
+                    		<span class="logo">
+                    			<img src="../../../resources/testreg/images/logo_sbac.png" class="thumbnail" alt="Logo" name="SBAC_logo">
+                    		</span> 
+                    		<div class="title"><h1>Administration and Registration Tools</h1></div>
+                    		<div class="clear"></div>
+                	</div>
+          </div>
+</div>
+            
+<br>
+<br>
+<br>
+There was an issue logging in, please ensure you have the proper role and tenancy for this application.
+<a  href="../../../logout"  ><button type="button" class="boxBtn" tabindex="0">
+                <span class="btnIcon icon_sprite icon_reTry2" aria-hidden="true"></span>
+                <span class="btnText">Logout</span>
+            </button></a>
+<div class="clear"></div>

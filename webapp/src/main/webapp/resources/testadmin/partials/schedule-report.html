@@ -1,0 +1,105 @@
+<div  data-ng-include src='"resources/testadmin/partials/leftnav.html"'></div>
+<div class="secContent"> 
+
+<div data-ng-repeat="error in errors">
+     <div><span class="icon_sprite icon_error error"></span>{{error}}</div>
+</div>
+           
+<div data-ng-form="proctorScheduleReportForm" class="formWrapper">
+    <div class="fieldGroup">
+    <h5>{{ scheduleReportLabel}}<span class="control-label-required">Indicates required field</span></h5>
+        <ul class="reportLayout">
+            <li data-ng-show="reportTypeFlag('CLIENT')"  >
+                <span > 
+                    <label class="control-label" for="proctorScheduleReport.clientsId" > {{entityNameLabels['Client']}}:</label>
+                  <select  data-ng-model="proctorScheduleReport.clientsId"  data-ng-options="entity.id as entity.entityId + ' - ' + entity.entityName for entity in clients" data-ng-change="selectedEntityType(proctorScheduleReport.clientsId,'CLIENT')" data-ng-hide="(userEntityType=='CLIENT')">
+                       <option value="">Select...</option>
+                    </select>
+                    <span class="reportSpanLeft" data-ng-show="(userEntityType=='CLIENT')">{{clients[0].entityName}}</span>
+                </span>
+            </li>
+            <li data-ng-show="reportTypeFlag('GROUPOFSTATES')&& (groupOfStatesFlag())" >
+                <span > 
+                    <label class="control-label" for="proctorScheduleReport.groupofstatesId" > {{entityNameLabels['GroupOfStates']}}:</label>
+                  <select  data-ng-model="proctorScheduleReport.groupofstatesId"  data-ng-options="entity.id as entity.entityId + ' - ' + entity.entityName for entity in groupofstates" data-ng-change="selectedEntityType(proctorScheduleReport.groupofstatesId,'GROUPOFSTATES')" data-ng-hide="(userEntityType=='GROUPOFSTATES')" >
+                       <option value="">Select...</option>
+                    </select>
+                    <span class="reportSpanLeft" data-ng-show="(userEntityType=='GROUPOFSTATES')">{{groupofstates[0].entityName}}</span>
+                </span>
+            </li>
+ 
+             <li data-ng-show="reportTypeFlag('STATE')" >
+                <span > 
+                    <label class="control-label" for="proctorScheduleReport.statesId" >  {{entityNameLabels['State']}}:</label>
+                  <select  data-ng-model="proctorScheduleReport.statesId"  data-ng-options="entity.id as entity.entityId + ' - ' + entity.entityName for entity in states"  data-ng-change="selectedEntityType(proctorScheduleReport.statesId,'STATE')" data-ng-hide="(userEntityType=='STATE')">
+                        <option value="">Select...</option>
+                    </select>
+                    <span class="reportSpanLeft" data-ng-show="(userEntityType=='STATE')">{{states[0].entityName}}</span> 
+                </span>
+            </li>
+            <li data-ng-show="reportTypeFlag('GROUPOFDISTRICTS')&& (groupOfDistrictsFlag())" >
+                <span > 
+                    <label class="control-label" for="proctorScheduleReport.groupofdistrictsId" > {{entityNameLabels['GroupOfDistricts']}}:</label>
+                  <select  data-ng-model="proctorScheduleReport.groupofdistrictsId"  data-ng-options="entity.id as entity.entityId + ' - ' + entity.entityName for entity in groupofdistricts" data-ng-change="selectedEntityType(proctorScheduleReport.groupofdistrictsId,'GROUPOFDISTRICTS')" data-ng-hide="(userEntityType=='GROUPOFDISTRICTS')" >
+                       <option value="">Select...</option>
+                    </select>
+                    <span class="reportSpanLeft" data-ng-show="(userEntityType=='GROUPOFDISTRICTS')">{{groupofdistricts[0].entityName}}</span>
+                </span>
+            </li>          
+             <li data-ng-show="reportTypeFlag('DISTRICT')" >
+                <span > 
+                    <label class="control-label" for="proctorScheduleReport.districtsId" > {{entityNameLabels['District']}}:</label>
+                  <select  data-ng-model="proctorScheduleReport.districtsId"  data-ng-options="entity.id as entity.entityId + ' - ' + entity.entityName for entity in districts"  data-ng-change="selectedEntityType(proctorScheduleReport.districtsId,'DISTRICT')" data-ng-hide="(userEntityType=='DISTRICT')">
+                        <option value="">Select...</option>
+                    </select>
+                    <span class="reportSpanLeft" data-ng-show="(userEntityType=='DISTRICT')">{{districts[0].entityName}}</span>
+                </span>
+            </li>
+            <li data-ng-show="reportTypeFlag('GROUPOFINSTITUTIONS')&& (groupOfInstitutionsFlag())" >
+                <span > 
+                    <label class="control-label" for="proctorScheduleReport.groupofinstitutionsId" > {{entityNameLabels['GroupOfInstitutions']}}:</label>
+                  <select  data-ng-model="proctorScheduleReport.groupofinstitutionsId"  data-ng-options="entity.id as entity.entityId + ' - ' + entity.entityName for entity in groupofinstitutions" data-ng-change="selectedEntityType(proctorScheduleReport.groupofinstitutionsId,'GROUPOFINSTITUTIONS')" data-ng-hide="(userEntityType=='GROUPOFINSTITUTIONS')">
+                       <option value="">Select...</option>
+                    </select>
+                    <span class="reportSpanLeft" data-ng-show="(userEntityType=='GROUPOFINSTITUTIONS')">{{groupofinstitutions[0].entityName}}</span>
+                </span>
+            </li>                
+
+             <li data-ng-show="reportTypeFlag('INSTITUTION')" >
+                <span > 
+                    <label class="control-label" for="proctorScheduleReport.institutionsId" > {{entityNameLabels['Institution']}}:</label>
+                  <select  data-ng-model="proctorScheduleReport.institutionsId"  data-ng-options="entity.id as entity.entityId + ' - ' + entity.entityName for entity in institutions" data-ng-change="selectedEntityType(proctorScheduleReport.institutionsId,'INSTITUTION')" data-ng-hide="(userEntityType=='INSTITUTION')" >
+                        <option value="">Select...</option>
+                    </select>
+                    <span class="reportSpanLeft" data-ng-show="(userEntityType=='INSTITUTION')">{{institutions[0].entityName}}</span>
+                </span>
+            </li>
+             <li>
+                  <span  class="datepicker"> 
+                    <label class="control-label" for="proctorScheduleReport.testStatus" > Start Date :</label>
+                        <span class="icon-chevron-calendar" style="width:14px"></span>
+                    <input type="text" name="proctorScheduleReport.startDate"  data-datepicker-popup="{{format}}" 
+                      data-is-open="startDate.opened" data-show-weeks="false" data-ng-model="proctorScheduleReport.startDate"/>
+                </span>
+            </li>  
+             <li>
+                  <span  class="datepicker"> 
+                    <label class="control-label" for="proctorScheduleReport.testStatus" > End Date :</label>
+                        <span class="icon-chevron-calendar" style="width:14px"></span>
+                    <input type="text" name="proctorScheduleReport.endDate"  data-datepicker-popup="{{format}}" 
+                      data-is-open="endDate.opened" data-show-weeks="false" data-ng-model="proctorScheduleReport.endDate"/>
+                </span>
+            </li>             
+        </ul>  
+
+        <button type="button" class="boxBtn"  data-ng-click="createScheduledReport(proctorScheduleReport)">
+            <span class="btnIcon icon_sprite icon_save2" ></span>
+            <span class="btnText">Create Report</span>
+        </button>
+
+    </div>
+</div>
+</div>
+<div class="clear"></div>
+
+ 

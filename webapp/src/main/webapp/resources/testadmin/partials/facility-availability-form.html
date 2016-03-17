@@ -1,0 +1,152 @@
+<div  data-ng-include src='"resources/testadmin/partials/leftnav.html"'></div>
+ <div class="secContent"> 
+<div data-ng-repeat="error in errors">
+     <div><span class="icon_sprite icon_error error"></span>{{error}}</div>
+</div>
+           
+<div data-ng-form="facilityAvailabilityForm" class="formWrapper">
+    <div data-ng-show="facilityAvailabilityForm.$dirty" class="dirtynag">* Warning: You have unsaved changes</div>
+    <div class="fieldGroup">
+    <h5>{{formAction}} Facility Availability/Unavailability Information<span class="control-label-required">Indicates required field</span></h5>
+        <ul>          
+           <li>
+                <span> 
+                    <label class="control-label-required" for="facilityAvailability.stateAbbreviation" title="State Abbreviation">State Abbreviation:</label>
+                    <select data-ng-model="facilityAvailability.stateAbbreviation" data-ng-options="id.entityId as id.entityId for id in states | orderBy:'entityId'" title="State Abbreviation" tabindex="0">
+                       <option value="" >Select...</option>
+                    </select>
+                </span>
+            </li>   
+            <li>
+                <span class="district-auto-complete">
+                    <label class="control-label-required" for="facilityAvailability.institutionIdentifier">{{xwalk('Institution Identifier')}}:</label>
+                    <input data-institution-auto-complete-schedule type="text" 
+                    placeholder="Search..." 
+                    data-ng-model="institution"
+                    data-typeahead="entity as entity.entityId + ' - ' + entity.entityName for entity in filterInstitutions($viewValue, facilityAvailability.stateAbbreviation, 10)" 
+                    data-typeahead-wait-ms="200" 
+                    data-typeahead-editable="true" 
+                    data-typeahead-input-formatter="formatInstitutionLabel($model)"
+                    data-typeahead-on-select="changeInstitution({institution:$item})" />  
+                 </span>               
+            </li>         
+            <li>
+                 <span> 
+                    <label class="control-label-required" for="facilityAvailability.facilityName">Facility:</label>
+                     <select  data-ng-model="facilityAvailability.facilityName" data-ng-change="setFacility(facilityAvailability.facilityName)" data-ng-options="facility.facilityName as facility.facilityName for facility in facilities | orderBy:'facilityName'" >
+                      <option value="">Select...</option>
+                    </select>
+                </span>           
+            </li>
+            <li>
+             <span> 
+                    <label class="control-label-required" for="facilityAvailability.status">Availability:</label>
+                    <select name="facilityAvailability.status" data-ng-model="facilityAvailability.status" data-ng-change='clearAvailabilities()' data-ng-options="availability.id as availability.name for availability in availabilityChoices | orderBy:'id'">
+                        <option value="" >Select...</option>
+                    </select>
+             </span>
+            </li>
+            <li>
+             <span  class="datepicker"> 
+                    <label class="control-label-required" for="facilityAvailability.fromDate">From Date:</label>
+                    <span class="icon-chevron-calendar" style="width:14px"></span>
+                    <input type="text" name="facilityAvailability.fromDate"  data-datepicker-popup="{{format}}" 
+                      data-is-open="fromDate.opened" data-show-weeks="false"  data-ng-model="facilityAvailability.fromDate"/>
+             </span>                  
+            </li>  
+            <li>
+             <span  class="datepicker"> 
+                    <label class="control-label-required" for="facilityAvailability.toDate">To Date:</label>
+                    <span class="icon-chevron-calendar" style="width:14px"></span>
+                    <input type="text" name="facilityAvailability.toDate"  data-datepicker-popup="{{format}}" 
+                      data-is-open="toDate.opened" data-show-weeks="false"  data-ng-model="facilityAvailability.toDate"/>
+             </span>
+            </li>                       
+        </ul>
+
+        <div data-ng-show="facilityAvailability.status && facilityAvailability.status == 'AVAILABLE'">
+            <h5>Testing Slots</h5>
+	        <div class="tableWrapper">
+	            <table class="dataTable" style="width:98%;margin:auto">
+	                <colgroup>
+	                    <col style="width:12%">
+	                    <col style="width:12%">
+	                    <col style="width:32%">     
+                        <col> 	           
+	                    <col class="actionColumn">
+	                </colgroup>
+	                <tr>
+	                    <th data-ng-class="{'control-label-required' : facilityAvailability.facilityTimes && facilityAvailability.facilityTimes.length > 0}">Start Time</th>
+	                    <th data-ng-class="{'control-label-required' : facilityAvailability.facilityTimes && facilityAvailability.facilityTimes.length > 0}">End Time</th>
+                        <th>Affinity</th>	                                       
+                        <th data-ng-class="{'control-label-required' : facilityAvailability.facilityTimes && facilityAvailability.facilityTimes.length > 0}">Seat Configurations</th>                        
+	                    <th>
+	                        <div class="tableButtonGroup">
+	                          <button data-ng-click="addTimeSlot()" class="boxBtn" ><span class="btnIcon icon_sprite icon_saveAdd2"></span></button>
+	                        </div>
+	                    </th>
+	                </tr>
+	                <tr data-ng-repeat="facilityTime in facilityAvailability.facilityTimes">
+	                     <td><input style="width:80px"  name="startTime" data-ng-model="facilityTime.timeSlot.startTime" data-ui-timepicker/></td>
+	                     <td><input style="width:80px" name="endTime" data-ng-model="facilityTime.timeSlot.endTime" data-ui-timepicker/></td>  	                     
+                         <td><button data-ng-click="addAffinity($index)" class="btnAddSeat" ><span data-ng-show="!facilityTime.timeSlot.affinities || facilityTime.timeSlot.affinities.length == 0">Add</span><span data-ng-show="facilityTime.timeSlot.affinities.length > 0">Edit</span></button>
+                         <span data-ng-repeat="affinity in facilityTime.timeSlot.affinities">{{affinity.type}} : {{affinity.value | assessmentNameFilter:affinity.type:assessments}} : {{affinity.rule}}<span data-ng-show="!$last"><br></span></span>
+                         </td>
+	                     <td><button data-ng-click="addSeats($index)" class="btnAddSeat" ><span data-ng-show="!selectedConfigurations[$index] || selectedConfigurations[$index].length == 0">Add</span><span data-ng-show="selectedConfigurations[$index].length > 0">Edit</span></button>
+	                     <span data-ng-repeat="seatConfig in selectedConfigurations[$index]">Seats: {{seatConfig.numberOfSeats}}, Test Platform: {{seatConfig.testPlatform}}, Equipment: {{seatConfig.accessibilityEquipments | joinBy}}<span data-ng-show="!$last"><br></span></span></td>                        
+	                     <td><div class="tableButtonGroup">
+	                                <button data-ng-click="removeTimeSlot($index)" class="boxBtn"><span class="btnIcon icon_sprite icon_delete2"></span></button>
+	                         </div>                                 
+	                     </td>
+	                </tr>
+	            </table> 
+	        </div>
+	    </div>
+        <div data-ng-show="facilityAvailability.status && facilityAvailability.status == 'NOTAVAILABLE'">
+            <h5>Time Periods</h5>
+            <div class="tableWrapper">
+                <table class="dataTable" style="width:40%;margin:auto">
+                    <colgroup>
+                        <col>
+                        <col>
+                        <col class="actionColumn">
+                    </colgroup>
+                    <tr>
+                        <th data-ng-class="{'control-label-required' : facilityAvailability.facilityTimes && facilityAvailability.facilityTimes.length > 0}">Start Time</th>
+                        <th data-ng-class="{'control-label-required' : facilityAvailability.facilityTimes && facilityAvailability.facilityTimes.length > 0}">End Time</th>
+                        
+                        <th>
+                            <div class="tableButtonGroup">
+                              <button data-ng-click="addTimeSlot()" class="boxBtn" ><span class="btnIcon icon_sprite icon_saveAdd2"></span></button>
+                            </div>
+                        </th>
+                    </tr>
+                    <tr data-ng-repeat="facilityTime in facilityAvailability.facilityTimes">
+                         <td><input style="width:80px"  name="startTime" data-ng-model="facilityTime.timeSlot.startTime" data-ui-timepicker/></td>
+                         <td><input style="width:80px" name="endTime" data-ng-model="facilityTime.timeSlot.endTime" data-ui-timepicker/></td>
+                         <td><div class="tableButtonGroup">
+                                    <button data-ng-click="removeTimeSlot($index)" class="boxBtn"><span class="btnIcon icon_sprite icon_delete2"></span></button>
+                             </div>                                 
+                         </td>
+                    </tr>
+                </table> 
+            </div>	        
+        </div>	
+
+        <br>
+        <br>
+	        <button type="button" class="boxBtn" data-ng-show="facilityAvailabilityForm.$dirty" data-ng-click="save(facilityAvailability)">
+	            <span class="btnIcon icon_sprite icon_save2 ng-class:{ajax_indicator:savingIndicator}" ></span>
+	            <span class="btnText">Save</span>
+	        </button>
+	     
+	        <button type="button" class="boxBtn" data-ng-click="cancel()">
+	            <span class="btnIcon icon_sprite icon_cancel2" ></span>
+	            <span class="btnText">Cancel</span>
+	        </button>        
+
+ </div>
+</div>
+</div>
+<div class="clear"></div>
+ 

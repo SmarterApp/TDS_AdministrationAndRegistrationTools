@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:mongo="http://www.springframework.org/schema/data/mongo"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:util="http://www.springframework.org/schema/util"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+                http://www.springframework.org/schema/data/mongo http://www.springframework.org/schema/data/mongo/spring-mongo-1.1.xsd
+                http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-3.0.xsd
+                http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
+
+    <mongo:repositories base-package="org.opentestsystem.delivery.testreg.persistence" factory-class="org.opentestsystem.shared.search.persistence.SearchableRepositoryFactoryBean"/>
+
+    <!-- <mongo:db-factory id="mongoDbFactory"
+                      mongo-ref="testreg-mongo"
+                      dbname="${testreg.mongo.dbname}"
+                      username="${testreg.mongo.username}"
+                      password="${testreg.mongo.password}"/>  -->
+
+    <mongo:mapping-converter id="mongoMappingConverter" db-factory-ref="mongoDbFactory" base-package="org.opentestsystem.delivery.testreg.domain">
+        <mongo:custom-converters>
+            <mongo:converter>
+                <bean class="org.opentestsystem.delivery.testreg.mongodb.converter.DateTimeWriteConverter"/>
+            </mongo:converter>
+            <mongo:converter>
+                <bean class="org.opentestsystem.delivery.testreg.mongodb.converter.DateTimeReadConverter"/>
+            </mongo:converter>
+        </mongo:custom-converters>
+    </mongo:mapping-converter>
+
+    <bean id="mongoTemplate" class="org.springframework.data.mongodb.core.MongoTemplate">
+        <constructor-arg name="mongoDbFactory" ref="mongoDbFactory"/>
+        <constructor-arg name="mongoConverter" ref="mongoMappingConverter"/>
+        <property name="writeConcern">
+            <util:constant static-field="com.mongodb.WriteConcern.SAFE"/>
+        </property>
+    </bean>
+
+    <bean id="mappingContext" class="org.springframework.data.mongodb.core.mapping.MongoMappingContext"/>
+
+    <bean id="mappingMongoConverter" class="org.springframework.data.mongodb.core.convert.MappingMongoConverter">
+        <constructor-arg name="mongoDbFactory" ref="mongoDbFactory"/>
+        <constructor-arg name="mappingContext" ref="mappingContext"/>
+    </bean>
+
+    <bean id="gridFsTemplate" class="org.springframework.data.mongodb.gridfs.GridFsTemplate">
+        <constructor-arg ref="mongoDbFactory"/>
+        <constructor-arg ref="mappingMongoConverter"/>
+    </bean>
+
+    <bean id="fileUploadGridFsRepository" class="org.opentestsystem.delivery.testreg.persistence.FileGridFsRepositoryImpl"/>
+
+<!--     <bean id="parentEntityClassFinder" class="org.opentestsystem.delivery.testreg.persistence.ParentEntityClassFinder">
+        <constructor-arg name="basePackageName" value="org.opentestsystem.delivery.testreg.domain"/>
+    </bean>
+ -->
+<!--     <context:annotation-config/>
+    <context:component-scan base-package="org.opentestsystem.delivery.testreg.persistence.criteria"/> -->
+    <bean id="conversionService" class="org.springframework.context.support.ConversionServiceFactoryBean"/>
+
+</beans>
