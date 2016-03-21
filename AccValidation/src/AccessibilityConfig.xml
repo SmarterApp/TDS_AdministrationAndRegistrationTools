@@ -949,6 +949,12 @@
 			</Selection>
 		</SingleSelectResource>
 
+		<!-- "Eliminate" Illustration Glossary by getting rid of all its options. It will still be present so that the columns are consistent, but will not be selectable -->
+		<SingleSelectResource>
+			<Code>IllustrationGlossary</Code>
+			<Disabled/>
+		</SingleSelectResource>
+
 		<!-- Eliminate two Read Aloud Spanish codes and all glossaries -->
 		<MultiSelectResource>
 			<Code>NonEmbeddedDesignatedSupports</Code>
