@@ -165,7 +165,7 @@
     	<value>MiddleName</value>
     	<value>Birthdate</value>
     	<value>SSID</value>
-    	<value>AlternateSSID</value>
+    	<value>ExternalSSID</value>
     	<value>GradeLevelWhenAssessed</value>
     	<value>Sex</value>
     	<value>HispanicOrLatinoEthnicity</value>
