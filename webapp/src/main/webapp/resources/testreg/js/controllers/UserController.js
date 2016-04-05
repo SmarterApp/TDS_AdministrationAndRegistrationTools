@@ -72,25 +72,9 @@ testreg.controller(	'UserController',['$scope','$state','$timeout','loadedData',
 							};
 							
 							$scope.removeRoleAssociation = function (index) {
-								if($scope.user.roleAssociations.length != 0 && $scope.user.roleAssociations.length-1 > 0){
-									$scope.user.roleAssociations.splice(index,1);
-									$scope.entities.splice(index,1);
-									$scope.userForm.$dirty=true;
-								}else{
-									var confirm = prompt("WARNING: If you delete this role, user will be permanently deleted from ART. To confirm, please type DELETE here:");
-									if(confirm=='DELETE'){
-										$scope.user.roleAssociations.splice(index,1);
-										$scope.entities.splice(index,1);
-										if($scope.user.roleAssociations.length == 0 && angular.isDefined($scope.user.id)) {
-											UserService.deleteUser($scope.user.id).then(
-													function(response) {
-														$scope.userForm.$setPristine();
-														$state.transitionTo("searchUser");
-													});	
-										}
-										$scope.userForm.$dirty=true;
-									}
-								}
+								$scope.user.roleAssociations.splice(index,1);
+								$scope.entities.splice(index,1);
+								$scope.userForm.$dirty=true;
 							};			
 							
 							$scope.addRoleAssociation = function(){
@@ -98,28 +82,37 @@ testreg.controller(	'UserController',['$scope','$state','$timeout','loadedData',
 									$scope.user.roleAssociations=[];
 								} 
 								$scope.user.roleAssociations.push({"role":"","level":null,"associatedEntityId":"","stateAbbreviation":"",});
-								$scope.userForm.$dirty=true;						
+								$scope.userForm.$dirty=true;		
+								
 							};
 
 							$scope.save = function(User) {
 								$scope.errors = [];
 								$scope.savingIndicator = true;
-								if(User.roleAssociations === undefined || User.roleAssociations.length === 0){
+								if(User.roleAssociations === undefined || User.roleAssociations.length === 0 && !User.hasRolesOutside){
 									$scope.errors.push("At least one role is required");
 									$scope.savingIndicator = false;
 								}
 								if ($scope.errors.length == 0) {
-									UserService.saveUser(User).then(
-										function(response) {
-											$scope.savingIndicator = false;
-											$scope.errors = response.errors;
-											if ($scope.errors.length == 0) {
-												$scope.userForm
-														.$setPristine();
-												$scope.user = response.data;
-												$state.transitionTo("searchUser");
-											}
-									});
+									if (User.roleAssociations.length === 0 && User.hasRolesOutside && angular.isDefined($scope.user.id)) {
+										UserService.deleteUser($scope.user.id).then(
+												function(response) {
+													$scope.userForm.$setPristine();
+													$state.transitionTo("searchUser");
+												});
+									} else {
+										UserService.saveUser(User).then(
+												function(response) {
+													$scope.savingIndicator = false;
+													$scope.errors = response.errors;
+													if ($scope.errors.length == 0) {
+														$scope.userForm
+																.$setPristine();
+														$scope.user = response.data;
+														$state.transitionTo("searchUser");
+													}
+											});
+									}
 								} else {
 									$scope.savingIndicator = false;
 								}								

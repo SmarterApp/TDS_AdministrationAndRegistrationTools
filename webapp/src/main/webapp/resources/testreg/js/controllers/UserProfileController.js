@@ -129,17 +129,17 @@ testreg.controller(	'UserProfileController',['$scope','$location','$state','$tim
 	 };
 	 
 	 $scope.removeRoleAssociation = function (index) {
-		if($scope.user.roleAssociations.length != 0 && $scope.user.roleAssociations.length-1 > 0){
+		if($scope.user.roleAssociations.length > 1){
 			var confirmation = prompt("WARNING: If you delete this role, you may need to contact your coordinator to restore it. To confirm, please type DELETE here:");
 			if(confirmation =='DELETE'){
 				$scope.user.roleAssociations.splice(index,1);
 				$scope.entities.splice(index,1);
 				$scope.userForm.$dirty=true;
 			}else if(confirmation != null){
-				alert("Not confirmed, no changes made. You have to type DELETE to delete role");
+				alert("Not confirmed, no changes made. You must type DELETE to remove the role.");
 			} 
 		}else{
-			var confirmation = prompt("WARNING: If you delete this role, your account will be permanently deleted from ART and you will be immediately logged out. To confirm, please type DELETE here:");
+			var confirmation = prompt("WARNING: If you delete this role, your account will be permanently deleted from ART. To confirm, please type DELETE here:");
 			if(confirmation =='DELETE'){
 				$scope.user.roleAssociations.splice(index,1);
 				$scope.entities.splice(index,1);
@@ -154,7 +154,7 @@ testreg.controller(	'UserProfileController',['$scope','$location','$state','$tim
 				}
 				$scope.userForm.$dirty=true;
 			} else if(confirmation != null){
-				alert("Not confirmed, no changes made. You have to type DELETE to delete role");
+				alert("Not confirmed, no changes made. You must type DELETE to remove the role.");
 			}
 		}
 	 };

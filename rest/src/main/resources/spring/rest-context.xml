@@ -72,7 +72,7 @@
     <entry key="GROUPOFINSTITUTIONS"    value="GroupOfInstitutionsIdentifier, GroupOfInstitutionsName, ParentEntityType, ParentExternalId, ParentEntityName, StateAbbreviation, Delete"/>
     <entry key="USER"           value="FirstName, LastOrSurname, ElectronicMailAddress, TelephoneNumber, Role, AssociatedEntityID, AssociatedEntityName, Level, StateAbbreviation, Delete"/>
     <entry key="DESIGNATEDSUPPORTSANDACCOMMODATIONS"   value="StudentIdentifier,StateAbbreviation,Subject, AccommodationCodes"/>
-    <entry key="STUDENT" 		 value="StateAbbreviation, ResponsibleDistrictIdentifier, ResponsibleInstitutionIdentifier, LastOrSurname, FirstName, MiddleName, BirthDate, SSID, AlternateSSID, GradeLevelWhenAssessed, Sex, HispanicOrLatinoEthnicity, AmericanIndianOrAlaskaNative, Asian, 
+    <entry key="STUDENT" 		 value="StateAbbreviation, ResponsibleDistrictIdentifier, ResponsibleInstitutionIdentifier, LastOrSurname, FirstName, MiddleName, BirthDate, SSID, ExternalSSID, GradeLevelWhenAssessed, Sex, HispanicOrLatinoEthnicity, AmericanIndianOrAlaskaNative, Asian, 
     								BlackOrAfricanAmerican, White, NativeHawaiianOrOtherPacificIslander, DemographicRaceTwoOrMoreRaces, IDEAIndicator, 
     								LEPStatus, Section504Status, EconomicDisadvantageStatus, LanguageCode, EnglishLanguageProficiencyLevel, MigrantStatus, 
     								FirstEntryDateIntoUSSchool, LimitedEnglishProficiencyEntryDate, LEPExitDate, TitleIIILanguageInstructionProgramType, PrimaryDisabilityType,
