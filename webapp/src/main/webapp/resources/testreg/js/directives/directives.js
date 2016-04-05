@@ -56,6 +56,7 @@ testreg.directive("searchable",['$http','$parse', function($http, $parse){
 					$http.get(baseUrl + url, {params:params}).success(function(data) {
 						$scope.errors =[];
 						$scope.searchResponse = data;
+						$scope.searchResponse.totalCount = data.totalCount > 1000 ? "1000+" : data.totalCount;
 						$scope.searchResponse.currentPage = ($scope.searchResponse.currentPage *1) +1;
 						var modVal = (($scope.searchResponse.totalCount*1) % ($scope.searchResponse.pageSize*1));
 						if(modVal == 0){
@@ -132,6 +133,38 @@ testreg.directive("searchOnClick", function(){
 		}
 	};
 });
+
+testreg.directive("userSearchOnChange", ['$timeout', function($timeout){
+	return {
+		restrict : "A",
+		replace: true,
+		require: "^searchable",
+		scope:true,
+		transclude : false,
+		link : function(scope, element, attrs, searchableController) {
+			var timer = false;
+			scope.$watch(attrs.ngModel, function() {
+				if (timer) {
+					$timeout.cancel(timer);
+				}
+				timer = $timeout (function() {
+					if (attrs.ngModel=='firstName'){
+						scope.changeFirstName(scope.$eval(attrs.ngModel));
+					} else if(attrs.ngModel=='lastName'){
+						scope.changeLastName(scope.$eval(attrs.ngModel));
+					} else if (attrs.ngModel=='districtName') {
+						scope.changeDistrict(scope.$eval(attrs.ngModel));
+					} else if (attrs.ngModel=='institutionName') {
+						scope.changeInstitution(scope.$eval(attrs.ngModel));
+					} else {
+						scope.changeEmail(scope.$eval(attrs.ngModel));
+					}
+					searchableController.filterChange();
+				}, 500)
+			});
+		}
+	};
+}]);
 
 testreg.directive("sortOnClick", function(){
 	return {
