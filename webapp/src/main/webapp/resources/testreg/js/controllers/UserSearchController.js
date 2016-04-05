@@ -7,7 +7,8 @@ testreg.controller('UserSearchController', ['$scope', '$state','$window', 'UserS
 	 };
 	if(!$state.current.searchParams) {
 
-		$scope.searchParams = {"firstName":"","lastName":"","email":"", "roleAssociations.stateAbbreviation":"", "sortKey":"email", "sortDir":"asc", "currentPage": 1};
+		$scope.searchParams = {"firstName":"","lastName":"","email":"", "roleAssociations.stateAbbreviation":"",
+			"roleAssociations.associatedEntityId":"", "sortKey":"email", "sortDir":"asc", "currentPage": 1};
 	}else{
 
 		$scope.searchParams = $state.current.searchParams;
@@ -61,7 +62,13 @@ testreg.controller('UserSearchController', ['$scope', '$state','$window', 'UserS
 	};
 	$scope.changeLastName = function(lastName){
 		$scope.searchParams.lastName = lastName;
-	};  		
+	};
+	$scope.changeDistrict = function(districtName){
+		$scope.searchParams.districtName = districtName;
+	};
+	$scope.changeInstitution = function(institutionName){
+		$scope.searchParams.institutionName = institutionName;
+	};
 	$scope.formatUserLastName = function(user) {
 		if(user) {
   			return user.lastName; 				
