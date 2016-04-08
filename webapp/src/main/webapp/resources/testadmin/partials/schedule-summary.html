@@ -1,0 +1,82 @@
+
+<div  data-ng-include src='"resources/testadmin/partials/leftnav.html"'></div>
+<div class="secContent"> 
+<span class="boxIcon icon_sprite icon_view1"></span>
+<div data-ng-repeat="error in errors">
+     <div><span class="icon_sprite icon_error error"></span>{{error}}</div>
+</div>
+
+<div data-schedule-search data-type="Search" data-trigger-search="triggerSearch" data-action-fn="findSchedule(institutionId, facilityId, scheduledDate)"></div>
+		<div>
+			<table style="width:100%">
+				<tbody>
+					<tr>
+						<td>
+							<button data-ng-click="previousScheduledDay()">&lt; Previous Day</button>
+						</td>
+						<td style=" text-align: right;">
+							<button data-ng-click="nextScheduledDay()">Next Day &gt;</button>
+						</td>
+					</tr>
+				</tbody>
+			</table>
+			<div  class="tableWrapper">
+			<table class="dataTable">
+				<colgroup>
+					<col>
+					<col data-ng-repeat="scheduledTimeSlot in timeSlotsForDisplay">
+					<col>
+				</colgroup>
+				<tbody>	
+					<tr data-ng-show="totalTimeSlots > 0">
+						<th rowspan="2">
+							<a data-ng-click="showPrevTimeSlots()"  data-ng-show="hasPreviousTimeSlots()" style="cursor:pointer;">&lt;&lt; <br>TimeSlots</a>
+						</th>
+						<th colspan="4" data-ng-repeat="scheduledTimeSlot in timeSlotsForDisplay" >
+						 {{_.getFullName(scheduledTimeSlot.proctor.user)}}<br>
+							{{_.getTimeSlotText(scheduledTimeSlot.startTime, scheduledTimeSlot.endTime)}}
+							<button data-ng-click="edit($index)" class="boxBtn"><span class="btnIcon icon_sprite icon_edit2"></span></button>
+							<br>  
+							Total Capacity: {{scheduledTimeSlot.totalCapacity}}<br>
+							# Students Assigned: {{scheduledTimeSlot.assignedStudents.length}}<br>
+							# Available Seats: {{scheduledTimeSlot.totalCapacity - scheduledTimeSlot.assignedStudents.length}}
+							<!-- TODO: Total capacity:21, # students assigned: 12, # available seats: 9  -->
+							</th>
+	                    <th rowspan="2">
+	                    	<a data-ng-click="showNextTimeSlots()"  data-ng-show="hasNextTimeSlots()" style="cursor:pointer;">&gt;&gt; <br>TimeSlots</a>
+	                    </th>
+					</tr>						
+					<tr>							
+						<th data-ng-repeat="subColumnList in _.getSubColumnList(timeSlotsForDisplay)">{{subColumnList}}</th>							
+					</tr>
+				</tbody>
+				<tbody>				
+					<tr data-ng-repeat="rowFordisplay in getRowsForDisplay(timeSlotsForDisplay)">
+						<td data-ng-show="$index == 0" rowspan="{{numberOfRowsDisplayed}}">							
+							<b>Facility:</b> {{facilityName}}<br>
+							<b>{{_.getEntityLabel('Institution')}}:</b> {{institutionName}}
+						</td>
+						<td data-ng-repeat="colsForDisplay in rowFordisplay">{{colsForDisplay}}</td>
+						<td data-ng-show="$index == 0" rowspan="{{numberOfRowsDisplayed}}">
+			               <b>Schedule<br> Day:</b> {{scheduledDay}} <br>
+			               <b>Schedule<br> Name:</b> {{schedule.scheduleName}} <br>
+						</td>
+					</tr>
+				</tbody>
+			</table>
+			</div>
+		</div>
+
+	<div id="tableNav" class="tableWrapper">
+				<table class="dataTable" >
+					<tbody>
+						<tr align="left">
+						<th align="left" data-ng-show="scheduleFound == 'not-found'" class="ng-binding">
+								No Schedule found
+						</th>
+						</tr>
+					</tbody>
+				</table>
+	</div>
+</div>
+<div class="clear"></div>

@@ -1,0 +1,79 @@
+<br><br><br>
+<div data-ng-repeat="error in errors">
+     <div><span class="icon_sprite icon_error error"></span>{{error}}</div>
+</div>   
+<div data-ng-form="clientForm" class="formWrapper">
+    <div data-ng-show="clientForm.$dirty" class="dirtynag">* Warning: You have unsaved changes</div>
+    <div class="fieldGroup">
+    <h5 tabindex="-1">Client  Information</h5>
+        <ul class="clientLayout">
+            <li>
+                <span> 
+                    <label class="control-label" for="client.entityName" title="Client Id">Client Id:</label>
+                    <span class="viewSpanLeft">{{client.entityId}}</span>
+                 </span>
+            </li>        
+            <li>
+                <span> 
+                    <label class="control-label" for="client.entityName" title="Client Name">Client Name:</label>
+                    <span class="viewSpanLeft">{{client.entityName}}</span>
+                 </span>
+            </li>
+            <li>
+                <span> 
+                    <label class="control-label" for="client.systemId" title="Test Reg System Id">Test Reg System Id:</label>
+                    <span class="viewSpanLeft">{{client.systemId}}</span>
+                 </span>
+            </li>            
+            <li>
+                <span> 
+                    <label class="control-label" for="client.timeZone" title="Time Zone">Time Zone:</label>
+                    <select name="client.timeZone" data-ng-model="client.timeZone" data-ng-options="zone.name as zone.name for zone in timeZones">
+                       <option value="" >Select...</option>
+                    </select>                    
+                 </span>
+            </li>
+            <li>
+                <span> 
+                    <label class="control-label" for="client.sbacExportTypes" title="Assessment Eligibility Types SBAC">Assessment Eligibility types <br>for export to SBAC<br> Data Warehouse:</label>                   
+                    <span class="viewSpanLeft" data-ng-repeat="type in client.sbacExportTypes">{{type}}</span>
+                 </span>
+            </li>
+            
+            <li>
+                <span> 
+                    <label class="control-label" for="client.localExportTypes" title="Assessment Eligibility Types Local">Assessment Eligibility types <br>for export to Local<br> Data Warehouse:</label>                
+                    <span class="viewSpanLeft" data-ng-repeat="type in client.localExportTypes">{{type}}</span>
+                 </span>
+            </li>
+    
+            <li>
+                <span > 
+                    <label class="control-label" for="client.groupOfLevels" title="Share Student Identity Data">Share Student Identity Data:<br>(Student's First/Last Name,  Birth Date & SSID)</label>
+                    <span class="viewSpanLeft">{{client.shareStudentIdentity}}</span>           
+                 </span>
+            </li>                          
+            <li>
+                <span> 
+                    <label class="control-label" for="client.groupOfLevels" title="Hide 'Group Of' Entity Levels">Hide 'Group Of' Entity Levels:</label>
+                    <span class="viewSpanLeft">
+                        <input type="checkbox" data-ng-model="client.groupOfStates"  data-ng-checked="client.groupOfStates" alt="GroupOfStates" tabindex="0">{{entityNameLabels['GroupOfStates']}}</input><br>
+                        <input type="checkbox" data-ng-model="client.groupOfDistricts"  data-ng-checked="client.groupOfDistricts" alt="GroupOfDistricts" tabindex="0">{{entityNameLabels['GroupOfDistricts']}}</input><br>
+                        <input type="checkbox" data-ng-model="client.groupOfInstitutions"   data-ng-checked="client.groupOfInstitutions" alt="GroupOfInstitutions" tabindex="0">{{entityNameLabels['GroupOfInstitutions']}}</input>
+                    </span>
+                 </span>
+            </li> 
+        </ul>  
+        <button type="button" class="boxBtn" data-ng-show="clientForm.$dirty" data-ng-click="save(client)" tabindex="0">
+            <span class="btnIcon icon_sprite icon_save2 ng-class:{ajax_indicator:savingIndicator}" aria-hidden="true"></span>
+            <span class="btnText">Save</span>
+        </button>
+     
+        <button type="button" class="boxBtn" data-ng-click="cancel()" tabindex="0">
+            <span class="btnIcon icon_sprite icon_cancel2" aria-hidden="true"></span>
+            <span class="btnText">Cancel</span>
+        </button>
+    </div>
+
+</div>
+<div class="clear"></div>

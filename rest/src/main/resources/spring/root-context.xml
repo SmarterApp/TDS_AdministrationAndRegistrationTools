@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
+
+    <!-- Root Context: defines shared resources visible to all other web components -->
+    
+    <import resource="classpath:/spring/rest-context.xml" />
+    <import resource="classpath:/security/oauth_client.xml" />
+    <import resource="classpath:/security/samlmetadata-context.xml" />
+    <import resource="classpath:/security/securityContext.xml" />
+    <import resource="classpath:/spring/mongo-factory-context.xml" />
+    <import resource="classpath:/spring/test-spec-bank-client-context.xml" />
+    <import resource="classpath:/spring/persistence-context.xml" />
+    <import resource="classpath:/spring/service-context.xml" />
+    <import resource="classpath:api-gen-context.xml" />
+    <import resource="classpath:shared-web-context.xml" />
+    <import resource="classpath:/spring/domain-context.xml"/>
+	<import resource="classpath:/spring/validation-context.xml" />
+	<import resource="classpath:/spring/entity-crosswalk-context.xml"/>
+	<import resource="classpath:/spring/language-codes-context.xml"/>
+	<import resource="classpath:/spring/grade-level-context.xml"/>
+	<import resource="classpath:/spring/state-codes-context.xml"/>
+    <import resource="classpath:/spring/integration-context.xml" />
+    <import resource="classpath:/spring/integration-dw-context.xml" />
+    <import resource="classpath:/spring/integration-dw-sftp-context.xml" />
+    <import resource="classpath:/spring/rabbitmq-context.xml" />
+    <import resource="classpath:/spring/no-rabbitmq-context.xml" />
+
+    <import resource="classpath:/spring/intercept-generated-data-context.xml" />
+</beans>

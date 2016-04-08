@@ -1,0 +1,235 @@
+ <div  data-ng-include src='"resources/testadmin/partials/leftnav.html"'></div>
+ <div class="secContent"> 
+<div data-ng-repeat="error in errors">
+     <div><span class="icon_sprite icon_error error"></span>{{error}}</div>
+</div>
+           
+<div data-ng-form="accessibilityEquipmentForm" class="formWrapper">
+    <div data-ng-show="accessibilityEquipmentForm.$dirty" class="dirtynag">* Warning: You have unsaved changes</div>
+    <div class="fieldGroup">
+    <h5>{{formAction}} Accessibility Equipment <span class="control-label-required">Indicates required field</span></h5>
+        <ul>
+            <li>
+                <span> 
+                    <label class="control-label-required" for="accessibilityEquipment.name" > Name :</label>
+                     <input type="text" name="accessibilityEquipment.name" data-ng-model="accessibilityEquipment.name" />
+                </span>
+            </li>
+            <li>
+                <span> 
+                    <label class="control-label-required" for="accessibilityEquipment.name" > Category :</label>
+                     <input type="text" name="accessibilityEquipment.category" data-ng-model="accessibilityEquipment.category" />
+                </span>
+            </li>
+            <li>
+                <span> 
+                    <label class="control-label-required" for="accessibilityEquipment.type" > Type :</label>
+                            <select name="accessibilityEquipment.type" data-ng-model="accessibilityEquipment.type" data-ng-options="type.id as type.name for type in equipmentTypes">
+                                <option value="" >Select...</option>
+                            </select>
+                </span>
+            </li>            
+            <li>
+                <span></span>
+            </li>
+        </ul>  
+        <div class="home"><div class="testslot"><hr/></div></div>
+        <div class="home"><div class="testslot"><h2>Equipment Rules</h2></div></div>
+          <div class="tableWrapper">
+                <table class="dataTable" style="width:80%;margin:auto">
+                    <colgroup>
+                        <col>
+                        <col style="width:25%">
+                        <col style="width:25%">
+                        <col class="actionColumn">
+                    </colgroup>
+                    <tr>
+                        <th  data-ng-class="{'control-label-required' : accessibilityEquipment.rules && accessibilityEquipment.rules.length > 0}">Rule Field</th>
+                        <th>Operator</th>
+                        <th data-ng-class="{'control-label-required' : accessibilityEquipment.rules && accessibilityEquipment.rules.length > 0}">Value</th>
+                        <th>
+                            <div class="tableButtonGroup">
+                                <button data-ng-click="addRule()" class="boxBtn" ><span class="btnIcon icon_sprite icon_saveAdd2"></span></button>
+                            </div>
+                        </th>
+                    </tr>
+                    <tr data-ng-class="{highlight: $index == highlighted}" data-ng-repeat="(index, ruleEntry) in accessibilityEquipment.rules">
+                        <td><select name="ruleEntry.field" data-ng-change="emptyTheValueField(ruleEntry)" data-ng-model="ruleEntry.field" style="width:300px;"
+                        data-ng-options="item.fieldValue as item.fieldId group by item.segment for item in fields | orderBy:'fieldId'">
+                                <option value="" >Select...</option>
+                            </select>
+                        </td>
+                        <td><select name="ruleEntry.operatorType" data-ng-model="ruleEntry.operatorType" data-ng-show="ruleEntry.field.indexOf('Date') > -1">
+                                <option data-ng-class="{'hide': ruleEntry.field.indexOf('Date') == -1}" data-ng-selected="ot.operatorName == ruleEntry.operatorType" data-ng-repeat="ot in operatorTypes | orderBy:'order'">{{ot.operatorId}}</option>
+                            </select><input type="text" name="ruleEntry.operatorType"  data-ng-hide="ruleEntry.field.indexOf('Date') > -1"                        
+                                data-ng-model="defaultOperatorType" data-ng-disabled="operatorTypeMuted"/>                            
+                        </td>
+                        <td  class="normalSpace">
+                            <div class="datepicker" data-ng-show="dateTimeFields.indexOf(ruleEntry.field)>-1" >
+                            <span class="datepicker icon-chevron-calendar"></span>
+                                <input type="text"  name="ruleEntry.value"  style="width:150px;"                                 
+                                        data-datepicker-popup="{{format}}"  
+                                        data-show-weeks="false" 
+                                        data-ng-model="ruleEntry.value"/>
+                            </div>
+                            
+                            <input type="text" name="ruleEntry.value"
+                                        data-ng-show="textFields.indexOf(ruleEntry.field)>-1" 
+                                        data-ng-model="ruleEntry.value" />
+                                        
+                            <select name="ruleEntry.value"  
+                                        data-ng-show="yesOrNoFields.indexOf(ruleEntry.field)>-1" 
+                                        data-ng-model="ruleEntry.value" data-ng-options="id.entityId as id.entityId for id in yesOrNoTypes | orderBy:'entityId'">
+                                <option value="" >Select...</option>
+                            </select>
+                            
+                            <select name="ruleEntry.value"  
+                                        data-ng-show="ruleEntry.field=='section504Status'" 
+                                        data-ng-model="ruleEntry.value" data-ng-options="sectionStatus.name as sectionStatus.name for sectionStatus in section504Status">
+                                <option value="" >Select...</option>
+                            </select>
+                        
+                               <select name="ruleEntry.value"  
+                                        data-ng-show="ruleEntry.field=='languageCode'" 
+                                        data-ng-model="ruleEntry.value" data-ng-options="language.id as language.text for language in languages">
+                                <option value="" >Select...</option>
+                            </select>                                                   
+                            <select name="ruleEntry.value"  
+                                        data-ng-show="ruleEntry.field=='stateAbbreviation'" 
+                                        data-ng-model="ruleEntry.value" data-ng-options="id.entityId as id.entityId for id in states | orderBy:'entityId'">
+                                <option value="" >Select...</option>
+                            </select>                                                   
+                                                        
+                            <select name="ruleEntry.value"  
+                                        data-ng-show="ruleEntry.field=='gradeLevelWhenAssessed'" 
+                                        data-ng-model="ruleEntry.value" data-ng-options="grade.id as grade.text for grade in grades">
+                                <option value="" >Select...</option>
+                            </select>
+                            
+                            <select name="ruleEntry.value"  
+                                        data-ng-show="ruleEntry.field=='gender'" 
+                                        data-ng-model="ruleEntry.value" data-ng-options="gender.genderId as gender.genderName for gender in genders">
+                                <option value="" >Select...</option>
+                            </select>
+                            
+                            
+                            <select name="ruleEntry.value"  
+                                        data-ng-show="ruleEntry.field=='title3ProgramType'" 
+                                        data-ng-model="ruleEntry.value" data-ng-options="progType.name as progType.description for progType in title3ProgramType">
+                                <option value="" >Select...</option>
+                            </select>
+                            
+                            <select name="ruleEntry.value"  
+                                        data-ng-show="ruleEntry.field=='primaryDisabilityType'" 
+                                        data-ng-model="ruleEntry.value" data-ng-options="disabilityType.name as disabilityType.name for disabilityType in primaryDisabilityType">
+                                <option value="" >Select...</option>
+                            </select>
+                            
+                            <select name="ruleEntry.value"  
+                                        data-ng-show="ruleEntry.field=='americanSignLanguage'" 
+                                        data-ng-model="ruleEntry.value" data-ng-options="aslVideo.name as aslVideo.description for aslVideo in americanSignLanguage">
+                                <option value="" >Select...</option>
+                            </select>
+                            
+                            <select name="ruleEntry.value"  
+                                        data-ng-show="ruleEntry.field=='colorContrast'" 
+                                        data-ng-model="ruleEntry.value" data-ng-options="color.name as color.description for color in colorContrast">
+                                <option value="" >Select...</option>
+                            </select>
+                            
+                            <select name="ruleEntry.value"  
+                                        data-ng-show="ruleEntry.field=='closedCaptioning'" 
+                                        data-ng-model="ruleEntry.value" data-ng-options="caption.name as caption.description for caption in closedCaptioning">
+                                <option value="" >Select...</option>
+                            </select>
+                            
+                            <select name="ruleEntry.value"  
+                                        data-ng-show="ruleEntry.field=='language'" 
+                                        data-ng-model="ruleEntry.value" data-ng-options="lang.name as lang.description for lang in language">
+                                <option value="" >Select...</option>
+                            </select>
+                            
+                            <select name="ruleEntry.value"  
+                                        data-ng-show="ruleEntry.field=='masking'" 
+                                        data-ng-model="ruleEntry.value" data-ng-options="mask.name as mask.description for mask in masking">
+                                <option value="" >Select...</option>
+                            </select>
+                            
+                            <select name="ruleEntry.value"  
+                                        data-ng-show="ruleEntry.field=='permissiveMode'" 
+                                        data-ng-model="ruleEntry.value" data-ng-options="permMode.name as permMode.description for permMode in permissiveMode">
+                                <option value="" >Select...</option>
+                            </select>
+                            
+                            <select name="ruleEntry.value"  
+                                        data-ng-show="ruleEntry.field=='printOnDemand'" 
+                                        data-ng-model="ruleEntry.value" data-ng-options="printDem.name as printDem.description for printDem in printOnDemand">
+                                <option value="" >Select...</option>
+                            </select>
+                            
+                            <select name="ruleEntry.value"  
+                                        data-ng-show="ruleEntry.field=='printSize'" 
+                                        data-ng-model="ruleEntry.value" data-ng-options="prntSize.name as prntSize.description for prntSize in printSize">
+                                <option value="" >Select...</option>
+                            </select>
+                            
+                            <select name="ruleEntry.value"  
+                                        data-ng-show="ruleEntry.field=='streamlinedInterface'" 
+                                        data-ng-model="ruleEntry.value" data-ng-options="stream.name as stream.description for stream in streamlinedInterface">
+                                <option value="" >Select...</option>
+                            </select>
+                            
+                            <select name="ruleEntry.value"  
+                                        data-ng-show="ruleEntry.field=='textToSpeech'" 
+                                        data-ng-model="ruleEntry.value" data-ng-options="tts.name as tts.description for tts in textToSpeech">
+                                <option value="" >Select...</option>
+                            </select>
+                            
+                            <select name="ruleEntry.value"  
+                                        data-ng-show="ruleEntry.field=='translation'" 
+                                        data-ng-model="ruleEntry.value" data-ng-options="translate.name as translate.description for translate in translation">
+                                <option value="" >Select...</option>
+                            </select>
+                            
+                            <select name="ruleEntry.value"  
+                                        data-ng-show="ruleEntry.field=='nonEmbeddedDesignatedSupports'" 
+                                        data-ng-model="ruleEntry.value" data-ng-options="supports.name as supports.description for supports in nonEmbeddedDesignatedSupports">
+                                <option value="" >Select...</option>
+                            </select>
+                            
+                            <select name="ruleEntry.value"  
+                                        data-ng-show="ruleEntry.field=='nonEmbeddedAccommodations'" 
+                                        data-ng-model="ruleEntry.value" data-ng-options="nonembed.name as nonembed.description for nonembed in nonEmbeddedAccommodations">
+                                <option value="" >Select...</option>
+                            </select>
+                            
+                            <input type="text" name="ruleEntry.value"
+                                data-ng-show="ruleEntry.field=='other'"   
+                                data-ng-model="ruleEntry.value"/>
+                            
+                        </td>
+                        <td class="normalSpace">
+                            <div class="tableButtonGroup">
+                                <button data-ng-click="deleteRule($index)" class="boxBtn"><span class="btnIcon icon_sprite icon_delete2"></span></button>
+                            </div>
+                        </td>  
+                    </tr>
+                </table>    
+          </div>
+        
+        <br>
+        <button type="button" class="boxBtn" data-ng-show="accessibilityEquipmentForm.$dirty" data-ng-click="save(accessibilityEquipment)">
+            <span class="btnIcon icon_sprite icon_save2 ng-class:{ajax_indicator:savingIndicator}" ></span>
+            <span class="btnText">Save</span>
+        </button>
+     
+        <button type="button" class="boxBtn" data-ng-click="cancel()">
+            <span class="btnIcon icon_sprite icon_cancel2" ></span>
+            <span class="btnText">Cancel</span>
+        </button>
+    </div>
+</div>
+</div>
+<div class="clear"></div>
+
+ 

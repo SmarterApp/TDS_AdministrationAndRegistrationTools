@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:mongo="http://www.springframework.org/schema/data/mongo" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+    xsi:schemaLocation="
+                http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+                http://www.springframework.org/schema/data/mongo http://www.springframework.org/schema/data/mongo/spring-mongo-1.1.xsd
+                http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
+                http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd">
+
+    <aop:aspectj-autoproxy proxy-target-class="false"/>
+    <context:annotation-config/>
+    <context:component-scan base-package="org.opentestsystem.shared.security.service,org.opentestsystem.shared.security.integration,org.opentestsystem.delivery.testreg.persistence.config"/>
+
+    <mongo:db-factory id="mongoDbFactory" dbname="test" host="localhost" port="55555" />
+
+    <bean id="restPropertyConfigurer" class="org.springframework.context.support.PropertySourcesPlaceholderConfigurer">
+        <!-- this allows for missing resources files, specifically the ones defined in env vars -->
+        <property name="ignoreResourceNotFound" value="true"/>
+        <!-- this allows blank entries  in the specified .properties files -->
+        <property name="ignoreUnresolvablePlaceholders" value="true"/>
+        <property name="locations">
+            <list>
+                <value>classpath:mongo.properties</value>
+                <value>classpath:language_codes.properties</value>
+                <value>classpath:sftp.properties</value>
+                <value>classpath:tsb_url.properties</value>
+                <value>classpath:clientconfig.properties</value>
+                <value>classpath:tz.properties</value>
+                <value>classpath:permission-json.properties</value>
+            </list>
+        </property>
+    </bean>
+
+    <!-- placeholder for testing -->
+    <mongo:mongo id="testreg-mongo" />
+    
+    <bean id="validator" class="org.springframework.validation.beanvalidation.LocalValidatorFactoryBean"/>
+
+</beans>

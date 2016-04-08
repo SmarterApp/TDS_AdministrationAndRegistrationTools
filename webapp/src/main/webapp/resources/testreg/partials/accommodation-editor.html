@@ -1,0 +1,55 @@
+
+<div class="tableWrapper"> 
+    <h5 class="h5Accommodations" tabindex="-1">{{getEntityNameLabel(entityNameLabels['DesignatedSupportsAndAccommodations'])}}</h5>
+	<p class="note">{{accommodationMessage}}</p>
+    <table class="accommodationTable" role="grid">
+           <colgroup>
+               <col class="actionColumn">
+               <col>
+               <col>
+               <col>
+               <col>
+               <col>
+               <col>
+               <col>
+               <col>
+               <col>                              
+               <col>
+           </colgroup>
+           <tr role="row">
+               <th scope="col" id="actionHeader" title="Add">
+                   <div class="tableButtonGroup">
+                        <button data-ng-click="addItem()" class="boxBtn" data-ng-disabled="isDisabled" tabindex="0"><span class="btnIcon icon_sprite icon_saveAdd2" aria-hidden="true"></span></button>
+                   </div>
+               </th>
+               <th data-ng-repeat="header in headerNames">{{accommodationXwalk(header)}}</th>
+           </tr>
+           
+           <tr data-ng-repeat="accommodation in student.accommodations" role="row">              
+               <td class="normalSpace" role="gridcell" aria-labelledby="actionHeader" ng-init="parentIndex=$index">
+                   <div class="tableButtonGroup">
+                        <button data-ng-click="removeAccommodation($index)" class="boxBtn" tabindex="0"><span class="btnIcon icon_sprite icon_delete2" aria-hidden="true"></span></button>
+                   </div>
+               </td>           
+                <td>                  
+                    <input type="hidden" aria-hidden="true" data-ng-model="accommodation.studentId" value={{student.entityId}} alt="Student ID" />
+                    <input type="hidden" aria-hidden="true" data-ng-model="accommodation.stateAbbreviation" value="{{student.stateAbbreviation}}" alt="State Abbreviation" />
+                    <select  data-ng-model="accommodation.subject" data-ng-options="subject for subject in subjects[$index]" data-ng-change="refreshSubject(accommodation.subject,$index,accommodation)" title="subject" tabindex="0">
+                      <option value="">Select...</option>
+                    </select>
+               </td>
+               <td data-ng-repeat="field in accommodationResourceData[$index]" data-ng-switch data-on="field.resourceType"> 
+               <select  data-ng-switch-when='MultiSelectResource' data-ui-select2="select2Config" data-ng-model="accommodation[field.code]" data-ng-change="mutuallyExclusiveOptions(parentIndex,field.code,accommodation[field.code],field)" multiple data-ng-show="hasDisabled(field)" tabindex="0" >
+                      <option data-ng-repeat="option in field.options" data-ng-bind="option.text[0].label" value="{{option.code}}" ></option>
+               </select> 
+                
+               <input type="text" data-ng-switch-when='EditResource' data-ng-model="accommodation[field.code]" data-ng-show="hasDisabled(field)" tabindex="0" />
+               
+               <select data-ng-switch-when='SingleSelectResource' data-ng-change="modifyMessage(field, accommodation[field.code])" tabindex="0" data-ng-options="option.code as option.text[0].label for option in field.options" data-ng-model="accommodation[field.code]" data-ng-show="hasDisabled(field)">
+                      <option value=""> Select...</option>
+               </select>
+               </td>                                                                                                                             
+           </tr>  
+    </table>
+</div>
+

@@ -1,0 +1,53 @@
+<br><br><br>
+<span class="boxIcon icon_sprite icon_view1"></span>
+<div data-ng-repeat="error in errors">
+     <div><span class="icon_sprite icon_error error"></span>{{error}}</div>
+</div>
+<div class="boxTitle"><h2 tabindex="-1">Subject Search</h2></div>
+<div>
+	<div data-searchable data-search-promise="searchSubjects(params)"  data-search-params="searchParams" data-search-response="searchResponse">
+		<div class="fieldGroup">
+			<h5 tabindex="-1">Search Filters</h5>
+			<ul>
+            <li>
+                <span> 
+                    <label class="control-label" for="searchParams.code" title="Subject Code">Subject Code:</label>
+                    <input type="text" name="searchParams.code" data-ng-model="searchParams.code" data-capitalize alt="Subject Code" tabindex="0" />
+                </span>
+            </li>  
+			</ul>
+			<button type="button" type="button" class="boxBtn"  data-search-on-click data-active-indicator="searchResponse.searching" tabindex="0">
+				<span class="btnIcon icon_sprite icon_search ng-class:{ajax_indicator:activeIndicator}" aria-hidden="true"></span>
+				<span class="btnText">Search</span>
+			</button>
+			<button type="button" type="button" class="boxBtn"	data-ng-click="addSubject()" tabindex="0">
+				<span class="btnIcon icon_sprite icon_saveAdd2" aria-hidden="true"></span> <span class="btnText">New</span>
+			</button>					
+		</div>
+       	
+		<div data-pageable data-paging-info="searchResponse"	data-search-params="searchParams" data-change-page="changePage()">
+			<table class="dataTable" data-accessible-table role="grid">
+				<colgroup>
+					<col>
+                    <col class="tripleActionColumn">                    
+				</colgroup>
+				<tr>
+					
+				<th data-sort-on-click data-sort-column="code" class="headerSortUp">Subject Code</th>
+	            <th></th>
+				</tr>
+				<tr data-ng-repeat="subject in searchResponse.searchResults">
+    				<td>{{subject.code}}</td>
+                    <td class="normalSpace">
+                        <div class="tableButtonGroup">
+                            <button data-ng-click="edit(subject)" title="Edit" class="boxBtn" tabindex="0"><span class="btnIcon icon_sprite icon_edit2" aria-hidden="true"></span></button>
+                            <button data-ng-click="deleteItem(subject)" title="Delete" class="boxBtn" tabindex="0"><span class="btnIcon icon_sprite icon_delete2" aria-hidden="true"></span></button>
+                            <button data-ng-click="merge(subject)" title="Merge" class="boxBtn" tabindex="0"><span class="btnIcon icon_sprite icon_update2" aria-hidden="true"></span></button>
+                        </div>
+                    </td>					
+				</tr>
+			</table>
+		</div>
+	</div>
+</div>
+<div class="clear"></div>

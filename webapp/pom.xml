@@ -1,0 +1,74 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <parent>
+    <groupId>org.opentestsystem.delivery</groupId>
+    <artifactId>test-reg-parent</artifactId>
+    <version>0.0.1-SNAPSHOT</version>
+  </parent>
+  <artifactId>testreg.webapp</artifactId>
+  <packaging>war</packaging>
+  
+    <name>Smarter Balanced #11 Test Registration - Webapp for the Component</name>
+
+    <properties>
+        <classifier.classes>classes</classifier.classes>
+    </properties>
+
+    <profiles>
+        <profile>
+            <id>m2e</id>
+            <activation>
+                <property>
+                    <name>m2e.version</name>
+                </property>
+            </activation>
+            <properties>
+                <classifier.classes></classifier.classes>
+            </properties>
+        </profile>
+    </profiles>
+
+    <dependencies>
+        <!-- Servlet -->
+        <dependency>
+            <groupId>javax.servlet</groupId>
+            <artifactId>javax.servlet-api</artifactId>
+            <version>${servlet-api.version}</version>
+            <scope>provided</scope>
+        </dependency>
+        
+        <dependency>
+            <groupId>javax.servlet</groupId>
+            <artifactId>jstl</artifactId>
+            <version>${jstl.library.version}</version>
+        </dependency>
+        
+        <dependency>
+            <groupId>org.opentestsystem.shared</groupId>
+            <artifactId>prog-mgmnt-client</artifactId>
+            <version>${progman-client.version}</version>
+        </dependency>
+        
+        <dependency>
+            <groupId>org.opentestsystem.shared</groupId>
+            <artifactId>prog-mgmnt-client-null-impl</artifactId>
+            <version>${progman-client.version}</version>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <resources>
+            <resource>
+                <directory>src/main/resources/properties</directory>
+                <filtering>true</filtering>
+            </resource>
+            <resource>
+                <directory>src/main/resources</directory>
+                <excludes>
+                    <exclude>properties/**</exclude>
+                </excludes>
+            </resource>
+        </resources>
+    </build>
+  
+</project>

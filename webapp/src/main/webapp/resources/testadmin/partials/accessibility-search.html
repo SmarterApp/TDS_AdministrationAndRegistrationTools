@@ -1,0 +1,62 @@
+
+ <div  data-ng-include src='"resources/testadmin/partials/leftnav.html"'></div>
+ <div class="secContent"> 
+<span class="boxIcon icon_sprite icon_view1"></span>
+<div data-ng-repeat="error in errors">
+     <div><span class="icon_sprite icon_error error"></span>{{error}}</div>
+</div>
+
+<div class="boxTitle"><h2> Accessibility Equipment  Search</h2></div>
+<div>
+	<div data-searchable data-search-url="'accessibilityEquipment'"  data-search-params="searchParams" data-search-response="searchResponse">
+		<div class="fieldGroup">
+			<h5>Search Filters</h5>
+			<ul>
+	            <li>
+	                <span> 
+	                    <label class="control-label" for="accessibilityEquipment.name" >Name:</label>
+	                     <input type="text" name="accessibilityEquipment.name" data-ng-model="searchParams.name" />
+	                </span>
+	            </li>            
+			</ul>
+			<br>
+			<button type="button" type="button" class="boxBtn" data-search-on-click	data-active-indicator="searchResponse.searching">
+				<span class="btnIcon icon_sprite icon_search ng-class:{ajax_indicator:activeIndicator}"></span>
+				<span class="btnText">Search</span>
+			</button>
+			<button type="button" type="button" class="boxBtn"	data-ng-click="createNew()">
+				<span class="btnIcon icon_sprite icon_saveAdd2"></span> <span class="btnText">New</span>
+			</button>
+		</div>
+        
+		<div data-pageable data-paging-info="searchResponse"	data-search-params="searchParams" data-change-page="changePage()">
+			<table class="dataTable">
+				<colgroup>
+					<col>
+					<col>
+					<col>
+					<col class="doubleActionColumn">
+				</colgroup>
+				<tr>
+					<th data-sort-on-click data-sort-column="name" class="headerSortUp">Name</th>
+					<th data-sort-on-click data-sort-column="category" class="headerSortUp">Category</th>
+					<th data-sort-on-click data-sort-column="type" class="headerSortUp">Type</th>
+                    <th></th>
+				</tr>
+				<tr data-ng-repeat="accessibilityEquipment in searchResponse.searchResults" >
+					<td>{{accessibilityEquipment.name}}</td>
+					<td>{{accessibilityEquipment.category}}</td>
+					<td>{{accessibilityEquipment.type}}</td>
+			      <td class="normalSpace">
+                        <div class="tableButtonGroup">
+                            <button data-ng-click="edit(accessibilityEquipment)" class="boxBtn"><span class="btnIcon icon_sprite icon_edit2"></span></button>
+                            <button data-delete-confirmation="{{accessibilityEquipment.id}}" class="boxBtn"><span class="btnIcon icon_sprite icon_delete2"></span></button>                          
+                        </div>
+                    </td>
+				</tr>
+			</table>
+		</div>
+	</div>
+</div>
+</div>
+<div class="clear"></div>

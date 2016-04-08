@@ -1,0 +1,53 @@
+<div  data-ng-include src='"resources/testadmin/partials/leftnav.html"'></div>
+<div class="secContent"> 
+
+<span class="boxIcon icon_sprite icon_view1"></span>
+<div data-ng-repeat="error in errors">
+     <div><span class="icon_sprite icon_error error"></span>{{error}}</div>
+</div>
+
+<div class="boxTitle"><h2> Proctor Roles</h2></div>
+<div>
+	<div data-searchable data-search-promise="searchProctorRoles(params)"  data-search-params="searchParams" data-search-response="searchResponse">
+		<div class="fieldGroup">
+			<button type="button" type="button" class="boxBtn"	data-ng-click="createNew()">
+				<span class="btnIcon icon_sprite icon_saveAdd2"></span> <span class="btnText">New</span>
+			</button>
+		</div>      
+			<table class="dataTable">
+				<colgroup>
+					<col>
+					<col>
+					<col>
+					<col class="doubleActionColumn">
+				</colgroup>
+				<tr>
+					<th data-sort-on-click data-sort-column="name" class="headerSortUp">Role Name</th>
+					<th data-sort-on-click data-sort-column="name" class="headerSortUp">Role Level</th>
+ 					<th data-sort-on-click data-sort-column="name" class="headerSortUp">{{entityNameLabels['Assessment']}} Types</th>
+                    <th></th>
+				</tr>
+				<tbody data-ng-repeat="proctorRole in searchResponse.searchResults">
+				
+					<tr>
+						<td rowspan="{{proctorRole.assessmentTypes.length+1}}">{{proctorRole.name}}</td>
+						<td rowspan="{{proctorRole.assessmentTypes.length+1}}">{{getEntities(proctorRole.name)}}
+						<td>{{proctorRole.assessmentTypes[0]}}</td>	
+						<td rowspan="{{proctorRole.assessmentTypes.length+1}}" class="normalSpace">
+			               <div class="tableButtonGroup">
+			                   <button data-ng-click="edit(proctorRole)" class="boxBtn"><span class="btnIcon icon_sprite icon_edit2"></span></button>
+			                   <button data-delete-confirmation="{{proctorRole.id}}" class="boxBtn"><span class="btnIcon icon_sprite icon_delete2"></span></button>                          
+			               </div>
+						</td>
+					</tr>
+					
+					<tr data-ng-repeat="(index, assessmentType) in proctorRole.assessmentTypes">
+						<td data-ng-show="$index > 0 ">{{assessmentType}}</td>
+					</tr>
+					
+				</tbody>
+			</table>
+	</div>
+</div>
+</div>
+<div class="clear"></div>

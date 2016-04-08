@@ -1,0 +1,68 @@
+<div  data-ng-include src='"resources/testadmin/partials/leftnav.html"'></div>
+<div class="secContent"> 
+
+<span class="boxIcon icon_sprite icon_view1"></span>
+<div data-ng-repeat="error in errors">
+     <div><span class="icon_sprite icon_error error"></span>{{error}}</div>
+</div>
+
+<div class="boxTitle"><h2> Test Platform  Search</h2></div>
+<div>
+	<div data-searchable data-search-url="'testplatform'"  data-search-params="searchParams" data-search-response="searchResponse">
+		<div class="fieldGroup">
+			<h5>Search Filters</h5>
+			<ul>
+	            <li>
+	                <span> 
+	                    <label class="control-label" for="searchParams.name" > Device Name:</label>
+	                     <input type="text"  data-ng-model="searchParams.name" />
+	      
+	                </span>
+	            </li>
+			</ul>
+			<button type="button" type="button" class="boxBtn" data-search-on-click	data-active-indicator="searchResponse.searching">
+				<span class="btnIcon icon_sprite icon_search ng-class:{ajax_indicator:activeIndicator}"></span>
+				<span class="btnText">Search</span>
+			</button>
+			<button type="button" type="button" class="boxBtn"	data-ng-click="createNew()">
+				<span class="btnIcon icon_sprite icon_saveAdd2"></span> <span class="btnText">New</span>
+			</button>
+		</div>
+        
+		<div data-pageable data-paging-info="searchResponse"	data-search-params="searchParams" data-change-page="changePage()">
+			<table class="dataTable">
+				<colgroup>
+					<col>
+					<col>
+					<col>
+					<col>
+                    <col>
+					<col class="doubleActionColumn">
+				</colgroup>
+				<tr>
+					<th data-sort-on-click data-sort-column="name" class="headerSortUp">Device Name</th>
+					<th data-sort-on-click data-sort-column="operatingSystem" >Operating System</th>
+					<th data-sort-on-click data-sort-column="operatingSystemVersion" >Operating System Version</th>
+					<th data-sort-on-click data-sort-column="browserName" >Browser Name</th>
+					<th data-sort-on-click data-sort-column="browserVersion" >Browser Version</th>
+                    <th></th>
+				</tr>
+				<tr data-ng-repeat="testPlatForm in searchResponse.searchResults" >
+					<td>{{testPlatForm.name}}</td>
+					<td>{{testPlatForm.operatingSystem}}</td>
+					<td>{{testPlatForm.version}}</td>
+					<td>{{testPlatForm.browserName}}</td>
+					<td>{{testPlatForm.browserVersion}}</td>     
+			      <td class="normalSpace">
+                        <div class="tableButtonGroup">
+                            <button data-ng-click="edit(testPlatForm)" class="boxBtn"><span class="btnIcon icon_sprite icon_edit2"></span></button>
+                            <button data-delete-confirmation="{{testPlatForm.id}}" class="boxBtn"><span class="btnIcon icon_sprite icon_delete2"></span></button>                          
+                        </div>
+                    </td>
+				</tr>
+			</table>
+		</div>
+	</div>
+</div>
+</div>
+<div class="clear"></div>

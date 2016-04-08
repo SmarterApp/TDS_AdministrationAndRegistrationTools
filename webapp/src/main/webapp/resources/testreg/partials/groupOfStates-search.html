@@ -1,0 +1,93 @@
+
+<span class="boxIcon icon_sprite icon_view1"></span>
+
+<div data-ng-repeat="error in errors">
+    <div><span class="icon_sprite icon_error error"></span>{{error}}</div>
+</div>
+
+<div class="boxTitle"><h2 tabindex="-1">{{entityNameLabels['GroupOfStates']}} Search</h2></div>
+<div>
+    <div data-searchable data-search-url="'groupofstate'" data-search-params="searchParams" data-search-response="searchResponse">
+        <div class="fieldGroup">
+            <h5 tabindex="-1">Search Filters</h5>
+            <ul class="entityLayout">
+            <li>
+                <span class="entity-auto-complete">
+                   <label class="control-label" for="searchParams.entityId" title="Group Of States Identifier">{{xwalk('Group Of States Identifier')}}:</label>
+                   <input data-group-of-states-search-auto-complete type="text" 
+                    placeholder="Search..." 
+                    data-ng-model="entityId"
+                    data-typeahead="entity as entity.entityId+ ' - ' + entity.entityName for entity in filterGroupofStates($viewValue, 20, true)" 
+                    data-typeahead-wait-ms="200" 
+                    data-typeahead-editable="true" 
+                    data-typeahead-input-formatter="formatGroupofStatesLabelId($model)"
+                    data-typeahead-on-select="changeGroupofStatesId($item)" 
+                    alt="Group Of States Identifier" 
+                    tabindex="0" />  
+                 </span>                              
+            </li>
+            <li>
+              <span class="entity-auto-complete">
+                   <label class="control-label" for="searchParams.entityName" title="Group Of States Name">{{xwalk('Group Of States Name')}}:</label>
+                   <input data-group-of-states-search-auto-complete type="text" 
+                    placeholder="Search..." 
+                    data-ng-model="entityName"
+                    data-typeahead="entity as entity.entityName+ ' - ' + entity.entityId for entity in filterGroupofStates($viewValue, 20, false)" 
+                    data-typeahead-wait-ms="200" 
+                    data-typeahead-editable="true" 
+                    data-typeahead-input-formatter="formatGroupofStatesLabelName($model)"
+                    data-typeahead-on-select="changeGroupofStatesName($item)" 
+                    alt="Group Of States Name" 
+                    tabindex="0" />  
+                 </span>                             
+            </li>	                     
+            </ul>
+            <div class="buttonRow">
+            <button type="button" type="button" class="boxBtn" data-search-on-click  data-active-indicator="searchResponse.searching" tabindex="0">
+                <span class="btnIcon icon_sprite icon_search ng-class:{ajax_indicator:activeIndicator}" aria-hidden="true"></span>
+                <span class="btnText">Search</span>
+            </button>
+            <button type="button" type="button" class="boxBtn"  data-ng-click="createNew()" tabindex="0">
+                <span class="btnIcon icon_sprite icon_saveAdd2" aria-hidden="true"></span> <span class="btnText">Add New GroupOfState</span>
+            </button>
+            <div class="positioningContainer" data-export="groupofstates"></div>
+            </div>
+        </div>
+        
+        <div data-pageable data-paging-info="searchResponse"  data-search-params="searchParams" data-change-page="changePage()">
+            <table class="dataTable" data-accessible-table role="grid">
+                <colgroup>
+                    <col>
+                    <col>
+                    <col>
+                    <col>
+                    <col class="doubleActionColumn">                   
+                </colgroup>
+                <tr role="row">
+                    <th data-sort-on-click data-sort-column="entityId" class="headerSortUp" scope="col" id="idHeader" title="Group Of States Identifier">{{xwalk('Group Of States Identifier')}}</th>
+                    <th data-sort-on-click data-sort-column="entityName" scope="col" id="nameHeader" title="Group Of States Name">{{xwalk('Group Of States Name')}}</th>
+                    <th data-sort-on-click data-sort-column="parentEntityType" scope="col" id="entityTypeHeader" title="Parent Entity Type">{{xwalk('Parent Entity Type')}}</th>
+                    <th data-sort-on-click data-sort-column="parentEntityId" scope="col" id="entityNameHeader" title="Parent Entity Name">{{xwalk('Parent Entity Name')}}</th>
+                    <th scope="col" id="actionHeader" title="Edit"></th>
+                </tr role="row">
+                <tr data-ng-repeat="groupOfStates in searchResponse.searchResults">
+                    <td role="gridcell" aria-labelledby="idHeader">{{groupOfStates.entityId}}</td>
+                    <td role="gridcell" aria-labelledby="nameHeader">{{groupOfStates.entityName}}</td>
+                    <td role="gridcell" aria-labelledby="entityTypeHeader">{{entityNameLabels[entityHierarchyRef[groupOfStates.parentEntityType]]}}</td>
+                    <td class="ng-class:{ajax_indicator:savingIndicator}" role="gridcell" aria-labelledby="entityNameHeader">{{groupOfStates.parentId | parentNameFilter:groupOfStates.parentEntityType:parentEntities}}</td>
+                    <td class="normalSpace" role="gridcell" aria-labelledby="actionHeader">
+                        <div class="tableButtonGroup">
+                            <button data-ng-click="edit(groupOfStates)" class="boxBtn" tabindex="0"><span class="btnIcon icon_sprite icon_edit2" aria-hidden="true"></span></button>
+                            <button data-delete-confirmation="{{groupOfStates.id}}" class="boxBtn" tabindex="0"><span class="btnIcon icon_sprite icon_delete2" aria-hidden="true"></span></button>
+                        </div>
+                    </td>  
+                </tr>
+            </table>
+        </div>
+        <div data-load-parent-names></div>
+    </div>
+</div>
+</div>  
+
+
+<div class="clear"></div>
