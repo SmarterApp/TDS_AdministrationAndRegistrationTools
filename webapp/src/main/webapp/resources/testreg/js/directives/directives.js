@@ -56,13 +56,21 @@ testreg.directive("searchable",['$http','$parse', function($http, $parse){
 					$http.get(baseUrl + url, {params:params}).success(function(data) {
 						$scope.errors =[];
 						$scope.searchResponse = data;
-						$scope.searchResponse.totalCount = data.totalCount > 1000 ? "1000+" : data.totalCount;
+						$scope.searchResponse.totalCountStr = data.totalCount > 1000 ? "1000+" : data.totalCount;
 						$scope.searchResponse.currentPage = ($scope.searchResponse.currentPage *1) +1;
 						var modVal = (($scope.searchResponse.totalCount*1) % ($scope.searchResponse.pageSize*1));
 						if(modVal == 0){
 							$scope.searchResponse.lastPage = parseInt((($scope.searchResponse.totalCount*1) / ($scope.searchResponse.pageSize*1)));
 						}else{
 							$scope.searchResponse.lastPage = parseInt((($scope.searchResponse.totalCount*1) / ($scope.searchResponse.pageSize*1))) + 1;
+						}
+						if ($scope.searchParams.lastPageClicked) {
+							// If we clicked on the "Last page" link, nextUrl should be null (this prevents next/last buttons)
+							// from displaying. This could be handled in backend, but easier to set in this callback as
+							// current pages (used to calculate the urls) are precalculated on screen render.
+							$scope.searchResponse.nextPageUrl = null;
+							$scope.searchParams.currentPage = $scope.searchResponse.lastPage;
+							delete $scope.searchParams.lastPageClicked; // clear the flag
 						}
 						if ($scope.searchPostProcess) {
 							if($scope.searchResponse.searchResults) {
@@ -301,8 +309,8 @@ testreg.directive("pageable", function(){
 				$scope.changePage();
 			};
 			$scope.lastPage = function(){
-				
 				$scope.searchParams.currentPage = $scope.pagingInfo.lastPage;
+				$scope.searchParams.lastPageClicked = true;
 				$scope.changePage();
 			};
 			$scope.firstPage = function(){
