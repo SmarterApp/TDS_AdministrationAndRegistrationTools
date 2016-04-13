@@ -65,44 +65,6 @@
                 </span>
             </li>
         </ul>
-     <h5 tabindex="-1">Test Windows</h5>
-     	<div class="tableWrapper">
-	     	<table class="assessmentTable" role="grid">
-	                <colgroup>
-	                    <col>
-	                    <col>
-	                    <col> 
-	                    <col class="actionColumn">
-	                </colgroup>
-	                <tr role="row">
-	                    <th data-ng-class="{'control-label-required' : assessment.testWindow && assessment.testWindow.length > 0}" scope="col" id="startDateHeader" title="Start Date">{{xwalk('Start Date')}}</th>
-	                    <th data-ng-class="{'control-label-required' : assessment.testWindow && assessment.testWindow.length > 0}" scope="col" id="endDateHeader" title="End Date">{{xwalk('End Date')}}</th>
-	                    <th scope="col" id="opportunitiesHeader" title="Opportunities">{{xwalk('Opportunities')}}</th>
-	                    <th scope="col" id="actionHeader" title="Add">
-		                    <div class="tableButtonGroup">
-	                          <button data-ng-click="addTestWindow()" class="boxBtn" tabindex="0"><span class="btnIcon icon_sprite icon_saveAdd2" aria-hidden="true"></span></button>
-	                        </div>
-		                </th>
-	                </tr>
-	                <tr data-ng-class="{highlight: $index == highlighted}" data-ng-repeat="(index, testWindowEntry) in assessment.testWindow">	                
-	                	<td role="gridcell" aria-labelledby="startDateHeader"><div class="centerDiv datepicker"><span class="icon-chevron-calendar"></span>
-	                		<input type="text"  name="assessment.testWindow[$index].beginWindow"  data-datepicker-popup="{{format}}"  data-show-weeks="false"  data-is-open="assessment.testWindow[$index].beginWindowOpened" data-ng-model="assessment.testWindow[$index].beginWindow"/></div></td>
-	                	<td role="gridcell" aria-labelledby="endDateHeader"><div class="centerDiv datepicker"><span class="icon-chevron-calendar"></span>
-	                		<input type="text" name="assessment.testWindow[$index].endWindow"     data-datepicker-popup="{{format}}"  data-show-weeks="false"  data-is-open="assessment.testWindow[$index].endWindowOpened" data-ng-model="assessment.testWindow[$index].endWindow"/></div></td>
-	                	<td role="gridcell" aria-labelledby="opportunitiesHeader"><div class="centerDiv">
-	                	<input type="text" name="assessment.testWindow[$index].numOpportunities" data-ng-model="assessment.testWindow[$index].numOpportunities" data-ng-show=" assessment.testWindow.length != 1 "/>
-	                	 <span data-ng-show="assessment.testWindow.length == 1">{{assessment.testWindow[$index].numOpportunities}}</span>  
-	                	</div>
-	                	
-	                	</td>
-	                	<td role="gridcell" aria-labelledby="actionHeader">
-	                        <div class="tableButtonGroup">
-	                            <button data-ng-click="deleteTestWindow($index)" class="boxBtn" tabindex="0"><span class="btnIcon icon_sprite icon_delete2" aria-hidden="true"></span></button>
-	                        </div>
-                    	</td>      
-	                </tr>
-	       	</table>
-       </div>
        <h5 tabindex="-1">Implicit Eligibility Rules</h5>
        	  <div class="tableWrapper">
        	  		<table class="dataTable" role="grid">
