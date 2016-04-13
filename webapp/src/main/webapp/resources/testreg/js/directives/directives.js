@@ -86,6 +86,9 @@ testreg.directive("searchable",['$http','$parse', function($http, $parse){
 								$scope.errors.push(data.messages[field][messages]);
 							}
 						}
+						if ($scope.searchParams.lastPageClicked) {
+							delete $scope.searchParams.lastPageClicked; // clear the flag
+						}
 						$scope.searchResponse.searching = false;
 						return status;
 					});						
