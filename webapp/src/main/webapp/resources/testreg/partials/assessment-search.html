@@ -104,34 +104,24 @@
                     <col>       
                     <col>
                     <col> 
-                    <col> 
-                    <col class="doubleActionColumn">            
+                    <col>
                 </colgroup>
                 <tr role="row">
-                    
                     <th rowspan="2" data-sort-on-click data-sort-column="entityId" class="headerSortUp" scope="col" id="idHeader" title="Identifier">{{xwalk('Identifier')}}</th>
                     <th rowspan="2" data-sort-on-click data-sort-column="testName" scope="col" id="nameHeader" title="Name">{{xwalk('Name')}}</th>
-                    <th colspan="3" scope="col" id="testWindowsHeader" title="Test Windows">{{xwalk('Test Windows')}}</th>
+                    <th rowspan="2" data-sort-on-click data-sort-column="numGlobalOpportunities" scope="col" id="testOpportunitiesHeader" title="Test Opportunities">{{xwalk('Test Opportunities')}}</th>
                     <th rowspan="2" data-sort-on-click data-sort-column="delayRule" scope="col" id="delayRuleHeader" title="Delay Rule">{{xwalk('Delay Rule')}}</th>
                     <th rowspan="2" data-sort-on-click data-sort-column="grade" scope="col" id="gradeHeader" title="Grade">{{xwalk('Grade')}}</th>
                     <th rowspan="2" data-sort-on-click data-sort-column="subjectCode" scope="col" id="subjectCodeHeader" title="Subject Code">{{xwalk('Subject Code')}}</th>
                     <th rowspan="2" data-sort-on-click data-sort-column="version" scope="col" id="versionHeader" title="Version">{{xwalk('Version')}}</th>
                     <th rowspan="2" scope="col" id="actionHeader" title="Edit"></th>
                 </tr>
-                <tr role="row">
-                	<th data-sort-on-click data-sort-column="testWindow.beginWindow" scope="col" id="startDateHeader" title="Start Date">{{xwalk('Start Date')}}</th>
-                	<th data-sort-on-click data-sort-column="testWindow.endWindow" scope="col" id="endDateHeader" title="End Date">{{xwalk('End Date')}}</th>
-                	<th data-sort-on-click data-sort-column="testWindow.numOpportunities" scope="col" id="opportunitiesHeader" title="Opportunities">{{xwalk('Opportunities')}}</th>
-            
-                </tr>
                 <tbody data-ng-repeat="assessment in searchResponse.searchResults">
                 <tr role="row">
          
                     <td rowspan="{{assessment.testWindow.length+1}}" role="gridcell" aria-labelledby="idHeader">{{assessment.entityId}}</td>
                     <td rowspan="{{assessment.testWindow.length+1}}" role="gridcell" aria-labelledby="nameHeader">{{assessment.testName}}</td>
-                    <td role="gridcell" aria-labelledby="startDateHeader">{{assessment.testWindow[0].beginWindow | date: 'yyyy-MM-dd'}}</td>
-                    <td role="gridcell" aria-labelledby="endDateHeader">{{assessment.testWindow[0].endWindow | date: 'yyyy-MM-dd'}}</td>
-                    <td role="gridcell" aria-labelledby="opportunitiesHeader">{{assessment.testWindow[0].numOpportunities}}</td>
+                    <td rowspan="{{assessment.testWindow.length+1}}" role="gridcell" aria-labelledby="opportunitiesHeader"><div class="centerText">{{assessment.numGlobalOpportunities}}</div></td>
                     <td rowspan="{{assessment.testWindow.length+1}}" role="gridcell" aria-labelledby="delayRuleHeader"><div class="centerText">{{assessment.delayRule}}</div></td>
                     <td rowspan="{{assessment.testWindow.length+1}}" role="gridcell" aria-labelledby="gradeHeader"><div class="centerText">{{assessment.grade}}</div></td>
                     <td rowspan="{{assessment.testWindow.length+1}}" role="gridcell" aria-labelledby="subjectCodeHeader"><div class="centerText">{{assessment.subjectCode}}</div></td>
@@ -143,13 +133,6 @@
                         </div>
                     </td>                     
                 </tr>
-                
-                <tr data-ng-repeat="(index, testWindowEntry) in assessment.testWindow" role="row">
-                    <td data-ng-show="$index > 0 " role="gridcell" aria-labelledby="startDateHeader">{{testWindowEntry.beginWindow | date: 'yyyy-MM-dd'}}</td>
-                    <td data-ng-show="$index > 0 " role="gridcell" aria-labelledby="endDateHeader">{{testWindowEntry.endWindow | date: 'yyyy-MM-dd'}}</td>
-                    <td data-ng-show="$index > 0 " role="gridcell" aria-labelledby="opportunitiesHeader">{{testWindowEntry.numOpportunities}}</td>
-				</tr>
-	            
 	            </tbody>
             </table>
         </div>

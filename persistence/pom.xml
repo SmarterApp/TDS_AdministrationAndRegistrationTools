@@ -30,7 +30,19 @@
             <version>${progman-client.version}</version>
             <scope>test</scope>
         </dependency>
-        
+
+        <dependency>
+            <groupId>org.opentestsystem.shared</groupId>
+            <artifactId>shared-tr-api</artifactId>
+            <version>1.0.1-BUILD-SNAPSHOT</version>
+            <exclusions>
+                <exclusion>
+                    <artifactId>bcprov-jdk16</artifactId>
+                    <groupId>org.bouncycastle</groupId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+
          <dependency>
             <groupId>org.opentestsystem.shared</groupId>
             <artifactId>monitoring-alerting.client-interfaces</artifactId>
@@ -148,7 +160,7 @@
             <artifactId>super-csv</artifactId>
             <version>${super-csv.version}</version>
         </dependency>
-        
+
     </dependencies>
     
     <build>
