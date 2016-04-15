@@ -154,24 +154,28 @@ testreg.directive("userSearchOnChange", ['$timeout', function($timeout){
 		transclude : false,
 		link : function(scope, element, attrs, searchableController) {
 			var timer = false;
-			scope.$watch(attrs.ngModel, function() {
+			scope.$watch(attrs.ngModel, function(newVal, oldVal) {
+				// Prevent change event if this an initial load or the value didn't actually change.
+				if (typeof newVal !== 'undefined' && newVal !== oldVal) {
+					timer = $timeout (function() {
+						if (attrs.ngModel=='firstName'){
+							scope.changeFirstName(scope.$eval(attrs.ngModel));
+						} else if(attrs.ngModel=='lastName'){
+							scope.changeLastName(scope.$eval(attrs.ngModel));
+						} else if (attrs.ngModel=='districtName') {
+							scope.changeDistrict(scope.$eval(attrs.ngModel));
+						} else if (attrs.ngModel=='institutionName') {
+							scope.changeInstitution(scope.$eval(attrs.ngModel));
+						} else {
+							scope.changeEmail(scope.$eval(attrs.ngModel));
+						}
+						searchableController.filterChange();
+					}, 500);
+				}
 				if (timer) {
 					$timeout.cancel(timer);
 				}
-				timer = $timeout (function() {
-					if (attrs.ngModel=='firstName'){
-						scope.changeFirstName(scope.$eval(attrs.ngModel));
-					} else if(attrs.ngModel=='lastName'){
-						scope.changeLastName(scope.$eval(attrs.ngModel));
-					} else if (attrs.ngModel=='districtName') {
-						scope.changeDistrict(scope.$eval(attrs.ngModel));
-					} else if (attrs.ngModel=='institutionName') {
-						scope.changeInstitution(scope.$eval(attrs.ngModel));
-					} else {
-						scope.changeEmail(scope.$eval(attrs.ngModel));
-					}
-					searchableController.filterChange();
-				}, 500)
+
 			});
 		}
 	};
