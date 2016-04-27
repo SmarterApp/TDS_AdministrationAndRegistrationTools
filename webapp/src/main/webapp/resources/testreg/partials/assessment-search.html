@@ -1,232 +1,153 @@
-<div  data-ng-include src='"resources/testreg/partials/leftnav.html"'></div>
+  <div  data-ng-include src='"resources/testreg/partials/leftnav.html"'></div>
+ <div class="secContent">
+<span class="boxIcon icon_sprite icon_view1"></span>
+<div data-ng-repeat="error in errors">
+    <div><span class="icon_sprite icon_error error"></span>{{error}}</div>
+</div>
 
-<div class="secContent">
-
-    <div data-ng-repeat="error in errors">
-        <div><span class="icon_sprite icon_error error"></span>{{error}}</div>
-    </div>
-
-    <div data-ng-form="assessmentForm" class="formWrapper">
-        <div data-ng-show="assessmentForm.$dirty" class="dirtynag">* Warning: You have unsaved changes</div>
+<div class="boxTitle"><h2 tabindex="-1">{{entityNameLabels['Assessment']}} Search</h2></div>
+<div>
+    <div data-searchable data-search-url="'assessment'" data-search-params="searchParams" data-search-response="searchResponse">
         <div class="fieldGroup">
-            <h2 class="assessmentFont" tabindex="-1">{{formAction}} {{entityNameLabels['Assessment']}} Information</h2>
-
-            <h5 tabindex="-1">{{entityNameLabels['Assessment']}} Properties <span class="control-label-required">Indicates required field</span></h5>
+            <h5 tabindex="-1">Search Filters</h5>
             <ul class="assessmentLayout">
                 <li>
-                <span>
-                    <label class="control-label" for="assessment.entityId" title="Identifier">{{xwalk('Identifier')}}:</label><span class="layoutDisplayOnly" id="assessment.entityId">{{assessment.entityId}}</span>
-                </span>
+	                <span class="entity-auto-complete">
+	                   <label class="control-label" for="searchParams.entityId" title="Identifier">{{xwalk('Identifier')}}:</label>
+	                   <input assessement-search-auto-complete type="text"
+	                    placeholder="Search..."
+	                    data-ng-model="entityId"
+	                    data-typeahead="entity as entity.entityId for entity in filterAssessments($viewValue, 20,'entityId')"
+	                    data-typeahead-wait-ms="200"
+	                    data-typeahead-editable="true"
+	                    data-typeahead-input-formatter="formatAssessmentId($model)"
+	                    data-typeahead-on-select="changeAssessmentId($item)"
+	                    alt="Identifier"
+	                    tabindex="0" />
+	                 </span>
                 </li>
                 <li>
-                <span>
-                    <label class="control-label" for="assessment.testName" title="Name">{{xwalk('Name')}}:</label><span class="layoutDisplayOnly" id="assessment.testName">{{assessment.testName}}</span>
-                </span>
+                    <span class="entity-auto-complete">
+                       <label class="control-label" for="searchParams.entityId" title="Name">{{xwalk('Name')}}:</label>
+                       <input assessement-search-auto-complete type="text"
+                        placeholder="Search..."
+                        data-ng-model="testName"
+                        data-typeahead-wait-ms="200"
+                        data-typeahead="entity as entity.testName for entity in filterAssessments($viewValue, 20,'testName')"
+                        data-typeahead-editable="true"
+                        data-typeahead-input-formatter="formatAssessmentTestName($model)"
+                        data-typeahead-on-select="changeAssessmentTestName($item)"
+                        alt="Name"
+                        tabindex="0" />
+                     </span>
                 </li>
-                <li>
+            <li>
                 <span>
-                    <label class="control-label" for="assessment.subjectCode" title="Subject Code">{{xwalk('Subject Code')}}:</label><span class="layoutDisplayOnly" id="assessment.subjectCode">{{assessment.subjectCode}}</span>
-                </span>
-                </li>
-                <li>
-                <span>
-                    <label class="control-label" for="assessment.version" title="Version">{{xwalk('Version')}}:</label><span class="layoutDisplayOnly" id="assessment.version">{{assessment.version}}</span>
-                </span>
-                </li>
-                <li>
-                <span>
-                    <label class="control-label" for="assessment.grade" title="Grade">{{xwalk('Grade')}}:</label><span class="layoutDisplayOnly" id="assessment.grade">{{assessment.grade}}</span>
-                </span>
-                </li>
-                <li>
-                <span>
-                    <label class="control-label-required" for="assessment.numGlobalOpportunities" title="Total Opportunities">{{xwalk('Total Opportunities')}}:</label>
-                    <input type="text" name="assessment.numGlobalOpportunities" data-ng-model="assessment.numGlobalOpportunities" alt="Total Opportunities" tabindex="0" />
-                </span>
-                </li>
-                <li>
-                <span>
-                    <label data-ng-class="{'control-label-required':assessment.numGlobalOpportunities > 1 && assessment.testWindow.length == 0}" for="assessment.delayRule" title="Delay Rule">{{xwalk('Delay Rule')}}:</label>
-                    <input type="text" name="assessment.delayRule" data-ng-model="assessment.delayRule" alt="Delay Rule" tabindex="0" />
-                </span>
-                </li>
-                <li>
-                <span>
-                    <label class="control-label-required" for="assessment.eligibilityType" title="Eligibility Type">{{xwalk('Eligibility Type')}}:</label>
-                    <select name="assessment.eligibilityType" data-ng-model="assessment.eligibilityType" data-ng-options="id.entityId as id.entityId for id in eligibilityTypes | orderBy:'entityId'" title="Eligibility Type" tabindex="0">
-                       <option value="" >Select...</option>
+                    <label class="control-label" for="searchParams.grade" title="Grade Level">{{xwalk('Grade Level')}}:</label>
+                     <select  data-ng-model="searchParams.grade"
+                              data-ng-options="grade.id as grade.text  for grade in grades" title="Grade Level" tabindex="0">
+                      <option value="">Select...</option>
                     </select>
                 </span>
                 </li>
                 <li>
-                <span>
-                    <label class="control-label-required" for="assessment.academicYear" title="Academic Year">{{xwalk('Academic Year (yyyy)')}}:</label>
-                    <input type="text" name="assessment.academicYear" data-ng-model="assessment.academicYear" alt="Academic Year" tabindex="0" />
-                </span>
+                    <span class="entity-auto-complete">
+                       <label class="control-label" for="searchParams.subjectCode" title="Subject Code">{{xwalk('Subject Code')}}:</label>
+                       <input assessement-search-auto-complete type="text"
+                        placeholder="Search..."
+                        data-ng-model="subjectCode"
+                        data-typeahead-wait-ms="200"
+                        data-typeahead="entity as entity.subjectCode for entity in filterAssessments($viewValue, 20,'subjectCode')"
+                        data-typeahead-editable="true"
+                        data-typeahead-input-formatter="formatAssessmentSubjectCode($model)"
+                        data-typeahead-on-select="changeAssessmentSubjectCode($item)"
+                        alt="Subject Code"
+                        tabindex="0" />
+                     </span>
                 </li>
+                <li>
+                    <span  class="datepicker">
+                        <label class="control-label" for="searchParams.assessmentBeginWindow" title="Start Window">{{xwalk('Start Window')}}:</label>
+                        <span class="icon-chevron-calendar" style="width:14px"></span>
+                        <input type="text" name="testWindow.beginWindow"  data-datepicker-popup="{{format}}"  data-is-open="beginWindow.opened" data-show-weeks="false"  data-ng-model="searchParams.beginWindow" value="{searchParams.beginWindow | date: 'yyyy-MM-dd HH:mm:ss Z'}" alt="Start Window" tabindex="0" />
+                    </span>
+
+                </li>
+                <li>
+                    <span class="datepicker">
+                        <label class="control-label" for="searchParams.assessmentEndWindow" title="End Window">{{xwalk('End Window')}}:</label>
+                        <span class="icon-chevron-calendar" style="width:14px"></span>
+                        <input type="text" name="testWindow.endWindow" data-datepicker-popup="{{format}}"  data-is-open="endWindow.opened" data-show-weeks="false" data-ng-model="searchParams.endWindow" value="{searchParams.endWindow | date: 'yyyy-MM-dd HH:mm:ss Z'}" alt="End Window" tabindex="0" />
+                    </span>
+                </li>
+
+	            <li>
+	                <span></span>
+	            </li>
             </ul>
-            <h5 tabindex="-1">Test Windows</h5>
-            <div class="tableWrapper">
-                <table class="assessmentTable" role="grid">
-                    <colgroup>
-                        <col>
-                        <col>
-                        <col class="actionColumn">
-                    </colgroup>
-                    <tr role="row">
-                        <th data-ng-class="{'control-label-required' : assessment.testWindow && assessment.testWindow.length > 0}" scope="col" id="startDateHeader" title="Start Date">{{xwalk('Start Date')}}</th>
-                        <th data-ng-class="{'control-label-required' : assessment.testWindow && assessment.testWindow.length > 0}" scope="col" id="endDateHeader" title="End Date">{{xwalk('End Date')}}</th>
-                        <th scope="col" id="actionHeader" title="Add">
-                            <div class="tableButtonGroup">
-                                <button data-ng-click="addTestWindow()" class="boxBtn" tabindex="0"><span class="btnIcon icon_sprite icon_saveAdd2" aria-hidden="true"></span></button>
-                            </div>
-                        </th>
-                    </tr>
-                    <tr data-ng-class="{highlight: $index == highlighted}" data-ng-repeat="(index, testWindowEntry) in assessment.testWindow">
-                        <td role="gridcell" aria-labelledby="startDateHeader"><div class="centerDiv datepicker"><span class="icon-chevron-calendar"></span>
-                            <input type="text"  name="assessment.testWindow[$index].beginWindow"  data-datepicker-popup="{{format}}"  data-show-weeks="false"  data-is-open="assessment.testWindow[$index].beginWindowOpened" data-ng-model="assessment.testWindow[$index].beginWindow"/></div></td>
-                        <td role="gridcell" aria-labelledby="endDateHeader"><div class="centerDiv datepicker"><span class="icon-chevron-calendar"></span>
-                            <input type="text" name="assessment.testWindow[$index].endWindow"     data-datepicker-popup="{{format}}"  data-show-weeks="false"  data-is-open="assessment.testWindow[$index].endWindowOpened" data-ng-model="assessment.testWindow[$index].endWindow"/></div></td>
-                        </td>
-                        <td role="gridcell" aria-labelledby="actionHeader">
-                            <div class="tableButtonGroup">
-                                <button data-ng-click="deleteTestWindow($index)" class="boxBtn" tabindex="0"><span class="btnIcon icon_sprite icon_delete2" aria-hidden="true"></span></button>
-                            </div>
-                        </td>
-                    </tr>
-                </table>
-            </div>
-
-            <h5 tabindex="-1">Implicit Eligibility Rules</h5>
-            <div class="tableWrapper">
-                <table class="dataTable" role="grid">
-                    <colgroup>
-                        <col>
-                        <col>
-                        <col>
-                        <col>
-                        <col class="actionColumn">
-                    </colgroup>
-                    <tr role="row">
-                        <th  data-ng-class="{'control-label-required' : assessment.implicitEligibilityRules && assessment.implicitEligibilityRules.length > 0}" scope="col" id="ruleFieldHeader" title="Rule Field">{{xwalk('Rule Field')}}</th>
-                        <th scope="col" id="operatorHeader" title="Operator">{{xwalk('Operator')}}</th>
-                        <th data-ng-class="{'control-label-required' : assessment.implicitEligibilityRules && assessment.implicitEligibilityRules.length > 0}" scope="col" id="valueHeader" title="Value">{{xwalk('Value')}}</th>
-                        <th data-ng-class="{'control-label-required' : assessment.implicitEligibilityRules && assessment.implicitEligibilityRules.length > 0}" scope="col" id="ruleTypeHeader" title="Rule Type">{{xwalk('Rule Type')}}</th>
-                        <th scope="col" id="actionHeader" title="Add">
-                            <div class="tableButtonGroup">
-                                <button data-ng-click="addImplicitEligibilityRule()" class="boxBtn" tabindex="0"><span class="btnIcon icon_sprite icon_saveAdd2" aria-hidden="true"></span></button>
-                            </div>
-                        </th>
-                    </tr>
-                    <tr data-ng-class="{highlight: $index == highlighted}" data-ng-repeat="(index, implicitEligibilityRulesEntry) in assessment.implicitEligibilityRules" role="row">
-                        <td role="gridcell" aria-labelledby="ruleFieldHeader"><select name="implicitEligibilityRulesEntry.field" data-ng-change="emptyTheValueField(implicitEligibilityRulesEntry)" data-ng-model="implicitEligibilityRulesEntry.field"
-                                                                                      data-ng-options="item.fieldValue as item.fieldId group by item.segment for item in fields | orderBy:'fieldId'" title="Implicit Rules Entry" tabindex="0">
-                            <option value="" >Select...</option>
-                        </select>
-                        </td>
-                        <td role="gridcell" aria-labelledby="operatorHeader"><select name="implicitEligibilityRulesEntry.operatorType" data-ng-model="implicitEligibilityRulesEntry.operatorType" data-ng-show="implicitEligibilityRulesEntry.field.indexOf('Date') > -1" title="Implicit Rules Entry Operator Type" tabindex="0">
-                            <option data-ng-class="{'hide': implicitEligibilityRulesEntry.field.indexOf('Date') == -1}" data-ng-bind="ot.operatorId"  data-ng-repeat="ot in operatorTypes | orderBy:'order'">{{ot.operatorId}}</option>
-                        </select><input type="text" name="implicitEligibilityRulesEntry.operatorType"  data-ng-hide="implicitEligibilityRulesEntry.field.indexOf('Date') > -1"
-                                        data-ng-model="defaultOperatorType" data-ng-disabled="operatorTypeMuted" alt="Impact Eligibility Rules Entry" tabindex="0" />
-                        </td>
-                        <td  class="normalSpace" role="gridcell" aria-labelledby="valueHeader">
-                            <div class="datepicker" data-ng-show="dateTimeFields.indexOf(implicitEligibilityRulesEntry.field)>-1" >
-                                <span class="datepicker icon-chevron-calendar"></span>
-                                <input type="text"  name="implicitEligibilityRulesEntry.value"
-                                       data-date-parser
-                                       data-datepicker-popup="{{format}}"
-                                       data-show-weeks="false"
-                                       readonly="readonly"
-                                       data-ng-model="implicitEligibilityRulesEntry.value"
-                                       alt="Implicit Rules Entry"
-                                       tabindex="0" />
-                            </div>
-
-                            <input type="text" name="implicitEligibilityRulesEntry.value"
-                                   data-ng-show="textFields.indexOf(implicitEligibilityRulesEntry.field)>-1"
-                                   data-ng-model="implicitEligibilityRulesEntry.value" data-ng-disabled=" assessment.eligibilityType != 'IMPLICIT' " alt="Text Fields" tabindex="0" />
-
-                            <select name="implicitEligibilityRulesEntry.value"
-                                    data-ng-show="yesOrNoFields.indexOf(implicitEligibilityRulesEntry.field)>-1"
-                                    data-ng-model="implicitEligibilityRulesEntry.value" data-ng-options="id.entityId as id.entityId for id in yesOrNoTypes | orderBy:'entityId'" title="Yes or No" tabindex="0">
-                                <option value="" >Select...</option>
-                            </select>
-
-                            <select name="implicitEligibilityRulesEntry.value"
-                                    data-ng-show="implicitEligibilityRulesEntry.field=='section504Status'"
-                                    data-ng-model="implicitEligibilityRulesEntry.value" data-ng-options="sectionStatus.name as sectionStatus.name for sectionStatus in section504Status" title="Section 504 Status" tabindex="0">
-                                <option value="" >Select...</option>
-                            </select>
-
-                            <select name="implicitEligibilityRulesEntry.value"
-                                    data-ng-show="implicitEligibilityRulesEntry.field=='languageCode'"
-                                    data-ng-model="implicitEligibilityRulesEntry.value" data-ng-options="language.id as language.text for language in languages" title="Language Code" tabindex="0">
-                                <option value="" >Select...</option>
-                            </select>
-                            <select name="implicitEligibilityRulesEntry.value"
-                                    data-ng-show="implicitEligibilityRulesEntry.field=='stateAbbreviation'"
-                                    data-ng-model="implicitEligibilityRulesEntry.value" data-ng-options="id.entityId as id.entityId for id in states | orderBy:'entityId'" title="State Abbreviation" tabindex="0">
-                                <option value="" >Select...</option>
-                            </select>
-
-                            <select name="implicitEligibilityRulesEntry.value"
-                                    data-ng-show="implicitEligibilityRulesEntry.field=='gradeLevelWhenAssessed'"
-                                    data-ng-model="implicitEligibilityRulesEntry.value" data-ng-options="grade.id as grade.text for grade in grades" title="Grade Level When Assessed" tabindex="0">
-                                <option value="" >Select...</option>
-                            </select>
-
-                            <select name="implicitEligibilityRulesEntry.value"
-                                    data-ng-show="implicitEligibilityRulesEntry.field=='gender'"
-                                    data-ng-model="implicitEligibilityRulesEntry.value" data-ng-options="gender.genderId as gender.genderName for gender in genders" title="Gender" tabindex="0">
-                                <option value="" >Select...</option>
-                            </select>
-
-                            <select name="implicitEligibilityRulesEntry.value"
-                                    data-ng-show="implicitEligibilityRulesEntry.field=='title3ProgramType'"
-                                    data-ng-model="implicitEligibilityRulesEntry.value" data-ng-options="progType.name as progType.description for progType in title3ProgramType" title="Title 3 Program Type" tabindex="0">
-                                <option value="" >Select...</option>
-                            </select>
-
-                            <select name="implicitEligibilityRulesEntry.value"
-                                    data-ng-show="implicitEligibilityRulesEntry.field=='primaryDisabilityType'"
-                                    data-ng-model="implicitEligibilityRulesEntry.value" data-ng-options="disabilityType.name as disabilityType.name for disabilityType in primaryDisabilityType" title="Primary Disability Type" tabindex="0">
-                                <option value="" >Select...</option>
-                            </select>
-                            <select name="implicitEligibilityRulesEntry.value"
-                                    data-ng-show="loadSingleSelectFields.indexOf(implicitEligibilityRulesEntry.field)>-1"
-                                    data-ng-model="implicitEligibilityRulesEntry.value" data-ng-options="accommodationResource.name as accommodationResource.description for accommodationResource in masterAccommodations[implicitEligibilityRulesEntry.field]" tabindex="0">
-                                <option value="" >Select...</option>
-                            </select>
-
-                            <input type="text" name="implicitEligibilityRulesEntry.value"
-                                   data-ng-show="loadEditFields.indexOf(implicitEligibilityRulesEntry.field)>-1"
-                                   data-ng-model="implicitEligibilityRulesEntry.value" alt="Implicit Eligibility Rules Entry Value" tabindex="0" />
-                        </td>
-                        <td role="gridcell" aria-labelledby="ruleTypeHeader"><select name="implicitEligibilityRulesEntry.ruleType" data-ng-model="implicitEligibilityRulesEntry.ruleType" data-ng-options="id.ruleId as id.ruleId for id in ruleTypes | orderBy:'ruleId'" data-ng-disabled=" assessment.eligibilityType != 'IMPLICIT' " title="Rule Type" tabindex="0">
-                            <option value="" >Select...</option>
-                        </select>
-                        </td>
-                        <td class="normalSpace" role="gridcell" aria-labelledby="actionHeader">
-                            <div class="tableButtonGroup">
-                                <button data-ng-click="deleteImplicitEligibilityRule($index)" class="boxBtn" tabindex="0"><span class="btnIcon icon_sprite icon_delete2" aria-hidden="true"></span></button>
-                            </div>
-                        </td>
-                    </tr>
-                </table>
-            </div>
-            <button type="button" class="boxBtn" data-ng-show="assessmentForm.$dirty" data-ng-click="save(assessment)" tabindex="0">
-                <span class="btnIcon icon_sprite icon_save2 ng-class:{ajax_indicator:savingIndicator}" aria-hidden="true"></span>
-                <span class="btnText">Save</span>
+            <div class="buttonRow">
+            <button type="button" type="button" class="boxBtn" data-search-on-click  data-active-indicator="searchResponse.searching" tabindex="0">
+                <span class="btnIcon icon_sprite icon_search ng-class:{ajax_indicator:activeIndicator}" aria-hidden="true"></span>
+                <span class="btnText">Search</span>
             </button>
-            <button type="button" class="boxBtn" data-ng-click="cancel()" tabindex="0">
-                <span class="btnIcon icon_sprite icon_cancel2" aria-hidden="true"></span>
-                <span class="btnText">Cancel</span>
-            </button>
+             <div class="positioningContainer" data-export="assessments"></div>
+            </div>
+        </div>
+
+        <div data-pageable data-paging-info="searchResponse"  data-search-params="searchParams" data-change-page="changePage()">
+            <table class="dataTable" data-accessible-table role="grid">
+                <colgroup>
+                    <col>
+                    <col>
+                    <col>
+                    <col>
+                    <col>
+                    <col>
+                    <col>
+                    <col>
+                    <col class="doubleActionColumn">
+                </colgroup>
+                <tr role="row">
+                    <th rowspan="2" data-sort-on-click data-sort-column="entityId" class="headerSortUp" scope="col" id="idHeader" title="Identifier">{{xwalk('Identifier')}}</th>
+                    <th rowspan="2" data-sort-on-click data-sort-column="testName" scope="col" id="nameHeader" title="Name">{{xwalk('Name')}}</th>
+                    <th colspan="2" scope="col" id="testWindowsHeader" title="Test Windows">{{xwalk('Test Windows')}}</th>
+                    <th rowspan="2" data-sort-on-click data-sort-column="numGlobalOpportunities" scope="col" id="testOpportunitiesHeader" title="Test Opportunities">{{xwalk('Test Opportunities')}}</th>
+                    <th rowspan="2" data-sort-on-click data-sort-column="delayRule" scope="col" id="delayRuleHeader" title="Delay Rule">{{xwalk('Delay Rule')}}</th>
+                    <th rowspan="2" data-sort-on-click data-sort-column="grade" scope="col" id="gradeHeader" title="Grade">{{xwalk('Grade')}}</th>
+                    <th rowspan="2" data-sort-on-click data-sort-column="subjectCode" scope="col" id="subjectCodeHeader" title="Subject Code">{{xwalk('Subject Code')}}</th>
+                    <th rowspan="2" data-sort-on-click data-sort-column="version" scope="col" id="versionHeader" title="Version">{{xwalk('Version')}}</th>
+                    <th rowspan="2" scope="col" id="actionHeader" title="Edit"></th>
+                </tr>
+                <tr role="row">
+                    <th data-sort-on-click data-sort-column="testWindow.beginWindow" scope="col" id="startDateHeader" title="Start Date">{{xwalk('Start Date')}}</th>
+                    <th data-sort-on-click data-sort-column="testWindow.endWindow" scope="col" id="endDateHeader" title="End Date">{{xwalk('End Date')}}</th>
+                </tr>
+
+                <tbody data-ng-repeat="assessment in searchResponse.searchResults">
+                <tr role="row">
+
+                    <td rowspan="{{assessment.testWindow.length+1}}" role="gridcell" aria-labelledby="idHeader">{{assessment.entityId}}</td>
+                    <td rowspan="{{assessment.testWindow.length+1}}" role="gridcell" aria-labelledby="nameHeader">{{assessment.testName}}</td>
+                    <td role="gridcell" aria-labelledby="startDateHeader">{{assessment.testWindow[0].beginWindow | date: 'yyyy-MM-dd'}}</td>
+                    <td role="gridcell" aria-labelledby="endDateHeader">{{assessment.testWindow[0].endWindow | date: 'yyyy-MM-dd'}}</td>
+                    <td rowspan="{{assessment.testWindow.length+1}}" role="gridcell" aria-labelledby="opportunitiesHeader"><div class="centerText">{{assessment.numGlobalOpportunities}}</div></td>
+                    <td rowspan="{{assessment.testWindow.length+1}}" role="gridcell" aria-labelledby="delayRuleHeader"><div class="centerText">{{assessment.delayRule}}</div></td>
+                    <td rowspan="{{assessment.testWindow.length+1}}" role="gridcell" aria-labelledby="gradeHeader"><div class="centerText">{{assessment.grade}}</div></td>
+                    <td rowspan="{{assessment.testWindow.length+1}}" role="gridcell" aria-labelledby="subjectCodeHeader"><div class="centerText">{{assessment.subjectCode}}</div></td>
+                    <td rowspan="{{assessment.testWindow.length+1}}" role="gridcell" aria-labelledby="versionHeader"><div class="centerText">{{assessment.version}}</div></td>
+                    <td rowspan="{{assessment.testWindow.length+1}}" class="normalSpace" role="gridcell" aria-labelledby="actionHeader">
+                        <div class="tableButtonGroup">
+                            <button data-ng-click="edit(assessment)" class="boxBtn" tabindex="0"><span class="btnIcon icon_sprite icon_edit2" aria-hidden="true"></span></button>
+                            <button data-delete-confirmation="{{assessment.id}}" class="boxBtn" tabindex="0"><span class="btnIcon icon_sprite icon_delete2" aria-hidden="true"></span></button>
+                        </div>
+                    </td>
+                </tr>
+	            </tbody>
+            </table>
         </div>
     </div>
+</div>
 </div>
 
 </div>
 <div class="clear"></div>
-
-
