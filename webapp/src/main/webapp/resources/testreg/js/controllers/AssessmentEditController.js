@@ -94,7 +94,7 @@ testreg.controller('AssessmentEditController',['$scope','$state', '$filter', 'lo
 			
 		} else {
 			//set the Default Value
-			$scope.assessment.numGlobalOpportunities="2";
+			$scope.assessment.numGlobalOpportunities="3";
 			if(inputData) {
 
 				$scope.assessment.entityId = inputData.entityId;
