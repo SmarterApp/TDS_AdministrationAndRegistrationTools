@@ -157,6 +157,9 @@ testreg.directive("userSearchOnChange", ['$timeout', function($timeout){
 			scope.$watch(attrs.ngModel, function(newVal, oldVal) {
 				// Prevent change event if this an initial load or the value didn't actually change.
 				if (typeof newVal !== 'undefined' && newVal !== oldVal) {
+					if (timer) {
+						$timeout.cancel(timer);
+					}
 					timer = $timeout (function() {
 						if (attrs.ngModel=='firstName'){
 							scope.changeFirstName(scope.$eval(attrs.ngModel));
@@ -171,11 +174,10 @@ testreg.directive("userSearchOnChange", ['$timeout', function($timeout){
 						}
 						searchableController.filterChange();
 					}, 500);
+				} else {
+					// Update DOM to prevent input fields from clearing
+					element.val(scope.searchParams[attrs.ngModel]);
 				}
-				if (timer) {
-					$timeout.cancel(timer);
-				}
-
 			});
 		}
 	};
