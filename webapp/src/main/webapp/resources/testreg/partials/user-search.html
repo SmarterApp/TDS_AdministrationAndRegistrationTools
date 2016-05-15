@@ -9,76 +9,82 @@
 		<div class="fieldGroup">
 			<h5>Search Filters</h5>
                 <ul>		
-              <li>
-                 <span class="entity-auto-complete">
-                    <label class="control-label" for="searchParams.firstName" title="First Name">{{xwalk('First Name')}}:</label>
-                    <input user-search-auto-complete type="text" 
-                     placeholder="Search..." 
-                     data-ng-model="firstName"
-                     data-typeahead="entity as entity.firstName + ' - ' +entity.lastName  for entity in filterUsers($viewValue, 20, 'firstName')" 
-                     data-typeahead-wait-ms="200" 
-                     data-typeahead-editable="true" 
-                     data-typeahead-input-formatter="formatUserFirstName($model)"
-                     data-typeahead-on-select="changeUserFirstName($item)" 
-                     alt="First Name" 
-                     tabindex="0" />  
-                  </span>                              
-                </li>               
-              <li>
-                 <span class="entity-auto-complete">
-                    <label class="control-label" for="searchParams.lastName" title="Last Name">{{xwalk('Last Name')}}:</label>
-                    <input user-search-auto-complete type="text" 
-                     placeholder="Search..." 
-                     data-ng-model="lastName"
-                     data-typeahead="entity as entity.lastName + ' - ' +entity.firstName  for entity in filterUsers($viewValue, 20, 'lastName')" 
-                     data-typeahead-wait-ms="200" 
-                     data-typeahead-editable="true" 
-                     data-typeahead-input-formatter="formatUserLastName($model)"
-                     data-typeahead-on-select="changeUserLastName($item)" 
-                     alt="Last Name" 
-                     tabindex="0" />  
-                  </span>                              
-                </li>               
-              <li>
-                 <span class="entity-auto-complete">
-                    <label class="control-label" for="searchParams.email" title="Email Address">{{xwalk('Email Address')}}:</label>
-                    <input user-search-auto-complete type="text" 
-                     placeholder="Search..." 
-                     data-ng-model="email"
-                     data-typeahead="entity as entity.email  for entity in filterUsers($viewValue, 20, 'email')" 
-                     data-typeahead-wait-ms="200" 
-                     data-typeahead-editable="true" 
-                     data-typeahead-input-formatter="formatUserEmail($model)"
-                     data-typeahead-on-select="changeUserEmail($item)" 
-                     alt="Email Address" 
-                     tabindex="0" />  
-                  </span>                              
-                </li> 
-               <li>
-                <span> 
-                    <label class="control-label" for="searchParams.roleAssociations.role" title="Role">{{xwalk('Role')}}:</label>
-                     <select  data-ng-model="searchParams['roleAssociations.role']"  data-ng-options="userRole.role as userRole.role for userRole in roles | orderBy:'role'" title="Role" tabindex="0">
-                      <option value="">Select...</option>
-                    </select>
-                </span>
-            </li>
-            <li>
-                <span> 
-                    <label class="control-label" for="searchParams.roleAssociations.stateAbbreviation" title="State Abbreviation">{{xwalk('State Abbreviation')}}:</label>
-                     <select  data-ng-model="searchParams['roleAssociations.stateAbbreviation']"  data-ng-options="id.entityId as id.entityId for id in states | orderBy:'entityId'" title="State Abbreviation" tabindex="0">
-                      <option value="">Select...</option>
-                    </select>
-                </span>
-            </li>
-            <li>
-                <span> 
-                    <label class="control-label" for="searchParams.changeEventExportError" title="Show Users with Errors">Show Users with Errors:</label>
-                     <select  data-ng-model="searchParams.changeEventExportError" title="Show Users with Errors" tabindex="0">
-                      <option value="">Select...</option>
-                      <option value="true">Yes</option>
-                    </select>
-                </span>
-            </li>
+                    <li>
+                        <span class="entity-auto-complete">
+                            <label class="control-label" for="searchParams.firstName" title="First Name">{{xwalk('First Name')}}:</label>
+                            <input user-search-on-change type="text"
+                             placeholder="Search..."
+                             data-ng-model="firstName"
+
+                             alt="First Name"
+                             tabindex="0" />
+                        </span>
+                    </li>
+                    <li>
+                     <span class="entity-auto-complete">
+                        <label class="control-label" for="searchParams.lastName" title="Last Name">{{xwalk('Last Name')}}:</label>
+                        <input user-search-on-change type="text"
+                         placeholder="Search..."
+                         data-ng-model="lastName"
+                         alt="Last Name"
+                         tabindex="0" />
+                      </span>
+                    </li>
+                <li>
+                     <span class="entity-auto-complete">
+                        <label class="control-label" for="searchParams.email" title="Email Address">{{xwalk('Email Address')}}:</label>
+                        <input user-search-on-change type="text"
+                         placeholder="Search..."
+                         data-ng-model="email"
+                         alt="Email Address"
+                         tabindex="0" />
+                      </span>
+                </li>
+                <li>
+                    <span class="entity-auto-complete">
+                        <label class="control-label" for="searchParams.districtName" title="District Name">{{xwalk('District Name')}}:</label>
+                        <input user-search-on-change type="text"
+                               placeholder="Search..."
+                               data-ng-model="districtName"
+                               alt="District Name"
+                               tabindex="0" />
+                      </span>
+                </li>
+                <li>
+                  <span class="entity-auto-complete">
+                    <label class="control-label" for="searchParams.institutionName" title="Institution Name">{{xwalk('Institution Name')}}:</label>
+                    <input user-search-on-change type="text"
+                           placeholder="Search..."
+                           data-ng-model="institutionName"
+                           alt="Institution Name"
+                           tabindex="0" />
+                  </span>
+                </li>
+                <li>
+                    <span>
+                        <label class="control-label" for="searchParams.roleAssociations.role" title="Role">{{xwalk('Role')}}:</label>
+                         <select  data-ng-model="searchParams['roleAssociations.role']"  data-ng-options="userRole.role as userRole.role for userRole in roles | orderBy:'role'" title="Role" tabindex="0">
+                          <option value="">Select...</option>
+                        </select>
+                    </span>
+                </li>
+                <li>
+                    <span>
+                        <label class="control-label" for="searchParams.roleAssociations.stateAbbreviation" title="State Abbreviation">{{xwalk('State Abbreviation')}}:</label>
+                         <select  data-ng-model="searchParams['roleAssociations.stateAbbreviation']"  data-ng-options="id.entityId as id.entityId for id in states | orderBy:'entityId'" title="State Abbreviation" tabindex="0">
+                          <option value="">Select...</option>
+                        </select>
+                    </span>
+                </li>
+                <li>
+                    <span>
+                        <label class="control-label" for="searchParams.changeEventExportError" title="Show Users with Errors">Show Users with Errors:</label>
+                         <select  data-ng-model="searchParams.changeEventExportError" title="Show Users with Errors" tabindex="0">
+                          <option value="">Select...</option>
+                          <option value="true">Yes</option>
+                        </select>
+                    </span>
+                </li>
             <li><span></span></li>
 			</ul>
 			<div class="buttonRow">

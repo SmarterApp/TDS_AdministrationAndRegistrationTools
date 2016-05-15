@@ -56,12 +56,21 @@ testreg.directive("searchable",['$http','$parse', function($http, $parse){
 					$http.get(baseUrl + url, {params:params}).success(function(data) {
 						$scope.errors =[];
 						$scope.searchResponse = data;
+						$scope.searchResponse.totalCountStr = data.totalCount > 1000 ? "1000+" : data.totalCount;
 						$scope.searchResponse.currentPage = ($scope.searchResponse.currentPage *1) +1;
 						var modVal = (($scope.searchResponse.totalCount*1) % ($scope.searchResponse.pageSize*1));
 						if(modVal == 0){
 							$scope.searchResponse.lastPage = parseInt((($scope.searchResponse.totalCount*1) / ($scope.searchResponse.pageSize*1)));
 						}else{
 							$scope.searchResponse.lastPage = parseInt((($scope.searchResponse.totalCount*1) / ($scope.searchResponse.pageSize*1))) + 1;
+						}
+						if ($scope.searchParams.lastPageClicked) {
+							// If we clicked on the "Last page" link, nextUrl should be null (this prevents next/last buttons)
+							// from displaying. This could be handled in backend, but easier to set in this callback as
+							// current pages (used to calculate the urls) are precalculated on screen render.
+							$scope.searchResponse.nextPageUrl = null;
+							$scope.searchParams.currentPage = $scope.searchResponse.lastPage;
+							delete $scope.searchParams.lastPageClicked; // clear the flag
 						}
 						if ($scope.searchPostProcess) {
 							if($scope.searchResponse.searchResults) {
@@ -76,6 +85,9 @@ testreg.directive("searchable",['$http','$parse', function($http, $parse){
 							for(var messages in data.messages[field]){
 								$scope.errors.push(data.messages[field][messages]);
 							}
+						}
+						if ($scope.searchParams.lastPageClicked) {
+							delete $scope.searchParams.lastPageClicked; // clear the flag
 						}
 						$scope.searchResponse.searching = false;
 						return status;
@@ -132,6 +144,44 @@ testreg.directive("searchOnClick", function(){
 		}
 	};
 });
+
+testreg.directive("userSearchOnChange", ['$timeout', function($timeout){
+	return {
+		restrict : "A",
+		replace: true,
+		require: "^searchable",
+		scope:true,
+		transclude : false,
+		link : function(scope, element, attrs, searchableController) {
+			var timer = false;
+			scope.$watch(attrs.ngModel, function(newVal, oldVal) {
+				// Prevent change event if this an initial load or the value didn't actually change.
+				if (typeof newVal !== 'undefined' && newVal !== oldVal) {
+					if (timer) {
+						$timeout.cancel(timer);
+					}
+					timer = $timeout (function() {
+						if (attrs.ngModel=='firstName'){
+							scope.changeFirstName(scope.$eval(attrs.ngModel));
+						} else if(attrs.ngModel=='lastName'){
+							scope.changeLastName(scope.$eval(attrs.ngModel));
+						} else if (attrs.ngModel=='districtName') {
+							scope.changeDistrict(scope.$eval(attrs.ngModel));
+						} else if (attrs.ngModel=='institutionName') {
+							scope.changeInstitution(scope.$eval(attrs.ngModel));
+						} else {
+							scope.changeEmail(scope.$eval(attrs.ngModel));
+						}
+						searchableController.filterChange();
+					}, 500);
+				} else {
+					// Update DOM to prevent input fields from clearing
+					element.val(scope.searchParams[attrs.ngModel]);
+				}
+			});
+		}
+	};
+}]);
 
 testreg.directive("sortOnClick", function(){
 	return {
@@ -268,8 +318,8 @@ testreg.directive("pageable", function(){
 				$scope.changePage();
 			};
 			$scope.lastPage = function(){
-				
 				$scope.searchParams.currentPage = $scope.pagingInfo.lastPage;
+				$scope.searchParams.lastPageClicked = true;
 				$scope.changePage();
 			};
 			$scope.firstPage = function(){

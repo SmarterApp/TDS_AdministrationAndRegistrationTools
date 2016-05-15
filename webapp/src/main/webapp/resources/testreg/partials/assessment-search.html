@@ -1,5 +1,5 @@
   <div  data-ng-include src='"resources/testreg/partials/leftnav.html"'></div>
- <div class="secContent"> 
+ <div class="secContent">
 <span class="boxIcon icon_sprite icon_view1"></span>
 <div data-ng-repeat="error in errors">
     <div><span class="icon_sprite icon_error error"></span>{{error}}</div>
@@ -14,64 +14,64 @@
                 <li>
 	                <span class="entity-auto-complete">
 	                   <label class="control-label" for="searchParams.entityId" title="Identifier">{{xwalk('Identifier')}}:</label>
-	                   <input assessement-search-auto-complete type="text" 
-	                    placeholder="Search..." 
+	                   <input assessement-search-auto-complete type="text"
+	                    placeholder="Search..."
 	                    data-ng-model="entityId"
-	                    data-typeahead="entity as entity.entityId for entity in filterAssessments($viewValue, 20,'entityId')" 
-	                    data-typeahead-wait-ms="200" 
-	                    data-typeahead-editable="true" 
+	                    data-typeahead="entity as entity.entityId for entity in filterAssessments($viewValue, 20,'entityId')"
+	                    data-typeahead-wait-ms="200"
+	                    data-typeahead-editable="true"
 	                    data-typeahead-input-formatter="formatAssessmentId($model)"
-	                    data-typeahead-on-select="changeAssessmentId($item)" 
-	                    alt="Identifier" 
-	                    tabindex="0" />  
-	                 </span>                              
-                </li>	            
+	                    data-typeahead-on-select="changeAssessmentId($item)"
+	                    alt="Identifier"
+	                    tabindex="0" />
+	                 </span>
+                </li>
                 <li>
                     <span class="entity-auto-complete">
                        <label class="control-label" for="searchParams.entityId" title="Name">{{xwalk('Name')}}:</label>
-                       <input assessement-search-auto-complete type="text" 
-                        placeholder="Search..." 
+                       <input assessement-search-auto-complete type="text"
+                        placeholder="Search..."
                         data-ng-model="testName"
-                        data-typeahead-wait-ms="200" 
-                        data-typeahead="entity as entity.testName for entity in filterAssessments($viewValue, 20,'testName')" 
-                        data-typeahead-editable="true" 
+                        data-typeahead-wait-ms="200"
+                        data-typeahead="entity as entity.testName for entity in filterAssessments($viewValue, 20,'testName')"
+                        data-typeahead-editable="true"
                         data-typeahead-input-formatter="formatAssessmentTestName($model)"
-                        data-typeahead-on-select="changeAssessmentTestName($item)" 
-                        alt="Name" 
-                        tabindex="0" />  
-                     </span>                              
-                </li>   	            
+                        data-typeahead-on-select="changeAssessmentTestName($item)"
+                        alt="Name"
+                        tabindex="0" />
+                     </span>
+                </li>
             <li>
-                <span> 
+                <span>
                     <label class="control-label" for="searchParams.grade" title="Grade Level">{{xwalk('Grade Level')}}:</label>
-                     <select  data-ng-model="searchParams.grade" 
+                     <select  data-ng-model="searchParams.grade"
                               data-ng-options="grade.id as grade.text  for grade in grades" title="Grade Level" tabindex="0">
                       <option value="">Select...</option>
                     </select>
-                </span>     
-                </li>   
+                </span>
+                </li>
                 <li>
                     <span class="entity-auto-complete">
                        <label class="control-label" for="searchParams.subjectCode" title="Subject Code">{{xwalk('Subject Code')}}:</label>
-                       <input assessement-search-auto-complete type="text" 
-                        placeholder="Search..." 
+                       <input assessement-search-auto-complete type="text"
+                        placeholder="Search..."
                         data-ng-model="subjectCode"
-                        data-typeahead-wait-ms="200" 
-                        data-typeahead="entity as entity.subjectCode for entity in filterAssessments($viewValue, 20,'subjectCode')" 
-                        data-typeahead-editable="true" 
+                        data-typeahead-wait-ms="200"
+                        data-typeahead="entity as entity.subjectCode for entity in filterAssessments($viewValue, 20,'subjectCode')"
+                        data-typeahead-editable="true"
                         data-typeahead-input-formatter="formatAssessmentSubjectCode($model)"
-                        data-typeahead-on-select="changeAssessmentSubjectCode($item)" 
-                        alt="Subject Code" 
-                        tabindex="0" />  
-                     </span>                              
-                </li>   
+                        data-typeahead-on-select="changeAssessmentSubjectCode($item)"
+                        alt="Subject Code"
+                        tabindex="0" />
+                     </span>
+                </li>
                 <li>
                     <span  class="datepicker">
                         <label class="control-label" for="searchParams.assessmentBeginWindow" title="Start Window">{{xwalk('Start Window')}}:</label>
                         <span class="icon-chevron-calendar" style="width:14px"></span>
                         <input type="text" name="testWindow.beginWindow"  data-datepicker-popup="{{format}}"  data-is-open="beginWindow.opened" data-show-weeks="false"  data-ng-model="searchParams.beginWindow" value="{searchParams.beginWindow | date: 'yyyy-MM-dd HH:mm:ss Z'}" alt="Start Window" tabindex="0" />
-                    </span> 
-                    
+                    </span>
+
                 </li>
                 <li>
                     <span class="datepicker">
@@ -80,10 +80,10 @@
                         <input type="text" name="testWindow.endWindow" data-datepicker-popup="{{format}}"  data-is-open="endWindow.opened" data-show-weeks="false" data-ng-model="searchParams.endWindow" value="{searchParams.endWindow | date: 'yyyy-MM-dd HH:mm:ss Z'}" alt="End Window" tabindex="0" />
                     </span>
                 </li>
-                                
+
 	            <li>
 	                <span></span>
-	            </li>	                
+	            </li>
             </ul>
             <div class="buttonRow">
             <button type="button" type="button" class="boxBtn" data-search-on-click  data-active-indicator="searchResponse.searching" tabindex="0">
@@ -93,7 +93,7 @@
              <div class="positioningContainer" data-export="assessments"></div>
             </div>
         </div>
-       
+
         <div data-pageable data-paging-info="searchResponse"  data-search-params="searchParams" data-change-page="changePage()">
             <table class="dataTable" data-accessible-table role="grid">
                 <colgroup>
@@ -101,17 +101,17 @@
                     <col>
                     <col>
                     <col>
-                    <col>       
                     <col>
-                    <col> 
-                    <col> 
-                    <col class="doubleActionColumn">            
+                    <col>
+                    <col>
+                    <col>
+                    <col class="doubleActionColumn">
                 </colgroup>
                 <tr role="row">
-                    
                     <th rowspan="2" data-sort-on-click data-sort-column="entityId" class="headerSortUp" scope="col" id="idHeader" title="Identifier">{{xwalk('Identifier')}}</th>
                     <th rowspan="2" data-sort-on-click data-sort-column="testName" scope="col" id="nameHeader" title="Name">{{xwalk('Name')}}</th>
-                    <th colspan="3" scope="col" id="testWindowsHeader" title="Test Windows">{{xwalk('Test Windows')}}</th>
+                    <th colspan="2" scope="col" id="testWindowsHeader" title="Test Windows">{{xwalk('Test Windows')}}</th>
+                    <th rowspan="2" data-sort-on-click data-sort-column="numGlobalOpportunities" scope="col" id="testOpportunitiesHeader" title="Test Opportunities">{{xwalk('Test Opportunities')}}</th>
                     <th rowspan="2" data-sort-on-click data-sort-column="delayRule" scope="col" id="delayRuleHeader" title="Delay Rule">{{xwalk('Delay Rule')}}</th>
                     <th rowspan="2" data-sort-on-click data-sort-column="grade" scope="col" id="gradeHeader" title="Grade">{{xwalk('Grade')}}</th>
                     <th rowspan="2" data-sort-on-click data-sort-column="subjectCode" scope="col" id="subjectCodeHeader" title="Subject Code">{{xwalk('Subject Code')}}</th>
@@ -119,19 +119,18 @@
                     <th rowspan="2" scope="col" id="actionHeader" title="Edit"></th>
                 </tr>
                 <tr role="row">
-                	<th data-sort-on-click data-sort-column="testWindow.beginWindow" scope="col" id="startDateHeader" title="Start Date">{{xwalk('Start Date')}}</th>
-                	<th data-sort-on-click data-sort-column="testWindow.endWindow" scope="col" id="endDateHeader" title="End Date">{{xwalk('End Date')}}</th>
-                	<th data-sort-on-click data-sort-column="testWindow.numOpportunities" scope="col" id="opportunitiesHeader" title="Opportunities">{{xwalk('Opportunities')}}</th>
-            
+                    <th data-sort-on-click data-sort-column="testWindow.beginWindow" scope="col" id="startDateHeader" title="Start Date">{{xwalk('Start Date')}}</th>
+                    <th data-sort-on-click data-sort-column="testWindow.endWindow" scope="col" id="endDateHeader" title="End Date">{{xwalk('End Date')}}</th>
                 </tr>
+
                 <tbody data-ng-repeat="assessment in searchResponse.searchResults">
                 <tr role="row">
-         
+
                     <td rowspan="{{assessment.testWindow.length+1}}" role="gridcell" aria-labelledby="idHeader">{{assessment.entityId}}</td>
                     <td rowspan="{{assessment.testWindow.length+1}}" role="gridcell" aria-labelledby="nameHeader">{{assessment.testName}}</td>
                     <td role="gridcell" aria-labelledby="startDateHeader">{{assessment.testWindow[0].beginWindow | date: 'yyyy-MM-dd'}}</td>
                     <td role="gridcell" aria-labelledby="endDateHeader">{{assessment.testWindow[0].endWindow | date: 'yyyy-MM-dd'}}</td>
-                    <td role="gridcell" aria-labelledby="opportunitiesHeader">{{assessment.testWindow[0].numOpportunities}}</td>
+                    <td rowspan="{{assessment.testWindow.length+1}}" role="gridcell" aria-labelledby="opportunitiesHeader"><div class="centerText">{{assessment.numGlobalOpportunities}}</div></td>
                     <td rowspan="{{assessment.testWindow.length+1}}" role="gridcell" aria-labelledby="delayRuleHeader"><div class="centerText">{{assessment.delayRule}}</div></td>
                     <td rowspan="{{assessment.testWindow.length+1}}" role="gridcell" aria-labelledby="gradeHeader"><div class="centerText">{{assessment.grade}}</div></td>
                     <td rowspan="{{assessment.testWindow.length+1}}" role="gridcell" aria-labelledby="subjectCodeHeader"><div class="centerText">{{assessment.subjectCode}}</div></td>
@@ -141,21 +140,14 @@
                             <button data-ng-click="edit(assessment)" class="boxBtn" tabindex="0"><span class="btnIcon icon_sprite icon_edit2" aria-hidden="true"></span></button>
                             <button data-delete-confirmation="{{assessment.id}}" class="boxBtn" tabindex="0"><span class="btnIcon icon_sprite icon_delete2" aria-hidden="true"></span></button>
                         </div>
-                    </td>                     
+                    </td>
                 </tr>
-                
-                <tr data-ng-repeat="(index, testWindowEntry) in assessment.testWindow" role="row">
-                    <td data-ng-show="$index > 0 " role="gridcell" aria-labelledby="startDateHeader">{{testWindowEntry.beginWindow | date: 'yyyy-MM-dd'}}</td>
-                    <td data-ng-show="$index > 0 " role="gridcell" aria-labelledby="endDateHeader">{{testWindowEntry.endWindow | date: 'yyyy-MM-dd'}}</td>
-                    <td data-ng-show="$index > 0 " role="gridcell" aria-labelledby="opportunitiesHeader">{{testWindowEntry.numOpportunities}}</td>
-				</tr>
-	            
 	            </tbody>
             </table>
         </div>
     </div>
 </div>
-</div>  
+</div>
 
 </div>
 <div class="clear"></div>

@@ -4,7 +4,7 @@
 	<table role="grid">
 		<tr role="row">
 		<th data-ng-if="pagingInfo && pagingInfo != ''">
-			Total results found: {{pagingInfo.totalCount}}
+			Total results found: {{pagingInfo.totalCountStr}}
 		</th>
 	    <th data-ng-show="!pagingInfo || pagingInfo == ''">
             Total results found: 0
@@ -15,8 +15,8 @@
 			 	<li data-ng-show="pagingInfo.prevPageUrl" data-ng-click="prevPage()"><span class="tbNav tbprev"></span> Previous</li>
 			 	<li>Page: <input type="text" data-ng-change="changePage()" data-ng-model="searchParams.currentPage"/></li>
 			 	<li data-ng-show="pagingInfo.nextPageUrl" data-ng-click="nextPage()">Next <span class="tbNav tbnext"></span></li>
-			 	<li data-ng-show="pagingInfo.nextPageUrl" data-ng-click="lastPage()">Last <span class="tbNav tblast"></span></li>
-			 </ul>
+				<li data-ng-show="pagingInfo.nextPageUrl" data-ng-click="lastPage()">Last <span class="tbNav tblast"></span></li>
+			</ul>
 		</th>
 		</tr>
 	</table>
