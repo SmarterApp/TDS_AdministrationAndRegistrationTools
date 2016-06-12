@@ -29,9 +29,9 @@
     </properties>
 
     <scm>
-        <connection>scm:hg:https://bitbucket.org/sbacoss/adminandregtools_release</connection>
-        <developerConnection>scm:hg:https://bitbucket.org/sbacoss/adminandregtools_release</developerConnection>
-        <url>https://bitbucket.org/sbacoss/adminandregtools_release</url>
+        <connection>scm:git:https://github.com/SmarterApp/AdministrationAndRegistrationTools</connection>
+        <developerConnection>scm:git:https://github.com/SmarterApp/AdministrationAndRegistrationTools</developerConnection>
+        <url>https://github.com/SmarterApp/AdministrationAndRegistrationTools</url>
     </scm>
 
     <dependencies>
