@@ -70,6 +70,7 @@ testreg.controller(	'UserController',['$scope','$state','$timeout','loadedData',
 									}
 								}
 							};
+							
 							$scope.removeRoleAssociation = function (index) {
 								$scope.user.roleAssociations.splice(index,1);
 								$scope.entities.splice(index,1);
@@ -81,28 +82,37 @@ testreg.controller(	'UserController',['$scope','$state','$timeout','loadedData',
 									$scope.user.roleAssociations=[];
 								} 
 								$scope.user.roleAssociations.push({"role":"","level":null,"associatedEntityId":"","stateAbbreviation":"",});
-								$scope.userForm.$dirty=true;						
+								$scope.userForm.$dirty=true;		
+								
 							};
 
 							$scope.save = function(User) {
 								$scope.errors = [];
 								$scope.savingIndicator = true;
-								if(User.roleAssociations === undefined || User.roleAssociations.length === 0){
+								if(User.roleAssociations === undefined || User.roleAssociations.length === 0 && !User.hasRolesOutside){
 									$scope.errors.push("At least one role is required");
 									$scope.savingIndicator = false;
 								}
 								if ($scope.errors.length == 0) {
-									UserService.saveUser(User).then(
-										function(response) {
-											$scope.savingIndicator = false;
-											$scope.errors = response.errors;
-											if ($scope.errors.length == 0) {
-												$scope.userForm
-														.$setPristine();
-												$scope.user = response.data;
-												$state.transitionTo("searchUser");
-											}
-									});
+									if (User.roleAssociations.length === 0 && User.hasRolesOutside && angular.isDefined($scope.user.id)) {
+										UserService.deleteUser($scope.user.id).then(
+												function(response) {
+													$scope.userForm.$setPristine();
+													$state.transitionTo("searchUser");
+												});
+									} else {
+										UserService.saveUser(User).then(
+												function(response) {
+													$scope.savingIndicator = false;
+													$scope.errors = response.errors;
+													if ($scope.errors.length == 0) {
+														$scope.userForm
+																.$setPristine();
+														$scope.user = response.data;
+														$state.transitionTo("searchUser");
+													}
+											});
+									}
 								} else {
 									$scope.savingIndicator = false;
 								}								
@@ -111,28 +121,28 @@ testreg.controller(	'UserController',['$scope','$state','$timeout','loadedData',
                             $scope.sync = function () {
                                 UserService.syncUser($scope.user.id).then(
                                     function() {
-                                        confirm("A request to SYNC the user is in progress!")
+                                        confirm("A request to SYNC the user is in progress!");
                                     });
                             };
 
                             $scope.resetPassword = function () {
                                 UserService.resetPasswordUser($scope.user.id).then(
                                     function() {
-                                        confirm("A request to RESET the user's password is in progress!")
+                                        confirm("Your name will be provided to the user via email along with password reset request.");
                                     });
                             };
 
                             $scope.lock = function () {
                                 UserService.lockUser($scope.user.id).then(
                                     function() {
-                                        confirm("A request to LOCK the user is in progress!")
+                                        confirm("A request to LOCK the user is in progress!");
                                     });
                             };
 
                             $scope.unlock = function () {
                                 UserService.unlockUser($scope.user.id).then(
                                     function() {
-                                       confirm("A request to UNLOCK the user is in progress!")
+                                       confirm("A request to UNLOCK the user is in progress!");
                                     });
                             };
 
@@ -147,3 +157,4 @@ testreg.controller(	'UserController',['$scope','$state','$timeout','loadedData',
 												}
 											});
 						} ]);
+

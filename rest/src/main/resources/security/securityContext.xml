@@ -37,12 +37,28 @@
 
     <!-- Secured pages -->
     <security:http entry-point-ref="delegatingAuthenticationEntryPoint" use-expressions="true">
+        <security:custom-filter before="FIRST" ref="metadataGeneratorFilter" />
         <security:custom-filter ref="oauth2ProviderFilter" before="PRE_AUTH_FILTER" />
         <security:custom-filter after="BASIC_AUTH_FILTER" ref="samlFilter"/>
         <security:intercept-url pattern="/datawarehouse/extract/status**" access="permitAll"/>
         <security:intercept-url pattern="/users/extract**" access="permitAll"/>
         <security:intercept-url pattern="/**" access="isFullyAuthenticated()"/>
     </security:http>
+
+    <bean id="metadataGeneratorFilter" class="org.springframework.security.saml.metadata.MetadataGeneratorFilter">
+        <constructor-arg ref="metadataGenerator"/>
+    </bean>
+
+    <bean id="metadataGenerator" class="org.springframework.security.saml.metadata.MetadataGenerator">
+        <property name="bindingsSSO">
+            <list>
+                <value>redirect</value>
+                <value>artifact</value>
+            </list>
+        </property>
+        <property name="entityId" value="art_rest_local"/>
+    </bean>
+
 
     <bean id="samlFilter" class="org.springframework.security.web.FilterChainProxy">
         <security:filter-chain-map request-matcher="ant">

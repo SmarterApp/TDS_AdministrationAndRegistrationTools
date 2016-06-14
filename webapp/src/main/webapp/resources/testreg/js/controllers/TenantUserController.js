@@ -1,6 +1,6 @@
 
-testreg.controller('TenantUserController', ['$scope', '$state', '$window', '$location', 'TenantUserService' , 'CurrentUserService', 
-     function UserController($scope, $state, $window, $location, TenantUserService, CurrentUserService) {
+testreg.controller('TenantUserController', ['$scope', '$state', '$window', '$location', 'TenantUserService' , 'CurrentUserService', 'UserService', 
+     function UserController($scope, $state, $window, $location, TenantUserService, CurrentUserService, UserService) {
 		 var defaultAssets = {
 				 logo : 'resources/testreg/images/logo_sbac.png',
 				 headerbackground:'white'
@@ -8,8 +8,13 @@ testreg.controller('TenantUserController', ['$scope', '$state', '$window', '$loc
 		 $scope.go = function(path){
 	    		$location.path(path);
 		 };
+		 
+		 $scope.editProfile = function() {
+			 $state.transitionTo("userProfile");
+		 };
 		 $scope.tenantContainer = [];
 		 $scope.selectedTenant = {};
+		 $scope.currentUser = [];
 
 		 TenantUserService.getApplicableTenants().then(function(response){
 			 if(response.data != null){
@@ -49,6 +54,14 @@ testreg.controller('TenantUserController', ['$scope', '$state', '$window', '$loc
 				 skinApp(assets);
 			 });
 		 }
+		 
+		 TenantUserService.getCurrentUser().then(function (response){
+			 $scope.errors = response.errors;
+			 if($scope.errors.length == 0){
+				 $scope.currentUser = response.data;	
+				 isUserHasOnlyEditProfile();
+			 }
+		});
 		 		 
 		 $scope.changeTenant = function(){
 			 CurrentUserService.setTenantId($scope.selectedTenant.id);
@@ -69,4 +82,53 @@ testreg.controller('TenantUserController', ['$scope', '$state', '$window', '$loc
 			 $scope.logoImage =  assets.logo;
 			 $scope.headerbackground = {"background-color":assets.headerbackground }; 
 		 }
+		 
+		 UserService.getCurrentUser().then(function (response){
+			 $scope.errors = response.errors;
+			 if($scope.errors.length == 0){
+				 $scope.user = response.data;
+			 }
+		});
+		 
+		 $scope.hasPermissionForEditProfile = function() {
+			 var hasPermission = false;
+			 if(angular.isDefined($scope.user)){
+				 hasPermission = true;
+			 }
+			 return hasPermission;
+		 };
+		 
+		 function isUserHasOnlyEditProfile() {
+			 var hasPermission = false;
+			 if(angular.isDefined($scope.currentUser) && angular.isDefined($scope.currentUser.authorities) && $scope.currentUser.authorities.length == 1){
+				 if($scope.currentUser.authorities[0].name=="Edit Profile"){
+					 hasPermission = true;
+				 } 
+			 }
+	
+			 if(hasPermission == true){
+				 $state.transitionTo("userProfile");
+			 }
+		 }
+		 
+		 $scope.hasPermissionForDownloadTemplate = function() {
+			 var hasPermission = false;
+			 if(angular.isDefined($scope.currentUser)){
+				 hasPermission = $scope.containsObject($scope.currentUser.authorities);
+			 }
+			 return hasPermission;
+		 };
+		 
+		 $scope.containsObject = function (list) {
+			 var i;
+			 if(angular.isDefined(list)){
+				 for (i = 0; i < list.length; i++) {
+					 if (list[i].name === "Template Download") {
+						 return true;
+					 }
+				 }
+			 }
+			 return false;
+		 };
 }]);
+

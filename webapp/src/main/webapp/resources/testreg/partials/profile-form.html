@@ -1,0 +1,120 @@
+  <div  data-ng-include src='"resources/testreg/partials/leftnav.html"'></div>
+
+ <div class="secContent"> 
+
+<div data-ng-repeat="error in errors">
+               <div><span class="icon_sprite icon_error error"></span>{{error}}</div>
+</div>
+           
+<div data-ng-form="userForm" class="formWrapper">
+    <div data-ng-show="userForm.$dirty" class="dirtynag">* Warning: You have unsaved changes</div>
+    <div class="fieldGroup">
+    <h5 tabindex="-1">{{formAction}} {{entityNameLabels['User']}} Information <span class="control-label-required">Indicates required field</span></h5>
+        <ul>
+             <li>
+                <span> 
+                    <label class="control-label-required" for="user.firstName" title="First Name">{{xwalk('First Name')}}:</label>
+                    <input type="text" data-ng-model="user.firstName" alt="First Name" tabindex="0"/>
+                </span>
+            </li>
+             <li>
+                <span> 
+                    <label class="control-label-required" for="user.lastName" title="Last Name">{{xwalk('Last Name')}}:</label>
+                    <input type="text" data-ng-model="user.lastName" alt="Last Name" tabindex="0"/>
+               </span>
+            </li> 
+             <li>
+                <span> 
+                    <label class="control-label-required" for="user.email" title="Email Address">{{xwalk('Email Address')}}:</label>
+                    <input type="text" data-ng-model="user.email" alt="Email Address" tabindex="0"/>
+               </span>
+            </li>  
+             <li>
+                <span> 
+                    <label class="control-label" for="user.phone" title="Telephone Number">{{xwalk('Telephone Number')}}:</label>
+                    <input type="text" data-ng-model="user.phone" alt="Telephone Number" tabindex="0"/>
+                </span>
+            </li>  
+        </ul>
+
+        <div data-ng-hide="!user.changeEventExportError">
+            This user was not successfully provisioned due to the following error(s):<br>
+            <div class="user-error-alert">{{user.changeEventExportError}}</div>
+        </div>
+        
+        <div data-ng-show="messageDisplay()" class="role-message">
+            Your changes have been saved, and will take effect when you next log in.
+        </div>
+
+        <h5 tabindex="-1">Role Associations</h5>
+        <div class="tableWrapper">
+            <table class="assessmentTable" role="grid">
+                    <colgroup>
+                        <col>
+                        <col>
+                        <col style="width:40%"> 
+                        <col style="width:10%">
+                        <!-- <col> -->
+                        <col class="actionColumn">
+                    </colgroup>
+                    <tr role="row">
+                        <th data-ng-class="{'control-label-required' : user.roleAssociations && user.roleAssociations.length > 0}" scope="col" id="roleHeader" title="Role">{{xwalk('Role')}}</th>
+                        <th data-ng-class="{'control-label-required' : user.roleAssociations && user.roleAssociations.length > 0}" scope="col" id="entityTypeHeader" title="Responsible Entity Type">{{xwalk('Responsible Entity Type')}}</th>
+                        <!-- <th data-ng-class="{'control-label' : user.roleAssociations && user.roleAssociations.length > 0}" scope="col" id="parentFilterHeader" title="Parent Filter">{{xwalk('Parent Filter')}}</th> -->
+                        <th data-ng-class="{'control-label-required' : user.roleAssociations && user.roleAssociations.length > 0}" scope="col" id="entityIdHeader" title="Associated Entity Id">{{xwalk('Associated Entity Id')}}</th>
+                        <th scope="col" id="stateHeader" title="State">{{xwalk('State')}}</th>
+                        <th scope="col" id="actionHeader">
+                            <div class="tableButtonGroup">
+                              <span class="btnIcon icon_saveAdd2" aria-hidden="true"></span>
+                            </div>
+                        </th>
+                    </tr>
+                    <tr  data-ng-repeat="roleAssociation in user.roleAssociations" role="row">   
+                        <td role="gridcell" aria-labelledby="roleHeader">
+                            <div class="centerDiv">                
+                                 <span>{{roleAssociation.role}}</span>
+                            </div>
+                        </td>               
+                        <td role="gridcell" aria-labelledby="entityTypeHeader">
+                            <div class="centerDiv">                
+                                <span>{{roleAssociation.level}}</span>
+                            </div>
+                        </td>
+                        <td role="gridcell" aria-labelledby="entityIdHeader">
+                            <div class="centerDiv">
+                                <span>{{getEntityIdwithName(user,$index)}}</span>
+                            </div>
+                        </td>
+                        <td role="gridcell" aria-labelledby="stateHeader">
+                          <div class="centerDiv">                      
+                                <span>{{roleAssociation.stateAbbreviation}}</span>  
+                            </div>
+                        </td>                                                  
+                        <td role="gridcell" aria-labelledby="actionHeader">
+                            <div class="tableButtonGroup">
+                                <button data-ng-click="removeRoleAssociation($index)" class="boxBtn" tabindex="0"><span class="btnIcon icon_sprite icon_delete2" aria-hidden="true"> </span></button>
+                            </div>
+                        </td>      
+                    </tr>
+            </table>
+       </div>
+        
+        <button type="button" class="boxBtn" data-ng-show="userForm.$dirty" data-ng-click="save(user)" tabindex="0">
+            <span class="btnIcon icon_sprite icon_save2 ng-class:{ajax_indicator:savingIndicator}" aria-hidden="true"></span>
+            <span class="btnText">Save</span>
+        </button>
+     
+        <button type="button" class="boxBtn" data-ng-show="displayCancel(userForm.$dirty)" data-ng-click="cancel(userForm.$dirty)" tabindex="0">
+            <span class="btnIcon icon_sprite icon_cancel2" aria-hidden="true"></span>
+            <span class="btnText">Cancel</span>
+        </button>
+
+        <h5 tabindex="-1">{{entityNameLabels['User']}} Actions</h5>
+        <button type="button" class="boxBtn" data-ng-click="resetPassword()" tabindex="0">
+            <span class="btnIcon icon_sprite icon_save2" aria-hidden="true"></span>
+            <span class="btnText">Reset Password</span>
+        </button>
+    </div>
+    </div>
+</div>  
+<div class="clear"></div>

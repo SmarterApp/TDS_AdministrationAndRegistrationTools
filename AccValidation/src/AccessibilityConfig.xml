@@ -539,9 +539,34 @@
 			</Selection>
 		</SingleSelectResource>
 
+		<SingleSelectResource>
+			<Code>IllustrationGlossary</Code>
+			<Order>12</Order>
+			<Text>
+				<Language>eng</Language>
+				<Label>Illustration Glossary</Label>
+			</Text>
+			<Selection>
+				<Code>TDS_ILG0</Code>
+				<Order>1</Order>
+				<Text>
+					<Language>eng</Language>
+					<Label>Do not show Illustration Glossary</Label>
+				</Text>
+			</Selection>
+			<Selection>
+				<Code>TDS_ILG1</Code>
+				<Order>2</Order>
+				<Text>
+					<Language>eng</Language>
+					<Label>Show Illustration Glossary</Label>
+				</Text>
+			</Selection>
+		</SingleSelectResource>
+
 		<MultiSelectResource>
 			<Code>NonEmbeddedDesignatedSupports</Code>
-			<Order>12</Order>
+			<Order>13</Order>
 			<DefaultSelection>NEDS0</DefaultSelection>
 			<Text>
 				<Language>eng</Language>
@@ -736,7 +761,7 @@
 
 		<MultiSelectResource>
 			<Code>NonEmbeddedAccommodations</Code>
-			<Order>13</Order>
+			<Order>14</Order>
 			<DefaultSelection>NEA0</DefaultSelection>
 			<Text>
 				<Language>eng</Language>
@@ -811,7 +836,7 @@
 		
 		<EditResource>
 			<Code>Other</Code>
-			<Order>14</Order>
+			<Order>15</Order>
 			<Text>
 				<Language>eng</Language>
 				<Label>Other</Label>
@@ -922,6 +947,12 @@
 			<Selection>
 				<Code>TDS_WL_Glossary</Code>
 			</Selection>
+		</SingleSelectResource>
+
+		<!-- "Eliminate" Illustration Glossary by getting rid of all its options. It will still be present so that the columns are consistent, but will not be selectable -->
+		<SingleSelectResource>
+			<Code>IllustrationGlossary</Code>
+			<Disabled/>
 		</SingleSelectResource>
 
 		<!-- Eliminate two Read Aloud Spanish codes and all glossaries -->
