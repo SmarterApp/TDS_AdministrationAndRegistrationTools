@@ -19,7 +19,8 @@
                                           org.opentestsystem.shared.security.integration,
                                           org.opentestsystem.delivery.testadmin.service,
                                           org.opentestsystem.delivery.testadmin.scheduling,
-                                          org.opentestsystem.delivery.testadmin.service.impl"/>
+                                          org.opentestsystem.delivery.testadmin.service.impl,
+                                          org.opentestsystem.delivery.testreg.persistence.batch" />
 
     <!-- use an async version of an UserChangeEventService -->
     <bean id="userChangeEventService" class="org.opentestsystem.delivery.testreg.service.impl.UserChangeEventServiceAsyncImpl"/>
