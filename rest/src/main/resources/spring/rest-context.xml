@@ -62,6 +62,11 @@
 	</mvc:annotation-driven>
     <bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver"/>
 
+    <mvc:interceptors>
+        <!-- This runs for all mappings -->
+        <bean  class="org.opentestsystem.delivery.testreg.rest.external.security.SslInterceptor"/>
+    </mvc:interceptors>
+
 
 <util:map id="headersMap" key-type="java.lang.String" value-type="java.lang.String[]">
     <entry key="STATE"          value="StateAbbreviation, StateName, ParentEntityType, ParentExternalId, ParentEntityName, Delete"/>
@@ -157,5 +162,13 @@
     </util:map>
     
     <bean id="fileFormatTypeAppender" class="org.opentestsystem.delivery.testreg.upload.FileFormatTypeAppender"/>
+
+    <bean id="secureLocations" class="java.util.ArrayList">
+        <constructor-arg>
+            <list>
+                <value>/rest/external/**</value>
+            </list>
+        </constructor-arg>
+    </bean>
  
 </beans>
