@@ -32,7 +32,13 @@
     <security:http security="none" pattern="/favicon.ico"/>   
     <security:http security="none" pattern="/api/**"/>
     <security:http security="none" pattern="/version"/>
-    
+
+    <!-- Swagger UI -->
+    <security:http security="none" pattern="/swagger-ui.html"/>
+    <security:http security="none" pattern="/webjars/**"/>
+    <security:http security="none" pattern="/swagger-resources/**"/>
+    <security:http security="none" pattern="/v2/api-docs"/>
+
     <security:http security="none" pattern="/resources/dtd/**"/>
 
     <!-- Secured pages -->
