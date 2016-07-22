@@ -12,8 +12,10 @@
 
     <!-- DispatcherServlet Context: defines this servlet's request-processing infrastructure -->
     <!-- Handles HTTP GET requests for /resources/** by efficiently serving up static resources in the ${webappRoot}/resources directory -->
+    <!-- swagger resources -->
+    <resources mapping="swagger-ui.html" location="classpath:/META-INF/resources/" />
+    <resources mapping="/webjars/**" location="classpath:/META-INF/resources/webjars/" />
     <resources mapping="/resources/**" location="/resources/" />
-
   
     <beans:bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
     	<beans:property  name="order" value="2" />

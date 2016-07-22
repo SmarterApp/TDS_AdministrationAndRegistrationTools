@@ -171,4 +171,5 @@
         </constructor-arg>
     </bean>
  
+	<bean name="/applicationSwaggerConfig" class="org.opentestsystem.delivery.testreg.rest.ApplicationSwaggerConfig"/>
 </beans>
