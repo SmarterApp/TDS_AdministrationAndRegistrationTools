@@ -158,9 +158,7 @@
     
     <bean id="fileFormatTypeAppender" class="org.opentestsystem.delivery.testreg.upload.FileFormatTypeAppender"/>
 
-    <!-- swagger resources -->
-    <mvc:resources mapping="swagger-ui.html" location="classpath:/META-INF/resources/" />
-    <mvc:resources mapping="/webjars/**" location="classpath:/META-INF/resources/webjars/" />
+
 
     <bean name="/applicationSwaggerConfig" class="org.opentestsystem.delivery.testreg.rest.ApplicationSwaggerConfig"/>
 </beans>
