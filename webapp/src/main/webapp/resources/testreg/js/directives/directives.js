@@ -233,15 +233,18 @@ testreg.directive("export", function($window, $timeout, EntityService){
 	  				$scope.pageLimit=response;
 	  			});
                 $timeout(function() {
-                	$scope.searchParams.currentPage = '0';
-    	  			var paramValues = $.param($scope.searchParams);
-    	  			var  endpoint;
-    	  			if($attrs.export=='students' && angular.isDefined($scope.mode)){
-    	  				endpoint = $attrs.export + "/" + $scope.mode + "." + fileType + '?pageSize='+$scope.pageLimit+"&"+paramValues;
-    	  			}else if($attrs.export!='students'){
-    	  				endpoint = $attrs.export + "." + fileType + '?exportSearch=true&pageSize='+$scope.pageLimit+"&"+paramValues;
-    	  			}
-    	  			$window.open(baseUrl + endpoint);
+					var currentPage = $scope.searchParams.currentPage;
+					// Temporarily change current page to 0 to capture all results.
+					$scope.searchParams.currentPage = '0';
+					var paramValues = $.param($scope.searchParams);
+					var  endpoint;
+					if ($attrs.export=='students' && angular.isDefined($scope.mode)) {
+						endpoint = $attrs.export + "/" + $scope.mode + "." + fileType + '?pageSize='+$scope.pageLimit+"&"+paramValues;
+					} else if ($attrs.export!='students'){
+						endpoint = $attrs.export + "." + fileType + '?exportSearch=true&pageSize='+$scope.pageLimit+"&"+paramValues;
+					}
+					$window.open(baseUrl + endpoint);
+					$scope.searchParams.currentPage = currentPage;
                 }, 300);
 	  		};
 	  		
