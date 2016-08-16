@@ -239,7 +239,7 @@ testreg.directive("export", function($window, $timeout, EntityService){
     	  			if($attrs.export=='students' && angular.isDefined($scope.mode)){
     	  				endpoint = $attrs.export + "/" + $scope.mode + "." + fileType + '?pageSize='+$scope.pageLimit+"&"+paramValues;
     	  			}else if($attrs.export!='students'){
-    	  				endpoint = $attrs.export + "." + fileType + '?pageSize='+$scope.pageLimit+"&"+paramValues;
+    	  				endpoint = $attrs.export + "." + fileType + '?exportSearch=true&pageSize='+$scope.pageLimit+"&"+paramValues;
     	  			}
     	  			$window.open(baseUrl + endpoint);
                 }, 300);
