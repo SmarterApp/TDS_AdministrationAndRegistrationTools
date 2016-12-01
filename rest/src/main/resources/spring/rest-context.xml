@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
     xmlns:context="http://www.springframework.org/schema/context"
+    xmlns:beans="http://www.springframework.org/schema/beans" xmlns:jee="http://www.springframework.org/schema/jee"
     xmlns:int="http://www.springframework.org/schema/integration"
     xmlns:aop="http://www.springframework.org/schema/aop" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xmlns:mvc="http://www.springframework.org/schema/mvc"
@@ -19,7 +20,24 @@
     									  org.opentestsystem.delivery.testadmin.rest,
     									  org.opentestsystem.delivery.testreg.rest.view" />
 
+    <!-- common diagnostic service -->
+    <bean id="diagnosticSystemService" class="tds.dll.common.diagnostic.services.impl.DiagnosticSystemServiceImpl"/>
+    <bean id="diagnosticConfigurationService" class="tds.dll.common.diagnostic.services.impl.DiagnosticConfigurationServiceImpl"/>
+    <bean id="diagnosticDatabaseService" class="org.opentestsystem.delivery.testreg.rest.diagnostic.DiagnosticDatabaseServiceImpl"/>
+
     <bean id="clientRequestFactory" class="org.springframework.http.client.HttpComponentsClientHttpRequestFactory"/>
+    <bean id="rabbitMQHealthCheck" class="org.opentestsystem.delivery.testreg.rest.diagnostic.client.RabbitMQHealthCheck">
+        <constructor-arg ref="restTemplate"/>
+        <constructor-arg value="${rabbitmq.host}"/>
+        <constructor-arg value="${rabbitmq.username}"/>
+        <constructor-arg value="${rabbitmq.password}"/>
+    </bean>
+
+    <bean id="sftpHealthCheck" class="org.opentestsystem.delivery.testreg.rest.diagnostic.client.SFTPHealthCheck">
+        <constructor-arg value="${testreg.sftp.host}" />
+        <constructor-arg value="${testreg.sftp.user}" />
+        <constructor-arg value="${testreg.sftp.pass}" />
+    </bean>
 
     <!-- a generic rest Template bean for invoking webservices can be injected into clients -->
     <bean id="restTemplate" class="org.springframework.web.client.RestTemplate">
