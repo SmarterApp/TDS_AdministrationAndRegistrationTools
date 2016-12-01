@@ -32,6 +32,7 @@
     <security:http security="none" pattern="/favicon.ico"/>   
     <security:http security="none" pattern="/api/**"/>
     <security:http security="none" pattern="/version"/>
+    <security:http security="none" pattern="/status/**"/>
 
     <!-- Swagger UI -->
     <security:http security="none" pattern="/swagger-ui.html"/>
