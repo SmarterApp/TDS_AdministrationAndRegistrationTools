@@ -3,7 +3,7 @@
   <parent>
     <groupId>org.opentestsystem.delivery</groupId>
     <artifactId>test-reg-parent</artifactId>
-    <version>2.1.2-SNAPSHOT</version>
+    <version>2.1.2</version>
   </parent>
   <artifactId>test-reg-persistence</artifactId>
   
@@ -34,7 +34,7 @@
         <dependency>
             <groupId>org.opentestsystem.shared</groupId>
             <artifactId>shared-tr-api</artifactId>
-            <version>1.0.1-BUILD-SNAPSHOT</version>
+            <version>1.0.1</version>
             <exclusions>
                 <exclusion>
                     <artifactId>bcprov-jdk16</artifactId>
