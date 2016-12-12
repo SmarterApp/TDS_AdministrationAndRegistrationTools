@@ -32,7 +32,13 @@
     <security:http security="none" pattern="/favicon.ico"/>   
     <security:http security="none" pattern="/api/**"/>
     <security:http security="none" pattern="/version"/>
-    
+
+    <!-- Swagger UI -->
+    <security:http security="none" pattern="/swagger-ui.html"/>
+    <security:http security="none" pattern="/webjars/**"/>
+    <security:http security="none" pattern="/swagger-resources/**"/>
+    <security:http security="none" pattern="/v2/api-docs"/>
+
     <security:http security="none" pattern="/resources/dtd/**"/>
 
     <!-- Secured pages -->
@@ -40,6 +46,7 @@
         <security:custom-filter before="FIRST" ref="metadataGeneratorFilter" />
         <security:custom-filter ref="oauth2ProviderFilter" before="PRE_AUTH_FILTER" />
         <security:custom-filter after="BASIC_AUTH_FILTER" ref="samlFilter"/>
+        <security:intercept-url pattern="/swagger-ui.html" requires-channel="https" />
         <security:intercept-url pattern="/datawarehouse/extract/status**" access="permitAll"/>
         <security:intercept-url pattern="/users/extract**" access="permitAll"/>
         <security:intercept-url pattern="/**" access="isFullyAuthenticated()"/>

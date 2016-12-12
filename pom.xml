@@ -4,14 +4,14 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.opentestsystem.delivery</groupId>
     <artifactId>test-reg-parent</artifactId>
-    <version>2.1.1</version>
+    <version>2.1.2-SNAPSHOT</version>
     <name>Smarter Balanced #11 Test Registration - Parent Project</name>
     <packaging>pom</packaging>
 
     <parent>
         <groupId>org.opentestsystem.shared</groupId>
         <artifactId>shared-build-parent</artifactId>
-        <version>0.0.7</version>
+        <version>0.0.7-SNAPSHOT</version>
     </parent>
 
     <properties>
@@ -25,7 +25,7 @@
         <commons-compress.version>1.7</commons-compress.version>
         <open-csv.version>2.3</open-csv.version>
         <super-csv.version>2.1.0</super-csv.version>
-        <sb11-shared-security.version>0.0.1</sb11-shared-security.version>
+        <sb11-shared-security.version>0.0.1-SNAPSHOT</sb11-shared-security.version>
     </properties>
 
     <scm>
