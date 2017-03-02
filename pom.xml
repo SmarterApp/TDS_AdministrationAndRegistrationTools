@@ -11,7 +11,7 @@
     <parent>
         <groupId>org.opentestsystem.shared</groupId>
         <artifactId>shared-build-parent</artifactId>
-        <version>0.0.7-SNAPSHOT</version>
+        <version>3.0.2</version>
     </parent>
 
     <properties>
@@ -24,9 +24,14 @@
         <bouncycastle.version>1.50</bouncycastle.version>
         <commons-compress.version>1.7</commons-compress.version>
         <open-csv.version>2.3</open-csv.version>
+        <progman-client.version>0.0.4-SNAPSHOT</progman-client.version>
+        <rest-api-generator.version>0.0.3-SNAPSHOT</rest-api-generator.version>
         <super-csv.version>2.1.0</super-csv.version>
+        <sb11-mna-client.version>0.0.4-SNAPSHOT</sb11-mna-client.version>
+        <sb11-shared-code.version>0.0.6-SNAPSHOT</sb11-shared-code.version>
         <sb11-shared-security.version>0.0.1-SNAPSHOT</sb11-shared-security.version>
         <tds-dll.version>0.0.1-SNAPSHOT</tds-dll.version>
+        <tsb-client.version>0.0.1-SNAPSHOT</tsb-client.version>
     </properties>
 
     <scm>
