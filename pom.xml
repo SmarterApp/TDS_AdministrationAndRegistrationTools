@@ -24,6 +24,7 @@
         <bouncycastle.version>1.50</bouncycastle.version>
         <commons-compress.version>1.7</commons-compress.version>
         <open-csv.version>2.3</open-csv.version>
+        <rest-api-generator.version>0.0.3-SNAPSHOT</rest-api-generator.version>
         <super-csv.version>2.1.0</super-csv.version>
         <sb11-shared-code.version>0.0.6-SNAPSHOT</sb11-shared-code.version>
         <sb11-shared-security.version>0.0.1-SNAPSHOT</sb11-shared-security.version>
