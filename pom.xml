@@ -30,7 +30,7 @@
         <sb11-mna-client.version>0.0.4-SNAPSHOT</sb11-mna-client.version>
         <sb11-shared-code.version>3.0.0</sb11-shared-code.version>
         <sb11-shared-security.version>0.0.1-SNAPSHOT</sb11-shared-security.version>
-        <tds-dll.version>0.0.1-SNAPSHOT</tds-dll.version>
+        <tds-dll.version>3.0.0</tds-dll.version>
         <tsb-client.version>0.0.1-SNAPSHOT</tsb-client.version>
     </properties>
 
