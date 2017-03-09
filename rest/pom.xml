@@ -179,7 +179,7 @@
         <dependency>
             <groupId>org.opentestsystem.shared</groupId>
             <artifactId>monitoring-alerting.client</artifactId>
-            <version> ${sb11-mna-client.version}</version>
+            <version>${sb11-mna-client.version}</version>
         </dependency>
 
         <dependency>
