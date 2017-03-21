@@ -15,7 +15,7 @@
     </parent>
 
     <properties>
-        <shared-master.version>3.0.1</shared-master.version>
+        <shared-master.version>3.0.3</shared-master.version>
         <apache-poi.version>3.9</apache-poi.version>
         <lowagie-itext.version>4.2.1</lowagie-itext.version>
 		<commons-jexl.version>2.0</commons-jexl.version>
