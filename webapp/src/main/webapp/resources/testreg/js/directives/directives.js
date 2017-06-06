@@ -239,8 +239,8 @@ testreg.directive("export", function($window, $timeout, EntityService){
 					var paramValues = $.param($scope.searchParams);
 					var  endpoint;
 					if ($attrs.export=='students' && angular.isDefined($scope.mode)) {
-						endpoint = $attrs.export + "/" + $scope.mode + "." + fileType + '?pageSize='+$scope.pageLimit+"&"+paramValues;
-					} else if ($attrs.export!='students'){
+						endpoint = $attrs.export + "/" + $scope.mode + "." + fileType + '?exportSearch=true&pageSize='+$scope.pageLimit+"&"+paramValues;
+					} else {
 						endpoint = $attrs.export + "." + fileType + '?exportSearch=true&pageSize='+$scope.pageLimit+"&"+paramValues;
 					}
 					$window.open(baseUrl + endpoint);
@@ -314,10 +314,12 @@ testreg.directive("pageable", function(){
 
 			$scope.nextPage = function(){
 				$scope.searchParams.currentPage = $scope.searchParams.currentPage + 1;
+				$scope.searchParams.lastPageClicked = false;
 				$scope.changePage();
 			};
 			$scope.prevPage = function(){
 				$scope.searchParams.currentPage = $scope.searchParams.currentPage - 1;
+				$scope.searchParams.lastPageClicked = false;
 				$scope.changePage();
 			};
 			$scope.lastPage = function(){
@@ -327,6 +329,7 @@ testreg.directive("pageable", function(){
 			};
 			$scope.firstPage = function(){
 				$scope.searchParams.currentPage = 0;
+				$scope.searchParams.lastPageClicked = false;
 				$scope.changePage();
 			};
 		},

@@ -97,7 +97,7 @@ testreg.controller('StudentSearchController', ['$scope', '$state','$timeout','$w
             $timeout(function() {
             	$scope.searchParams.currentPage = '0';
 	  			var paramValues = $.param($scope.searchParams);
-	  			var  endpoint = "students/" + mode + "." + fileType + '?pageSize='+$scope.pageLimit+"&"+paramValues;
+	  			var  endpoint = "students/" + mode + "." + fileType + '?exportSearch=true&pageSize='+$scope.pageLimit+"&"+paramValues;
 	  			$window.open(baseUrl + endpoint);
             }, 300);
   		};
