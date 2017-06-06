@@ -314,10 +314,12 @@ testreg.directive("pageable", function(){
 
 			$scope.nextPage = function(){
 				$scope.searchParams.currentPage = $scope.searchParams.currentPage + 1;
+				$scope.searchParams.lastPageClicked = false;
 				$scope.changePage();
 			};
 			$scope.prevPage = function(){
 				$scope.searchParams.currentPage = $scope.searchParams.currentPage - 1;
+				$scope.searchParams.lastPageClicked = false;
 				$scope.changePage();
 			};
 			$scope.lastPage = function(){
@@ -327,6 +329,7 @@ testreg.directive("pageable", function(){
 			};
 			$scope.firstPage = function(){
 				$scope.searchParams.currentPage = 0;
+				$scope.searchParams.lastPageClicked = false;
 				$scope.changePage();
 			};
 		},
