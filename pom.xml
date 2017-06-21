@@ -45,8 +45,8 @@
     </build>
 
     <scm>
-        <connection>scm:git:https://github.com/SmarterApp/AdministrationAndRegistrationTools.git</connection>
-        <developerConnection>scm:git:git://github.com/SmarterApp/AdministrationAndRegistrationTools.git</developerConnection>
+        <connection>scm:git:https://github.com/SmarterApp/AdministrationAndRegistrationTools</connection>
+        <developerConnection>scm:git:git@github.com:SmarterApp/AdministrationAndRegistrationTools</developerConnection>
         <url>https://github.com/SmarterApp/AdministrationAndRegistrationTools</url>
         <tag>HEAD</tag>
     </scm>
