@@ -15,7 +15,7 @@
     </parent>
 
     <properties>
-        <shared-master.version>3.0.6</shared-master.version>
+        <shared-master.version>3.1.0.RELEASE</shared-master.version>
         <apache-poi.version>3.9</apache-poi.version>
         <lowagie-itext.version>4.2.1</lowagie-itext.version>
 		<commons-jexl.version>2.0</commons-jexl.version>
@@ -25,14 +25,14 @@
         <bouncycastle.version>1.50</bouncycastle.version>
         <commons-compress.version>1.7</commons-compress.version>
         <open-csv.version>2.3</open-csv.version>
-        <progman-client.version>3.0.0</progman-client.version>
-        <rest-api-generator.version>0.0.3-SNAPSHOT</rest-api-generator.version>
+        <progman-client.version>3.1.0.RELEASE</progman-client.version>
+        <rest-api-generator.version>3.1.0.RELEASE</rest-api-generator.version>
         <super-csv.version>2.1.0</super-csv.version>
-        <sb11-mna-client.version>3.0.0</sb11-mna-client.version>
-        <sb11-shared-code.version>3.0.6</sb11-shared-code.version>
-        <sb11-shared-security.version>3.0.0</sb11-shared-security.version>
-        <tds-dll.version>3.0.1</tds-dll.version>
-        <tsb-client.version>0.0.1-SNAPSHOT</tsb-client.version>
+        <sb11-mna-client.version>3.1.0.RELEASE</sb11-mna-client.version>
+        <sb11-shared-code.version>3.1.0.RELEASE</sb11-shared-code.version>
+        <sb11-shared-security.version>3.1.0.RELEASE</sb11-shared-security.version>
+        <tds-dll.version>3.1.0.RELEASE</tds-dll.version>
+        <tsb-client.version>3.1.0.RELEASE</tsb-client.version>
     </properties>
 
     <build>
