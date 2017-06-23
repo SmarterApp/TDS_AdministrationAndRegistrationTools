@@ -3,7 +3,7 @@
   <parent>
     <groupId>org.opentestsystem.delivery</groupId>
     <artifactId>test-reg-parent</artifactId>
-    <version>2.1.2</version>
+    <version>3.1.1.RELEASE</version>
   </parent>
   <artifactId>test-reg-client-interfaces</artifactId>
   

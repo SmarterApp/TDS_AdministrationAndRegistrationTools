@@ -1,7 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration scan="true">
-	<property scope="local" name="app.context.name" value="testreg.webapp" />
-    <property scope="local" name="app.base.package.name" value="org.opentestsystem.delivery.testreg" />
-    <property scope="local" name="app.base.package.loglevel" value="debug" />
+	<property scope="context" name="app.context.name" value="testreg.webapp" />
 	<include resource="logback-included-common-config.xml" />
 </configuration>
