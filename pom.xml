@@ -45,7 +45,7 @@
 
     <scm>
         <connection>scm:git:https://github.com/SmarterApp/TDS_AdministrationAndRegistrationTools.git</connection>
-        <developerConnection>scm:git:git@github.com:SmarterApp/TDS_AdministrationAndRegistrationTools.git</developerConnection>
+        <developerConnection>scm:git:git://github.com/SmarterApp/TDS_AdministrationAndRegistrationTools.git</developerConnection>
         <url>https://github.com/SmarterApp/TDS_AdministrationAndRegistrationTools</url>
         <tag>HEAD</tag>
     </scm>
