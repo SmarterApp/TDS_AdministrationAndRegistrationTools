@@ -266,4 +266,13 @@
         <module>null-client</module>
         <module>client</module>
     </modules>
+
+    <distributionManagement>
+        <repository>
+            <id>central</id>
+            <name>airdev-releases</name>
+            <url>https://airdev.jfrog.io/airdev/libs-releases-local</url>
+        </repository>
+    </distributionManagement>
+
 </project>
