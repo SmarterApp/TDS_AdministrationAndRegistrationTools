@@ -1,36 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration scan="true">
-	<property scope="local" name="app.context.name" value="testreg.rest" />
-    <property scope="local" name="app.base.package.name" value="org.opentestsystem.delivery.testreg" />
-    <property scope="local" name="app.base.package.loglevel" value="debug" />
-    <property scope="local" name="mna.appender.active" value="true" />
+	<property scope="context" name="app.context.name" value="testreg.rest" />
 	<include resource="logback-included-common-config.xml" />
-    <logger name="log4j.logger.org.springframework.security.saml" level="DEBUG" />
-    <logger name="log4j.logger.org.opensaml" level="DEBUG" />
-    
-    <!-- uncomment the following line to stop logging the rest layer performance metric to mna -->
-    <!--  <logger name="PERFORMANCE_REST" additivity="false" level="ERROR"/>-->
-
-    <logger name="net.sf.ehcache" level="ALL"/>
-
-    <!-- these two turn on a ton of mongo debug logging -->
-    <!-- <logger name="org.springframework.data.mongodb" level="debug" /> -->
-    <!-- <logger name="org.springframework.data.document.mongodb" level="debug" /> -->
-    
-    <!-- turns on debug logging to see what queries are being run -->
-    <!-- <logger name="org.springframework.data.mongodb.core.MongoTemplate" level="debug" /> -->
-    
-    <!-- stop logging the uber entity map debug statements -->
-    <!-- <logger name="org.opentestsystem.delivery.testreg.service.TestRegUberEntityRelationshipService" level="error" /> -->
-    
-    <!-- trace level will also log a representation of the uber cache tree -->
-    <!-- <logger name="org.opentestsystem.delivery.testreg.service.TestRegUberEntityRelationshipService" level="trace" /> -->
-    
-    
-    <!-- stop logging search request debug statements -->
-    <!-- <logger name="org.opentestsystem.delivery.testreg.domain.search.AbstractTestRegSearchRequest" level="error" /> -->
-
-    <!-- turns on logging for things like the permission client -->
-    <logger name="org.opentestsystem.shared.security.integration" level="debug" />
-    
 </configuration>

@@ -3,7 +3,11 @@
   <parent>
     <groupId>org.opentestsystem.delivery</groupId>
     <artifactId>test-reg-parent</artifactId>
+<<<<<<< HEAD
     <version>2.1.2</version>
+=======
+    <version>3.1.1.RELEASE</version>
+>>>>>>> tags/3.1.1.RELEASE
   </parent>
   <artifactId>test-reg-persistence</artifactId>
   
@@ -34,7 +38,11 @@
         <dependency>
             <groupId>org.opentestsystem.shared</groupId>
             <artifactId>shared-tr-api</artifactId>
+<<<<<<< HEAD
             <version>1.0.1</version>
+=======
+            <version>${shared-master.version}</version>
+>>>>>>> tags/3.1.1.RELEASE
             <exclusions>
                 <exclusion>
                     <artifactId>bcprov-jdk16</artifactId>
@@ -66,7 +74,7 @@
         <dependency>
             <groupId>org.opentestsystem.shared</groupId>
             <artifactId>monitoring-alerting.client</artifactId>
-            <version> ${sb11-mna-client.version}</version>
+            <version>${sb11-mna-client.version}</version>
         </dependency>
         
         <dependency>

@@ -239,8 +239,8 @@ testreg.directive("export", function($window, $timeout, EntityService){
 					var paramValues = $.param($scope.searchParams);
 					var  endpoint;
 					if ($attrs.export=='students' && angular.isDefined($scope.mode)) {
-						endpoint = $attrs.export + "/" + $scope.mode + "." + fileType + '?pageSize='+$scope.pageLimit+"&"+paramValues;
-					} else if ($attrs.export!='students'){
+						endpoint = $attrs.export + "/" + $scope.mode + "." + fileType + '?exportSearch=true&pageSize='+$scope.pageLimit+"&"+paramValues;
+					} else {
 						endpoint = $attrs.export + "." + fileType + '?exportSearch=true&pageSize='+$scope.pageLimit+"&"+paramValues;
 					}
 					$window.open(baseUrl + endpoint);
