@@ -10,7 +10,7 @@
     <parent>
         <groupId>org.opentestsystem.shared</groupId>
         <artifactId>shared-build-parent</artifactId>
-        <version>3.0.2</version>
+        <version>3.1.1-SNAPSHOT</version>
     </parent>
 
     <properties>
@@ -28,8 +28,8 @@
         <rest-api-generator.version>3.1.1.RELEASE</rest-api-generator.version>
         <super-csv.version>2.1.0</super-csv.version>
         <sb11-mna-client.version>3.1.0.RELEASE</sb11-mna-client.version>
-        <sb11-shared-code.version>3.1.1.RELEASE</sb11-shared-code.version>
-        <sb11-shared-security.version>3.1.1.RELEASE</sb11-shared-security.version>
+        <sb11-shared-code.version>3.1.2-SNAPSHOT</sb11-shared-code.version>
+        <sb11-shared-security.version>3.1.2-SNAPSHOT</sb11-shared-security.version>
         <tds-dll.version>3.1.1.RELEASE</tds-dll.version>
         <tsb-client.version>3.1.0.RELEASE</tsb-client.version>
     </properties>
