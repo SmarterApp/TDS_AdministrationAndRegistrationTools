@@ -15,32 +15,22 @@
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-webmvc</artifactId>
-            <version>${spring.version}</version>
-            <exclusions>
-                <exclusion>
-                    <groupId>org.springframework</groupId>
-                    <artifactId>spring-aop</artifactId>
-                </exclusion>
-            </exclusions>
         </dependency>
 
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-web</artifactId>
-            <version>${spring.version}</version>
         </dependency>
 
         <dependency>
             <groupId>commons-fileupload</groupId>
             <artifactId>commons-fileupload</artifactId>
-            <version>${commons-fileupload.version}</version>
         </dependency>
 
         <!-- need this for @Configuration -->
         <dependency>
             <groupId>cglib</groupId>
             <artifactId>cglib</artifactId>
-            <version>${cglib.version}</version>
         </dependency>
 
         <!-- intra-project dependencies -->
@@ -86,13 +76,11 @@
         <dependency>
             <groupId>org.opentestsystem.shared</groupId>
             <artifactId>prog-mgmnt-client</artifactId>
-            <version>${progman-client.version}</version>
         </dependency>
         
         <dependency>
             <groupId>org.opentestsystem.shared</groupId>
             <artifactId>prog-mgmnt-client-null-impl</artifactId>
-            <version>${progman-client.version}</version>
         </dependency>
         
         <dependency>
@@ -147,7 +135,6 @@
         <dependency>
             <groupId>com.google.guava</groupId>
             <artifactId>guava</artifactId>
-            <version>${guava.version}</version>
         </dependency>                   
     		<!-- OPEN CSV -->
         <dependency>
