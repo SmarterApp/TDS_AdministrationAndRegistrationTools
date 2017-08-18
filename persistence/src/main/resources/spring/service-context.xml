@@ -4,13 +4,14 @@
        xmlns:context="http://www.springframework.org/schema/context"
        xmlns:util="http://www.springframework.org/schema/util"
        xsi:schemaLocation="
-                http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+                http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
                 http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
-                http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-3.0.xsd">
+                http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd">
 
     <context:component-scan base-package="org.opentestsystem.delivery.testreg.aop,
                                           org.opentestsystem.delivery.testreg.aop.trigger,
                                           org.opentestsystem.delivery.testreg.service,
+                                          org.opentestsystem.delivery.testreg.service.impl,
                                           org.opentestsystem.delivery.testreg.eligibility,
                                           org.opentestsystem.delivery.testreg.xstream.converters,
                                           org.opentestsystem.delivery.testreg.event,
@@ -20,7 +21,9 @@
                                           org.opentestsystem.delivery.testadmin.service,
                                           org.opentestsystem.delivery.testadmin.scheduling,
                                           org.opentestsystem.delivery.testadmin.service.impl,
-                                          org.opentestsystem.delivery.testreg.persistence.batch" />
+                                          org.opentestsystem.delivery.testreg.persistence.batch,
+                                          org.opentestsystem.delivery.testreg.persistence.criteria.dependencyresolvers,
+                                          org.opentestsystem.delivery.testreg.persistence.criteria" />
 
     <!-- use an async version of an UserChangeEventService -->
     <bean id="userChangeEventService" class="org.opentestsystem.delivery.testreg.service.impl.UserChangeEventServiceAsyncImpl"/>
@@ -102,7 +105,7 @@
         <property name="password" value="${testreg.sftp.pass}" />
     </bean>
     
-    <bean id="sb11TimeZoneBuilder" class="org.opentestsystem.delivery.Sb11TimeZoneBuilder"/>
+    <!--<bean id="sb11TimeZoneBuilder" class="org.opentestsystem.delivery.Sb11TimeZoneBuilder"/>-->
     
     <bean id="cachedClientEntity" class="org.opentestsystem.delivery.CachedClientEntity" scope="singleton" depends-on="clientServiceImpl"/>
 
