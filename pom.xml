@@ -14,18 +14,15 @@
     </parent>
 
     <properties>
-        <shared-master.version>3.1.1.RELEASE</shared-master.version>
         <apache-poi.version>3.9</apache-poi.version>
         <lowagie-itext.version>4.2.1</lowagie-itext.version>
-		<commons-jexl.version>2.0</commons-jexl.version>
 	    <xstream.version>1.4.5</xstream.version>
-        <mockito.version>1.9.5</mockito.version>
-        <bouncycastle.version>1.50</bouncycastle.version>
         <commons-compress.version>1.7</commons-compress.version>
+        <commons-jexl.version>2.0</commons-jexl.version>
+        <bouncycastle.version>1.50</bouncycastle.version>
+        <sb11-mna-client.version>4.0.1-SNAPSHOT</sb11-mna-client.version>
         <open-csv.version>2.3</open-csv.version>
         <super-csv.version>2.1.0</super-csv.version>
-        <sb11-mna-client.version>3.1.0.RELEASE</sb11-mna-client.version>
-        <tds-dll.version>3.1.1.RELEASE</tds-dll.version>
     </properties>
 
     <build>
@@ -140,22 +137,16 @@
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
-            <version>${junit.version}</version>
-            <scope>test</scope>
         </dependency>
 
         <dependency>
             <groupId>de.flapdoodle.embed</groupId>
             <artifactId>de.flapdoodle.embed.mongo</artifactId>
-            <version>${embedded-mongo.version}</version>
-            <scope>test</scope>
         </dependency>
 
         <dependency>
             <groupId>org.mockito</groupId>
-            <artifactId>mockito-all</artifactId>
-            <version>${mockito.version}</version>
-            <scope>test</scope>
+            <artifactId>mockito-core</artifactId>
         </dependency>
 
         <dependency>
@@ -172,15 +163,6 @@
         <dependency>
             <groupId>uk.co.jemos.podam</groupId>
             <artifactId>podam</artifactId>
-            <version>${podam.version}</version>
-            <scope>test</scope>
-
-            <exclusions>
-                <exclusion>
-                    <groupId>log4j</groupId>
-                    <artifactId>log4j</artifactId>
-                </exclusion>
-            </exclusions>
         </dependency>
 
         <dependency>
@@ -193,11 +175,6 @@
         <dependency>
             <groupId>ch.qos.logback</groupId>
             <artifactId>logback-classic</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-api</artifactId>
         </dependency>
 
         <dependency>
