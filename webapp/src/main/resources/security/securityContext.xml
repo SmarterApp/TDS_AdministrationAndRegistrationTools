@@ -38,6 +38,7 @@
         <security:custom-filter before="FIRST" ref="metadataGeneratorFilter" />
         <security:custom-filter after="BASIC_AUTH_FILTER" ref="samlFilter"/>
         <security:intercept-url pattern="/**" access="isFullyAuthenticated()"/>
+        <security:csrf disabled="true"/>
     </security:http>
 
     <bean id="metadataGeneratorFilter" class="org.springframework.security.saml.metadata.MetadataGeneratorFilter">
