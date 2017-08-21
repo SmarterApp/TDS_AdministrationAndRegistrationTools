@@ -51,6 +51,7 @@
         <security:intercept-url pattern="/datawarehouse/extract/status**" access="permitAll"/>
         <security:intercept-url pattern="/users/extract**" access="permitAll"/>
         <security:intercept-url pattern="/**" access="isFullyAuthenticated()"/>
+        <security:csrf disabled="true"/>
     </security:http>
 
     <bean id="metadataGeneratorFilter" class="org.springframework.security.saml.metadata.MetadataGeneratorFilter">
