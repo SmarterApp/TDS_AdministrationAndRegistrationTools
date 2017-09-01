@@ -10,19 +10,31 @@
     <parent>
         <groupId>org.opentestsystem.shared</groupId>
         <artifactId>shared-build-parent</artifactId>
-        <version>4.0.1-SNAPSHOT</version>
+        <version>4.0.8-SNAPSHOT</version>
     </parent>
 
     <properties>
+        <shared-master.version>4.0.5</shared-master.version>
         <apache-poi.version>3.9</apache-poi.version>
         <lowagie-itext.version>4.2.1</lowagie-itext.version>
+		<commons-jexl.version>2.0</commons-jexl.version>
+        <commons-collections.version>3.2.1</commons-collections.version>
 	    <xstream.version>1.4.5</xstream.version>
+        <mockito.version>1.9.5</mockito.version>
+        <bouncycastle.version>1.50</bouncycastle.version>
         <commons-compress.version>1.7</commons-compress.version>
         <commons-jexl.version>2.0</commons-jexl.version>
         <bouncycastle.version>1.50</bouncycastle.version>
-        <sb11-mna-client.version>4.0.1-SNAPSHOT</sb11-mna-client.version>
+        <sb11-mna-client.version>4.0.2</sb11-mna-client.version>
         <open-csv.version>2.3</open-csv.version>
+        <progman-client.version>4.0.4</progman-client.version>
+        <rest-api-generator.version>4.0.3</rest-api-generator.version>
         <super-csv.version>2.1.0</super-csv.version>
+        <sb11-mna-client.version>4.0.2</sb11-mna-client.version>
+        <sb11-shared-code.version>4.0.6-SNAPSHOT</sb11-shared-code.version>
+        <sb11-shared-security.version>4.0.2</sb11-shared-security.version>
+        <tds-dll.version>4.0.2</tds-dll.version>
+        <tsb-client.version>3.1.0.RELEASE</tsb-client.version>
     </properties>
 
     <build>
@@ -45,26 +57,37 @@
         <dependency>
             <groupId>commons-io</groupId>
             <artifactId>commons-io</artifactId>
+            <version>${commons-io.version}</version>
         </dependency>
 
         <dependency>
             <groupId>commons-collections</groupId>
             <artifactId>commons-collections</artifactId>
-        </dependency> 
+            <version>${commons-collections.version}</version>
+        </dependency>
         
         <dependency>
             <groupId>commons-beanutils</groupId>
             <artifactId>commons-beanutils</artifactId>
+            <version>${commons-beanutils.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>commons-logging</groupId>
+                    <artifactId>commons-logging</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
 
         <dependency>
             <groupId>org.opentestsystem.shared</groupId>
             <artifactId>sb11-shared-code</artifactId>
+            <version>${sb11-shared-code.version}</version>
         </dependency>
 
          <dependency>
             <groupId>org.opentestsystem.shared</groupId>
             <artifactId>sb11-shared-security</artifactId>
+            <version>${sb11-shared-security.version}</version>
         </dependency>
 
         <dependency>
@@ -85,6 +108,7 @@
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-aop</artifactId>
+            <version>${spring.version}</version>
         </dependency>
 
         <dependency>
@@ -120,11 +144,14 @@
         <dependency>
             <groupId>com.fasterxml.jackson.datatype</groupId>
             <artifactId>jackson-datatype-joda</artifactId>
+            <version>${jackson-datatype-joda.version}</version>
         </dependency>
 
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-test</artifactId>
+            <version>${spring.version}</version>
+            <scope>test</scope>
         </dependency>
         
         <dependency>
@@ -137,16 +164,22 @@
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
+            <version>${junit.version}</version>
+            <scope>test</scope>
         </dependency>
 
         <dependency>
             <groupId>de.flapdoodle.embed</groupId>
             <artifactId>de.flapdoodle.embed.mongo</artifactId>
+            <version>${embedded-mongo.version}</version>
+            <scope>test</scope>
         </dependency>
 
         <dependency>
             <groupId>org.mockito</groupId>
-            <artifactId>mockito-core</artifactId>
+            <artifactId>mockito-all</artifactId>
+            <version>${mockito.version}</version>
+            <scope>test</scope>
         </dependency>
 
         <dependency>
@@ -158,11 +191,22 @@
         <dependency>
             <groupId>javax.servlet</groupId>
             <artifactId>javax.servlet-api</artifactId>
+            <version>${servlet-api.version}</version>
+            <scope>provided</scope>
         </dependency>
 
         <dependency>
             <groupId>uk.co.jemos.podam</groupId>
             <artifactId>podam</artifactId>
+            <version>${podam.version}</version>
+            <scope>test</scope>
+
+            <exclusions>
+                <exclusion>
+                    <groupId>log4j</groupId>
+                    <artifactId>log4j</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
 
         <dependency>
@@ -175,17 +219,20 @@
         <dependency>
             <groupId>ch.qos.logback</groupId>
             <artifactId>logback-classic</artifactId>
+            <version>${logback.version}</version>
         </dependency>
 
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>jcl-over-slf4j</artifactId>
+            <version>${slf4j.version}</version>
         </dependency>
 
         <!-- needed only in test scope for podam library -->
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>log4j-over-slf4j</artifactId>
+            <version>${slf4j.version}</version>
             <scope>test</scope>
         </dependency>
 
