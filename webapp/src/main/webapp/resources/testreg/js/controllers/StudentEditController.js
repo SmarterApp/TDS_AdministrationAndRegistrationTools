@@ -197,7 +197,7 @@ testreg.controller('StudentEditController',['$scope','$state', '$filter', '$time
 			
 			//if date is undefined then it means the entered date is not a valid date
 			if (student.birthDate === undefined) {
-				$scope.errors.push("The Birthdate is invalid: the valid format is YYYY-MM-DD, and the range should be between '1900 <= YYYY <=9999'");
+				$scope.errors.push("The Birthdate is invalid: the valid format is YYYY-MM-DD");
 				$scope.savingIndicator = false;
 			}
 			if (student.firstEntryDateIntoUsSchool === undefined) {
