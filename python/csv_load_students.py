@@ -49,7 +49,6 @@ GRADEMAP = {
     'UG': 'UG',  # UNGRADED
 }
 gradelevels = collections.defaultdict(int)
-languages = collections.defaultdict(int)
 
 
 def main(argv):
@@ -182,9 +181,6 @@ def load_student_data(filename, encoding, delimiter, num_students, offset, dry_r
     global gradelevels
     if gradelevels:
         print("grade levels encountered: %s" % gradelevels)
-    global languages
-    if languages:
-        print("languages encountered: %s" % languages)
 
 
 # takes a list of csv lines and parses into a DTO. row 1 must be a csv header row.
@@ -202,16 +198,10 @@ def create_student_dto(student):
     global gradelevels
     gradeLevelWhenAssessed = xstr(student['GradeLevelWhenAssessed'])
     if gradeLevelWhenAssessed not in GRADEMAP:
-        # Record blanked out gradelevels for debugging.
+        # Record unexpected gradelevels for later display.
         gradelevels[gradeLevelWhenAssessed] += 1
-
     # Map known gradelevel values to expected.
-    # TODO: don't map 'unknown' to 'TK'. figure out how to handle these.
     gradeLevelWhenAssessed = GRADEMAP.get(gradeLevelWhenAssessed, 'UG')
-
-    global languages
-    language = xstr(student['LanguageCode'])
-    languages[language] += 1
 
     return {
         "ssid": student['SSID'],
@@ -222,8 +212,7 @@ def create_student_dto(student):
         "birthDate": xstr(student['DateofBirth']),
         "externalSsid": xstr(student['SmarterStudentID']),
         "institutionIdentifier": generate_institution_identifier(student),
-        # "districtIdentifier": xstr(student['ResponsibleDistrictIdentifier']),
-        "districtIdentifier": '5171464',
+        "districtIdentifier": xstr(student['ResponsibleDistrictIdentifier']),
         "gradeLevelWhenAssessed": gradeLevelWhenAssessed,
         "hispanicOrLatino": string_to_boolean(student['HispanicOrLatinoEthnicity']),
         "americanIndianOrAlaskaNative": string_to_boolean(student['AmericanIndianOrAlaskaNative']),
@@ -240,7 +229,7 @@ def create_student_dto(student):
         "elpLevel": xstr(student['EnglishLanguageProficiencyLevel']),
         "section504Status": string_to_boolean(student['Section504Status']),
         "disadvantageStatus": string_to_boolean(student['EconomicDisadvantageStatus']),
-        "languageCode": language,
+        "languageCode": xstr(student['LanguageCode']),
         "migrantStatus": string_to_boolean(student['MigrantStatus']),
         "title3ProgramType": None,
         "primaryDisabilityType": xstr(student['PrimaryDisabilityType']),
