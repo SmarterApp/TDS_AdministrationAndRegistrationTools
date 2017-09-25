@@ -55,3 +55,6 @@ GRADEMAP = {
 
 # settings for pg_load_students only
 DB_PARAMS = {'host': 'localhost', 'database': 'postgres', 'user': 'ubuntu', 'password': 'ubuntu'}
+
+# settings for random_load_students only
+MONGO_PARAMS = "mongodb://art:foo@localhost:27017/art"

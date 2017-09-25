@@ -20,6 +20,8 @@ except:
     print("*** settings.py not found! USING DEFAULTS in settings_default.py.")
     print("*** Please copy settings_default.py to settings_secret.py and modify that!")
 
+requests.packages.urllib3.disable_warnings(
+    requests.packages.urllib3.exceptions.InsecureRequestWarning)
 gradelevels = collections.defaultdict(int)
 
 
