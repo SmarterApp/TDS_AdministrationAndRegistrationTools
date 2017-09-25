@@ -6,7 +6,7 @@ NUM_STUDENTS = 10000000  # 10 million ought to be enough for anybody.
 FILENAME = 'students.csv'
 ART_ENDPOINT = "https://localhost:8443/rest/external/student/CA/batch"
 
-# SUPER SENSITIVE AUTH INFO (these are fake - put yours in settings.py)
+# SUPER SENSITIVE AUTH INFO (these are fake - put yours in settings_secret.py)
 AUTH_ENDPOINT = "https://localhost/auth/oauth2/access_token?realm=/sbac"
 AUTH_PAYLOAD = {
     "client_id": "me",
