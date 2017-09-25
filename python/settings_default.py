@@ -16,15 +16,15 @@ AUTH_PAYLOAD = {
     "username": "me@example.com"
 }
 
-# FILE FORMAT SETTINGS
-DELIMITER = '^'
-FILE_ENCODING = 'cp1252'
+# RUNTIME SETTINGS
 DATE_FORMAT_YYYY_MM_DD = '%Y-%m-%d'
-
-# ADVANCED RUNTIME SETTINGS
 CHUNK_SIZE = 10000
 SLEEP_INTERVAL = 0.25  # how long to sleep while waiting on the file for data
 WAIT_CYCLES_BEFORE_QUIT = 20  # how many SLEEP_INTERVALS to wait with no data before quitting
+
+# SETTINGS for csv_load_students only
+DELIMITER = '^'
+FILE_ENCODING = 'cp1252'
 GRADEMAP = {
     # MAPPED VALUES
     'US': 'PS',  # TODO: temporary - what is US?
@@ -52,3 +52,6 @@ GRADEMAP = {
     'PS': 'PS',  # POST SECONDARY
     'UG': 'UG',  # UNGRADED
 }
+
+# settings for pg_load_students only
+DB_PARAMS = {'host': 'localhost', 'database': 'postgres', 'user': 'ubuntu', 'password': 'ubuntu'}

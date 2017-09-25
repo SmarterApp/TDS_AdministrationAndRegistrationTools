@@ -1,12 +1,24 @@
-import random, requests, string, sys, getopt, json, psycopg2, datetime
+# requirements in requirements.txt, plus requires psycopg2 module
+import datetime
+import getopt
+import json
+import psycopg2
+import random
+import requests
+import string
+import sys
 
 # from datetime import datetime
 from psycopg2 import extras
 
-CHUNK_SIZE = 10000
-DEFAULT_NUM_STUDENTS = 1000000
-
-DATE_FORMAT_YYYY_MM_DD = '%Y-%m-%d'
+# Pull settings from csv_settings.py.
+try:
+    import settings_secret as settings
+    print("Using settings in settings_secret.py (good job!).")
+except:
+    import settings_default as settings
+    print("*** settings.py not found! USING DEFAULTS in settings_default.py.")
+    print("*** Please copy settings_default.py to settings_secret.py and modify that!")
 
 # do everything except post the data to the Student API (for testing)
 DRY_RUN_MODE = False
@@ -15,21 +27,15 @@ offset = 0
 randpercent = 0.0
 randcount = 0
 
+
 def main(argv):
     global randpercent
     global offset
     # number of students to create
-    num_students = DEFAULT_NUM_STUDENTS
-
-    # default connection string
-
-    output_format = "json"
-    mode = "create"
+    num_students = settings.NUM_STUDENTS
 
     try:
-        opts, args = getopt.getopt(argv, "hn:i:g:c:f:m:e:o:r:",
-                                   ["help", "number=", "institutions=", "grades=", "connection=",
-                                    "format=", "mode=", "errors=", "offset=", "randpercent="])
+        opts, args = getopt.getopt(argv, "hn:o:r:", ["help", "number=", "offset=", "randpercent="])
     except getopt.GetoptError:
         usage()
         sys.exit(2)
@@ -39,45 +45,27 @@ def main(argv):
             usage()
             sys.exit()
         elif opt in ("-n", "--number"):
-            print "Number of students = " + arg
+            print("Number of students = " + arg)
             num_students = int(arg)
-        elif opt in ("-i", "--institutions"):
-            print "Institutions = " + arg
-            institution_ids = arg.split(',')
-        elif opt in ("-c", "--connection"):
-            print "Connection string = " + arg
-            connection = arg
-        elif opt in ("-g", "--grades"):
-            print "Grades = " + arg
-            grade_levels = arg.split(',')
-        elif opt in ("-f", "--format"):
-            print "Format = " + arg
-            output_format = arg
-        elif opt in ("-m", "--mode"):
-            print "Mode = " + arg
-            mode = arg
-        elif opt in ("-e", "--errors"):
-            print "Errors = " + arg
-            errors = arg
         elif opt in ("-o", "--offset"):
-            print "Offset (large values can be slow!) = " + arg
+            print("Offset (large values can be slow!) = " + arg)
             offset = int(arg)
         elif opt in ("-r", "--randpercent"):
-            print "RandomMutationPercent = " + arg
+            print("RandomMutationPercent = " + arg)
             randpercent = float(arg)
 
     start_time = datetime.datetime.now()
-    print "\nStarting at: %s" % start_time
+    print("\nStarting at: %s" % start_time)
 
     load_student_data(num_students)
 
     end_time = datetime.datetime.now()
     deltasecs = (end_time - start_time).total_seconds()
-    print "\nStarting at: %s" % start_time
-    print "\nFinished at: %s\n\tElapsed %s\n\tStudents/sec %0.4f\n\tMutated/sec  %0.4f\n" % (
-        end_time, deltasecs, num_students / deltasecs, randcount/deltasecs)
-    print "Randomized %d of %d students (got %0.2f%% wanted %0.2f%%)." % (
-        randcount, num_students, 100.0 * randcount / num_students, randpercent)
+    print("\nStarting at: %s" % start_time)
+    print("\nFinished at: %s\n\tElapsed %s\n\tStudents/sec %0.4f\n\tMutated/sec  %0.4f\n" % (
+        end_time, deltasecs, num_students / deltasecs, randcount/deltasecs))
+    print("Randomized %d of %d students (got %0.2f%% wanted %0.2f%%)." % (
+        randcount, num_students, 100.0 * randcount / num_students, randpercent))
 
 
 def connect_db(db_params):
@@ -95,31 +83,32 @@ def load_student_data(num_students):
     # at a time
     bearer_token = get_bearer_token()
 
-    print "\nLoading %d full chunks, %d remainder" % divmod(num_students, CHUNK_SIZE)
+    print("\nLoading %d full chunks, %d remainder" % divmod(num_students, settings.CHUNK_SIZE))
     total_loaded = 0
 
-    db_params = {'host':'localhost', 'database': 'postgres', 'user': 'ubuntu', 'password': 'ubuntu'}
+    db_params = settings.DB_PARAMS
     db_conn = connect_db(db_params)
     cursor = db_conn.cursor(name="server_side_cursor", cursor_factory=extras.RealDictCursor)
-    cursor.arraysize = CHUNK_SIZE
-    cursor.itersize = CHUNK_SIZE
+    cursor.arraysize = settings.CHUNK_SIZE
+    cursor.itersize = settings.CHUNK_SIZE
 
-    #cursor.execute('SELECT * FROM "public"."tmp_students" ORDER BY "SSID" OFFSET %d' % offset)
+    # cursor.execute('SELECT * FROM "public"."tmp_students" ORDER BY "SSID" OFFSET %d' % offset)
     cursor.execute('SELECT * FROM "public"."CA_students" ORDER BY "SSID" OFFSET %d' % offset)
 
     while True:
         remaining = num_students - total_loaded
-        print "Loading %d students (%d remaining)..." % (min(CHUNK_SIZE, remaining), remaining), 
-        students = cursor.fetchmany(min(CHUNK_SIZE, num_students - total_loaded))
+        print("Loading %d students (%d remaining)..." % (min(settings.CHUNK_SIZE, remaining), remaining))
+        students = cursor.fetchmany(min(settings.CHUNK_SIZE, num_students - total_loaded))
         if not students:
             break
-        print "\nPosting %d students..." % len(students)
+        print("\nPosting %d students..." % len(students))
         post_student_data(students, bearer_token)
         total_loaded += len(students)
-        print "Completed posting %d students!\n" % total_loaded
+        print("Completed posting %d students!\n" % total_loaded)
         if total_loaded >= num_students:
             break
-    print "Fetched no more"
+    print("Fetched no more")
+
 
 def id_generator(size=7, chars=string.ascii_uppercase + string.digits):
     return ''.join(random.choice(chars) for _ in range(size))
@@ -128,16 +117,18 @@ def id_generator(size=7, chars=string.ascii_uppercase + string.digits):
 def random_boolean():
     return random.choice(True, False)
 
+
 # mutate a dto some percent of the time
 def randomize_dto(student_dto):
     global randcount
-    #import pdb; pdb.set_trace()
+    # import pdb; pdb.set_trace()
     if random.random() * 100 <= randpercent:
         first = "First" + id_generator()
-        #print "Randomizing %s from %s to %s!" % (
+        # print "Randomizing %s from %s to %s!" % (
         #    student_dto['ssid'], student_dto['firstName'], first)
         student_dto['firstName'] = first
         randcount += 1
+
 
 def create_student_dto(student):
     student_dto = {
@@ -178,6 +169,7 @@ def create_student_dto(student):
 
     return student_dto
 
+
 # Due to duplicate school IDs in the source CALPADS data I mashed the
 # district and school IDs together to create unique IDs
 def generate_institution_identifier(student):
@@ -191,7 +183,7 @@ def ensure_valid_dto(student_dto):
 
 # each student has to have at least one demographic racial selector set
 def ensure_race_selected(student_dto):
-    race_flags = ['white','hispanicOrLatino','asian', 'blackOrAfricanAmerican', 'americanIndianOrAlaskaNative',
+    race_flags = ['white', 'hispanicOrLatino', 'asian', 'blackOrAfricanAmerican', 'americanIndianOrAlaskaNative',
                   'nativeHawaiianOrPacificIsland', 'twoOrMoreRaces']
     race_selected = False
     for race in race_flags:
@@ -214,10 +206,10 @@ def ensure_first_date_of_entry_after_date_of_birth(student_dto):
     if not dob_str:
         return
 
-    dob = datetime.datetime.strptime(dob_str, DATE_FORMAT_YYYY_MM_DD)
+    dob = datetime.datetime.strptime(dob_str, settings.DATE_FORMAT_YYYY_MM_DD)
 
     if entry_date_str:
-        entry_date = datetime.datetime.strptime(entry_date_str, DATE_FORMAT_YYYY_MM_DD)
+        entry_date = datetime.datetime.strptime(entry_date_str, settings.DATE_FORMAT_YYYY_MM_DD)
         if entry_date < dob + datetime.timedelta(days=366):
             entry_date = dob + datetime.timedelta(days=366)
 
@@ -243,43 +235,35 @@ def ensure_first_date_of_entry_after_date_of_birth(student_dto):
 
 
 def get_bearer_token():
-    endpoint = "https://sso-deployment.sbtds.org/auth/oauth2/access_token?realm=/sbac"
-    headers = {"Content-Type" : "application/x-www-form-urlencoded"}
-
-    payload = {
-        "client_id": "pm",
-        "client_secret" : "sbac12345",
-        "grant_type" : "password",
-        "password" : "password",
-        "username" : "prime.user@example.com"
-    }
-
+    endpoint = settings.AUTH_ENDPOINT
+    headers = {"Content-Type": "application/x-www-form-urlencoded"}
+    payload = settings.AUTH_PAYLOAD
     response = requests.post(endpoint, headers=headers, data=payload)
     content = json.loads(response.content)
-
     if response.status_code == 200:
         bearer_token = content["access_token"]
-        print "Bearer token retrieved: %s" % bearer_token
+        print("Bearer token retrieved: %s" % bearer_token)
         return bearer_token
     else:
         raise RuntimeError("Error retrieving SBAC access token")
 
 
 def post_student_data(students, bearer_token):
-    endpoint = "https://art-capacity-test.sbtds.org/rest/external/student/CA/batch"
-    headers = {"Content-Type": "application/json", "Authorization" : "Bearer %s" % bearer_token}
+    endpoint = settings.ART_ENDPOINT
+    headers = {"Content-Type": "application/json", "Authorization": "Bearer %s" % bearer_token}
 
     if not DRY_RUN_MODE:
-       response = requests.post(endpoint, headers=headers, data=json.dumps(
-           [create_student_dto(student) for student in students]))
+        response = requests.post(endpoint, headers=headers, data=json.dumps(
+            [create_student_dto(student) for student in students]))
 
-       if response.status_code == 202:
-           location = response.headers["Location"]
-           print "Batch status URL: %s" % location
-           return location
-       else:
-           print "Student API batch call failed with code: %d, %s: %s" % (response.status_code, response.reason, response.content)
-           sys.exit(1)
+        if response.status_code == 202:
+            location = response.headers["Location"]
+            print("Batch status URL: %s" % location)
+            return location
+        else:
+            print("Student API batch call failed with code: %d, %s: %s" % (
+                response.status_code, response.reason, response.content))
+            sys.exit(1)
 
 
 def string_to_boolean(str):
@@ -293,7 +277,7 @@ def date_to_yyyy_mm_dd_str(date):
     if date is None:
         return ''
     else:
-        return date.strftime(DATE_FORMAT_YYYY_MM_DD)
+        return date.strftime(settings.DATE_FORMAT_YYYY_MM_DD)
 
 
 # handle None when we expect a string
@@ -302,11 +286,9 @@ def xstr(s):
 
 
 def usage():
-    print "Help/usage details:"
-    print "  -c, --connection         : mongo connection string (defaults to mongodb://localhost:27017/)"
-    print "  -n, --number             : the number of students to create"
-    print "  --institutions           : comma separated list of institution entityIds to use (from the institutionEntity collection). if none provided it will use all available"
-    print "  --grades                 : comma separated list of grade levels to choose from. if none provided it will use 3-12"
-    print "  -h, --help               : this help screen"
+    print("Help/usage details:")
+    print("  -n, --number             : the number of students to create")
+    print("  -h, --help               : this help screen")
+
 
 main(sys.argv[1:])
