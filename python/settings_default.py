@@ -1,5 +1,5 @@
-# Please don't edit this file - copy to settings.py file and modify that copy.
-# The code will try to read settings.py instead ( settings.py in).
+# Don't edit this file - copy to settings_secret.py file and modify that copy.
+# The code will read settings_secret.py first and fallback to this file if missing.
 
 # BASIC DEFAULTS AND CONSTANTS
 NUM_STUDENTS = 10000000  # 10 million ought to be enough for anybody.
