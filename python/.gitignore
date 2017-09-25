@@ -1,1 +1,4 @@
+*.pyc
 *.csv
+settings_secret.py
+__pycache__

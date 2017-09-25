@@ -11,54 +11,26 @@ import unicodedata
 
 import requests
 
-DEFAULT_NUM_STUDENTS = 10000000  # 10 million ought to be enough for anybody.
-DEFAULT_FILENAME = 'students.csv'
-DEFAULT_DELIMITER = '^'
-DEFAULT_FILE_ENCODING = 'cp1252'
-DATE_FORMAT_YYYY_MM_DD = '%Y-%m-%d'
+# Pull settings from csv_settings.py.
+try:
+    import settings_secret as settings
+    print("Using settings in settings_secret.py (good job!).")
+except:
+    import settings_default as settings
+    print("*** settings.py not found! USING DEFAULTS in settings_default.py.")
+    print("*** Please copy settings_default.py to settings_secret.py and modify that!")
 
-SLEEP_INTERVAL = 0.25  # how long to sleep while waiting on the file for data
-WAIT_CYCLES_BEFORE_QUIT = 20  # how many SLEEP_INTERVALS to wait with no data before quitting
-CHUNK_SIZE = 10000
-
-GRADEMAP = {
-    # MAPPED VALUES
-    'US': 'PS',  # TODO: temporary - what is US?
-    'UE': 'UG',  # TODO: temporary - what is UE?
-    'KN': 'KG',  # KN -> KG (kindergarten)
-    # IDENTITIES
-    'IT': 'IT',  # UNKNOWN, NOT IN DROPDOWN (BUT ART ACCEPTED)
-    'PR': 'PR',  # PRESCHOOL
-    'PK': 'PK',  # PRE-K
-    'TK': 'TK',  # TRANSITIONAL KG
-    'KG': 'KG',  # KINDERGARTEN
-    '01': '01',
-    '02': '02',
-    '03': '03',
-    '04': '04',
-    '05': '05',
-    '06': '06',
-    '07': '07',
-    '08': '08',
-    '09': '09',
-    '10': '10',
-    '11': '11',
-    '12': '12',
-    '13': '13',
-    'PS': 'PS',  # POST SECONDARY
-    'UG': 'UG',  # UNGRADED
-}
 gradelevels = collections.defaultdict(int)
 
 
 def main(argv):
     # do everything except post the data to the Student API (for testing)
     dry_run = False
-    num_students = DEFAULT_NUM_STUDENTS
-    filename = DEFAULT_FILENAME
-    encoding = DEFAULT_FILE_ENCODING
+    num_students = settings.NUM_STUDENTS
+    filename = settings.FILENAME
+    encoding = settings.FILE_ENCODING
     offset = 0
-    delimiter = DEFAULT_DELIMITER
+    delimiter = settings.DELIMITER
 
     try:
         opts, _ = getopt.getopt(argv, "hyn:f:e:d:o:", [
@@ -107,14 +79,14 @@ def read_lines(filename, encoding, offset):
             where = file.tell()
             line = file.readline()
             if not line:
-                if waited >= WAIT_CYCLES_BEFORE_QUIT:
+                if waited >= settings.WAIT_CYCLES_BEFORE_QUIT:
                     print("\n\nTimed out waiting for data. Quitting.")
                     break
                 if waited == 0:
                     print('\nWaiting for data.', end='', flush=True)
                 else:
                     print('.', end='', flush=True)
-                time.sleep(SLEEP_INTERVAL)
+                time.sleep(settings.SLEEP_INTERVAL)
                 file.seek(where)
                 waited += 1
             else:
@@ -140,7 +112,7 @@ def post_students(total_loaded, students, delimiter, bearer_token, dry_run):
 def load_student_data(filename, encoding, delimiter, num_students, offset, dry_run):
     bearer_token = get_bearer_token()
 
-    print("\nLoading %d full chunks, %d remainder" % divmod(num_students, CHUNK_SIZE))
+    print("\nLoading %d full chunks, %d remainder" % divmod(num_students, settings.CHUNK_SIZE))
     total_loaded = 0
     students = []
     header_row = False
@@ -154,7 +126,7 @@ def load_student_data(filename, encoding, delimiter, num_students, offset, dry_r
             continue
 
         # How many students to post in this chunk.
-        students_to_load = min(CHUNK_SIZE, num_students - total_loaded)
+        students_to_load = min(settings.CHUNK_SIZE, num_students - total_loaded)
 
         # No more students to load? We're done, even though there's data left.
         if students_to_load <= 0:
@@ -197,11 +169,11 @@ def create_student_dto(student):
     # Report on any unknown gradelevels.
     global gradelevels
     gradeLevelWhenAssessed = xstr(student['GradeLevelWhenAssessed'])
-    if gradeLevelWhenAssessed not in GRADEMAP:
+    if gradeLevelWhenAssessed not in settings.GRADEMAP:
         # Record unexpected gradelevels for later display.
         gradelevels[gradeLevelWhenAssessed] += 1
     # Map known gradelevel values to expected.
-    gradeLevelWhenAssessed = GRADEMAP.get(gradeLevelWhenAssessed, 'UG')
+    gradeLevelWhenAssessed = settings.GRADEMAP.get(gradeLevelWhenAssessed, 'UG')
 
     return {
         "ssid": student['SSID'],
@@ -244,31 +216,21 @@ def generate_institution_identifier(student):
 
 
 def get_bearer_token():
-    endpoint = "https://sso-deployment.sbtds.org/auth/oauth2/access_token?realm=/sbac"
+    endpoint = settings.AUTH_ENDPOINT
+    payload = settings.AUTH_PAYLOAD
     headers = {"Content-Type": "application/x-www-form-urlencoded"}
-
-    payload = {
-        "client_id": "pm",
-        "client_secret": "sbac12345",
-        "grant_type": "password",
-        "password": "password",
-        "username": "prime.user@example.com"
-    }
-
     response = requests.post(endpoint, headers=headers, data=payload)
     content = json.loads(response.content)
-
     if response.status_code == 200:
         bearer_token = content["access_token"]
         print("Bearer token retrieved: %s" % bearer_token)
         return bearer_token
     else:
-        raise RuntimeError("Error retrieving SBAC access token")
+        raise RuntimeError("Error retrieving access token from '%s'" % endpoint)
 
 
 def post_student_data(students, bearer_token):
-    # endpoint = "https://art-capacity-test.sbtds.org/rest/external/student/CA/batch"
-    endpoint = "https://localhost:8443/rest/external/student/CA/batch"
+    endpoint = settings.ART_ENDPOINT
     headers = {"Content-Type": "application/json", "Authorization": "Bearer %s" % bearer_token}
     response = requests.post(endpoint, headers=headers, data=json.dumps(students), verify=False)
     if response.status_code == 202:
