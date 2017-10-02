@@ -57,7 +57,7 @@ SFTP_PORT = 22
 SFTP_PASSWORD = '1bigsecret'
 SFTP_USER = 'testuser'
 SFTP_DIRECTORY = './calpads/'  # start with ./, end with /
-SFTP_FILENAME = 'students.csv'  # filename only. will be local filename also
+SFTP_FILENAME = 'sftp_students.csv'  # filename only. will be local filename also
 
 # settings for pg_load_students only
 DB_PARAMS = {'host': 'localhost', 'database': 'postgres', 'user': 'ubuntu', 'password': 'ubuntu'}

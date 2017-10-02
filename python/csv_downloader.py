@@ -18,7 +18,7 @@ except:
 
 
 def main(argv):
-    offset = 0
+    offset = None
 
     try:
         opts, _ = getopt.getopt(argv, "ho:", ["help", "offset="])
@@ -32,10 +32,10 @@ def main(argv):
             sys.exit()
         elif opt in ("-o", "--offset"):
             offset = int(arg)
-            print("Starting at byte offset %d" % offset)
+            print("\nStarting at byte offset %d" % offset)
 
     start_time = datetime.datetime.now()
-    print("\nStarting at %s" % start_time)
+    print("\nStarting at %s\n" % start_time)
 
     download_student_csv(offset)
 
@@ -48,7 +48,7 @@ def progress(bytes_so_far, totalbytes):
     print("%d/%d (%0.1f%%)" % (bytes_so_far, totalbytes, float(bytes_so_far)/totalbytes*100))
 
 
-def download_student_csv(offset=0):
+def download_student_csv(offset):
 
     hostname = settings.SFTP_HOSTNAME
     port = settings.SFTP_PORT
@@ -57,20 +57,57 @@ def download_student_csv(offset=0):
     directory = settings.SFTP_DIRECTORY
     filename = settings.SFTP_FILENAME
 
-    print("Downloading file %s@%s:%d/%s%s from byte %d" % (
-        username, hostname, port, directory, filename, offset))
+    # Open local file and seek to requested offset.
+    with open(filename, 'ab+') as localfile:
+        if offset:
+            localfile.seek(offset)
+        else:
+            offset = localfile.tell() # start downloading here
+            if offset:
+                print("Auto resuming existing download.")
 
-    with paramiko.Transport((hostname, port)) as transport:
-        transport.connect(username=username, password=password)
-        with paramiko.SFTPClient.from_transport(transport) as sftp:
-            print("Connected.")
-            sftp.get('%s%s' % (directory, filename), filename, progress)
-    print('Download finished.')
+        print("\nDownloading file %s%s from %s@%s" % (directory, filename, username, hostname))
+        if offset:
+            print("    Byte offset %d" % offset)
+        if port != 22:
+            print("    Port %d" % port)
+
+        with paramiko.Transport((hostname, port)) as transport:
+            transport.connect(username=username, password=password)
+            with paramiko.SFTPClient.from_transport(transport) as sftp:
+                print("\nConnected.")
+                with sftp.open('%s%s' % (directory, filename), bufsize=1) as remotefile:
+                    if offset and not remotefile.seekable():
+                        print("Server does not support seek(), which disables the offset feature. Exiting.")
+                        return
+
+                    attribs = remotefile.stat()
+                    if attribs.st_size <= offset:
+                        print("File size is %d, you requested offset of %d. Cowardly refusing to read past end of file." % (
+                            attribs.st_size, offset))
+                        return
+
+                    if offset:
+                        remotefile.seek(offset)
+
+                    print('Starting download.')
+                    remotefile.prefetch()
+                    written = offset
+
+                    while True:
+                        data = remotefile.read(512 * 1024)
+                        if not data:
+                            break
+                        localfile.write(data)
+                        written += len(data)
+                        print("writing %d/%d bytes" % (written, attribs.st_size))
+                    print('Download finished.')
 
 
 def usage():
     print("Help/usage details:")
-    print("  -o, --offset             : where to start reading in the file, in bytes (defaults to 0 (beginning))")
+    print("  -o, --offset             : where to start reading / writing in the files, in bytes\n"
+          "                             (defaults to resuming at end of existing file or beginning of new file)")
     print("  -h, --help               : this help screen")
 
 
