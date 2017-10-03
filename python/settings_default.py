@@ -22,7 +22,7 @@ CHUNK_SIZE = 10000
 SLEEP_INTERVAL = 0.25  # how long to sleep while waiting on the file for data
 WAIT_CYCLES_BEFORE_QUIT = 20  # how many SLEEP_INTERVALS to wait with no data before quitting
 
-# SETTINGS for csv_load_students only
+# settings for csv_load_students
 DELIMITER = '^'
 FILE_ENCODING = 'cp1252'
 GRADEMAP = {
@@ -52,12 +52,13 @@ GRADEMAP = {
     'PS': 'PS',  # POST SECONDARY
     'UG': 'UG',  # UNGRADED
 }
+
+# Settings for csv_downloader
 SFTP_HOSTNAME = 'localhost'
 SFTP_PORT = 22
 SFTP_PASSWORD = '1bigsecret'
 SFTP_USER = 'testuser'
-SFTP_DIRECTORY = './calpads/'  # start with ./, end with /
-SFTP_FILENAME = 'sftp_students.csv'  # filename only. will be local filename also
+SFTP_FILEPATH = './calpads/sftp_students.csv'  # start with ./
 
 # settings for pg_load_students only
 DB_PARAMS = {'host': 'localhost', 'database': 'postgres', 'user': 'ubuntu', 'password': 'ubuntu'}

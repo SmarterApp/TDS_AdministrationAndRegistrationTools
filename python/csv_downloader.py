@@ -23,9 +23,10 @@ BUFSIZE = 512 * 1024
 def main(argv):
     offset = None
     filename = None
+    remotepath = None
 
     try:
-        opts, _ = getopt.getopt(argv, "hf:o:", ["help", "filename=", "offset="])
+        opts, _ = getopt.getopt(argv, "hf:r:o:", ["help", "filename=", "remotepath=", "offset="])
     except getopt.GetoptError:
         usage()
         sys.exit(2)
@@ -37,6 +38,9 @@ def main(argv):
         elif opt in ("-f", "--filename"):
             filename = arg
             print("\nUsing filename '%s'" % filename)
+        elif opt in ("-r", "--remotepath"):
+            remotepath = arg
+            print("\nUsing remotepath '%s'" % remotepath)
         elif opt in ("-o", "--offset"):
             offset = int(arg)
             print("\nStarting at byte offset %d" % offset)
@@ -44,7 +48,7 @@ def main(argv):
     start_time = datetime.datetime.now()
     print("\nStarting at %s\n" % start_time)
 
-    download_student_csv(filename, offset)
+    download_student_csv(filename, remotepath, offset)
 
     end_time = datetime.datetime.now()
     deltasecs = (end_time - start_time).total_seconds()
@@ -55,16 +59,16 @@ def progress(bytes_so_far, totalbytes):
     print("%d/%d (%0.1f%%)" % (bytes_so_far, totalbytes, float(bytes_so_far)/totalbytes*100))
 
 
-def download_student_csv(filename, offset):
+def download_student_csv(filename, remotepath, offset):
 
     hostname = settings.SFTP_HOSTNAME
     port = settings.SFTP_PORT
     password = settings.SFTP_PASSWORD
     username = settings.SFTP_USER
-    directory = settings.SFTP_DIRECTORY
-    filename = filename if filename else settings.SFTP_FILENAME
+    remotepath = remotepath if remotepath else settings.SFTP_FILEPATH
+    filename = filename if filename else settings.FILENAME
 
-    print("\nDownloading file %s%s from %s@%s" % (directory, filename, username, hostname))
+    print("\nDownloading file %s from %s@%s" % (remotepath, username, hostname))
     if port != 22:
         print("    Port %d" % port)
 
@@ -73,7 +77,7 @@ def download_student_csv(filename, offset):
         transport.connect(username=username, password=password)
         with paramiko.SFTPClient.from_transport(transport) as sftp:
             print("\nConnected.")
-            with sftp.open('%s%s' % (directory, filename), bufsize=1) as remotefile:
+            with sftp.open(remotepath, bufsize=1) as remotefile:
                 attribs = remotefile.stat()
                 if not attribs.st_size:
                     print("Missing or empty remote file. Exiting.")
@@ -122,6 +126,8 @@ def download_student_csv(filename, offset):
 
 def usage():
     print("Help/usage details:")
+    print("  -f, --filename           : local filename to write into")
+    print("  -r, --remotepath         : remote filepath to download (include the directory)")
     print("  -o, --offset             : where to start reading / writing in the files, in bytes\n"
           "                             (defaults to resuming at end of existing file or beginning of new file)")
     print("  -h, --help               : this help screen")
