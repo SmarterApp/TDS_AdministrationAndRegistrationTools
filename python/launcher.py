@@ -1,26 +1,138 @@
 #!/usr/local/bin/python3
 
+import datetime
+import locale
+import os
+import queue
+import threading
 import tkinter as tk
+
+from csv_downloader import download_student_csv
+
 
 # Pull settings from csv_settings.py.
 try:
     import settings_secret as settings
 except:
     import settings_default as settings
+    print("*** USING DEFAULTS in settings_default.py.")
+    print("*** Please copy settings_default.py to settings_secret.py and modify that!")
+
+locale.setlocale(locale.LC_ALL, 'en_US')
+
+STATE_IDLE = "IDLE"
+STATE_RUNNING = "RUNNING"
+
+
+class MTListbox(tk.Listbox):
+    def __init__(self, master, **options):
+        tk.Listbox.__init__(self, master, **options)
+        self.queue = queue.Queue()
+        self.update_me()
+    def write(self, line):
+        self.queue.put(line)
+    def clear(self):
+        self.queue.put(None)
+    def update_me(self):
+        try:
+            while True:
+                line = self.queue.get_nowait()
+                if line is None:
+                    self.delete(0, tk.END)
+                else:
+                    self.insert(tk.END, str(line))
+                self.see(tk.END)
+                self.update_idletasks()
+        except queue.Empty:
+            pass
+        self.after(100, self.update_me)
 
 
 class App:
 
     def __init__(self, master):
-
+        self.downloader_thread = None
         self.setup_main_frame(master)
         self.setup_sftp_frame(master)
         self.setup_art_frame(master)
 
+    def set_downloader_status(self, message):
+        self.downloader_status.clear()
+        self.downloader_status.write(message)
+
+    def append_downloader_output(self, message, newlines=0):
+        self.downloader_output.write(message)
+        [self.downloader_output.write('') for _ in range(newlines)]
+
+    def append_exporter_output(self, message, newlines=0):
+        self.exporter_output.write(message)
+        [self.exporter_output.write('') for _ in range(newlines)]
+
+    def clear_downloader_output(self):
+        self.downloader_output.clear()
+
+    def clear_exporter_output(self):
+        self.exporter_output.clear()
+
+    def downloader_progress(self, message, bytes_written=None, bytes_remaining=None):
+        if message is not None:
+            self.append_downloader_output(message)
+        else:
+            self.set_downloader_status("DOWNLOADING: %d of %d bytes written" % (bytes_written, bytes_remaining))
+        
+    def check_file(self):
+        try:
+            st = os.stat(self.localfile.get())
+            writable = os.access(self.localfile.get(), os.W_OK)
+            self.check_file_label['text'] = "File '%s' found, size %s bytes. %s" % (
+                self.localfile.get(), locale.format('%d', st.st_size, grouping=True),
+                "Writable." if writable else "FILE IS NOT WRITABLE!!")
+        except FileNotFoundError:
+            self.check_file_label['text'] = "File '%s' not found. It will be created." % self.localfile.get()
+        except:
+            self.check_file_label['text'] = "Unknown issue reading file '%s'! Permission or directory problem?" % self.localfile.get()
+
+    def test_art_connection(self):
+        self.art_test_label["text"] = "Checking ART REST endpoint... (TODO)"
+
+    def test_sftp_connection(self):
+        self.sftp_test_label["text"] = "Looking for remote file... (TODO)"
+
+    def go(self):
+        if self.downloader_thread and self.downloader_thread.is_alive():
+            self.append_downloader_output("Downloader thread running - can't start!")
+            return
+        self.downloader_thread = threading.Thread(target=self.download_callable, name="downloader")
+        self.downloader_thread.start()
+
+    def download_callable(self):
+        self.set_downloader_status(STATE_RUNNING)
+        self.append_downloader_output("============================================================")
+        self.append_downloader_output("STARTING DOWNLOAD/EXPORT at %s" % datetime.datetime.now(), 1)
+        try:
+            download_student_csv(
+                self.sftp_host.get(),
+                settings.SFTP_PORT,
+                self.sftp_user.get(),
+                self.sftp_password.get(),
+                self.sftp_file.get(),
+                self.localfile.get(),
+                None,
+                self.downloader_progress)
+        except Exception as e:
+            self.append_downloader_output("Encountered exception: %s" % e)
+
+        self.append_downloader_output("END DOWNLOAD/EXPORT at %s\n\n" % datetime.datetime.now(), 2)
+        self.set_downloader_status(STATE_IDLE)
+
+        self.append_exporter_output("============================================================")
+        self.append_exporter_output("STARTING DOWNLOAD/EXPORT at %s" % datetime.datetime.now(), 1)
+        self.append_exporter_output("END DOWNLOAD/EXPORT at %s\n\n" % datetime.datetime.now(), 2)
+
     def setup_main_frame(self, master):
 
         main_frame = tk.LabelFrame(master, text="Main", padx=10, pady=5)
-        main_frame.grid(row=0, sticky=tk.W+tk.E, padx=10, pady=10)
+        main_frame.grid(row=0, sticky=tk.W+tk.E, padx=10, pady=5)
 
         tk.Label(main_frame, text="Local filename").grid(row=10, sticky=tk.W)
         self.localfile = tk.StringVar()
@@ -31,9 +143,18 @@ class App:
         self.check_file_label = tk.Label(main_frame, relief=tk.GROOVE, text="<-- press to get file details", anchor=tk.W)
         self.check_file_label.grid(row=20, column=1, sticky=tk.W+tk.E)
 
+        tk.Label(main_frame, text="").grid(row=21, sticky=tk.W)
+        tk.Button(main_frame, text="GO!", command=self.go).grid(row=22, sticky=tk.W)
+
         tk.Label(main_frame, text="").grid(row=24, sticky=tk.W)
-        tk.Label(main_frame, text="Downloader Output").grid(row=25, sticky=tk.W)
-        self.downloader_output = tk.Listbox(main_frame, width=100, height=15)
+
+        tk.Label(main_frame, text="Downloader Status").grid(row=25, sticky=tk.W)
+        self.downloader_status = MTListbox(main_frame, width=20, height=1)
+        self.downloader_status.grid(row=25, column=1, sticky=tk.E+tk.W)
+        self.set_downloader_status(STATE_IDLE)
+
+        tk.Label(main_frame, text="Downloader Output").grid(row=29, sticky=tk.W)
+        self.downloader_output = MTListbox(main_frame, width=80, height=10, selectmode=tk.EXTENDED)
         self.downloader_output.grid(row=30, column=0, columnspan=2)
         self.scrollY = tk.Scrollbar(main_frame, orient=tk.VERTICAL, command=self.downloader_output.yview)
         self.scrollY.grid(row=30, column=2, sticky=tk.N+tk.S)
@@ -41,13 +162,12 @@ class App:
         self.scrollX.grid(row=40, column=0, columnspan=2, sticky=tk.E+tk.W)
         self.downloader_output['xscrollcommand'] = self.scrollX.set
         self.downloader_output['yscrollcommand'] = self.scrollY.set
-        def clear_downloader_output():
-            self.downloader_output.delete(0,self.downloader_output.size())
-        tk.Button(main_frame, text="Clear", command=clear_downloader_output).grid(row=25, column=1, sticky=tk.E)
+        tk.Button(main_frame, text="Clear", command=self.clear_downloader_output).grid(row=29, column=1, sticky=tk.E)
 
-        tk.Label(main_frame, text="").grid(row=44, sticky=tk.W)
-        tk.Label(main_frame, text="Exporter Output").grid(row=45, sticky=tk.W)
-        self.exporter_output = tk.Listbox(main_frame, width=100, height=15)
+        tk.Label(main_frame, text="").grid(row=45, sticky=tk.W)
+            
+        tk.Label(main_frame, text="Exporter Output").grid(row=49, sticky=tk.W)
+        self.exporter_output = MTListbox(main_frame, width=80, height=10, selectmode=tk.EXTENDED)
         self.exporter_output.grid(row=50, column=0, columnspan=2)
         self.scrollY = tk.Scrollbar(main_frame, orient=tk.VERTICAL, command=self.exporter_output.yview)
         self.scrollY.grid(row=50, column=2, sticky=tk.N+tk.S)
@@ -55,18 +175,12 @@ class App:
         self.scrollX.grid(row=60, column=0, columnspan=2, sticky=tk.E+tk.W)
         self.exporter_output['xscrollcommand'] = self.scrollX.set
         self.exporter_output['yscrollcommand'] = self.scrollY.set
-        def clear_exporter_output():
-            self.exporter_output.delete(0,self.exporter_output.size())
-        tk.Button(main_frame, text="Clear", command=clear_exporter_output).grid(row=45, column=1, sticky=tk.E)
-
-        for x in range(50):
-            self.downloader_output.insert(tk.END, [x*a for a in range(100)])
-            self.exporter_output.insert(tk.END, [x*a for a in range(100)])
+        tk.Button(main_frame, text="Clear", command=self.clear_exporter_output).grid(row=49, column=1, sticky=tk.E)
 
     def setup_sftp_frame(self, master):
 
         sftp_frame = tk.LabelFrame(master, text="sFTP Settings", padx=10, pady=5)
-        sftp_frame.grid(row=1, sticky=tk.W+tk.E, padx=10, pady=10)
+        sftp_frame.grid(row=1, sticky=tk.W+tk.E, padx=10, pady=5)
 
         tk.Label(sftp_frame, text="File Path").grid(row=0, sticky=tk.W)
         self.sftp_file = tk.StringVar()
@@ -117,16 +231,6 @@ class App:
         self.art_test_label = tk.Label(
             art_frame, relief=tk.GROOVE, text="<-- press to check ART REST API connection", anchor=tk.W)
         self.art_test_label.grid(row=10, column=1, sticky=tk.W+tk.E)
-
-    def check_file(self):
-        self.check_file_label["text"] = "Checking local file... (TODO)"
-
-    def test_sftp_connection(self):
-        self.sftp_test_label["text"] = "Looking for remote file... (TODO)"
-
-    def test_art_connection(self):
-        self.art_test_label["text"] = "Checking ART REST endpoint... (TODO)"
-
 
 root = tk.Tk()
 
