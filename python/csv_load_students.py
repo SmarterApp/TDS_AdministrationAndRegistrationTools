@@ -19,9 +19,11 @@ except:
     print("*** USING DEFAULTS in settings_default.py.")
     print("*** Please copy settings_default.py to settings_secret.py and modify that!")
 
-requests.packages.urllib3.disable_warnings(
-    requests.packages.urllib3.exceptions.InsecureRequestWarning)
 gradelevels = collections.defaultdict(int)
+
+
+def progress(message):
+    print(message)
 
 
 def main(argv):
@@ -65,17 +67,18 @@ def main(argv):
     start_time = datetime.datetime.now()
     print("\nStarting at %s" % start_time)
 
-    endpoint = settings.AUTH_ENDPOINT
+    endpoint = settings.ART_ENDPOINT
     username = settings.AUTH_PAYLOAD.get('username', None)
     password = settings.AUTH_PAYLOAD.get('password', None)
-    load_student_data(filename, encoding, delimiter, num_students, offset, dry_run, endpoint, username, password)
+    load_student_data(
+        filename, encoding, delimiter, num_students, offset, dry_run, endpoint, username, password, progress)
 
     end_time = datetime.datetime.now()
     deltasecs = (end_time - start_time).total_seconds()
     print("\nFinished at %s\n\tElapsed %s\n\tStudents/sec %0.4f\n" % (end_time, deltasecs, num_students / deltasecs))
 
 
-def read_lines(filename, encoding, offset):
+def read_lines(filename, encoding, offset, progress):
     need_to_seek = offset != 0
     with open(filename, 'r', encoding=encoding) as file:
         waited = 0
@@ -84,12 +87,10 @@ def read_lines(filename, encoding, offset):
             line = file.readline()
             if not line:
                 if waited >= settings.WAIT_CYCLES_BEFORE_QUIT:
-                    print("\n\nTimed out waiting for data. Quitting.")
+                    progress("Timed out waiting for data. Quitting.")
                     break
                 if waited == 0:
-                    print('\nWaiting for data.', end='', flush=True)
-                else:
-                    print('.', end='', flush=True)
+                    progress('Waiting for data...')
                 time.sleep(settings.SLEEP_INTERVAL)
                 file.seek(where)
                 waited += 1
@@ -102,26 +103,33 @@ def read_lines(filename, encoding, offset):
                     need_to_seek = False
 
 
-def post_students(total_loaded, students, delimiter, bearer_token, dry_run):
-    print("\nPosting %d students..." % (len(students) - 1))
+def post_students(endpoint, total_loaded, students, delimiter, bearer_token, dry_run, progress):
+    progress("Posting %d students..." % (len(students) - 1))
     student_dtos = create_student_dtos(students, delimiter)
     if not dry_run:
-        post_student_data(student_dtos, bearer_token)
+        location = post_student_data(endpoint, student_dtos, bearer_token)
+        progress("Batch status URL: %s" % location)
     total_loaded += len(students) - 1
-    print("Completed %s %d students!\n" % (
+    progress("Completed %s %d students!" % (
         "pretending to post" if dry_run else "posting", total_loaded))
     return total_loaded
 
 
-def load_student_data(filename, encoding, delimiter, num_students, offset, dry_run, endpoint, username, password):
-    bearer_token = get_bearer_token(endpoint, username, password)
+def load_student_data(filename, encoding, delimiter, num_students,
+                      offset, dry_run, endpoint, username, password, progress):
 
-    print("\nLoading %d full chunks, %d remainder" % divmod(num_students, settings.CHUNK_SIZE))
+    requests.packages.urllib3.disable_warnings(
+        requests.packages.urllib3.exceptions.InsecureRequestWarning)
+
+    bearer_token = get_bearer_token(username, password)
+    progress("Bearer token retrieved: %s" % bearer_token)
+
+    progress("Loading %d full chunks, %d remainder" % divmod(num_students, settings.CHUNK_SIZE))
     total_loaded = 0
     students = []
     header_row = False
 
-    for (line, where) in read_lines(filename, encoding, offset):
+    for (line, where) in read_lines(filename, encoding, offset, progress):
 
         # First line is ALWAYS header row. Stash and prepend for every chunk.
         if not header_row:
@@ -140,7 +148,7 @@ def load_student_data(filename, encoding, delimiter, num_students, offset, dry_r
 
         # If we've got enough students, post 'em!
         if len(students) - 1 >= students_to_load:
-            total_loaded = post_students(total_loaded, students, delimiter, bearer_token, dry_run)
+            total_loaded = post_students(endpoint, total_loaded, students, delimiter, bearer_token, dry_run, progress)
             students = [header_row]  # Reset students for next chunk
 
         # If we're done, don't read file again, just exit.
@@ -149,14 +157,14 @@ def load_student_data(filename, encoding, delimiter, num_students, offset, dry_r
 
     # Post any remaining block of students from an aborted read.
     if total_loaded < num_students and len(students) > 1:
-        print("Posting final block of %d students" % (len(students) - 1))
-        total_loaded = post_students(total_loaded, students, delimiter, bearer_token, dry_run)
+        progress("Posting final block of %d students" % (len(students) - 1))
+        total_loaded = post_students(endpoint, total_loaded, students, delimiter, bearer_token, dry_run, progress)
 
-    print("%d students read, file at byte offset %d." % (total_loaded, where))
+    progress("%d students read, file at byte offset %d." % (total_loaded, where))
 
     global gradelevels
     if gradelevels:
-        print("grade levels encountered: %s" % gradelevels)
+        progress("grade levels encountered: %s" % gradelevels)
 
 
 # takes a list of csv lines and parses into a DTO. row 1 must be a csv header row.
@@ -219,7 +227,8 @@ def generate_institution_identifier(student):
     return '%s%s' % (xstr(student['ResponsibleDistrictIdentifier']), xstr(student['ResponsibleSchoolIdentifier']))
 
 
-def get_bearer_token(endpoint, username, password):
+def get_bearer_token(username, password):
+    endpoint = settings.AUTH_ENDPOINT
     payload = settings.AUTH_PAYLOAD
     if username:
         payload['username'] = username
@@ -229,25 +238,19 @@ def get_bearer_token(endpoint, username, password):
     response = requests.post(endpoint, headers=headers, data=payload)
     content = json.loads(response.content)
     if response.status_code == 200:
-        bearer_token = content["access_token"]
-        print("Bearer token retrieved: %s" % bearer_token)
-        return bearer_token
+        return content["access_token"]
     else:
         raise RuntimeError("Error retrieving access token from '%s'" % endpoint)
 
 
-def post_student_data(students, bearer_token):
-    endpoint = settings.ART_ENDPOINT
+def post_student_data(endpoint, students, bearer_token):
     headers = {"Content-Type": "application/json", "Authorization": "Bearer %s" % bearer_token}
     response = requests.post(endpoint, headers=headers, data=json.dumps(students), verify=False)
     if response.status_code == 202:
-        location = response.headers["Location"]
-        print("Batch status URL: %s" % location)
-        return location
+        return response.headers["Location"]
     else:
-        print("Student API batch call failed with code: %d, %s: %s" % (
+        raise RuntimeError("Student API batch call failed with code: %d, %s: %s" % (
             response.status_code, response.reason, response.content))
-        sys.exit(1)
 
 
 def normalize_caseless(text):
