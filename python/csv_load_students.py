@@ -65,7 +65,10 @@ def main(argv):
     start_time = datetime.datetime.now()
     print("\nStarting at %s" % start_time)
 
-    load_student_data(filename, encoding, delimiter, num_students, offset, dry_run)
+    endpoint = settings.AUTH_ENDPOINT
+    username = settings.AUTH_PAYLOAD.get('username', None)
+    password = settings.AUTH_PAYLOAD.get('password', None)
+    load_student_data(filename, encoding, delimiter, num_students, offset, dry_run, endpoint, username, password)
 
     end_time = datetime.datetime.now()
     deltasecs = (end_time - start_time).total_seconds()
@@ -110,8 +113,8 @@ def post_students(total_loaded, students, delimiter, bearer_token, dry_run):
     return total_loaded
 
 
-def load_student_data(filename, encoding, delimiter, num_students, offset, dry_run):
-    bearer_token = get_bearer_token()
+def load_student_data(filename, encoding, delimiter, num_students, offset, dry_run, endpoint, username, password):
+    bearer_token = get_bearer_token(endpoint, username, password)
 
     print("\nLoading %d full chunks, %d remainder" % divmod(num_students, settings.CHUNK_SIZE))
     total_loaded = 0
@@ -216,9 +219,12 @@ def generate_institution_identifier(student):
     return '%s%s' % (xstr(student['ResponsibleDistrictIdentifier']), xstr(student['ResponsibleSchoolIdentifier']))
 
 
-def get_bearer_token():
-    endpoint = settings.AUTH_ENDPOINT
+def get_bearer_token(endpoint, username, password):
     payload = settings.AUTH_PAYLOAD
+    if username:
+        payload['username'] = username
+    if password:
+        payload['password'] = password
     headers = {"Content-Type": "application/x-www-form-urlencoded"}
     response = requests.post(endpoint, headers=headers, data=payload)
     content = json.loads(response.content)
