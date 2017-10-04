@@ -93,7 +93,7 @@ def download_student_csv(hostname, port, username, password, remotepath, filenam
                         localfile.seek(offset)
                         localfile.truncate()  # New data goes here. Get rid of old.
                     else:
-                        offset = localfile.tell() # start downloading here
+                        offset = localfile.tell()  # start downloading here
                         if offset > 0:
                             progress("Auto resuming existing download.")
 
@@ -108,7 +108,7 @@ def download_student_csv(hostname, port, username, password, remotepath, filenam
                             return
                         elif attribs.st_size < offset:
                             progress("File size is %d but requested offset is %d. "
-                                  "Cowardly refusing to seek past end of file." % (attribs.st_size, offset))
+                                     "Cowardly refusing to seek past end of file." % (attribs.st_size, offset))
                             return
                         remotefile.seek(offset)
 
