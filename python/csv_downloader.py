@@ -10,14 +10,21 @@ import paramiko
 # Pull settings from csv_settings.py.
 try:
     import settings_secret as settings
-    print("Using settings in settings_secret.py (good job!).")
 except:
     import settings_default as settings
-    print("*** settings.py not found! USING DEFAULTS in settings_default.py.")
+    print("*** USING DEFAULTS in settings_default.py.")
     print("*** Please copy settings_default.py to settings_secret.py and modify that!")
 
 
 BUFSIZE = 512 * 1024
+
+
+def progress(message, bytes_written=None, bytes_remaining=None):
+    if message is not None:
+        print(message)
+    else:
+        print("%d of %d bytes written" % (bytes_written, bytes_remaining))
+        # print("%d/%d (%0.1f%%)" % (bytes_so_far, totalbytes, float(bytes_so_far)/totalbytes*100))
 
 
 def main(argv):
@@ -48,39 +55,36 @@ def main(argv):
     start_time = datetime.datetime.now()
     print("\nStarting at %s\n" % start_time)
 
-    download_student_csv(filename, remotepath, offset)
+    hostname = settings.SFTP_HOSTNAME
+    port = settings.SFTP_PORT
+    username = settings.SFTP_USER
+    password = settings.SFTP_PASSWORD
+    remotepath = remotepath if remotepath else settings.SFTP_FILEPATH
+    filename = filename if filename else settings.FILENAME
+
+    download_student_csv(hostname, port, username, password, remotepath, filename, offset, progress)
 
     end_time = datetime.datetime.now()
     deltasecs = (end_time - start_time).total_seconds()
     print("\nFinished at %s\n\tElapsed %s\n" % (end_time, deltasecs))
 
 
-def progress(bytes_so_far, totalbytes):
-    print("%d/%d (%0.1f%%)" % (bytes_so_far, totalbytes, float(bytes_so_far)/totalbytes*100))
+# Progress is method taking (bytes_so_far, totalbytes)
+def download_student_csv(hostname, port, username, password, remotepath, filename, offset, progress):
 
-
-def download_student_csv(filename, remotepath, offset):
-
-    hostname = settings.SFTP_HOSTNAME
-    port = settings.SFTP_PORT
-    password = settings.SFTP_PASSWORD
-    username = settings.SFTP_USER
-    remotepath = remotepath if remotepath else settings.SFTP_FILEPATH
-    filename = filename if filename else settings.FILENAME
-
-    print("\nDownloading file %s from %s@%s" % (remotepath, username, hostname))
+    progress("\nDownloading file %s from %s@%s" % (remotepath, username, hostname))
     if port != 22:
-        print("    Port %d" % port)
+        progress("    Port %d" % port)
 
     # First, do a sanity check on remote file.
     with paramiko.Transport((hostname, port)) as transport:
         transport.connect(username=username, password=password)
         with paramiko.SFTPClient.from_transport(transport) as sftp:
-            print("\nConnected.")
+            progress("\nConnected.")
             with sftp.open(remotepath, bufsize=1) as remotefile:
                 attribs = remotefile.stat()
                 if not attribs.st_size:
-                    print("Missing or empty remote file. Exiting.")
+                    progress("Missing or empty remote file. Exiting.")
                     return
 
                 # Remote file OK, now open local file and seek to requested offset.
@@ -91,26 +95,26 @@ def download_student_csv(filename, remotepath, offset):
                     else:
                         offset = localfile.tell() # start downloading here
                         if offset > 0:
-                            print("Auto resuming existing download.")
+                            progress("Auto resuming existing download.")
 
                     # If offset is specified, make sure remote can support it and remote file is big enough.
                     if offset > 0:
-                        print("    Using byte offset %d" % offset)
+                        progress("    Using byte offset %d" % offset)
                         if not remotefile.seekable():
-                            print("Server does not support seek(), which disables the offset/resume feature. Exiting.")
+                            progress("Server does not support seek(), which disables the offset/resume feature. Exiting.")
                             return
                         if attribs.st_size == offset:
-                            print("File appears to be complete (local and remote sizes match - contents not checked).")
+                            progress("File appears to be complete (local and remote sizes match - contents not checked).")
                             return
                         elif attribs.st_size < offset:
-                            print("File size is %d but requested offset is %d. "
+                            progress("File size is %d but requested offset is %d. "
                                   "Cowardly refusing to seek past end of file." % (attribs.st_size, offset))
                             return
                         remotefile.seek(offset)
 
                     # All systems go! Commence with the downloading.
                     bytes_remaining = attribs.st_size - offset
-                    print('Downloading %s%d bytes of %s, total size %d.' % (
+                    progress('Downloading %s%d bytes of %s, total size %d.' % (
                         "remaining " if offset else "", bytes_remaining, filename, attribs.st_size))
                     remotefile.prefetch()
                     written = 0
@@ -120,8 +124,8 @@ def download_student_csv(filename, remotepath, offset):
                             break
                         localfile.write(data)
                         written += len(data)
-                        print("%d of %d bytes written" % (written, bytes_remaining))
-                    print('Download finished.')
+                        progress(None, written, bytes_remaining)
+                    progress('Download finished.')
 
 
 def usage():
@@ -133,4 +137,5 @@ def usage():
     print("  -h, --help               : this help screen")
 
 
-main(sys.argv[1:])
+if __name__ == "__main__":
+    main(sys.argv[1:])

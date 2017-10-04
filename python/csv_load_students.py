@@ -14,10 +14,9 @@ import requests
 # Pull settings from csv_settings.py.
 try:
     import settings_secret as settings
-    print("Using settings in settings_secret.py (good job!).")
 except:
     import settings_default as settings
-    print("*** settings.py not found! USING DEFAULTS in settings_default.py.")
+    print("*** USING DEFAULTS in settings_default.py.")
     print("*** Please copy settings_default.py to settings_secret.py and modify that!")
 
 requests.packages.urllib3.disable_warnings(
@@ -275,4 +274,5 @@ def usage():
     print("  -h, --help               : this help screen")
 
 
-main(sys.argv[1:])
+if __name__ == "__main__":
+    main(sys.argv[1:])
