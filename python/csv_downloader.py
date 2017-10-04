@@ -101,10 +101,10 @@ def download_student_csv(hostname, port, username, password, remotepath, filenam
                     if offset > 0:
                         progress("    Using byte offset %d" % offset)
                         if not remotefile.seekable():
-                            progress("Server does not support seek(), which disables the offset/resume feature. Exiting.")
+                            progress("Server does not support seek(). This disables offset/resume feature. Exiting.")
                             return
                         if attribs.st_size == offset:
-                            progress("File appears to be complete (local and remote sizes match - contents not checked).")
+                            progress("File complete (local and remote sizes match - contents not checked).")
                             return
                         elif attribs.st_size < offset:
                             progress("File size is %d but requested offset is %d. "

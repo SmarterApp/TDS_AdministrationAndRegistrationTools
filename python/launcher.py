@@ -5,9 +5,12 @@ import locale
 import os
 import queue
 import threading
+import time
 import tkinter as tk
+import traceback
 
 from csv_downloader import download_student_csv
+from csv_load_students import load_student_data
 
 
 # Pull settings from csv_settings.py.
@@ -55,6 +58,7 @@ class App:
 
     def __init__(self, master):
         self.downloader_thread = None
+        self.exporter_thread = None
         self.setup_main_frame(master)
         self.setup_sftp_frame(master)
         self.setup_art_frame(master)
@@ -63,11 +67,18 @@ class App:
         self.downloader_status.clear()
         self.downloader_status.write(message)
 
+    def set_exporter_status(self, message):
+        self.exporter_status.clear()
+        self.exporter_status.write(message)
+
     def downloader_progress(self, message, bytes_written=None, bytes_remaining=None):
         if message is not None:
             self.downloader_output.write(message)
         else:
             self.set_downloader_status("DOWNLOADING: %d of %d bytes written" % (bytes_written, bytes_remaining))
+
+    def exporter_progress(self, message):
+        self.exporter_output.write(message)
 
     def check_file(self):
         try:
@@ -91,15 +102,21 @@ class App:
         if self.downloader_thread and self.downloader_thread.is_alive():
             self.downloader_output.write("Downloader thread running - can't start!")
             return
-        self.downloader_thread = threading.Thread(target=self.download_callable, name="downloader")
+        if self.exporter_thread and self.exporter_thread.is_alive():
+            self.exporter_output.write("Exporter thread running - can't start!")
+            return
+
+        self.exporter_thread = threading.Thread(target=self.export_callable, name="exporter", daemon=True)
+        self.exporter_thread.start()
+
+        self.downloader_thread = threading.Thread(target=self.download_callable, name="downloader", daemon=True)
         self.downloader_thread.start()
 
     def download_callable(self):
         self.set_downloader_status(STATE_RUNNING)
         self.downloader_output.clear()
-        self.exporter_output.clear()
 
-        self.downloader_output.write("STARTING DOWNLOAD/EXPORT at %s" % datetime.datetime.now())
+        self.downloader_output.write("STARTING DOWNLOAD at %s" % datetime.datetime.now())
         try:
             download_student_csv(
                 self.sftp_host.get(),
@@ -112,12 +129,35 @@ class App:
                 self.downloader_progress)
         except Exception as e:
             self.downloader_output.write("Encountered exception: %s" % e)
+            traceback.print_exc()
 
-        self.downloader_output.write("END DOWNLOAD/EXPORT at %s\n\n" % datetime.datetime.now())
+        self.downloader_output.write("END DOWNLOAD at %s\n\n" % datetime.datetime.now())
         self.set_downloader_status(STATE_IDLE)
 
-        self.exporter_output.write("STARTING DOWNLOAD/EXPORT at %s" % datetime.datetime.now())
-        self.exporter_output.write("END DOWNLOAD/EXPORT at %s\n\n" % datetime.datetime.now())
+    def export_callable(self):
+        time.sleep(1)
+        self.set_exporter_status(STATE_RUNNING)
+        self.exporter_output.clear()
+
+        self.exporter_output.write("STARTING EXPORT at %s" % datetime.datetime.now())
+        try:
+            load_student_data(
+                self.localfile.get(),
+                settings.FILE_ENCODING,
+                settings.DELIMITER,
+                settings.NUM_STUDENTS,
+                0,
+                False,
+                self.art_endpoint.get(),
+                self.art_user.get(),
+                self.art_password.get(),
+                self.exporter_progress)
+        except Exception as e:
+            self.exporter_output.write("Encountered exception: %s" % e)
+            traceback.print_exc()
+
+        self.exporter_output.write("END EXPORT at %s\n\n" % datetime.datetime.now())
+        self.set_exporter_status(STATE_IDLE)
 
     def setup_main_frame(self, master):
 
@@ -156,6 +196,11 @@ class App:
 
         tk.Label(main_frame, text="").grid(row=45, sticky=tk.W)
 
+        tk.Label(main_frame, text="Exporter Status").grid(row=48, sticky=tk.W)
+        self.exporter_status = MTListbox(main_frame, width=40, height=1)
+        self.exporter_status.grid(row=48, column=1, sticky=tk.E+tk.W)
+        self.set_exporter_status(STATE_IDLE)
+
         tk.Label(main_frame, text="Exporter Output").grid(row=49, sticky=tk.W)
         self.exporter_output = MTListbox(main_frame, width=80, height=10, selectmode=tk.EXTENDED)
         self.exporter_output.grid(row=50, column=0, columnspan=2)
@@ -192,10 +237,10 @@ class App:
         self.sftp_password.set(settings.SFTP_PASSWORD)
         tk.Entry(sftp_frame, textvariable=self.sftp_password, show='*').grid(row=3, column=1, sticky=tk.W+tk.E)
 
-        tk.Button(sftp_frame, text="Test sFTP Connection", command=self.test_sftp_connection).grid(row=4)
-        self.sftp_test_label = tk.Label(
-            sftp_frame, relief=tk.GROOVE, text="<-- press to check for file on sFTP host", anchor=tk.W)
-        self.sftp_test_label.grid(row=4, column=1, sticky=tk.W+tk.E)
+        # tk.Button(sftp_frame, text="Test sFTP Connection", command=self.test_sftp_connection).grid(row=4)
+        # self.sftp_test_label = tk.Label(
+        #     sftp_frame, relief=tk.GROOVE, text="<-- press to check for file on sFTP host", anchor=tk.W)
+        # self.sftp_test_label.grid(row=4, column=1, sticky=tk.W+tk.E)
 
     def setup_art_frame(self, master):
 
@@ -217,10 +262,10 @@ class App:
         self.art_password.set(settings.AUTH_PAYLOAD.get('password', ''))
         tk.Entry(art_frame, textvariable=self.art_password, show='*').grid(row=9, column=1, sticky=tk.W+tk.E)
 
-        tk.Button(art_frame, text="Test ART Connection", command=self.test_art_connection).grid(row=10)
-        self.art_test_label = tk.Label(
-            art_frame, relief=tk.GROOVE, text="<-- press to check ART REST API connection", anchor=tk.W)
-        self.art_test_label.grid(row=10, column=1, sticky=tk.W+tk.E)
+        # tk.Button(art_frame, text="Test ART Connection", command=self.test_art_connection).grid(row=10)
+        # self.art_test_label = tk.Label(
+        #     art_frame, relief=tk.GROOVE, text="<-- press to check ART REST API connection", anchor=tk.W)
+        # self.art_test_label.grid(row=10, column=1, sticky=tk.W+tk.E)
 
 
 root = tk.Tk()
