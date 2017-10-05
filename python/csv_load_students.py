@@ -1,4 +1,4 @@
-#!/usr/local/bin/python3
+#!/usr/bin/env python3
 
 import csv
 import datetime
@@ -18,6 +18,11 @@ except:
     import settings_default as settings
     print("*** USING DEFAULTS in settings_default.py.")
     print("*** Please copy settings_default.py to settings_secret.py and modify that!")
+
+if settings.ART_SKIP_SSL_CHECKS:
+    print("WARNING: Disabling insecure SSL request warnings! NOT FOR PROD!")
+    requests.packages.urllib3.disable_warnings(
+        requests.packages.urllib3.exceptions.InsecureRequestWarning)
 
 gradelevels = collections.defaultdict(int)
 
@@ -104,7 +109,6 @@ def read_lines(filename, encoding, offset, progress):
 
 
 def post_students(endpoint, total_loaded, students, delimiter, bearer_token, dry_run, progress):
-    progress("Posting %d students..." % (len(students) - 1))
     student_dtos = create_student_dtos(students, delimiter)
     if not dry_run:
         location = post_student_data(endpoint, student_dtos, bearer_token)
@@ -117,9 +121,6 @@ def post_students(endpoint, total_loaded, students, delimiter, bearer_token, dry
 
 def load_student_data(filename, encoding, delimiter, num_students,
                       offset, dry_run, endpoint, username, password, progress):
-
-    requests.packages.urllib3.disable_warnings(
-        requests.packages.urllib3.exceptions.InsecureRequestWarning)
 
     bearer_token = get_bearer_token(username, password)
     progress("Bearer token retrieved: %s" % bearer_token)
@@ -148,6 +149,7 @@ def load_student_data(filename, encoding, delimiter, num_students,
 
         # If we've got enough students, post 'em!
         if len(students) - 1 >= students_to_load:
+            progress("Posting %d students, offset %d..." % (len(students) - 1, where))
             total_loaded = post_students(endpoint, total_loaded, students, delimiter, bearer_token, dry_run, progress)
             students = [header_row]  # Reset students for next chunk
 
@@ -157,7 +159,7 @@ def load_student_data(filename, encoding, delimiter, num_students,
 
     # Post any remaining block of students from an aborted read.
     if total_loaded < num_students and len(students) > 1:
-        progress("Posting final block of %d students" % (len(students) - 1))
+        progress("Posting final block of %d students, offset %d" % (len(students) - 1, where))
         total_loaded = post_students(endpoint, total_loaded, students, delimiter, bearer_token, dry_run, progress)
 
     progress("%d students read, file at byte offset %d." % (total_loaded, where))
@@ -236,7 +238,7 @@ def get_bearer_token(username, password):
         payload['password'] = password
     headers = {"Content-Type": "application/x-www-form-urlencoded"}
     response = requests.post(endpoint, headers=headers, data=payload)
-    content = json.loads(response.content)
+    content = json.loads(response.content.decode("utf-8"))
     if response.status_code == 200:
         return content["access_token"]
     else:

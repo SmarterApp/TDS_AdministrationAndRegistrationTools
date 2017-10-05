@@ -1,4 +1,4 @@
-#!/usr/local/bin/python3
+#!/usr/bin/env python3
 
 import datetime
 import locale
@@ -123,6 +123,7 @@ class App:
                 settings.SFTP_PORT,
                 self.sftp_user.get(),
                 self.sftp_password.get(),
+                None,  # TODO: Keyfile support.
                 self.sftp_file.get(),
                 self.localfile.get(),
                 None,

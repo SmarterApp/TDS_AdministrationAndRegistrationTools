@@ -1,4 +1,5 @@
 *.pyc
 *.csv
+*.zip
 settings_secret.py
 __pycache__
