@@ -5,6 +5,7 @@
 NUM_STUDENTS = 10000000  # 10 million ought to be enough for anybody.
 FILENAME = 'students.csv'
 ART_ENDPOINT = "https://localhost:8443/rest/external/student/CA/batch"
+ART_SKIP_SSL_CHECKS = False  # For dev servers with bad SSL. Make sure it's False FOR PROD!
 
 # SUPER SENSITIVE AUTH INFO (these are fake - put yours in settings_secret.py)
 AUTH_ENDPOINT = "https://localhost/auth/oauth2/access_token?realm=/sbac"
@@ -57,6 +58,7 @@ GRADEMAP = {
 SFTP_HOSTNAME = 'localhost'
 SFTP_PORT = 22
 SFTP_PASSWORD = '1bigsecret'
+SFTP_KEYFILE = None
 SFTP_USER = 'testuser'
 SFTP_FILEPATH = './calpads/sftp_students.csv'  # start with ./
 

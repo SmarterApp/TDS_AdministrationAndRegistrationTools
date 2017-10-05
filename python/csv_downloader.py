@@ -1,4 +1,4 @@
-#!/usr/local/bin/python3
+#!/usr/bin/env python3
 
 import datetime
 import getopt
@@ -59,10 +59,11 @@ def main(argv):
     port = settings.SFTP_PORT
     username = settings.SFTP_USER
     password = settings.SFTP_PASSWORD
+    keyfile = settings.SFTP_KEYFILE
     remotepath = remotepath if remotepath else settings.SFTP_FILEPATH
     filename = filename if filename else settings.FILENAME
 
-    download_student_csv(hostname, port, username, password, remotepath, filename, offset, progress)
+    download_student_csv(hostname, port, username, password, keyfile, remotepath, filename, offset, progress)
 
     end_time = datetime.datetime.now()
     deltasecs = (end_time - start_time).total_seconds()
@@ -70,15 +71,16 @@ def main(argv):
 
 
 # Progress is method taking (bytes_so_far, totalbytes)
-def download_student_csv(hostname, port, username, password, remotepath, filename, offset, progress):
+def download_student_csv(hostname, port, username, password, keyfile, remotepath, filename, offset, progress):
 
     progress("\nDownloading file %s from %s@%s" % (remotepath, username, hostname))
     if port != 22:
         progress("    Port %d" % port)
 
-    # First, do a sanity check on remote file.
+    # First, do a sanity check on remote file and connection details.
+    pkey = paramiko.rsakey.RSAKey.from_private_key_file(keyfile) if keyfile else None
     with paramiko.Transport((hostname, port)) as transport:
-        transport.connect(username=username, password=password)
+        transport.connect(username=username, password=password, pkey=pkey)
         with paramiko.SFTPClient.from_transport(transport) as sftp:
             progress("\nConnected.")
             with sftp.open(remotepath, bufsize=1) as remotefile:
