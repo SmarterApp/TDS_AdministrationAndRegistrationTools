@@ -1,4 +1,6 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python
+
+# Python 3 required. A virtualenv is recommended. Install requirements.txt.
 
 import csv
 import datetime
@@ -19,7 +21,7 @@ except:
     print("*** USING DEFAULTS in settings_default.py.")
     print("*** Please copy settings_default.py to settings_secret.py and modify that!")
 
-if settings.ART_SKIP_SSL_CHECKS:
+if settings.ART_SSL_CHECKS is False:
     print("WARNING: Disabling insecure SSL request warnings! NOT FOR PROD!")
     requests.packages.urllib3.disable_warnings(
         requests.packages.urllib3.exceptions.InsecureRequestWarning)
@@ -247,7 +249,7 @@ def get_bearer_token(username, password):
 
 def post_student_data(endpoint, students, bearer_token):
     headers = {"Content-Type": "application/json", "Authorization": "Bearer %s" % bearer_token}
-    response = requests.post(endpoint, headers=headers, data=json.dumps(students), verify=False)
+    response = requests.post(endpoint, headers=headers, data=json.dumps(students), verify=settings.ART_SSL_CHECKS)
     if response.status_code == 202:
         return response.headers["Location"]
     else:
@@ -276,12 +278,15 @@ def xstr(s):
 
 
 def usage():
+    print("Loads students from CSV file into ART via REST API.")
+    print("Please put your settings in settings_secret.py. Defaults are in settings_default.py.")
     print("Help/usage details:")
-    print("  -f, --file               : file to read students from (defaults to students.csv)")
-    print("  -e, --encoding           : encoding to use when reading file (defaults to cp1252 (windows))")
-    print("  -d, --delimiter          : delimiter to use for CSV format (defaults to '^' (carat))")
-    print("  -o, --offset             : where to start reading in the file, in bytes (defaults to 0 (beginning))")
-    print("  -n, --number             : the max number of students to upload (defaults to 10,000,000)")
+    print("  -y, --dryrun             : do a dry run - does everything but actually POST to ART")
+    print("  -f, --file               : file to read students from")
+    print("  -e, --encoding           : encoding to use when reading file")
+    print("  -d, --delimiter          : delimiter to use for CSV format")
+    print("  -o, --offset             : where to start reading in the file, in bytes (defaults to byte 0)")
+    print("  -n, --number             : the max number of students to upload")
     print("  -h, --help               : this help screen")
 
 

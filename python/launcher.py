@@ -1,4 +1,6 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python
+
+# Python 3 required. A virtualenv is recommended. Install requirements.txt.
 
 import datetime
 import locale
@@ -123,7 +125,8 @@ class App:
                 settings.SFTP_PORT,
                 self.sftp_user.get(),
                 self.sftp_password.get(),
-                None,  # TODO: Keyfile support.
+                settings.SFTP_KEYFILE,
+                settings.SFTP_KEYPASS,
                 self.sftp_file.get(),
                 self.localfile.get(),
                 None,
@@ -163,16 +166,16 @@ class App:
     def setup_main_frame(self, master):
 
         main_frame = tk.LabelFrame(master, text="Main", padx=10, pady=5)
-        main_frame.grid(row=0, sticky=tk.W+tk.E, padx=10, pady=5)
+        main_frame.grid(row=0, sticky=tk.W + tk.E, padx=10, pady=5)
 
         tk.Label(main_frame, text="Local filename").grid(row=10, sticky=tk.W)
         self.localfile = tk.StringVar()
         self.localfile.set(settings.FILENAME)
-        tk.Entry(main_frame, textvariable=self.localfile).grid(row=10, column=1, sticky=tk.W+tk.E)
+        tk.Entry(main_frame, textvariable=self.localfile).grid(row=10, column=1, sticky=tk.W + tk.E)
 
         tk.Button(main_frame, text="Check File Details", command=self.check_file).grid(row=20, sticky=tk.W)
         self.check_file_label = tk.Label(main_frame, relief=tk.GROOVE, text="<-- press to check file", anchor=tk.W)
-        self.check_file_label.grid(row=20, column=1, sticky=tk.W+tk.E)
+        self.check_file_label.grid(row=20, column=1, sticky=tk.W + tk.E)
 
         tk.Label(main_frame, text="").grid(row=21, sticky=tk.W)
         tk.Button(main_frame, text="GO!", command=self.go).grid(row=22, sticky=tk.W)
@@ -181,16 +184,16 @@ class App:
 
         tk.Label(main_frame, text="Downloader Status").grid(row=25, sticky=tk.W)
         self.downloader_status = MTListbox(main_frame, width=40, height=1)
-        self.downloader_status.grid(row=25, column=1, sticky=tk.E+tk.W)
+        self.downloader_status.grid(row=25, column=1, sticky=tk.W + tk.E)
         self.set_downloader_status(STATE_IDLE)
 
         tk.Label(main_frame, text="Downloader Output").grid(row=29, sticky=tk.W)
         self.downloader_output = MTListbox(main_frame, width=80, height=10, selectmode=tk.EXTENDED)
         self.downloader_output.grid(row=30, column=0, columnspan=2)
         self.scrollY = tk.Scrollbar(main_frame, orient=tk.VERTICAL, command=self.downloader_output.yview)
-        self.scrollY.grid(row=30, column=2, sticky=tk.N+tk.S)
+        self.scrollY.grid(row=30, column=2, sticky=tk.N + tk.S)
         self.scrollX = tk.Scrollbar(main_frame, orient=tk.HORIZONTAL, command=self.downloader_output.xview)
-        self.scrollX.grid(row=40, column=0, columnspan=2, sticky=tk.E+tk.W)
+        self.scrollX.grid(row=40, column=0, columnspan=2, sticky=tk.W + tk.E)
         self.downloader_output['xscrollcommand'] = self.scrollX.set
         self.downloader_output['yscrollcommand'] = self.scrollY.set
         tk.Button(main_frame, text="Clear", command=self.downloader_output.clear).grid(row=29, column=1, sticky=tk.E)
@@ -199,16 +202,16 @@ class App:
 
         tk.Label(main_frame, text="Exporter Status").grid(row=48, sticky=tk.W)
         self.exporter_status = MTListbox(main_frame, width=40, height=1)
-        self.exporter_status.grid(row=48, column=1, sticky=tk.E+tk.W)
+        self.exporter_status.grid(row=48, column=1, sticky=tk.W + tk.E)
         self.set_exporter_status(STATE_IDLE)
 
         tk.Label(main_frame, text="Exporter Output").grid(row=49, sticky=tk.W)
         self.exporter_output = MTListbox(main_frame, width=80, height=10, selectmode=tk.EXTENDED)
         self.exporter_output.grid(row=50, column=0, columnspan=2)
         self.scrollY = tk.Scrollbar(main_frame, orient=tk.VERTICAL, command=self.exporter_output.yview)
-        self.scrollY.grid(row=50, column=2, sticky=tk.N+tk.S)
+        self.scrollY.grid(row=50, column=2, sticky=tk.N + tk.S)
         self.scrollX = tk.Scrollbar(main_frame, orient=tk.HORIZONTAL, command=self.exporter_output.xview)
-        self.scrollX.grid(row=60, column=0, columnspan=2, sticky=tk.E+tk.W)
+        self.scrollX.grid(row=60, column=0, columnspan=2, sticky=tk.W + tk.E)
         self.exporter_output['xscrollcommand'] = self.scrollX.set
         self.exporter_output['yscrollcommand'] = self.scrollY.set
         tk.Button(main_frame, text="Clear", command=self.exporter_output.clear).grid(row=49, column=1, sticky=tk.E)
@@ -216,57 +219,57 @@ class App:
     def setup_sftp_frame(self, master):
 
         sftp_frame = tk.LabelFrame(master, text="sFTP Settings", padx=10, pady=5)
-        sftp_frame.grid(row=1, sticky=tk.W+tk.E, padx=10, pady=5)
+        sftp_frame.grid(row=1, sticky=tk.W + tk.E, padx=10, pady=5)
 
         tk.Label(sftp_frame, text="File Path").grid(row=0, sticky=tk.W)
         self.sftp_file = tk.StringVar()
         self.sftp_file.set(settings.SFTP_FILEPATH)
-        tk.Entry(sftp_frame, textvariable=self.sftp_file).grid(row=0, column=1, sticky=tk.W+tk.E)
+        tk.Entry(sftp_frame, textvariable=self.sftp_file).grid(row=0, column=1, sticky=tk.W + tk.E)
 
         tk.Label(sftp_frame, text="Hostname").grid(row=1, sticky=tk.W)
         self.sftp_host = tk.StringVar()
         self.sftp_host.set(settings.SFTP_HOSTNAME)
-        tk.Entry(sftp_frame, textvariable=self.sftp_host).grid(row=1, column=1, sticky=tk.W+tk.E)
+        tk.Entry(sftp_frame, textvariable=self.sftp_host).grid(row=1, column=1, sticky=tk.W + tk.E)
 
         tk.Label(sftp_frame, text="Username").grid(row=2, sticky=tk.W)
         self.sftp_user = tk.StringVar()
         self.sftp_user.set(settings.SFTP_USER)
-        tk.Entry(sftp_frame, textvariable=self.sftp_user).grid(row=2, column=1, sticky=tk.W+tk.E)
+        tk.Entry(sftp_frame, textvariable=self.sftp_user).grid(row=2, column=1, sticky=tk.W + tk.E)
 
         tk.Label(sftp_frame, text="Password").grid(row=3, sticky=tk.W)
         self.sftp_password = tk.StringVar()
         self.sftp_password.set(settings.SFTP_PASSWORD)
-        tk.Entry(sftp_frame, textvariable=self.sftp_password, show='*').grid(row=3, column=1, sticky=tk.W+tk.E)
+        tk.Entry(sftp_frame, textvariable=self.sftp_password, show='*').grid(row=3, column=1, sticky=tk.W + tk.E)
 
         # tk.Button(sftp_frame, text="Test sFTP Connection", command=self.test_sftp_connection).grid(row=4)
         # self.sftp_test_label = tk.Label(
         #     sftp_frame, relief=tk.GROOVE, text="<-- press to check for file on sFTP host", anchor=tk.W)
-        # self.sftp_test_label.grid(row=4, column=1, sticky=tk.W+tk.E)
+        # self.sftp_test_label.grid(row=4, column=1, sticky=tk.W + tk.E)
 
     def setup_art_frame(self, master):
 
         art_frame = tk.LabelFrame(master, text="ART REST API Settings", padx=10, pady=5)
-        art_frame.grid(row=2, sticky=tk.W+tk.E, padx=10, pady=10)
+        art_frame.grid(row=2, sticky=tk.W + tk.E, padx=10, pady=10)
 
         tk.Label(art_frame, text="Endpoint").grid(row=7, sticky=tk.W)
         self.art_endpoint = tk.StringVar()
         self.art_endpoint.set(settings.ART_ENDPOINT)
-        tk.Entry(art_frame, textvariable=self.art_endpoint).grid(row=7, column=1, sticky=tk.W+tk.E)
+        tk.Entry(art_frame, textvariable=self.art_endpoint).grid(row=7, column=1, sticky=tk.W + tk.E)
 
         tk.Label(art_frame, text="Username").grid(row=8, sticky=tk.W)
         self.art_user = tk.StringVar()
         self.art_user.set(settings.AUTH_PAYLOAD.get('username', ''))
-        tk.Entry(art_frame, textvariable=self.art_user).grid(row=8, column=1, sticky=tk.W+tk.E)
+        tk.Entry(art_frame, textvariable=self.art_user).grid(row=8, column=1, sticky=tk.W + tk.E)
 
         tk.Label(art_frame, text="Password").grid(row=9, sticky=tk.W)
         self.art_password = tk.StringVar()
         self.art_password.set(settings.AUTH_PAYLOAD.get('password', ''))
-        tk.Entry(art_frame, textvariable=self.art_password, show='*').grid(row=9, column=1, sticky=tk.W+tk.E)
+        tk.Entry(art_frame, textvariable=self.art_password, show='*').grid(row=9, column=1, sticky=tk.W + tk.E)
 
         # tk.Button(art_frame, text="Test ART Connection", command=self.test_art_connection).grid(row=10)
         # self.art_test_label = tk.Label(
         #     art_frame, relief=tk.GROOVE, text="<-- press to check ART REST API connection", anchor=tk.W)
-        # self.art_test_label.grid(row=10, column=1, sticky=tk.W+tk.E)
+        # self.art_test_label.grid(row=10, column=1, sticky=tk.W + tk.E)
 
 
 root = tk.Tk()

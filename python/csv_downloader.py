@@ -1,4 +1,6 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python
+
+# Python 3 required. A virtualenv is recommended. Install requirements.txt.
 
 import datetime
 import getopt
@@ -28,10 +30,17 @@ def progress(message, bytes_written=None, bytes_remaining=None):
 
 
 def main(argv):
+    hostname = settings.SFTP_HOSTNAME
+    port = settings.SFTP_PORT
+    username = settings.SFTP_USER
+    password = settings.SFTP_PASSWORD
+    keyfile = settings.SFTP_KEYFILE
+    keypass = settings.SFTP_KEYPASS
+
+    # These values can come from command line and will override settings values.
     offset = None
     filename = None
     remotepath = None
-
     try:
         opts, _ = getopt.getopt(argv, "hf:r:o:", ["help", "filename=", "remotepath=", "offset="])
     except getopt.GetoptError:
@@ -52,18 +61,13 @@ def main(argv):
             offset = int(arg)
             print("\nStarting at byte offset %d" % offset)
 
-    start_time = datetime.datetime.now()
-    print("\nStarting at %s\n" % start_time)
-
-    hostname = settings.SFTP_HOSTNAME
-    port = settings.SFTP_PORT
-    username = settings.SFTP_USER
-    password = settings.SFTP_PASSWORD
-    keyfile = settings.SFTP_KEYFILE
     remotepath = remotepath if remotepath else settings.SFTP_FILEPATH
     filename = filename if filename else settings.FILENAME
 
-    download_student_csv(hostname, port, username, password, keyfile, remotepath, filename, offset, progress)
+    start_time = datetime.datetime.now()
+    print("\nStarting at %s\n" % start_time)
+
+    download_student_csv(hostname, port, username, password, keyfile, keypass, remotepath, filename, offset, progress)
 
     end_time = datetime.datetime.now()
     deltasecs = (end_time - start_time).total_seconds()
@@ -71,14 +75,14 @@ def main(argv):
 
 
 # Progress is method taking (bytes_so_far, totalbytes)
-def download_student_csv(hostname, port, username, password, keyfile, remotepath, filename, offset, progress):
+def download_student_csv(hostname, port, username, password, keyfile, keypass, remotepath, filename, offset, progress):
 
     progress("\nDownloading file %s from %s@%s" % (remotepath, username, hostname))
     if port != 22:
         progress("    Port %d" % port)
 
     # First, do a sanity check on remote file and connection details.
-    pkey = paramiko.rsakey.RSAKey.from_private_key_file(keyfile) if keyfile else None
+    pkey = paramiko.rsakey.RSAKey.from_private_key_file(keyfile, keypass) if keyfile else None
     with paramiko.Transport((hostname, port)) as transport:
         transport.connect(username=username, password=password, pkey=pkey)
         with paramiko.SFTPClient.from_transport(transport) as sftp:
@@ -131,11 +135,13 @@ def download_student_csv(hostname, port, username, password, keyfile, remotepath
 
 
 def usage():
+    print("Downloads today's student CSV dump from CALPADS sFTP server.")
+    print("Please put your settings in settings_secret.py. Defaults are in settings_default.py.")
     print("Help/usage details:")
     print("  -f, --filename           : local filename to write into")
-    print("  -r, --remotepath         : remote filepath to download (include the directory)")
+    print("  -r, --remotepath         : remote filepath to download (example: './Students/CA_students_20171005.zip')")
     print("  -o, --offset             : where to start reading / writing in the files, in bytes\n"
-          "                             (defaults to resuming at end of existing file or beginning of new file)")
+          "                             (will resume at end of any pre-existing file or at beginning of a new file)")
     print("  -h, --help               : this help screen")
 
 
