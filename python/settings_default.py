@@ -5,7 +5,7 @@
 NUM_STUDENTS = 10000000  # 10 million ought to be enough for anybody.
 FILENAME = 'students.csv'
 ART_ENDPOINT = "https://localhost:8443/rest/external/student/CA/batch"
-ART_SKIP_SSL_CHECKS = False  # For dev servers with bad SSL. Make sure it's False FOR PROD!
+ART_SSL_CHECKS = True  # Disable for dev servers with bad SSL. Make it True FOR PROD!
 
 # SUPER SENSITIVE AUTH INFO (these are fake - put yours in settings_secret.py)
 AUTH_ENDPOINT = "https://localhost/auth/oauth2/access_token?realm=/sbac"
@@ -55,15 +55,16 @@ GRADEMAP = {
 }
 
 # Settings for csv_downloader
+SFTP_FILEPATH = './calpads/sftp_students.csv'  # start with ./
 SFTP_HOSTNAME = 'localhost'
 SFTP_PORT = 22
-SFTP_PASSWORD = '1bigsecret'
+SFTP_USER = 'sftpuser'
+SFTP_PASSWORD = 'user_password'
 SFTP_KEYFILE = None
-SFTP_USER = 'testuser'
-SFTP_FILEPATH = './calpads/sftp_students.csv'  # start with ./
+SFTP_KEYPASS = 'pem_key_password'
 
-# settings for pg_load_students only
+# settings for pg_load_students
 DB_PARAMS = {'host': 'localhost', 'database': 'postgres', 'user': 'ubuntu', 'password': 'ubuntu'}
 
-# settings for random_load_students only
+# settings for random_load_students
 MONGO_PARAMS = "mongodb://art:foo@localhost:27017/art"
