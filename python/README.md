@@ -1,18 +1,17 @@
 # ART Student Loader Utilities
 ## Instruction Manual
 [TOC]
-### Description {#description}
+### Description
 The ART student loader utility is a Python scripts designed to automatically load the millions of students from the nightly CALPADS dump file into ART's REST API. The main utility includes an executable python script and a settings file, which is copied and modified for your local setup. There is also an optional GUI. The utilities are primarily designed to be run unattended by cron on a daily schedule.
 
 #### art_student_loader.py
 This is the main executable script. Run with -h or --help for a usage summary. This script performs the following main functions:
 
- 1. Download the nightly dump file from the CALPADS sFTP server. 
- - Will auto-resume an aborted download where it left off, if found.
- - Will automatically download this morning's dump file from the server using an established naming convention.
- 1. Extract the CSV data from the zip format used into a separate file, as defined in the zip file
-
- 1. Upload the student data from the CSV file into ART via the ART REST API.
+1. Download the nightly dump file from the CALPADS sFTP server. 
+  - Will auto-resume an aborted download where it left off, if found.
+  - Will automatically download this morning's dump file from the server using an established naming convention.
+2. Extract the CSV data from the zip format used into a separate file, as defined in the zip file
+3. Upload the student data from the CSV file into ART via the ART REST API.
   - Can be instructed to start at any offset in the data file in case a previous run was aborted.
   - Can also be given a max number of students to upload instead of uploading the entire file.  
 
@@ -62,7 +61,7 @@ Or to grab a file from a specified server directory and put it in my_local_file.
 To resume extra.csv at the one millionth byte in the file, then dry-run loading 20 students from the beginning:
 > $ ./art_student_loader.py -f extra.csv -o 1000000 -n 20 -y
 
-##### Usage notes {#usage-notes}
+##### Usage notes
 If no offset is provided, the script will try to be smart:
 
 *   If no local file is found, it will download the whole file.
@@ -78,13 +77,13 @@ Generally when in doubt it's safest to delete the local dump file and re-downloa
 
 When in doubt, it's generally a good idea to do a --dryrun before uploading for real. Nothing will be uploaded to ART, but all authentication will be performed and the file will be downloaded, extracted, and processed.
 
-### Installation and setup {#installation-and-setup}
+### Installation and setup
 
 The loader requires Python 3.4 or better. It's been tested against Python 3.4 and 3.6. No other Python versions are supported. The package requirements are in the customary requirements.txt file. Tkinter is also needed to run the optional GUI in launcher.py. 
 
 Python environment setup is detailed below for Ubuntu and CentOS. The utility has also been tested on MacOS Sierra with Python 3.6.2 installed via brew. It should run fine on Windows and many other platforms if Python 3.6 and the requirements are properly set up.
 
-#### Ubuntu 14.04 {#ubuntu-14-04}
+#### Ubuntu 14.04
 
 ```
 Become root or use sudo for all '#' commands, be regular user for '$' commands.
@@ -107,7 +106,7 @@ $ pip install -r requirements.txt
 ```
 You're all set! Make sure to always enter the correct python environment before running the loader scripts, or you may start up the wrong python version or be missing packages.
 
-#### CentOS 6.9 {#centos-6-9}
+#### CentOS 6.9
 ```
 -- become root or use sudo for all `'`#`'` commands, regular user for `'`$`'
 -- base setup
@@ -138,9 +137,9 @@ If you prefer epel or Python 3.4, you can adjust the commands like the following
 ... etc.
 ```
 
-### Configuration {#configuration}
+### Configuration
 
-#### Settings, overrides, and security {#settings-overrides-and-security}
+#### Settings, overrides, and security
 
 The scripts are configured by reading settings files. This way you can run the scripts with no arguments and they'll do what you want every time.
 
@@ -148,9 +147,9 @@ The scripts are configured by reading settings files. This way you can run the s
 
 If you put any sensitive values in settings_secret.py it's advised to **set the permissions on settings_secret.py so nobody but you can read it**. It also shouldn't be put into source control or emailed around.
 
-#### Authentication {#authentication}
+#### Authentication
 
-##### sFTP authentication {#downloader-sftp-authentication}
+##### sFTP authentication
 
 Depending on how the sFTP site you're loading from is configured, you may need a private key file and potentially a password to unlock that key file, or the sFTP site may only require a username and password. All of these settings are configured in your settings_secret.py file as described above. The values look like this:
 ```
@@ -161,7 +160,7 @@ SFTP_KEYFILE = "/Users/ubuntu/.ssh/art-capacity-test.pem"    # Your sFTP user's 
 SFTP_KEYPASS = "keypass"   # A password to unlock SFTP_KEYFILE if encrypted, else None if not needed
 ```
 
-###### SSH key format {#downloader-key-format}
+###### SSH key format
 
 The key used for sFTP by the downloader is just a regular ssh key. It should be an RSA private key in PEM format. This same file can be used directly by the ssh command on Linux and OSX. In fact, putting this key in your ~/.ssh folder and trying to log in to the sFTP server with ssh is a great way to test the key before trying it with the script.
 
@@ -169,9 +168,9 @@ Note: A putty key (.ppk) can be converted to the correct format with puttygen. P
 
 $ puttygen SomePrivatePuttyPPK.txt -O private-openssh -o sftp_priv.pem
 
-### Troubleshooting {#troubleshooting}
+### Troubleshooting
 
-#### Runtime issues {#runtime-issues}
+#### Runtime issues
 
 ART can get stuck when loading 6M students at once because the loading process is fast and asynchronous, with ART queuing each student into a large queue for future processing. Because of this, the utility's loading process completes long before all the students are removed from the queue, processed, and stored by ART.
 
@@ -194,7 +193,7 @@ $ sudo rabbitmqctl set_vm_memory_high_watermark absolute 40000MB
 0.75 is probably a more reasonable number for 3.2M students.
 ```
 
-#### Performance {#performance}
+#### Performance
 
 The scripts running on a CentOS host in us-east-1 downloaded the csv from a us-west-2c box at about 3 megabytes/sec (slow) and loaded into ART at about 2100 students/sec (that's slow). Running the scripts from the same availability zone is much faster. Fastest yet is to run it on the same box as ART. 
 
