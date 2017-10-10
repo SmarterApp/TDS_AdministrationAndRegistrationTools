@@ -49,17 +49,18 @@ Help/usage details:
   -y, --dryrun             : do a dry run - does everything except actually POST to ART
   -e, --encoding           : encoding to use when processing CSV file
   -d, --delimiter          : delimiter to use when processing CSV file
-  -n, --number             : the max number of students to upload before exiting
+  -s, --csv_start_line     : line in the csv file to start uploading
+  -n, --number             : the (max) number of students to upload
 ```
 ### Examples
 The script is designed to be run with no arguments, with all settings coming from settings_secret.py. For example, to download the students and upload them into ART using the settings file, just run it as follows:
 > $ ./art_student_loader.py
 
-Or to grab a file from a specified server directory and put it in my_local_file.csv:
+Or to grab a file from a specified server directory and put it in my_local_file.csv, then upload the students inside:
 > $ ./art_student_loader.py -f my_local_file.csv -r ./Requests/special_dump.csv
 
-To resume extra.csv at the one millionth byte in the file, then dry-run loading 20 students from the beginning:
-> $ ./art_student_loader.py -f extra.csv -o 1000000 -n 20 -y
+Or to resume extra.csv at the one millionth byte in the file (potentially truncating it), then dry-run loading 200 students starting at the 2,000,000th line:
+> $ ./art_student_loader.py -f extra.csv -o 1000000 -s 2000000 -n 20 -y
 
 ##### Usage notes
 For performance, the loader uploads students in blocks of 10,000. When each block of students is uploaded, ART queues the request into a batch that will be processed later. ART then provides a URL that can be used to check the status of that batch.  This apprears for each chunk in the output as follows:
