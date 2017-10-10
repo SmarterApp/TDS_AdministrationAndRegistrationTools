@@ -6,10 +6,11 @@ import csv
 import datetime
 import collections
 import getopt
+import io
 import json
 import sys
-import time
 import unicodedata
+import zipfile
 
 import paramiko
 import requests
@@ -58,11 +59,14 @@ def main(argv):
     dry_run = False
     encoding = settings.FILE_ENCODING
     delimiter = settings.DELIMITER
-    num_students = settings.NUM_STUDENTS
+    csv_start_line = 1
+    # 9223372036854775807 ought to be enough for anybody.
+    num_students = settings.NUM_STUDENTS if settings.NUM_STUDENTS else sys.maxsize
 
     try:
-        opts, _ = getopt.getopt(argv, "hyf:r:o:e:d:n:", [
-            "help", "dryrun", "localfile=", "remotepath=", "offset=", "encoding=", "delimiter=", "number=", ])
+        opts, _ = getopt.getopt(argv, "hyf:r:o:e:d:s:n:", [
+            "help", "dryrun", "localfile=", "remotepath=", "offset=",
+            "encoding=", "delimiter=", "csv_start_line", "number=", ])
     except getopt.GetoptError:
         usage()
         sys.exit(2)
@@ -73,22 +77,26 @@ def main(argv):
             sys.exit()
         elif opt in ("-y", "--dryrun"):
             dry_run = True
-            print("\n\t*** DRY RUN MODE! NOTHING WILL BE POSTED! ***\n\n")
+            print("*** DRY RUN MODE REQUESTED! NOTHING WILL BE POSTED! ***\n\n")
         elif opt in ("-f", "--localfile"):
             localfile = arg
-            print("\nUsing localfile '%s'" % localfile)
+            print("Command line set localfile to '%s'" % localfile)
         elif opt in ("-r", "--remotepath"):
             remotepath = arg
-            print("\nUsing remotepath '%s'" % remotepath)
+            print("Command line set remotepath to '%s'" % remotepath)
         elif opt in ("-o", "--offset"):
             offset = int(arg)
-            print("\nStarting download at byte offset %d" % offset)
+            print("Command line set byte offset to %d. Will continue download there." % offset)
         elif opt in ("-e", "--encoding"):
             encoding = arg
         elif opt in ("-d", "--delimiter"):
             delimiter = arg
+        elif opt in ("-s", "--csv_start_line"):
+            csv_start_line = int(arg) if int(arg) >= 1 else 1
+            print("Command line set starting csv file line to %d" % csv_start_line)
         elif opt in ("-n", "--number"):
             num_students = int(arg)
+            print("Command line limiting uploaded students to %d" % num_students)
 
     remotepath = remotepath if remotepath else datewise_filepath(
         settings.SFTP_FILE_DIR,
@@ -104,25 +112,24 @@ def main(argv):
     start_time = datetime.datetime.now()
     print("\nStarting at %s\n" % start_time)
 
-    success = download_student_csv(
+    dl_success = download_student_csv(
         hostname, port, username, password, keyfile, keypass, remotepath, localfile, offset, progress)
 
     end_time = datetime.datetime.now()
     deltasecs = (end_time - start_time).total_seconds()
-    print("\ndownload %s at %s, Elapsed %s" % ("completed" if success else "failed", end_time, deltasecs))
+    print("\ndownload %s at %s, Elapsed %s" % ("completed" if dl_success else "failed", end_time, deltasecs))
 
-    if success:
+    if dl_success:
         upload_start_time = datetime.datetime.now()
         print("\nUpload starting at %s" % upload_start_time)
         print("Uploading from file '%s', encoding '%s', delimiter '%s'" % (localfile, encoding, delimiter))
-        print("Max number of students to load: %d" % num_students)
 
         endpoint = settings.ART_ENDPOINT
         username = settings.AUTH_PAYLOAD.get('username', None)
         password = settings.AUTH_PAYLOAD.get('password', None)
 
-        students_loaded = load_student_data(
-            localfile, encoding, delimiter, num_students, dry_run, endpoint, username, password, progress)
+        students_loaded = load_student_data(localfile, encoding, delimiter, csv_start_line, num_students,
+                                            dry_run, endpoint, username, password, progress)
 
         end_time = datetime.datetime.now()
         deltasecs = (end_time - upload_start_time).total_seconds()
@@ -145,7 +152,7 @@ def datewise_filepath(dir, basename, date_format, ext):
 # progress is a callback taking (message, bytes_written, bytes_remaining). Called frequently to display progress.
 def download_student_csv(hostname, port, username, password, keyfile, keypass, remotepath, localfile, offset, progress):
 
-    progress("\nDownloading file '%s' from '%s@%s'" % (remotepath, username, hostname))
+    progress("Downloading file '%s' from '%s@%s'" % (remotepath, username, hostname))
     progress("              to './%s'" % localfile)
     if port != 22:
         progress("    Port %d" % port)
@@ -167,23 +174,23 @@ def download_student_csv(hostname, port, username, password, keyfile, keypass, r
                     if offset:
                         localfile.seek(offset)
                         localfile.truncate()  # New data goes here. Get rid of old.
+                        progress("Truncated file and resuming at requested byte offset %d." % offset)
                     else:
                         offset = localfile.tell()  # start downloading here
-                        if offset > 0:
-                            progress("Auto resuming existing download.")
+                        if offset > 0 and attribs.st_size != offset:
+                            progress("Auto resuming existing file. Appending at byte %d." % offset)
 
-                    # If offset is specified, make sure remote can support it and remote file is big enough.
+                    # If offset is in effect, make sure remote can support it and remote file is big enough.
                     if offset > 0:
-                        progress("    Using byte offset %d" % offset)
-                        if not remotefile.seekable():
-                            progress("Server does not support seek(). This disables offset/resume feature. Exiting.")
-                            return False
                         if attribs.st_size == offset:
-                            progress("File complete (local and remote sizes match - contents not checked).")
+                            progress("WARNING: File looks complete (local and remote sizes match). Skipping download.")
                             return True
                         elif attribs.st_size < offset:
-                            progress("File size is %d but requested offset is %d. "
-                                     "Cowardly refusing to seek past end of file." % (attribs.st_size, offset))
+                            progress("ERROR: File size is %d but requested offset is %d." % (attribs.st_size, offset))
+                            progress("Cowardly refusing to seek past end of file.")
+                            return False
+                        if not remotefile.seekable():
+                            progress("ERROR: Server does not support seek(). Requested offset impossible. Exiting.")
                             return False
                         remotefile.seek(offset)
 
@@ -204,16 +211,28 @@ def download_student_csv(hostname, port, username, password, keyfile, keypass, r
                     return True
 
 
-def read_lines(filename, encoding, offset, progress):
-    need_to_seek = offset != 0
-    with open(filename, 'r', encoding=encoding) as file:
-        line = file.readline()  # always read/output header row first, even when offset provided!
+def open_csv_files(filename, encoding):
+    # If filename is a zip file, open first file in the zip. Otherwise open file as a CSV.
+    if zipfile.is_zipfile(filename):
+        with zipfile.ZipFile(filename, 'r') as zip_file:
+            for csv_filename in zip_file.namelist():
+                with zip_file.open(csv_filename) as csv_file:
+                    yield io.TextIOWrapper(csv_file, encoding=encoding)
+    else:
+        with open(filename, 'r', encoding=encoding) as csv_file:
+            yield csv_file
+
+
+def read_lines(filename, encoding, csv_start_line):
+    for file in open_csv_files(filename, encoding):
+        current_line = 1  # we start reading at line 1, the header row
+        line = file.readline()
         while line:
-            yield (line, file.tell())
-            if need_to_seek:
-                file.seek(offset)
-                need_to_seek = False
+            # always read/output header row, even when skipping lines.
+            if current_line >= csv_start_line or current_line == 1:
+                yield (line, current_line)
             line = file.readline()
+            current_line += 1
 
 
 def post_students(endpoint, total_loaded, students, delimiter, bearer_token, dry_run, progress):
@@ -227,20 +246,22 @@ def post_students(endpoint, total_loaded, students, delimiter, bearer_token, dry
     return total_loaded
 
 
-def load_student_data(filename, encoding, delimiter, num_students, dry_run, endpoint, username, password, progress):
+def load_student_data(
+        filename, encoding, delimiter, csv_start_line, num_students, dry_run, endpoint, username, password, progress):
 
-    bearer_token = get_bearer_token(username, password)
-    progress("Bearer token retrieved: %s" % bearer_token)
-
-    progress("Loading up to %d full chunks, %d remainder" % divmod(num_students, settings.CHUNK_SIZE))
+    num_students = int(num_students) if num_students else sys.maxsize
+    encoding = encoding if encoding else settings.FILE_ENCODING
+    delimiter = delimiter if delimiter else settings.DELIMITER
+    csv_start_line = csv_start_line if csv_start_line else 1
     total_loaded = 0
     students = []
     header_row = False
+    bearer_token = get_bearer_token(username, password)
 
-    for (line, where) in read_lines(filename, encoding, 0, progress):
+    for (line, where) in read_lines(filename, encoding, csv_start_line):
 
         # First line is ALWAYS header row. Stash and prepend for every chunk.
-        if not header_row:
+        if where == 1:
             header_row = line
             students.append(header_row)
             continue
@@ -254,26 +275,27 @@ def load_student_data(filename, encoding, delimiter, num_students, dry_run, endp
 
         students.append(line)
 
-        # If we've got enough students, post 'em!
+        # If we've got a full chunk of students, post 'em!
         if len(students) - 1 >= students_to_load:
-            progress("Posting %d students, at byte %d..." % (len(students) - 1, where))
+            progress("Posting %d students, ending at line %d..." % (len(students) - 1, where))
             total_loaded = post_students(endpoint, total_loaded, students, delimiter, bearer_token, dry_run, progress)
-            students = [header_row]  # Reset students for next chunk
+            students = [header_row]  # Reset for new chunk
 
-        # If we're done, don't read file again, just exit.
+        # We uploaded what the user wanted. Exit read loop.
         if total_loaded >= num_students:
             break
 
-    # Post any remaining block of students from an aborted read.
-    if total_loaded < num_students and len(students) > 1:
-        progress("Posting final block of %d students, at byte %d" % (len(students) - 1, where))
+    # Post the final block from final read.
+    students = students[0:(num_students - total_loaded + 1)]  # Chop off any extras the user doesn't want.
+    if len(students) > 1:
+        progress("Posting final block of %d students, ending with line %d" % (len(students) - 1, where))
         total_loaded = post_students(endpoint, total_loaded, students, delimiter, bearer_token, dry_run, progress)
 
-    progress("%d students read, file at byte %d." % (total_loaded, where))
+    progress("%d total students uploaded. Ended at line %d." % (total_loaded, where))
 
     global gradelevels
     if gradelevels:
-        progress("grade levels encountered: %s" % gradelevels)
+        progress("WARNING: Unexpected grade level values encountered: %s" % gradelevels)
 
     return total_loaded
 
@@ -295,8 +317,8 @@ def create_student_dto(student):
     if gradeLevelWhenAssessed not in settings.GRADEMAP:
         # Record unexpected gradelevels for later display.
         gradelevels[gradeLevelWhenAssessed] += 1
-    # Map known gradelevel values to expected.
-    gradeLevelWhenAssessed = settings.GRADEMAP.get(gradeLevelWhenAssessed, 'UG')
+        # Map known gradelevel values to expected.
+        gradeLevelWhenAssessed = settings.GRADEMAP.get(gradeLevelWhenAssessed, 'UG')
 
     return {
         "ssid": student['SSID'],
@@ -401,7 +423,8 @@ def usage():
     print("  -y, --dryrun             : do a dry run - does everything except actually POST to ART")
     print("  -e, --encoding           : encoding to use when processing CSV file")
     print("  -d, --delimiter          : delimiter to use when processing CSV file")
-    print("  -n, --number             : the max number of students to upload before exiting\n")
+    print("  -s, --csv_start_line     : line in the csv file to start uploading")
+    print("  -n, --number             : the (max) number of students to upload\n")
 
 
 if __name__ == "__main__":

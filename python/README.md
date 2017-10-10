@@ -1,31 +1,31 @@
 # ART Student Loader Utilities
 ## Instruction Manual
-[TOC]
+
 ### Description
 The ART student loader utility is a Python scripts designed to automatically load the millions of students from the nightly CALPADS dump file into ART's REST API. The main utility includes an executable python script and a settings file, which is copied and modified for your local setup. There is also an optional GUI. The utilities are primarily designed to be run unattended by cron on a daily schedule.
 
 #### art_student_loader.py
 This is the main executable script. Run with -h or --help for a usage summary. This script performs the following main functions:
 
-1. Download the nightly dump file from the CALPADS sFTP server. 
+1. Download the nightly dump file from the CALPADS sFTP server.
   - Will auto-resume an aborted download where it left off, if found.
   - Will automatically download this morning's dump file from the server using an established naming convention.
 2. Extract the CSV data from the zip format used into a separate file, as defined in the zip file
 3. Upload the student data from the CSV file into ART via the ART REST API.
   - Can be instructed to start at any offset in the data file in case a previous run was aborted.
-  - Can also be given a max number of students to upload instead of uploading the entire file.  
+  - Can also be given a max number of students to upload instead of uploading the entire file.
 
 #### launcher.py
-This optional python script provides a GUI that can automate the loader. 
-This allows the user to see and change the important settings used by the loader before clicking GO. This will start the loading process and display the output as it goes. It's mainly designed for one-off execution, testing, and troubleshooting. It's especially useful to test connectivity without accidentally uploading anything (you can alternatively use the dry-run option of the command-line loader). 
+This optional python script provides a GUI that can automate the loader.
+This allows the user to see and change the important settings used by the loader before clicking GO. This will start the loading process and display the output as it goes. It's mainly designed for one-off execution, testing, and troubleshooting. It's especially useful to test connectivity without accidentally uploading anything (you can alternatively use the dry-run option of the command-line loader).
 
 #### settings_default.py
-This file is distributed with the utilities and contain default settings used by all the tools. 
+This file is distributed with the utilities and contain default settings used by all the tools.
 It's mainly designed to be a template you will copy to settings_secret.py before modifying. If settings_secret.py is missing this file will be read, but a warning will be printed as you probably won't connect to the right servers!
 The settings file is documented via internal comments. See the file for information about the options.
 
 #### settings_secret.py
-This file is a settings override file the user will create and modify, then prevent unauthorized users from reading via permissions, etc. Copy settings_default.py to this file and modify to taste. 
+This file is a settings override file the user will create and modify, then prevent unauthorized users from reading via permissions, etc. Copy settings_default.py to this file and modify to taste.
 This file should contain all the sensitive passwords and URL's, etc, the utilities read to connect to ART and the sFTP server where the sensitive data is stored. Due to its nature, this file is not distributed with the utilities and is not in source control.
 
 ### Usage
@@ -73,9 +73,9 @@ If no offset is provided, the script will try to be smart:
 *   If the remote file is smaller than the local file, it will display an error saying this and exit.
 *   If the remote file is the same size as the local file, it will think it's done and continue.
 
-If you provide an offset that is smaller than the local file, the script will truncate the local file at the provided offset and then resume downloading it at that spot. 
+If you provide an offset that is smaller than the local file, the script will truncate the local file at the provided offset and then resume downloading it at that spot.
 
-The script will never automatically truncate the local file, but it might append the wrong contents to the end of an old local file if the remote file is larger (as it thinks it's auto-resuming the new file). So use caution with pre-existing local files! The script cannot check that local file contents match the server as no digests are provided by the server. 
+The script will never automatically truncate the local file, but it might append the wrong contents to the end of an old local file if the remote file is larger (as it thinks it's auto-resuming the new file). So use caution with pre-existing local files! The script cannot check that local file contents match the server as no digests are provided by the server.
 
 Generally when in doubt it's safest to delete the local dump file and re-download the whole thing. Downloading the file takes much less time than uploading the students into ART.
 
@@ -83,32 +83,9 @@ When in doubt, it's generally a good idea to do a --dryrun before uploading for 
 
 ### Installation and setup
 
-The loader requires Python 3.4 or better. It's been tested against Python 3.4 and 3.6. No other Python versions are supported. The package requirements are in the customary requirements.txt file. Tkinter is also needed to run the optional GUI in launcher.py. 
+The loader requires Python 3.4 or better. It's been tested against Python 3.4 and 3.6. No other Python versions are supported. The package requirements are in the customary requirements.txt file. Tkinter is also needed to run the optional GUI in launcher.py, which is part of Python 3 on many platforms.
 
-Python environment setup is detailed below for Ubuntu and CentOS. The utility has also been tested on MacOS Sierra with Python 3.6.2 installed via brew. It should run fine on Windows and many other platforms if Python 3.6 and the requirements are properly set up.
-
-#### Ubuntu 14.04
-
-```
-Become root or use sudo for all '#' commands, be regular user for '$' commands.
--- base setup
-# apt update && apt upgrade
--- set up python 3
-# apt install python3
-# apt install python3-pip
-# apt install build-essential libssl-dev libffi-dev python3-dev  # for paramiko/ssl
-# apt install python3-tk  # only if you want to run the GUI in launcher.py
--- set up virtual environment for an isolated python
-# apt-get install python3.4-venv
-$ cd <loader-script-directory>
-$ mkdir environments
-$ python3.4 -m venv art34
-$ source environments/art34/bin/activate  # enter the art34 env. should show a nice env prompt.
--- now all regular python and pip commands will use your art python 3.4 environment
-$ python -V  # show python version. can also run pip -V to see that pip is OK
-$ pip install -r requirements.txt
-```
-You're all set! Make sure to always enter the correct python environment before running the loader scripts, or you may start up the wrong python version or be missing packages.
+Python environment setup is detailed below for CentOS, Ubuntu, and MacOS. It should run fine on Windows and many other platforms if Python 3.6 and the requirements are properly set up.
 
 #### CentOS 6.9
 ```
@@ -131,15 +108,53 @@ $ source environments/art36/bin/activate  # enter the art36 env. should show a n
 -- now all regular python and pip commands will use your art python 3.6 environment
 $ python -V  # show python version. can also run pip -V to see that pip is OK
 $ pip install -r requirements.txt  # run from within the loader script directory
-```
-You're all set! Make sure to always enter the correct python environment before running the loader scripts, or you may start up the wrong python version or be missing packages.
 
-If you prefer epel or Python 3.4, you can adjust the commands like the following (changing all 36u to 34):
-```
+-- If you prefer epel or Python 3.4, don't install ius-release and adjust the commands accordingly (changing 36u to 34):
 # yum install -y epel-release
-# yum install -y python34-tkinter
-... etc.
+# yum install -y python34-tkinter ..., etc.
 ```
+You're all set! Make sure to always enter the correct python environment before running the loader scripts, or you may start up the wrong python version or encounter missing packages.
+
+#### Ubuntu 14.04
+
+```
+Become root or use sudo for all '#' commands, be regular user for '$' commands.
+-- base setup
+# apt update && apt upgrade
+-- set up python 3
+# apt install python3
+# apt install python3-pip
+# apt install build-essential libssl-dev libffi-dev python3-dev  # for paramiko/ssl
+# apt install python3-tk  # only if you want to run the GUI in launcher.py
+-- set up virtual environment for an isolated python
+# apt-get install python3.4-venv
+$ cd <loader-script-directory>
+$ mkdir environments
+$ python3.4 -m venv art34
+$ source environments/art34/bin/activate  # enter the art34 env. should show a nice env prompt.
+-- now all regular python and pip commands will use your art python 3.4 environment
+$ python -V  # show python version. can also run pip -V to see that pip is OK
+$ pip install -r requirements.txt
+```
+You're all set! Make sure to always enter the correct python environment before running the loader scripts, or you may start up the wrong python version or encounter missing packages.
+
+#### MacOS Sierra (OSX 10.12)
+
+```
+-- base setup - install Homebrew (https://brew.sh/)
+$ /usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
+-- set up python 3 - brew's python includes tkinter for the GUI
+$ brew install python3
+-- set up virtual environment for an isolated python
+$ cd <loader-script-directory>
+$ mkdir environments
+$ python3 -m venv art36
+$ source environments/art36/bin/activate  # enter the art36 env. should show a nice env prompt.
+-- now all regular python and pip commands will use your art python 3.6 environment
+$ python -V  # show python version. can also run pip -V to see that pip is OK
+$ pip install -r requirements.txt
+```
+You're all set! Make sure to always enter the correct python environment before running the loader scripts, or you may start up the wrong python version or encounter missing packages.
 
 ### Configuration
 
@@ -183,7 +198,7 @@ Our test setup includes two ART REST servers, each having its own localhost queu
 There are two main ways to avoid this issue - install more rabbitmq servers behind ART to spread the load, or use a huge box and configure rabbitmq to use more memory by increasing rabbitmq's memory watermark settings.
 
 rabbitmq includes memory watermark settings to protect the system against the queue using up all your RAM.
-In testing on a large machine with 60GB RAM, this watermark was initially set to 0.4 (about 24GB). This memory filled up with 2.4M students in the queue. 
+In testing on a large machine with 60GB RAM, this watermark was initially set to 0.4 (about 24GB). This memory filled up with 2.4M students in the queue.
 
 You can tweak the watermark to allow rabbit to use more of your machine's RAM by setting the watermark higher, as follows. Of course, if you set the watermark too high you may cause other issues when erlang sucks up all the memory. You might want to put these settings in the rabbitmq config file to make them permanent:
 ```
@@ -199,9 +214,9 @@ $ sudo rabbitmqctl set_vm_memory_high_watermark absolute 40000MB
 
 #### Performance
 
-The scripts running on a CentOS host in us-east-1 downloaded the csv from a us-west-2c box at about 3 megabytes/sec (slow) and loaded into ART at about 2100 students/sec (that's slow). Running the scripts from the same availability zone is much faster. Fastest yet is to run it on the same box as ART. 
+The scripts running on a CentOS host in us-east-1 downloaded the csv from a us-west-2c box at about 3 megabytes/sec (slow) and loaded into ART at about 2100 students/sec (that's slow). Running the scripts from the same availability zone is much faster. Fastest yet is to run it on the same box as ART.
 
-The downloader was faster than the loader in all tests. 
+The downloader was faster than the loader in all tests.
 
 Remember that uploading only puts the students into rabbitmq, on the 'student' queue. ART then process each student, putting each into mongodb after processing. The latest ART takes less than an hour to drain over 6M duplicate students from the student queue because we recently added code to skip dupes.
 

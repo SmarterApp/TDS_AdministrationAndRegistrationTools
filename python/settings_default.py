@@ -2,7 +2,7 @@
 # The code will read settings_secret.py first and fallback to this file if missing.
 
 # BASIC DEFAULTS AND CONSTANTS
-NUM_STUDENTS = 10000000  # 10 million ought to be enough for anybody.
+NUM_STUDENTS = None
 ART_ENDPOINT = "https://localhost:8443/rest/external/student/CA/batch"
 ART_SSL_CHECKS = True  # Disable for dev servers with bad SSL. Make it True FOR PROD!
 

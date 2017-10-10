@@ -107,16 +107,16 @@ class App:
         self.downloader_output.write("WORK STARTED at %s" % datetime.datetime.now())
         try:
             success = art_student_loader.download_student_csv(
-                self.sftp_host.get(),
-                settings.SFTP_PORT,
-                self.sftp_user.get(),
-                self.sftp_password.get(),
-                settings.SFTP_KEYFILE,
-                settings.SFTP_KEYPASS,
-                self.sftp_file.get(),
-                self.localfile.get(),
-                None,
-                self.progress)
+                hostname=self.sftp_host.get(),
+                port=settings.SFTP_PORT,
+                username=self.sftp_user.get(),
+                password=self.sftp_password.get(),
+                keyfile=settings.SFTP_KEYFILE,
+                keypass=settings.SFTP_KEYPASS,
+                remotepath=self.sftp_file.get(),
+                localfile=self.localfile.get(),
+                offset=None,
+                progress=self.progress)
         except Exception as e:
             self.downloader_output.write("Encountered exception: %s" % e)
             traceback.print_exc()
@@ -126,15 +126,16 @@ class App:
             self.downloader_output.write("STARTING UPLOAD at %s" % datetime.datetime.now())
             try:
                 art_student_loader.load_student_data(
-                    self.localfile.get(),
-                    settings.FILE_ENCODING,
-                    settings.DELIMITER,
-                    settings.NUM_STUDENTS,
-                    False,
-                    self.art_endpoint.get(),
-                    self.art_user.get(),
-                    self.art_password.get(),
-                    self.progress)
+                    filename=self.localfile.get(),
+                    encoding=None,
+                    delimiter=None,
+                    csv_start_line=None,
+                    num_students=None,
+                    dry_run=False,
+                    endpoint=self.art_endpoint.get(),
+                    username=self.art_user.get(),
+                    password=self.art_password.get(),
+                    progress=self.progress)
             except Exception as e:
                 self.downloader_output.write("Encountered exception: %s" % e)
                 traceback.print_exc()
