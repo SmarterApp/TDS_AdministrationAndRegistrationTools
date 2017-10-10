@@ -17,18 +17,16 @@ AUTH_PAYLOAD = {
 }
 
 # RUNTIME SETTINGS
-DATE_FORMAT_YYYY_MM_DD = '%Y-%m-%d'
 CHUNK_SIZE = 10000
-SLEEP_INTERVAL = 0.25  # how long to sleep while waiting on the file for data
-WAIT_CYCLES_BEFORE_QUIT = 20  # how many SLEEP_INTERVALS to wait with no data before quitting
+BUFFER_SIZE = 512 * 1024
 
 # settings for csv_load_students
 DELIMITER = '^'
 FILE_ENCODING = 'cp1252'
 GRADEMAP = {
     # MAPPED VALUES
-    'US': 'PS',  # TODO: temporary - what is US?
-    'UE': 'UG',  # TODO: temporary - what is UE?
+    'US': 'UG',  # US goes to 'ungraded'
+    'UE': 'UG',  # UE goes to 'ungraded'
     'KN': 'KG',  # KN -> KG (kindergarten)
     # IDENTITIES
     'IT': 'IT',  # UNKNOWN, NOT IN DROPDOWN (BUT ART ACCEPTED)
@@ -67,6 +65,7 @@ SFTP_KEYPASS = None  # Set to encrypted key's password, else None.
 
 # settings for pg_load_students
 DB_PARAMS = {'host': 'localhost', 'database': 'postgres', 'user': 'ubuntu', 'password': 'ubuntu'}
+DATE_FORMAT_YYYY_MM_DD = '%Y-%m-%d'  # Date format expected in the CSV files.
 
 # settings for random_load_students
 MONGO_PARAMS = "mongodb://art:foo@localhost:27017/art"

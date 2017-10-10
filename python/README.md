@@ -62,6 +62,10 @@ To resume extra.csv at the one millionth byte in the file, then dry-run loading 
 > $ ./art_student_loader.py -f extra.csv -o 1000000 -n 20 -y
 
 ##### Usage notes
+For performance, the loader uploads students in blocks of 10,000. When each block of students is uploaded, ART queues the request into a batch that will be processed later. ART then provides a URL that can be used to check the status of that batch.  This apprears for each chunk in the output as follows:
+
+> Batch status URL: https://art-capacity-test.sbtds.org/rest/external/student/batch/59dbefb8e4b03b51be92cbf9
+
 If no offset is provided, the script will try to be smart:
 
 *   If no local file is found, it will download the whole file.

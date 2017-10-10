@@ -29,7 +29,6 @@ if settings.ART_SSL_CHECKS is False:
         requests.packages.urllib3.exceptions.InsecureRequestWarning)
 
 gradelevels = collections.defaultdict(int)
-BUFSIZE = 512 * 1024
 
 
 # This is a callback method for reporting progress. Gets replaced by launcher GUI.
@@ -195,7 +194,7 @@ def download_student_csv(hostname, port, username, password, keyfile, keypass, r
                     remotefile.prefetch()
                     written = 0
                     while True:
-                        data = remotefile.read(BUFSIZE)
+                        data = remotefile.read(settings.BUFFER_SIZE)
                         if not data:
                             break
                         localfile.write(data)
@@ -233,7 +232,7 @@ def load_student_data(filename, encoding, delimiter, num_students, dry_run, endp
     bearer_token = get_bearer_token(username, password)
     progress("Bearer token retrieved: %s" % bearer_token)
 
-    progress("Loading %d full chunks, %d remainder" % divmod(num_students, settings.CHUNK_SIZE))
+    progress("Loading up to %d full chunks, %d remainder" % divmod(num_students, settings.CHUNK_SIZE))
     total_loaded = 0
     students = []
     header_row = False
