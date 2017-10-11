@@ -31,14 +31,30 @@ if settings.ART_SSL_CHECKS is False:
 
 gradelevels = collections.defaultdict(int)
 
+# Globals
+lastProgressBytes = False
+is_terminal = sys.stdout.isatty()
+
 
 # This is a callback method for reporting progress. Gets replaced by launcher GUI.
-def progress(message, bytes_written=None, bytes_remaining=None):
+def progress(message, completedbytes=None, totalbytes=None):
+    global lastProgressBytes, is_terminal
     if message is not None:
+        if lastProgressBytes and is_terminal:
+            print()  # put a newline to move down from previous carriage return
+            lastProgressBytes = False
         print(message)
     else:
-        print("%d of %d bytes written" % (bytes_written, bytes_remaining))
-        # print("%d/%d (%0.1f%%)" % (bytes_so_far, totalbytes, float(bytes_so_far)/totalbytes*100))
+        end = '\n'
+        if not lastProgressBytes:
+            print()
+            lastProgressBytes = True
+        if is_terminal:
+            sys.stdout.write("\r")  # Go back to beginning of line
+            end = ''  # Don't put newline on output
+        print("Downloading: %d/%d bytes (%0.0f%%)" % (
+            completedbytes, totalbytes, 100 * float(completedbytes) / totalbytes), end=end)
+        sys.stdout.flush()  # Force output in case no newline.
 
 
 # Application entry point for command line execution mode.
@@ -149,7 +165,7 @@ def datewise_filepath(dir, basename, date_format, ext):
     return path
 
 
-# progress is a callback taking (message, bytes_written, bytes_remaining). Called frequently to display progress.
+# progress is a callback taking (message, completedbytes, totalbytes). Called frequently to display progress.
 def download_student_csv(hostname, port, username, password, keyfile, keypass, remotepath, localfile, offset, progress):
 
     progress("Downloading file '%s' from '%s@%s'" % (remotepath, username, hostname))
@@ -170,13 +186,13 @@ def download_student_csv(hostname, port, username, password, keyfile, keypass, r
                     return False
 
                 # Remote file OK, now open local file and seek to requested offset.
-                with open(localfile, 'ab+') as localfile:
+                with open(localfile, 'ab+') as file:
                     if offset:
-                        localfile.seek(offset)
-                        localfile.truncate()  # New data goes here. Get rid of old.
+                        file.seek(offset)
+                        file.truncate()  # New data goes here. Get rid of old.
                         progress("Truncated file and resuming at requested byte offset %d." % offset)
                     else:
-                        offset = localfile.tell()  # start downloading here
+                        offset = file.tell()  # start downloading here
                         if offset > 0 and attribs.st_size != offset:
                             progress("Auto resuming existing file. Appending at byte %d." % offset)
 
@@ -204,7 +220,7 @@ def download_student_csv(hostname, port, username, password, keyfile, keypass, r
                         data = remotefile.read(settings.BUFFER_SIZE)
                         if not data:
                             break
-                        localfile.write(data)
+                        file.write(data)
                         written += len(data)
                         progress(None, written, bytes_remaining)
                     progress('Download finished.')
