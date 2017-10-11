@@ -1,4 +1,3 @@
-#!/usr/local/bin/python3
 # requirements in requirements.txt, plus requires pymongo
 import datetime
 import getopt
