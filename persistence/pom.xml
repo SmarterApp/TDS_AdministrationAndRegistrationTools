@@ -3,7 +3,7 @@
   <parent>
     <groupId>org.opentestsystem.delivery</groupId>
     <artifactId>test-reg-parent</artifactId>
-    <version>3.1.2-SNAPSHOT</version>
+    <version>3.1.2.RELEASE</version>
   </parent>
   <artifactId>test-reg-persistence</artifactId>
   
