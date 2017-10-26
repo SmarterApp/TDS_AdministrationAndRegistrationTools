@@ -23,9 +23,6 @@
         <mockito.version>1.9.5</mockito.version>
         <bouncycastle.version>1.50</bouncycastle.version>
         <commons-compress.version>1.7</commons-compress.version>
-        <commons-jexl.version>2.0</commons-jexl.version>
-        <bouncycastle.version>1.50</bouncycastle.version>
-        <sb11-mna-client.version>4.0.2</sb11-mna-client.version>
         <open-csv.version>2.3</open-csv.version>
         <progman-client.version>4.0.6</progman-client.version>
         <rest-api-generator.version>4.0.3</rest-api-generator.version>
@@ -50,7 +47,7 @@
         <connection>scm:git:https://github.com/SmarterApp/TDS_AdministrationAndRegistrationTools.git</connection>
         <developerConnection>scm:git:git://github.com/SmarterApp/TDS_AdministrationAndRegistrationTools.git</developerConnection>
         <url>https://github.com/SmarterApp/TDS_AdministrationAndRegistrationTools</url>
-        <tag>HEAD</tag>
+        <tag>3.1.2.RELEASE</tag>
     </scm>
 
     <dependencies>
