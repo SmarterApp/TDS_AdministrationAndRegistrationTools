@@ -6,11 +6,11 @@
        xmlns:context="http://www.springframework.org/schema/context"
        xmlns:cache="http://www.springframework.org/schema/cache"
        xmlns:p="http://www.springframework.org/schema/p"
-       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
-                http://www.springframework.org/schema/data/mongo http://www.springframework.org/schema/data/mongo/spring-mongo-1.1.xsd
-                http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-3.0.xsd
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+                http://www.springframework.org/schema/data/mongo http://www.springframework.org/schema/data/mongo/spring-mongo.xsd
+                http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd
                 http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
-                http://www.springframework.org/schema/cache http://www.springframework.org/schema/cache/spring-cache-3.2.xsd">
+                http://www.springframework.org/schema/cache http://www.springframework.org/schema/cache/spring-cache.xsd">
 
 
 
@@ -71,7 +71,10 @@
     	org.opentestsystem.delivery.testreg.persistence.criteria.verifiers.assessment,
     	org.opentestsystem.delivery.testreg.persistence.criteria.verifiers.accommodation,
     	org.opentestsystem.delivery.testreg.persistence.criteria.verifiers.eligibility,
-    	org.opentestsystem.delivery.testreg.persistence.criteria.verifiers.studentgroup"/>
+    	org.opentestsystem.delivery.testreg.persistence.criteria.verifiers.studentgroup,
+    	org.opentestsystem.delivery.testadmin.persistence,
+    	org.opentestsystem.delivery.testreg.service.impl,
+        org.opentestsystem.delivery.testreg.persistence"/>
     	
         <!-- verifier map should be changed to key of class, value map keyed by formattype -->
         
