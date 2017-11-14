@@ -103,6 +103,7 @@
         <!--<property name="port" value="${testreg.sftp.port}" />-->
         <property name="user" value="${testreg.sftp.user}" />
         <property name="password" value="${testreg.sftp.pass}" />
+        <property name="knownHosts" value="${testreg.sftp.knownHosts}"/>
     </bean>
     
     <bean id="sb11TimeZoneBuilder" class="org.opentestsystem.delivery.Sb11TimeZoneBuilder"/>
