@@ -11,7 +11,7 @@
     <!-- swagger resources -->
     <resources mapping="swagger-ui.html" location="classpath:/META-INF/resources/" />
     <resources mapping="/webjars/**" location="classpath:/META-INF/resources/webjars/" />
-    <resources mapping="/resources/**" location="/resources/" />
+    <resources mapping="/resources/**" location="/resources/" cache-period="0" />
   
     <beans:bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
     	<beans:property  name="order" value="2" />
