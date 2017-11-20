@@ -116,6 +116,9 @@ $ pip install -r requirements.txt  # run from within the loader script directory
 ```
 You're all set! Make sure to always enter the correct python environment before running the loader scripts, or you may start up the wrong python version or encounter missing packages.
 
+It's been reported that on some CentOS installations it's necessary to manually install these packages (enter your art36 env first):
+$ pip install pyopenssl ndg-httpsclient pyasn1 "requests[security]"
+
 #### Ubuntu 14.04
 
 ```
