@@ -31,7 +31,7 @@
         <sb11-shared-code.version>4.0.7</sb11-shared-code.version>
         <sb11-shared-security.version>4.0.4</sb11-shared-security.version>
         <tds-dll.version>4.0.4</tds-dll.version>
-        <tsb-client.version>4.0.2-SNAPSHOT</tsb-client.version>
+        <tsb-client.version>4.0.1-SNAPSHOT</tsb-client.version>
     </properties>
 
     <build>
