@@ -43,6 +43,12 @@
     <bean id="objectMapper" class="org.springframework.http.converter.json.Jackson2ObjectMapperFactoryBean" >
         <property name="indentOutput" value="true"/>
         <property name="simpleDateFormat" value="yyyy-MM-dd'T'HH:mm:ss.SSSZ"/>
+        <property name="modules">
+            <list>
+                <bean class="com.fasterxml.jackson.datatype.guava.GuavaModule"/>
+                <bean class="com.fasterxml.jackson.datatype.joda.JodaModule" />
+            </list>
+        </property>
     </bean>
     
 	
@@ -51,6 +57,7 @@
         <property name="targetMethod" value="registerModule"/>
         <property name="arguments">
             <list>
+                <bean class="com.fasterxml.jackson.datatype.guava.GuavaModule"/>
                 <bean class="com.fasterxml.jackson.datatype.joda.JodaModule" />
             </list>
         </property>
@@ -68,12 +75,7 @@
             </bean>
         </mvc:message-converters>
     </mvc:annotation-driven>
-    
-    <mvc:annotation-driven validator="facilityValidator">
-    	<mvc:argument-resolvers>
-    		<bean class="org.opentestsystem.delivery.testreg.upload.validation.ValidatingPathVariableMethodArgumentResolver"/>
-    	</mvc:argument-resolvers>    	
-	</mvc:annotation-driven>
+
     <bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver"/>
 
     <mvc:interceptors>
