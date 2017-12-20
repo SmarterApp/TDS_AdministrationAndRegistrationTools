@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<beans xmlns="http://www.springframework.org/schema/beans" xmlns:oauth2="http://www.springframework.org/schema/security/oauth2" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:schemaLocation="http://www.springframework.org/schema/beans
-        http://www.springframework.org/schema/beans/spring-beans.xsd
-              http://www.springframework.org/schema/security/oauth2
-              http://www.springframework.org/schema/security/spring-security-oauth2.xsd">
-
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:oauth2="http://www.springframework.org/schema/security/oauth2"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+            http://www.springframework.org/schema/beans/spring-beans.xsd
+            http://www.springframework.org/schema/security/oauth2
+            http://www.springframework.org/schema/security/spring-security-oauth2.xsd">
 
     <bean id="httpComponentsClientHttpRequestFactory" class="org.springframework.http.client.HttpComponentsClientHttpRequestFactory"/>
 
@@ -19,4 +20,34 @@
         access-token-uri="${oauth.access.url}"
          />
     <oauth2:rest-template  access-token-provider="samlAssertionTokenProvider" id="tsbRestTemplate" resource="tsbResource"/>
+
+    <!-- ADDED TO SUPPORT ADDITIONAL REST TEMPLATE -->
+    <oauth2:resource id="tsbOauthResource"
+                     type="password"
+                     client-authentication-scheme="form"
+                     client-id="${oauth.testreg.client.id}"
+                     client-secret="${oauth.testreg.client.secret}"
+                     access-token-uri="${oauth.access.url}"
+                     username="${oauth.testreg.username}"
+                     password="${oauth.testreg.password}" />
+
+    <bean id="tsbHttpClient" class="org.apache.http.impl.client.DefaultHttpClient">
+        <constructor-arg>
+            <bean class="org.apache.http.impl.conn.PoolingClientConnectionManager">
+                <property name="maxTotal" value="${httpClientPool.maxTotal:200}" />
+                <property name="defaultMaxPerRoute" value="${httpClientPool.defaultMaxPerRoute:10}" />
+            </bean>
+        </constructor-arg>
+    </bean>
+
+    <bean id="tsbClientHttpRequestFactory" class="org.springframework.http.client.HttpComponentsClientHttpRequestFactory">
+        <constructor-arg ref="tsbHttpClient"/>
+        <property name="connectTimeout" value="60000"/>
+        <property name="readTimeout" value="60000"/>
+    </bean>
+
+    <bean id="oauthRestTemplate" class="org.springframework.security.oauth2.client.OAuth2RestTemplate">
+        <constructor-arg ref="tsbOauthResource"/>
+        <property name="requestFactory" ref="tsbClientHttpRequestFactory" />
+    </bean>
 </beans>

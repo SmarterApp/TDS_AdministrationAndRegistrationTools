@@ -31,7 +31,7 @@
         <sb11-shared-code.version>4.0.7</sb11-shared-code.version>
         <sb11-shared-security.version>4.0.4</sb11-shared-security.version>
         <tds-dll.version>4.0.4</tds-dll.version>
-        <tsb-client.version>3.1.0.RELEASE</tsb-client.version>
+        <tsb-client.version>4.0.2-SNAPSHOT</tsb-client.version>
     </properties>
 
     <build>
@@ -142,6 +142,12 @@
             <groupId>com.fasterxml.jackson.datatype</groupId>
             <artifactId>jackson-datatype-joda</artifactId>
             <version>${jackson-datatype-joda.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.fasterxml.jackson.datatype</groupId>
+            <artifactId>jackson-datatype-guava</artifactId>
+            <version>2.8.10</version>
         </dependency>
 
         <dependency>
