@@ -6,7 +6,7 @@
                         http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
     
     <!-- Create beans for @Configuration classes which specify component scanning -->
-    <!--<context:annotation-config/>-->
+    <context:annotation-config/>
     <bean class="org.opentestsystem.authoring.testspecbank.client.config.TestSpecBankClientConfigScanner"/>
     <bean class="org.opentestsystem.authoring.testspecbank.client.init.config.TestSpecBankClientContextConfigScanner"/>
 
