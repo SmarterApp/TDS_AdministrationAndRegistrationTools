@@ -31,7 +31,8 @@
         <sb11-shared-code.version>4.0.7</sb11-shared-code.version>
         <sb11-shared-security.version>4.0.4</sb11-shared-security.version>
         <tds-dll.version>4.0.4</tds-dll.version>
-        <tsb-client.version>4.0.1</tsb-client.version>
+        <tsb-client.version>4.0.2-SNAPSHOT</tsb-client.version>
+        <support-tool-client.version>0.0.1-SNAPSHOT</support-tool-client.version>
     </properties>
 
     <build>
@@ -85,6 +86,12 @@
             <groupId>org.opentestsystem.shared</groupId>
             <artifactId>sb11-shared-security</artifactId>
             <version>${sb11-shared-security.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.opentestsystem.delivery</groupId>
+            <artifactId>tds-support-tool-client</artifactId>
+            <version>${support-tool-client.version}</version>
         </dependency>
 
         <dependency>
@@ -148,6 +155,12 @@
             <groupId>com.fasterxml.jackson.datatype</groupId>
             <artifactId>jackson-datatype-guava</artifactId>
             <version>2.8.10</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.fasterxml.jackson.datatype</groupId>
+            <artifactId>jackson-datatype-jdk8</artifactId>
+            <version>2.8.6</version>
         </dependency>
 
         <dependency>
