@@ -49,5 +49,10 @@
     <bean id="oauthRestTemplate" class="org.springframework.security.oauth2.client.OAuth2RestTemplate">
         <constructor-arg ref="tsbOauthResource"/>
         <property name="requestFactory" ref="tsbClientHttpRequestFactory" />
+        <property name="messageConverters">
+            <ref bean="jacksonMessageConverter" />
+        </property>
     </bean>
+
+    <bean id="jacksonMessageConverter" class="org.springframework.http.converter.json.MappingJackson2HttpMessageConverter" />
 </beans>

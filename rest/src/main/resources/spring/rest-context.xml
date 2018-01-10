@@ -47,6 +47,8 @@
             <list>
                 <bean class="com.fasterxml.jackson.datatype.guava.GuavaModule"/>
                 <bean class="com.fasterxml.jackson.datatype.joda.JodaModule" />
+                <bean class="com.fasterxml.jackson.datatype.jdk8.Jdk8Module" />
+                <bean class="com.fasterxml.jackson.datatype.jsr310.JavaTimeModule" />
             </list>
         </property>
     </bean>
