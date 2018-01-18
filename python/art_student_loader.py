@@ -73,6 +73,7 @@ def main(argv):
     offset = 0
     # Uploader command line options
     dry_run = False
+    local_only = False
     encoding = settings.FILE_ENCODING
     delimiter = settings.DELIMITER
     csv_start_line = 1
@@ -80,8 +81,8 @@ def main(argv):
     num_students = settings.NUM_STUDENTS if settings.NUM_STUDENTS else sys.maxsize
 
     try:
-        opts, _ = getopt.getopt(argv, "hyf:r:o:e:d:s:n:", [
-            "help", "dryrun", "localfile=", "remotepath=", "offset=",
+        opts, _ = getopt.getopt(argv, "hylf:r:o:e:d:s:n:", [
+            "help", "dryrun", "localonly", "localfile=", "remotepath=", "offset=",
             "encoding=", "delimiter=", "csv_start_line", "number=", ])
     except getopt.GetoptError:
         usage()
@@ -94,6 +95,9 @@ def main(argv):
         elif opt in ("-y", "--dryrun"):
             dry_run = True
             print("*** DRY RUN MODE REQUESTED! NOTHING WILL BE POSTED! ***\n\n")
+        elif opt in ("-l", "--localonly"):
+            local_only = True
+            print("*** LOCAL ONLY MODE REQUESTED! NOTHING WILL BE DOWNLOADED! ***\n\n")
         elif opt in ("-f", "--localfile"):
             localfile = arg
             print("Command line set localfile to '%s'" % localfile)
@@ -128,8 +132,10 @@ def main(argv):
     start_time = datetime.datetime.now()
     print("\nStarting at %s\n" % start_time)
 
-    dl_success = download_student_csv(
-        hostname, port, username, password, keyfile, keypass, remotepath, localfile, offset, progress)
+    dl_success = local_only
+    if not dl_success:
+        dl_success = download_student_csv(
+            hostname, port, username, password, keyfile, keypass, remotepath, localfile, offset, progress)
 
     end_time = datetime.datetime.now()
     deltasecs = (end_time - start_time).total_seconds()
@@ -240,15 +246,19 @@ def open_csv_files(filename, encoding):
 
 
 def read_lines(filename, encoding, csv_start_line):
-    for file in open_csv_files(filename, encoding):
-        current_line = 1  # we start reading at line 1, the header row
-        line = file.readline()
-        while line:
-            # always read/output header row, even when skipping lines.
-            if current_line >= csv_start_line or current_line == 1:
-                yield (line, current_line)
+    try:
+        for file in open_csv_files(filename, encoding):
+            current_line = 1  # we start reading at line 1, the header row
             line = file.readline()
-            current_line += 1
+            while line:
+                # always read/output header row, even when skipping lines.
+                if current_line >= csv_start_line or current_line == 1:
+                    yield (line, current_line)
+                line = file.readline()
+                current_line += 1
+    except Exception as e:
+        print("ERROR: Exception raised reading line %d!" % current_line)
+        raise e
 
 
 def post_students(endpoint, total_loaded, students, delimiter, bearer_token, dry_run, progress):
@@ -437,6 +447,7 @@ def usage():
           "                             (will resume download at the end of any matching file found)")
     print("  Uploader Options:")
     print("  -y, --dryrun             : do a dry run - does everything except actually POST to ART")
+    print("  -l, --localonly          : don't try to download anything - just read the local file")
     print("  -e, --encoding           : encoding to use when processing CSV file")
     print("  -d, --delimiter          : delimiter to use when processing CSV file")
     print("  -s, --csv_start_line     : line in the csv file to start uploading")

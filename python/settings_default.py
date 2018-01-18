@@ -22,7 +22,7 @@ BUFFER_SIZE = 512 * 1024
 
 # settings for csv_load_students
 DELIMITER = '^'
-FILE_ENCODING = 'cp1252'
+FILE_ENCODING = 'latin1'  # which is also iso-8859-1 (don't use cp1252!)
 GRADEMAP = {
     # MAPPED VALUES
     'US': 'UG',  # US goes to 'ungraded'
