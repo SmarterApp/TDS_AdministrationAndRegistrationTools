@@ -246,6 +246,7 @@ def open_csv_files(filename, encoding):
 
 
 def read_lines(filename, encoding, csv_start_line):
+    current_line = 0
     try:
         for file in open_csv_files(filename, encoding):
             current_line = 1  # we start reading at line 1, the header row
