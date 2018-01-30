@@ -28,42 +28,42 @@ class FixerUpper:
         print("\n%d districts, %s schools, %s students in DB:\n\t%s" % (
             self.districts.count(), self.schools.count(), self.students.count(), self.db))
 
-        californians = self.students.find({"stateAbbreviation": "CA"})
-        print("\n%d californians found." % californians.count())
-
-        cali_no_district = self.students.find({"stateAbbreviation": "CA", "districtEntityMongoId": {"$exists": False}})
+        cali_no_district = self.students.find({
+            "stateAbbreviation": "CA",
+            "districtEntityMongoId": {"$exists": False}})
         print("%d cali_no_district found." % cali_no_district.count())
 
-        cali_no_school = self.students.find({"stateAbbreviation": "CA", "institutionEntityMongoId": {"$exists": False}})
+        cali_no_school = self.students.find({
+            "stateAbbreviation": "CA",
+            "institutionEntityMongoId": {"$exists": False}})
         print("%d cali_no_school found." % cali_no_school.count())
 
-        input("\nPress enter to start munging, CTRL-C to cancel!")
+        input("\n***** Press enter to start fixing, CTRL-C to cancel! *****")
 
         notfixed = []
         modified = []
+
         for student in cali_no_district:
-            print("processing %s..." % student['entityId'])
             districtIdentifier = student.get('districtIdentifier', None)
-
             if not districtIdentifier:
-                print("\tstudent has no districtIdentifier")
-                continue
-
-            fixed = self.link_district(student, districtIdentifier)
-
-            if not fixed and not districtIdentifier.endswith("0000000"):
-                districtIdentifier = "%s0000000" % districtIdentifier
-                print("\tadded 7 0's to student district ID, now '%s', will relink..." % districtIdentifier)
-                fixed = self.link_district(student, districtIdentifier)
-
-            if not fixed:
-                print("\t*** Could not fix %s!" % student['entityId'])
                 notfixed.append(student)
                 continue
 
-            print("\tStudent fixed! saving...")
+            fixed = None
+            # If missing the trailing 0's, fix up and relink.
+            if not districtIdentifier.endswith("0000000"):
+                districtIdentifier = "%s0000000" % districtIdentifier
+                fixed = self.link_district(student, districtIdentifier)
 
-            # student.pop("delete", None)
+            # If not fixed, try fixing without modifying the district ID.
+            if not fixed:
+                fixed = self.link_district(student, districtIdentifier)
+
+            if not fixed:
+                notfixed.append(student)
+                continue
+
+            # Student is fixed! Save record.
             try:
                 result = self.students.replace_one({'_id': student.get('_id')}, student)
                 modified.append(student)
@@ -76,8 +76,8 @@ class FixerUpper:
 
         print("Fixed %d students." % len(modified))
         print("Could not fix %d students." % len(notfixed))
-        print("Could not find %d districts (%s)." % (len(self.districtsNotFound), self.districtsNotFound))
-        print("Cached %d districts (%s)." % (len(self.districtCache), self.districtCache))
+        print("Could not find %d districts." % len(self.districtsNotFound))
+        print("Cached %d districts." % len(self.districtCache))
 
     def link_district(self, student, districtIdentifier):
         district = None
