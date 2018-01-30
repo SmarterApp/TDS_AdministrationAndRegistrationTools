@@ -82,10 +82,8 @@ class FixerUpper:
     def link_district(self, student, districtIdentifier):
         district = None
         if districtIdentifier in self.districtCache:
-            print("Cache hit!!!")
             district = self.districtCache.get(districtIdentifier)
         else:
-            print("Cache miss...")
             district = self.districts.find_one({"entityId": districtIdentifier})
             self.districtCache[districtIdentifier] = district  # Cache the district, good or None.
         if not district:
