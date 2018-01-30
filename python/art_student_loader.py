@@ -356,7 +356,7 @@ def create_student_dto(student):
         "birthDate": xstr(student['DateofBirth']),
         "externalSsid": xstr(student['SmarterStudentID']),
         "institutionIdentifier": generate_institution_identifier(student),
-        "districtIdentifier": xstr(student['ResponsibleDistrictIdentifier']),
+        "districtIdentifier": generate_district_identifier(student),
         "gradeLevelWhenAssessed": gradeLevelWhenAssessed,
         "hispanicOrLatino": string_to_boolean(student['HispanicOrLatinoEthnicity']),
         "americanIndianOrAlaskaNative": string_to_boolean(student['AmericanIndianOrAlaskaNative']),
@@ -381,8 +381,12 @@ def create_student_dto(student):
     }
 
 
-# Due to duplicate school IDs in the source CALPADS data I mashed the
-# district and school IDs together to create unique IDs
+# For CALPADS, district ID's have seven 0's appended in order to be 14 characters.
+def generate_district_identifier(student):
+    return '%s0000000' % xstr(student['ResponsibleDistrictIdentifier'])
+
+
+# For CALPADS, institution ID's are district and school ID's concatenated.
 def generate_institution_identifier(student):
     return '%s%s' % (xstr(student['ResponsibleDistrictIdentifier']), xstr(student['ResponsibleSchoolIdentifier']))
 
