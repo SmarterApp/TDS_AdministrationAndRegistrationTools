@@ -31,12 +31,12 @@ class FixerUpper:
         cali_no_district = self.students.find({
             "stateAbbreviation": "CA",
             "districtEntityMongoId": {"$exists": False}})
-        print("%d cali_no_district found." % cali_no_district.count())
+        # print("%d cali_no_district found." % cali_no_district.count())
 
-        cali_no_school = self.students.find({
-            "stateAbbreviation": "CA",
-            "institutionEntityMongoId": {"$exists": False}})
-        print("%d cali_no_school found." % cali_no_school.count())
+        # cali_no_school = self.students.find({
+        #     "stateAbbreviation": "CA",
+        #     "institutionEntityMongoId": {"$exists": False}})
+        # print("%d cali_no_school found." % cali_no_school.count())
 
         input("\n***** Press enter to start fixing, CTRL-C to cancel! *****")
 
