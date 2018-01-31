@@ -40,10 +40,17 @@ class FixerUpper:
 
         input("\n***** Press enter to start fixing, CTRL-C to cancel! *****")
 
+        rowidx = 0
         notfixed = []
         modified = []
 
         for student in cali_no_district:
+
+            # Something nice to look at...
+            rowidx += 1
+            if rowidx % 1000 == 0:
+                print("Processing row %d..." % rowidx)
+
             districtIdentifier = student.get('districtIdentifier', None)
             if not districtIdentifier:
                 notfixed.append(student)
@@ -74,6 +81,7 @@ class FixerUpper:
                 notfixed.append(student)
                 print("Duplicate key found for entity '%s': %s" % (student, e))
 
+        print("Processed %d students." % len(rowidx))
         print("Fixed %d students." % len(modified))
         print("Could not fix %d students." % len(notfixed))
         print("Could not find %d districts." % len(self.districtsNotFound))
