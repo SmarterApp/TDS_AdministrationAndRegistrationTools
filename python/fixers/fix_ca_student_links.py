@@ -41,8 +41,8 @@ class FixerUpper:
         input("\n***** Press enter to start fixing, CTRL-C to cancel! *****")
 
         rowidx = 0
-        notfixed = []
-        modified = []
+        notfixed = 0
+        modified = 0
 
         for student in cali_no_district:
 
@@ -53,7 +53,7 @@ class FixerUpper:
 
             districtIdentifier = student.get('districtIdentifier', None)
             if not districtIdentifier:
-                notfixed.append(student)
+                notfixed += 1
                 continue
 
             fixed = None
@@ -67,23 +67,23 @@ class FixerUpper:
                 fixed = self.link_district(student, districtIdentifier)
 
             if not fixed:
-                notfixed.append(student)
+                notfixed += 1
                 continue
 
             # Student is fixed! Save record.
             try:
                 result = self.students.replace_one({'_id': student.get('_id')}, student)
-                modified.append(student)
+                modified += 1
                 if result.matched_count != 1:
                     raise Exception(
                         "Matched %d documents saving student '%s'! Modified while running?" % result.matched_count)
             except pymongo.errors.DuplicateKeyError as e:
-                notfixed.append(student)
+                notfixed += 1
                 print("Duplicate key found for entity '%s': %s" % (student, e))
 
-        print("Processed %d students." % len(rowidx))
-        print("Fixed %d students." % len(modified))
-        print("Could not fix %d students." % len(notfixed))
+        print("Processed %d students." % rowidx)
+        print("Fixed %d students." % modified)
+        print("Could not fix %d students." % notfixed)
         print("Could not find %d districts." % len(self.districtsNotFound))
         print("Cached %d districts." % len(self.districtCache))
 
