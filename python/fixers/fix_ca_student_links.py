@@ -16,7 +16,8 @@ class FixerUpper:
 
     def __init__(self):
         self.districtCache = {}
-        self.districtsNotFound = set()
+        self.cacheHits = 0
+        self.cacheMisses = 0
 
         client = pymongo.MongoClient(settings.HOST, settings.PORT)
         self.db = client[settings.DBNAME]
@@ -43,6 +44,7 @@ class FixerUpper:
         rowidx = 0
         notfixed = 0
         modified = 0
+        districtsNotFound = set()
 
         for student in cali_no_district:
 
@@ -51,23 +53,27 @@ class FixerUpper:
             if rowidx % 1000 == 0:
                 print("Processing row %d..." % rowidx)
 
-            districtIdentifier = student.get('districtIdentifier', None)
-            if not districtIdentifier:
+            origDistrictIdentifier = student.get('districtIdentifier', None)
+            if not origDistrictIdentifier:
                 notfixed += 1
                 continue
 
             fixed = None
-            # If missing the trailing 0's, fix up and relink.
-            if not districtIdentifier.endswith("0000000"):
-                districtIdentifier = "%s0000000" % districtIdentifier
-                fixed = self.link_district(student, districtIdentifier)
+            # If district ID is 6 characters long, prepend a 0 and try to link.
+            if len(origDistrictIdentifier) == 6:
+                fixed = self.link_district(student, "0%s" % origDistrictIdentifier)
 
-            # If not fixed, try fixing without modifying the district ID.
+            # If missing 7 trailing 0's, add them and try to link.
+            if not fixed and not origDistrictIdentifier.endswith("0000000"):
+                fixed = self.link_district(student, "%s0000000" % origDistrictIdentifier)
+
+            # If not fixed yet, just try relinking with district ID as-is.
             if not fixed:
-                fixed = self.link_district(student, districtIdentifier)
+                fixed = self.link_district(student, origDistrictIdentifier)
 
             if not fixed:
                 notfixed += 1
+                districtsNotFound.add(origDistrictIdentifier)
                 continue
 
             # Student is fixed! Save record.
@@ -84,19 +90,21 @@ class FixerUpper:
         print("Processed %d students." % rowidx)
         print("Fixed %d students." % modified)
         print("Could not fix %d students." % notfixed)
-        print("Could not find %d districts." % len(self.districtsNotFound))
-        print("Cached %d districts." % len(self.districtCache))
+        print("Cached %d districts. %d hits, %d misses." % (len(self.districtCache), self.cacheHits, self.cacheMisses))
+        print("Could not find %d districts, as found on students:\n%s\n" % (len(districtsNotFound), districtsNotFound))
 
     def link_district(self, student, districtIdentifier):
         district = None
         if districtIdentifier in self.districtCache:
+            self.cacheHits += 1
             district = self.districtCache.get(districtIdentifier)
         else:
+            self.cacheMisses += 1
             district = self.districts.find_one({"entityId": districtIdentifier})
             self.districtCache[districtIdentifier] = district  # Cache the district, good or None.
         if not district:
-            self.districtsNotFound.add(districtIdentifier)
             return None
+        student['districtIdentifier'] = districtIdentifier
         student['districtEntityMongoId'] = str(district['_id'])
         return student
 
