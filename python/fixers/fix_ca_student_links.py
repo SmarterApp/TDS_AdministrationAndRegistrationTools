@@ -51,9 +51,12 @@ class FixerUpper:
 
     def fail(self, student, event):
         self.tally_district_event(event)
-        student['fixer_event'] = str(event)
-        self.students_not_fixed.write("%s,%s\n" % (
-            student.get('entityId', None), student.get('districtIdentifier', None)))
+        self.students_not_fixed.write("%s,%s,%s,%s\n" % (
+            student.get('entityId', ''),
+            student.get('districtIdentifier', ''),
+            student.get('institutionIdentifier', ''),
+            event.name,
+        ))
 
     def success(self, student, event):
         self.tally_district_event(event)
@@ -75,7 +78,8 @@ class FixerUpper:
 
         input("\n***** Press enter to start fixing, CTRL-C to cancel! *****")
 
-        self.students_not_fixed = open("students_not_fixed_%s" % start_time, "w")
+        self.students_not_fixed = open("students_not_fixed_%s.csv" % start_time, "w")
+        self.students_not_fixed.write("entityId,districtIdentifier,institutionIdentifier,failure\n")
 
         rowidx = 0
         self.districts_not_found = set()
