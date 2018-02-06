@@ -86,8 +86,6 @@ class FixerUpper:
             rowidx += 1
             if rowidx % 1000 == 0:
                 print("Processing row %d..." % rowidx)
-            if rowidx > 10000:
-                break
 
             district_id = student.get('districtIdentifier', None)
             if not district_id:
