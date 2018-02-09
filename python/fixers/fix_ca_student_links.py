@@ -88,12 +88,16 @@ class SchoolFixer:
         self.schools_not_found = set()
         self.schools_fixed = set()
 
+        deltaupdates = 0
+        updates = 0
         try:
             for student in cali_no_school:
                 # Some nice progress to look at...
                 self.rowidx += 1
                 if self.rowidx % 1000 == 0:
-                    print("Processing row %d..." % self.rowidx)
+                    print("Processing row %d, %d updates, %d delta..." % (
+                        self.rowidx, updates, updates - deltaupdates))
+                    deltaupdates = updates
 
                 school_id = student.get('institutionIdentifier', None)
                 if not school_id:
@@ -105,6 +109,7 @@ class SchoolFixer:
                     self.schools_not_found.add(school_id)
                     self.fail(student, failure)
                 else:
+                    updates += 1
                     self.schools_fixed.add(school_id)
                     self.success(student, SchoolFixer.Event.FIXED)
         except KeyboardInterrupt:
@@ -226,19 +231,23 @@ class DistrictFixer:
         self.districts_not_found = set()
         self.districts_fixed = set()
 
+        deltaupdates = 0
+        updates = 0
         try:
             for student in cali_no_district:
                 # Some nice progress to look at...
                 self.rowidx += 1
                 if self.rowidx % 1000 == 0:
-                    print("Processing row %d..." % self.rowidx)
+                    print("Processing row %d, %d updates, %d delta..." % (
+                        self.rowidx, updates, updates - deltaupdates))
+                    deltaupdates = updates
 
                 district_id = student.get('districtIdentifier', None)
                 if not district_id:
                     self.fail(student, DistrictFixer.Event.NOT_FIXED_NO_DISTRICT_ID)
                     continue
 
-                failure = None
+                failure = True
                 scheme = DistrictFixer.Event.FIXED_APPEND_ZEROES
                 # If district ID is 6 characters long, prepend a 0.
                 if len(district_id) == 6:
@@ -258,6 +267,7 @@ class DistrictFixer:
                     self.districts_not_found.add(student.get('districtIdentifier'))
                     self.fail(student, failure)
                 else:
+                    updates += 1
                     self.districts_fixed.add(student.get('districtIdentifier'))
                     self.success(student, scheme)
         except KeyboardInterrupt:
