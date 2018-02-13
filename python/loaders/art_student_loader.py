@@ -16,6 +16,14 @@ import paramiko
 import requests
 
 
+COUNTY_CODE = 'County-District Code'
+SCHOOL_CODE = 'School Code'
+CDS_CODE = 'Auth CDS Code'
+COUNTY_NAME = 'County Name'
+DISTRICT_NAME = 'District Name'
+SCHOOL_NAME = 'School Name'
+
+
 try:
     import settings_secret as settings
 except:
@@ -79,11 +87,12 @@ def main(argv):
     csv_start_line = 1
     # 9223372036854775807 ought to be enough for anybody.
     num_students = settings.NUM_STUDENTS if settings.NUM_STUDENTS else sys.maxsize
+    schoolfile = None
 
     try:
-        opts, _ = getopt.getopt(argv, "hylf:r:o:e:d:s:n:", [
+        opts, _ = getopt.getopt(argv, "hylf:r:o:e:d:s:n:c:", [
             "help", "dryrun", "localonly", "localfile=", "remotepath=", "offset=",
-            "encoding=", "delimiter=", "csv_start_line", "number=", ])
+            "encoding=", "delimiter=", "csv_start_line", "number=", "schoolfile=", ])
     except getopt.GetoptError:
         usage()
         sys.exit(2)
@@ -117,6 +126,9 @@ def main(argv):
         elif opt in ("-n", "--number"):
             num_students = int(arg)
             print("Command line limiting uploaded students to %d" % num_students)
+        elif opt in ("-c", "--schoolfile"):
+            schoolfile = arg
+            print("Command line set schoolfile to '%s'" % schoolfile)
 
     remotepath = remotepath if remotepath else datewise_filepath(
         settings.SFTP_FILE_DIR,
@@ -126,6 +138,11 @@ def main(argv):
     localfile = localfile if localfile else datewise_filepath(
         None,
         settings.SFTP_FILE_BASENAME,
+        settings.SFTP_FILE_DATEFORMAT,
+        settings.SFTP_FILE_EXT)
+    schoolfile = schoolfile if schoolfile else datewise_filepath(
+        None,
+        settings.SFTP_SCHOOL_FILE_BASENAME,
         settings.SFTP_FILE_DATEFORMAT,
         settings.SFTP_FILE_EXT)
 
@@ -142,6 +159,10 @@ def main(argv):
     print("\ndownload %s at %s, Elapsed %s" % ("completed" if dl_success else "failed", end_time, deltasecs))
 
     if dl_success:
+
+        # Process schools file for CDS Lookup.
+        cds_lookup = load_schools(schoolfile, encoding, delimiter)
+
         upload_start_time = datetime.datetime.now()
         print("\nUpload starting at %s" % upload_start_time)
         print("Uploading from file '%s', encoding '%s', delimiter '%s'" % (localfile, encoding, delimiter))
@@ -151,7 +172,7 @@ def main(argv):
         password = settings.AUTH_PAYLOAD.get('password', None)
 
         students_loaded = load_student_data(localfile, encoding, delimiter, csv_start_line, num_students,
-                                            dry_run, endpoint, username, password, progress)
+                                            dry_run, endpoint, username, password, progress, cds_lookup)
 
         end_time = datetime.datetime.now()
         deltasecs = (end_time - upload_start_time).total_seconds()
@@ -245,7 +266,7 @@ def open_csv_files(filename, encoding):
             yield csv_file
 
 
-def read_lines(filename, encoding, csv_start_line):
+def read_lines(filename, encoding, csv_start_line=1):
     current_line = 0
     try:
         for file in open_csv_files(filename, encoding):
@@ -273,12 +294,38 @@ def post_students(endpoint, total_loaded, students, delimiter, bearer_token, dry
     return total_loaded
 
 
-def load_student_data(
-        filename, encoding, delimiter, csv_start_line, num_students, dry_run, endpoint, username, password, progress):
+def is_district(school):
+    return school[COUNTY_CODE] and school[COUNTY_CODE] == school[SCHOOL_CODE]
+
+
+def load_schools(filename, encoding, delimiter):
+    rows_processed = 0
+    schools = []
+    districts = []
+    cds_lookup = {}
+
+    print("Processing schools file at %s..." % datetime.datetime.now())
+
+    for school in csv.DictReader(
+            [line[0] for line in read_lines(filename, encoding)], delimiter=delimiter):
+        rows_processed += 1
+        cds_lookup["%s%s" % (school[COUNTY_CODE], school[SCHOOL_CODE])] = school[CDS_CODE]
+        if is_district(school):
+            districts.append(school)
+        else:
+            schools.append(school)
+
+    print("Finished schools file at %s..." % datetime.datetime.now())
+    print("Processed %d rows, %d schools, %d districts, %d cds_lookup." % (
+        rows_processed, len(schools), len(districts), len(cds_lookup)))
+
+    return cds_lookup
+
+
+def load_student_data(filename, encoding, delimiter, csv_start_line, num_students,
+                      dry_run, endpoint, username, password, progress, cds_lookup):
 
     num_students = int(num_students) if num_students else sys.maxsize
-    encoding = encoding if encoding else settings.FILE_ENCODING
-    delimiter = delimiter if delimiter else settings.DELIMITER
     csv_start_line = csv_start_line if csv_start_line else 1
     total_loaded = 0
     students = []
@@ -387,8 +434,11 @@ def generate_district_identifier(student):
 
 
 # For CALPADS, institution ID's are district and school ID's concatenated.
-def generate_institution_identifier(student):
-    return '%s%s' % (xstr(student['ResponsibleDistrictIdentifier']), xstr(student['ResponsibleSchoolIdentifier']))
+def generate_institution_identifier(student, cds_lookup):
+    cds = cds_lookup.get(xstr(student['ResponsibleDistrictIdentifier']) + xstr(student['ResponsibleSchoolIdentifier']))
+    if not cds:
+        print("Did not find CDS for student %s!", student)
+    return cds
 
 
 def get_bearer_token(username, password):

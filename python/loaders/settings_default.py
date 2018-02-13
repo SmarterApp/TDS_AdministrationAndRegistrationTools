@@ -54,6 +54,7 @@ GRADEMAP = {
 # Settings for csv_downloader
 SFTP_FILE_DIR = './Students/'  # start with ./ and end with /
 SFTP_FILE_BASENAME = 'CA_students_'  # base part of filename, no file or extension.
+SFTP_SCHOOL_FILE_BASENAME = 'CA_schools_'  # base part of school filename.
 SFTP_FILE_DATEFORMAT = '%Y%m%d'  # Set to append date to filename. ex: '%Y%m%d'.
 SFTP_FILE_EXT = 'zip'  # Set to append to filepath after date is added.
 SFTP_HOSTNAME = 'localhost'  # sftp hostname or IP to connect to.
