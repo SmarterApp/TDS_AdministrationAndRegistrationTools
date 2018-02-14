@@ -23,6 +23,7 @@ COUNTY_NAME = 'County Name'
 DISTRICT_NAME = 'District Name'
 SCHOOL_NAME = 'School Name'
 
+FILE_TIME = datetime.datetime.now().strftime('%Y%m%d_%H%M%S')
 
 try:
     import settings_secret as settings
@@ -160,19 +161,23 @@ def main(argv):
 
     if dl_success:
 
+        bearer_token = get_bearer_token(
+            settings.AUTH_PAYLOAD.get('username', None),
+            settings.AUTH_PAYLOAD.get('password', None))
+
         # Process schools file for CDS Lookup.
-        cds_lookup = load_schools(schoolfile, encoding, delimiter)
+        cds_lookup, districts, schools = load_schools(schoolfile, encoding, delimiter)
+
+        post_districts(districts, settings.ART_REST_ENDPOINT + "/district", bearer_token)
+        post_schools(schools, settings.ART_REST_ENDPOINT + "/institution", bearer_token)
+        return
 
         upload_start_time = datetime.datetime.now()
         print("\nUpload starting at %s" % upload_start_time)
         print("Uploading from file '%s', encoding '%s', delimiter '%s'" % (localfile, encoding, delimiter))
 
-        endpoint = settings.ART_ENDPOINT
-        username = settings.AUTH_PAYLOAD.get('username', None)
-        password = settings.AUTH_PAYLOAD.get('password', None)
-
-        students_loaded = load_student_data(localfile, encoding, delimiter, csv_start_line, num_students,
-                                            dry_run, endpoint, username, password, progress, cds_lookup)
+        students_loaded = load_student_data(localfile, encoding, delimiter, csv_start_line, num_students, dry_run,
+                                            settings.ART_STUDENT_ENDPOINT, bearer_token, cds_lookup, progress)
 
         end_time = datetime.datetime.now()
         deltasecs = (end_time - upload_start_time).total_seconds()
@@ -300,9 +305,9 @@ def is_district(school):
 
 def load_schools(filename, encoding, delimiter):
     rows_processed = 0
-    schools = []
-    districts = []
     cds_lookup = {}
+    districts = []
+    schools = []
 
     print("Processing schools file at %s..." % datetime.datetime.now())
 
@@ -319,18 +324,17 @@ def load_schools(filename, encoding, delimiter):
     print("Processed %d rows, %d schools, %d districts, %d cds_lookup." % (
         rows_processed, len(schools), len(districts), len(cds_lookup)))
 
-    return cds_lookup
+    return cds_lookup, districts, schools
 
 
 def load_student_data(filename, encoding, delimiter, csv_start_line, num_students,
-                      dry_run, endpoint, username, password, progress, cds_lookup):
+                      dry_run, endpoint, bearer_token, cds_lookup, progress):
 
     num_students = int(num_students) if num_students else sys.maxsize
     csv_start_line = csv_start_line if csv_start_line else 1
     total_loaded = 0
     students = []
     header_row = False
-    bearer_token = get_bearer_token(username, password)
 
     for (line, where) in read_lines(filename, encoding, csv_start_line):
 
@@ -374,6 +378,91 @@ def load_student_data(filename, encoding, delimiter, csv_start_line, num_student
     return total_loaded
 
 
+def post_districts(districts, url, bearer_token):
+    print("Posting districts (%d in file)..." % len(districts))
+    with open("districts_loaded_%s.out.csv" % FILE_TIME, "w") as f_success, open(
+            "districts_not_loaded_%s.out.csv" % FILE_TIME, "w") as f_failed:
+        stats = {'processed': 0, 'success': 0, 'failed': 0}
+        try:
+            for district in districts:
+                stats['processed'] += 1
+                district = {
+                    'entityId': generate_district_identifier(district["County-District Code"]),
+                    'entityName': xstr(district["District Name"]),
+                    'nationwideIdentifier': generate_district_identifier(district["County-District Code"]),
+                    'parentEntityId': settings.STATE_ABBREVIATION,
+                    'parentEntityType': settings.STATE_ENTITY_TYPE,
+                    'stateAbbreviation': settings.STATE_ABBREVIATION,
+                }
+                # district = {
+                #     'entityId': "100000",
+                #     'entityName': "Jeffs4",
+                #     'nationwideIdentifier': "100000",
+                #     'parentEntityId': "CA",
+                #     'parentEntityType': "STATE",
+                #     'stateAbbreviation': "CA"}
+                # (not needed) 'parentId': "540f0abee4b0b2840bf21d32",
+
+                headers = {"Content-Type": "application/json", "Authorization": "Bearer %s" % bearer_token}
+                response = requests.post(
+                    url, headers=headers, data=json.dumps(district), verify=settings.ART_SSL_CHECKS)
+                if response.status_code == 201:
+                    stats['success'] += 1
+                    district['Location'] = response.headers["Location"]
+                    f_success.write("%s\n" % district)
+                else:
+                    stats['failed'] += 1
+                    district['Status Code'] = response.status_code
+                    district['Reason'] = response.reason
+                    district['Content'] = response.content
+                    f_failed.write("%s\n" % district)
+        except KeyboardInterrupt:
+            print("Got keyboard interrupt. Exiting district load.")
+    print("post_districts complete. stats: %s" % stats)
+
+
+def post_schools(schools, url, bearer_token):
+    print("Posting schools (%d in file)..." % len(schools))
+    with open("schools_loaded_%s.out.csv" % FILE_TIME, "w") as f_success, open(
+            "schools_not_loaded_%s.out.csv" % FILE_TIME, "w") as f_failed:
+        stats = {'processed': 0, 'success': 0, 'failed': 0}
+        try:
+            for school in schools:
+                stats['processed'] += 1
+                institution = {
+                    'entityId': xstr(school["Auth CDS Code"]),
+                    'entityName': xstr(school["School Name"]),
+                    'nationwideIdentifier': xstr(school["Auth CDS Code"]),
+                    'parentEntityId': generate_district_identifier(school["County-District Code"]),
+                    'parentEntityType': settings.DISTRICT_ENTITY_TYPE,
+                    'stateAbbreviation': settings.STATE_ABBREVIATION,
+                }
+                # institution = {
+                #     'entityId': "200000",
+                #     'entityname': "Jeff Test 3",
+                #     'nationwideIdentifier': "200000",
+                #     'parentEntityId': "100000",
+                #     'parentEntityType': "DISTRICT",
+                #     'stateAbbreviation': "CA"}
+                # (not needed) 'parentId':"5a838d6de4b05c70b2e66e14"
+
+                headers = {"Content-Type": "application/json", "Authorization": "Bearer %s" % bearer_token}
+                response = requests.post(
+                    url, headers=headers, data=json.dumps(institution), verify=settings.ART_SSL_CHECKS)
+                if response.status_code == 201:
+                    stats['success'] += 1
+                    f_success.write("%s\n" % school)
+                else:
+                    stats['failed'] += 1
+                    school['Status Code'] = response.status_code
+                    school['Reason'] = response.reason
+                    school['Content'] = response.content
+                    f_failed.write("%s\n" % school)
+        except KeyboardInterrupt:
+            print("Got keyboard interrupt. Exiting district load.")
+    print("post_schools complete. stats: %s" % stats)
+
+
 # takes a list of csv lines and parses into a DTO. row 1 must be a csv header row.
 def create_student_dtos(students, delimiter):
     return [create_student_dto(student) for student in csv.DictReader(students, delimiter=delimiter)]
@@ -403,7 +492,7 @@ def create_student_dto(student):
         "birthDate": xstr(student['DateofBirth']),
         "externalSsid": xstr(student['SmarterStudentID']),
         "institutionIdentifier": generate_institution_identifier(student),
-        "districtIdentifier": generate_district_identifier(student),
+        "districtIdentifier": generate_district_identifier(student['ResponsibleDistrictIdentifier']),
         "gradeLevelWhenAssessed": gradeLevelWhenAssessed,
         "hispanicOrLatino": string_to_boolean(student['HispanicOrLatinoEthnicity']),
         "americanIndianOrAlaskaNative": string_to_boolean(student['AmericanIndianOrAlaskaNative']),
@@ -428,12 +517,17 @@ def create_student_dto(student):
     }
 
 
-# For CALPADS, district ID's have seven 0's appended in order to be 14 characters.
-def generate_district_identifier(student):
-    return '%s0000000' % xstr(student['ResponsibleDistrictIdentifier'])
+# Create a 14-digit district ID with seven 0's on end, left padded with 0's.
+def generate_district_identifier(district_code):
+    # append seven 0's to the end of the district_code as institution placeholder
+    district_id = '%s0000000' % xstr(district_code)
+    # left pad with 0's until it's 14 characters long
+    while len(district_id) < 14:
+        district_id = '0' + district_id
+    return district_id
 
 
-# For CALPADS, institution ID's are district and school ID's concatenated.
+# Look up CDS Code from data in CA_students.csv file.
 def generate_institution_identifier(student, cds_lookup):
     cds = cds_lookup.get(xstr(student['ResponsibleDistrictIdentifier']) + xstr(student['ResponsibleSchoolIdentifier']))
     if not cds:

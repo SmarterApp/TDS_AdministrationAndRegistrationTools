@@ -3,7 +3,8 @@
 
 # BASIC DEFAULTS AND CONSTANTS
 NUM_STUDENTS = None
-ART_ENDPOINT = "https://localhost:8443/rest/external/student/CA/batch"
+ART_REST_ENDPOINT = "https://localhost:8443/rest"
+ART_STUDENT_ENDPOINT = ART_REST_ENDPOINT + "/external/student/CA/batch"
 ART_SSL_CHECKS = True  # Disable for dev servers with bad SSL. Make it True FOR PROD!
 
 # SUPER SENSITIVE AUTH INFO (these are fake - put yours in settings_secret.py)
@@ -20,9 +21,10 @@ AUTH_PAYLOAD = {
 CHUNK_SIZE = 10000
 BUFFER_SIZE = 512 * 1024
 
-# settings for csv_load_students
+# settings for art_student_loader
 DELIMITER = '^'
 FILE_ENCODING = 'latin1'  # which is also iso-8859-1 (don't use cp1252!)
+STATE_ABBREVIATION = 'CA'
 GRADEMAP = {
     # MAPPED VALUES
     'US': 'UG',  # US goes to 'ungraded'
@@ -50,6 +52,8 @@ GRADEMAP = {
     'PS': 'PS',  # POST SECONDARY
     'UG': 'UG',  # UNGRADED
 }
+STATE_ENTITY_TYPE = 'STATE'
+DISTRICT_ENTITY_TYPE = 'DISTRICT'
 
 # Settings for csv_downloader
 SFTP_FILE_DIR = './Students/'  # start with ./ and end with /
