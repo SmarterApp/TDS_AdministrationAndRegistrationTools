@@ -13,6 +13,7 @@ import unicodedata
 import zipfile
 
 import paramiko
+import pymongo
 import requests
 
 
@@ -22,6 +23,18 @@ CDS_CODE = 'Auth CDS Code'
 COUNTY_NAME = 'County Name'
 DISTRICT_NAME = 'District Name'
 SCHOOL_NAME = 'School Name'
+
+LOCATION = 'location'
+STATUS = 'status'
+REASON = 'reason'
+CONTENT = 'content'
+
+ENTITY_ID = 'entityId'
+ENTITY_NAME = 'entityName'
+NAT_ID = 'nationwideIdentifier'
+PARENT_EID = 'parentEntityId'
+PARENT_ETYPE = 'parentEntityType'
+STATE_ABBREV = 'stateAbbreviation'
 
 FILE_TIME = datetime.datetime.now().strftime('%Y%m%d_%H%M%S')
 
@@ -39,6 +52,11 @@ if settings.ART_SSL_CHECKS is False:
         requests.packages.urllib3.exceptions.InsecureRequestWarning)
 
 gradelevels = collections.defaultdict(int)
+
+client = pymongo.MongoClient(settings.MONGO_HOST, settings.MONGO_PORT)
+db = client[settings.MONGO_DBNAME]
+district_db = db[settings.MONGO_DISTRICTS]
+school_db = db[settings.MONGO_INSTITUTIONS]
 
 # Globals
 lastProgressBytes = False
@@ -131,6 +149,17 @@ def main(argv):
             schoolfile = arg
             print("Command line set schoolfile to '%s'" % schoolfile)
 
+    remoteschool = datewise_filepath(
+        settings.SFTP_SCHOOL_FILE_DIR,
+        settings.SFTP_SCHOOL_FILE_BASENAME,
+        settings.SFTP_FILE_DATEFORMAT,
+        settings.SFTP_FILE_EXT)
+    schoolfile = schoolfile if schoolfile else datewise_filepath(
+        None,
+        settings.SFTP_SCHOOL_FILE_BASENAME,
+        settings.SFTP_FILE_DATEFORMAT,
+        settings.SFTP_FILE_EXT)
+
     remotepath = remotepath if remotepath else datewise_filepath(
         settings.SFTP_FILE_DIR,
         settings.SFTP_FILE_BASENAME,
@@ -141,18 +170,16 @@ def main(argv):
         settings.SFTP_FILE_BASENAME,
         settings.SFTP_FILE_DATEFORMAT,
         settings.SFTP_FILE_EXT)
-    schoolfile = schoolfile if schoolfile else datewise_filepath(
-        None,
-        settings.SFTP_SCHOOL_FILE_BASENAME,
-        settings.SFTP_FILE_DATEFORMAT,
-        settings.SFTP_FILE_EXT)
 
     start_time = datetime.datetime.now()
     print("\nStarting at %s\n" % start_time)
 
     dl_success = local_only
     if not dl_success:
-        dl_success = download_student_csv(
+        dl_success = download_file(
+            hostname, port, username, password, keyfile, keypass, remoteschool, schoolfile, 0, progress)
+
+        dl_success &= download_file(
             hostname, port, username, password, keyfile, keypass, remotepath, localfile, offset, progress)
 
     end_time = datetime.datetime.now()
@@ -193,12 +220,13 @@ def datewise_filepath(dir, basename, date_format, ext):
     path = str(dir) if dir else ''
     path += str(basename) if basename else ''
     path += datetime.datetime.today().strftime(date_format) if date_format else ''
+    # path += (datetime.datetime.today() - datetime.timedelta(days=1)).strftime(date_format) if date_format else ''
     path += ('.' + str(ext)) if ext else ''
     return path
 
 
 # progress is a callback taking (message, completedbytes, totalbytes). Called frequently to display progress.
-def download_student_csv(hostname, port, username, password, keyfile, keypass, remotepath, localfile, offset, progress):
+def download_file(hostname, port, username, password, keyfile, keypass, remotepath, localfile, offset, progress):
 
     progress("Downloading file '%s' from '%s@%s'" % (remotepath, username, hostname))
     progress("              to './%s'" % localfile)
@@ -380,87 +408,137 @@ def load_student_data(filename, encoding, delimiter, csv_start_line, num_student
 
 def post_districts(districts, url, bearer_token):
     print("Posting districts (%d in file)..." % len(districts))
-    with open("districts_loaded_%s.out.csv" % FILE_TIME, "w") as f_success, open(
-            "districts_not_loaded_%s.out.csv" % FILE_TIME, "w") as f_failed:
-        stats = {'processed': 0, 'success': 0, 'failed': 0}
+    with open("districts_loaded_%s.out.csv" % FILE_TIME, "w", newline='') as f_success, open(
+            "districts_not_loaded_%s.out.csv" % FILE_TIME, "w", newline='') as f_failed:
+        fieldnames = [ENTITY_ID, ENTITY_NAME, NAT_ID, PARENT_EID, PARENT_ETYPE,
+                      STATE_ABBREV]
+        csv_success = csv.DictWriter(f_success, fieldnames + [LOCATION])
+        csv_success.writeheader()
+        csv_failed = csv.DictWriter(f_failed, fieldnames + [STATUS, REASON, CONTENT])
+        csv_failed.writeheader()
+        stats = {'processed': 0, 'skipped': 0, 'success': 0, 'failed': 0, 'name_changed': 0}
         try:
             for district in districts:
                 stats['processed'] += 1
-                district = {
-                    'entityId': generate_district_identifier(district["County-District Code"]),
-                    'entityName': xstr(district["District Name"]),
-                    'nationwideIdentifier': generate_district_identifier(district["County-District Code"]),
-                    'parentEntityId': settings.STATE_ABBREVIATION,
-                    'parentEntityType': settings.STATE_ENTITY_TYPE,
-                    'stateAbbreviation': settings.STATE_ABBREVIATION,
+                entity_id = generate_district_identifier(district[COUNTY_CODE])
+                entity_name = xstr(district[DISTRICT_NAME])[:60]
+                district_dto = {
+                    ENTITY_ID: entity_id,
+                    ENTITY_NAME: entity_name,
+                    NAT_ID: entity_id,
+                    PARENT_EID: settings.STATE_ABBREVIATION,
+                    PARENT_ETYPE: settings.STATE_ENTITY_TYPE,
+                    STATE_ABBREV: settings.STATE_ABBREVIATION,
                 }
-                # district = {
-                #     'entityId': "100000",
-                #     'entityName': "Jeffs4",
-                #     'nationwideIdentifier': "100000",
-                #     'parentEntityId': "CA",
-                #     'parentEntityType': "STATE",
-                #     'stateAbbreviation': "CA"}
-                # (not needed) 'parentId': "540f0abee4b0b2840bf21d32",
-
-                headers = {"Content-Type": "application/json", "Authorization": "Bearer %s" % bearer_token}
-                response = requests.post(
-                    url, headers=headers, data=json.dumps(district), verify=settings.ART_SSL_CHECKS)
-                if response.status_code == 201:
-                    stats['success'] += 1
-                    district['Location'] = response.headers["Location"]
-                    f_success.write("%s\n" % district)
+                # Update it if it's already in the DB, else insert.
+                found_district = district_db.find_one({"entityId": entity_id}, projection=['entityName'])
+                if found_district:
+                    if found_district.get('entityName') != entity_name:
+                        stats['name_changed'] += 1
+                        try:
+                            result = district_db.update_one({'_id': found_district.get('_id')}, {'$set': {
+                                'entityName': entity_name
+                            }})
+                            stats['success'] += 1
+                        except Exception as e:
+                            stats['failed'] += 1
+                            district_dto[STATUS] = 'UPDATE FAILED'
+                            district_dto[REASON] = 'Mongo update_one raised'
+                            district_dto[CONTENT] = "Exception %s" % e
+                            csv_failed.writerow(district_dto)
+                    else:
+                        stats['skipped'] += 1
                 else:
-                    stats['failed'] += 1
-                    district['Status Code'] = response.status_code
-                    district['Reason'] = response.reason
-                    district['Content'] = response.content
-                    f_failed.write("%s\n" % district)
+                    headers = {"Content-Type": "application/json", "Authorization": "Bearer %s" % bearer_token}
+                    response = requests.post(
+                        url, headers=headers, data=json.dumps(district_dto), verify=settings.ART_SSL_CHECKS)
+                    if response.status_code == 201:
+                        stats['success'] += 1
+                        district_dto[LOCATION] = response.headers["Location"]
+                        csv_success.writerow(district_dto)
+                    else:
+                        stats['failed'] += 1
+                        district_dto[STATUS] = response.status_code
+                        district_dto[REASON] = response.reason
+                        district_dto[CONTENT] = str(json.loads(response.content))
+                        csv_failed.writerow(district_dto)
         except KeyboardInterrupt:
             print("Got keyboard interrupt. Exiting district load.")
-    print("post_districts complete. stats: %s" % stats)
+    print("post_districts complete at %s.\nstats: %s" % (datetime.datetime.now(), stats))
 
 
 def post_schools(schools, url, bearer_token):
     print("Posting schools (%d in file)..." % len(schools))
-    with open("schools_loaded_%s.out.csv" % FILE_TIME, "w") as f_success, open(
-            "schools_not_loaded_%s.out.csv" % FILE_TIME, "w") as f_failed:
-        stats = {'processed': 0, 'success': 0, 'failed': 0}
+    with open("schools_loaded_%s.out.csv" % FILE_TIME, "w", newline='') as f_success, open(
+            "schools_not_loaded_%s.out.csv" % FILE_TIME, "w", newline='') as f_failed:
+        fieldnames = [ENTITY_ID, ENTITY_NAME, NAT_ID, PARENT_EID, PARENT_ETYPE,
+                      STATE_ABBREV]
+        csv_success = csv.DictWriter(f_success, fieldnames)
+        csv_success.writeheader()
+        csv_failed = csv.DictWriter(f_failed, fieldnames + [STATUS, REASON, CONTENT])
+        csv_failed.writeheader()
+        stats = {'processed': 0, 'skipped': 0, 'success': 0, 'failed': 0, 'parent_changed': 0, 'name_changed': 0}
         try:
             for school in schools:
                 stats['processed'] += 1
-                institution = {
-                    'entityId': xstr(school["Auth CDS Code"]),
-                    'entityName': xstr(school["School Name"]),
-                    'nationwideIdentifier': xstr(school["Auth CDS Code"]),
-                    'parentEntityId': generate_district_identifier(school["County-District Code"]),
-                    'parentEntityType': settings.DISTRICT_ENTITY_TYPE,
-                    'stateAbbreviation': settings.STATE_ABBREVIATION,
+                entity_id = xstr(school[CDS_CODE])
+                parent_id = generate_district_identifier(school[COUNTY_CODE])
+                school_name = xstr(school[SCHOOL_NAME])[:60]
+                institution_dto = {
+                    ENTITY_ID: entity_id,
+                    ENTITY_NAME: school_name,
+                    NAT_ID: entity_id,
+                    PARENT_EID: parent_id,
+                    PARENT_ETYPE: settings.DISTRICT_ENTITY_TYPE,
+                    STATE_ABBREV: settings.STATE_ABBREVIATION,
                 }
-                # institution = {
-                #     'entityId': "200000",
-                #     'entityname': "Jeff Test 3",
-                #     'nationwideIdentifier': "200000",
-                #     'parentEntityId': "100000",
-                #     'parentEntityType': "DISTRICT",
-                #     'stateAbbreviation': "CA"}
-                # (not needed) 'parentId':"5a838d6de4b05c70b2e66e14"
-
-                headers = {"Content-Type": "application/json", "Authorization": "Bearer %s" % bearer_token}
-                response = requests.post(
-                    url, headers=headers, data=json.dumps(institution), verify=settings.ART_SSL_CHECKS)
-                if response.status_code == 201:
-                    stats['success'] += 1
-                    f_success.write("%s\n" % school)
+                # Update it if it's already in the DB, else insert.
+                found_school = school_db.find_one({"entityId": entity_id}, projection=['parentEntityId', 'entityName'])
+                if found_school:
+                    skipped = True
+                    if found_school.get('entityName') != school_name:
+                        skipped = False
+                        stats['name_changed'] += 1
+                        try:
+                            result = school_db.update_one({'_id': found_school.get('_id')}, {'$set': {
+                                'entityName': school_name
+                            }})
+                            stats['success'] += 1
+                            csv_success.writerow(institution_dto)
+                        except Exception as e:
+                            print("Mongo update_one() failed. School '%s'. Exception '%s'." % (entity_id, e))
+                            stats['failed'] += 1
+                            institution_dto[STATUS] = 'UPDATE FAILED'
+                            institution_dto[REASON] = 'Mongo update_one raised'
+                            institution_dto[CONTENT] = "Exception %s" % e
+                            csv_failed.writerow(institution_dto)
+                    if found_school.get('parentEntityId') != parent_id:
+                        skipped = False
+                        stats['parent_changed'] += 1
+                        stats['failed'] += 1
+                        institution_dto[STATUS] = 'HUMAN REQUIRED'
+                        institution_dto[REASON] = 'PARENT CHANGE'
+                        institution_dto[CONTENT] = "Parent ID in DB: %s to CSV: %s" % (
+                            found_school.get('parentEntityId'), parent_id)
+                        csv_failed.writerow(institution_dto)
+                    if skipped:
+                        stats['skipped'] += 1
                 else:
-                    stats['failed'] += 1
-                    school['Status Code'] = response.status_code
-                    school['Reason'] = response.reason
-                    school['Content'] = response.content
-                    f_failed.write("%s\n" % school)
+                    headers = {"Content-Type": "application/json", "Authorization": "Bearer %s" % bearer_token}
+                    response = requests.post(
+                        url, headers=headers, data=json.dumps(institution_dto), verify=settings.ART_SSL_CHECKS)
+                    if response.status_code == 201:
+                        stats['success'] += 1
+                        csv_success.writerow(institution_dto)
+                    else:
+                        stats['failed'] += 1
+                        institution_dto[STATUS] = response.status_code
+                        institution_dto[REASON] = response.reason
+                        institution_dto[CONTENT] = str(json.loads(response.content))
+                        csv_failed.writerow(institution_dto)
         except KeyboardInterrupt:
             print("Got keyboard interrupt. Exiting district load.")
-    print("post_schools complete. stats: %s" % stats)
+    print("post_schools complete at %s.\nstats: %s" % (datetime.datetime.now(), stats))
 
 
 # takes a list of csv lines and parses into a DTO. row 1 must be a csv header row.
@@ -582,13 +660,14 @@ def xstr(s):
 
 
 def usage():
-    print("Download, extract, and upload today's student dump from CALPADS sFTP server into ART.")
-    print("  If a zip file is fetched, the first file inside will be extracted then uploaded to ART.")
-    print("\nMost settings are configured via settings files, NOT via this command line!")
+    print("Download, extract, and upload today's school and student dump files from sFTP server.")
+    print("  If a zip file is found, the first file inside will be read.")
+    print("\nMost settings are configured via settings files, NOT via the command line.")
     print("  To modify those settings, copy settings_default.py to settings_secret.py and edit the copy.")
     print("\nHelp/usage details:")
     print("  -h, --help               : this help screen")
-    print("  -f, --localfile          : local filename to write into. defaults to 'today's filename'")
+    print("  -f, --localfile          : local file to download into then read from, -l will prevent download")
+    print("  -c, --schoolfile         : local school file to download into then read from, -l prevents download")
     print("  Downloader Options:")
     print("  -r, --remotepath         : remote filepath to download\n"
           "                             (defaults to today's file, eg: './Students/CA_students_20171005.zip')")
