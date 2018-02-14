@@ -195,8 +195,9 @@ def main(argv):
         # Process schools file for CDS Lookup.
         cds_lookup, districts, schools = load_schools(schoolfile, encoding, delimiter)
 
-        post_districts(districts, settings.ART_REST_ENDPOINT + "/district", bearer_token)
-        post_schools(schools, settings.ART_REST_ENDPOINT + "/institution", bearer_token)
+        if not dry_run:
+            post_districts(districts, settings.ART_REST_ENDPOINT + "/district", bearer_token)
+            post_schools(schools, settings.ART_REST_ENDPOINT + "/institution", bearer_token)
 
         upload_start_time = datetime.datetime.now()
         print("\nUpload starting at %s" % upload_start_time)
@@ -383,7 +384,8 @@ def load_student_data(filename, encoding, delimiter, csv_start_line, num_student
         # If we've got a full chunk of students, post 'em!
         if len(students) - 1 >= students_to_load:
             progress("Posting %d students, ending at line %d..." % (len(students) - 1, where))
-            total_loaded = post_students(endpoint, total_loaded, students, delimiter, bearer_token, cds_lookup, dry_run, progress)
+            total_loaded = post_students(
+                endpoint, total_loaded, students, delimiter, bearer_token, cds_lookup, dry_run, progress)
             students = [header_row]  # Reset for new chunk
 
         # We uploaded what the user wanted. Exit read loop.
@@ -394,7 +396,8 @@ def load_student_data(filename, encoding, delimiter, csv_start_line, num_student
     students = students[0:(num_students - total_loaded + 1)]  # Chop off any extras the user doesn't want.
     if len(students) > 1:
         progress("Posting final block of %d students, ending with line %d" % (len(students) - 1, where))
-        total_loaded = post_students(endpoint, total_loaded, students, delimiter, bearer_token, cds_lookup, dry_run, progress)
+        total_loaded = post_students(
+            endpoint, total_loaded, students, delimiter, bearer_token, cds_lookup, dry_run, progress)
 
     progress("%d total students uploaded. Ended at line %d." % (total_loaded, where))
 
@@ -407,15 +410,15 @@ def load_student_data(filename, encoding, delimiter, csv_start_line, num_student
 
 def post_districts(districts, url, bearer_token):
     print("Posting districts (%d in file)..." % len(districts))
-    with open("districts_loaded_%s.out.csv" % FILE_TIME, "w", newline='') as f_success, open(
-            "districts_not_loaded_%s.out.csv" % FILE_TIME, "w", newline='') as f_failed:
+    with open("districts_success_%s.out.csv" % FILE_TIME, "w", newline='') as f_success, open(
+            "districts_failed_%s.out.csv" % FILE_TIME, "w", newline='') as f_failed:
         fieldnames = [ENTITY_ID, ENTITY_NAME, NAT_ID, PARENT_EID, PARENT_ETYPE,
                       STATE_ABBREV]
         csv_success = csv.DictWriter(f_success, fieldnames + [LOCATION])
         csv_success.writeheader()
         csv_failed = csv.DictWriter(f_failed, fieldnames + [STATUS, REASON, CONTENT])
         csv_failed.writeheader()
-        stats = {'processed': 0, 'skipped': 0, 'success': 0, 'failed': 0, 'name_changed': 0}
+        stats = {'processed': 0, 'skipped': 0, 'inserted': 0, 'failed_insert': 0, 'updated': 0, 'failed_update': 0}
         try:
             for district in districts:
                 stats['processed'] += 1
@@ -433,14 +436,15 @@ def post_districts(districts, url, bearer_token):
                 found_district = district_db.find_one({"entityId": entity_id}, projection=['entityName'])
                 if found_district:
                     if found_district.get('entityName') != entity_name:
-                        stats['name_changed'] += 1
                         try:
-                            result = district_db.update_one({'_id': found_district.get('_id')}, {'$set': {
+                            district_db.update_one({'_id': found_district.get('_id')}, {'$set': {
                                 'entityName': entity_name
                             }})
-                            stats['success'] += 1
+                            stats['updated'] += 1
+                            district_dto[LOCATION] = "updated from '%s'" % found_district.get('entityName')
+                            csv_success.writerow(district_dto)
                         except Exception as e:
-                            stats['failed'] += 1
+                            stats['failed_update'] += 1
                             district_dto[STATUS] = 'UPDATE FAILED'
                             district_dto[REASON] = 'Mongo update_one raised'
                             district_dto[CONTENT] = "Exception %s" % e
@@ -452,11 +456,11 @@ def post_districts(districts, url, bearer_token):
                     response = requests.post(
                         url, headers=headers, data=json.dumps(district_dto), verify=settings.ART_SSL_CHECKS)
                     if response.status_code == 201:
-                        stats['success'] += 1
+                        stats['inserted'] += 1
                         district_dto[LOCATION] = response.headers["Location"]
                         csv_success.writerow(district_dto)
                     else:
-                        stats['failed'] += 1
+                        stats['failed_insert'] += 1
                         district_dto[STATUS] = response.status_code
                         district_dto[REASON] = response.reason
                         district_dto[CONTENT] = str(json.loads(response.content))
@@ -468,15 +472,15 @@ def post_districts(districts, url, bearer_token):
 
 def post_schools(schools, url, bearer_token):
     print("Posting schools (%d in file)..." % len(schools))
-    with open("schools_loaded_%s.out.csv" % FILE_TIME, "w", newline='') as f_success, open(
-            "schools_not_loaded_%s.out.csv" % FILE_TIME, "w", newline='') as f_failed:
+    with open("schools_success_%s.out.csv" % FILE_TIME, "w", newline='') as f_success, open(
+            "schools_failed_%s.out.csv" % FILE_TIME, "w", newline='') as f_failed:
         fieldnames = [ENTITY_ID, ENTITY_NAME, NAT_ID, PARENT_EID, PARENT_ETYPE,
-                      STATE_ABBREV]
+                      STATE_ABBREV, STATUS]
         csv_success = csv.DictWriter(f_success, fieldnames)
         csv_success.writeheader()
-        csv_failed = csv.DictWriter(f_failed, fieldnames + [STATUS, REASON, CONTENT])
+        csv_failed = csv.DictWriter(f_failed, fieldnames + [REASON, CONTENT])
         csv_failed.writeheader()
-        stats = {'processed': 0, 'skipped': 0, 'success': 0, 'failed': 0, 'parent_changed': 0, 'name_changed': 0}
+        stats = {'processed': 0, 'skipped': 0, 'inserted': 0, 'failed_insert': 0, 'updated': 0, 'failed_update': 0}
         try:
             for school in schools:
                 stats['processed'] += 1
@@ -497,28 +501,26 @@ def post_schools(schools, url, bearer_token):
                     skipped = True
                     if found_school.get('entityName') != school_name:
                         skipped = False
-                        stats['name_changed'] += 1
                         try:
-                            result = school_db.update_one({'_id': found_school.get('_id')}, {'$set': {
+                            school_db.update_one({'_id': found_school.get('_id')}, {'$set': {
                                 'entityName': school_name
                             }})
-                            stats['success'] += 1
+                            stats['updated'] += 1
+                            institution_dto[STATUS] = "updated from '%s'" % found_school.get('entityName')
                             csv_success.writerow(institution_dto)
                         except Exception as e:
-                            print("Mongo update_one() failed. School '%s'. Exception '%s'." % (entity_id, e))
-                            stats['failed'] += 1
+                            stats['failed_update'] += 1
                             institution_dto[STATUS] = 'UPDATE FAILED'
                             institution_dto[REASON] = 'Mongo update_one raised'
                             institution_dto[CONTENT] = "Exception %s" % e
                             csv_failed.writerow(institution_dto)
                     if found_school.get('parentEntityId') != parent_id:
                         skipped = False
-                        stats['parent_changed'] += 1
-                        stats['failed'] += 1
-                        institution_dto[STATUS] = 'HUMAN REQUIRED'
-                        institution_dto[REASON] = 'PARENT CHANGE'
+                        institution_dto[STATUS] = 'HUMAN_NEEDED'
+                        institution_dto[REASON] = 'PARENT_CHANGED'
                         institution_dto[CONTENT] = "Parent ID in DB: %s to CSV: %s" % (
                             found_school.get('parentEntityId'), parent_id)
+                        stats['failed_update'] += 1
                         csv_failed.writerow(institution_dto)
                     if skipped:
                         stats['skipped'] += 1
@@ -527,10 +529,10 @@ def post_schools(schools, url, bearer_token):
                     response = requests.post(
                         url, headers=headers, data=json.dumps(institution_dto), verify=settings.ART_SSL_CHECKS)
                     if response.status_code == 201:
-                        stats['success'] += 1
+                        stats['inserted'] += 1
                         csv_success.writerow(institution_dto)
                     else:
-                        stats['failed'] += 1
+                        stats['failed_insert'] += 1
                         institution_dto[STATUS] = response.status_code
                         institution_dto[REASON] = response.reason
                         institution_dto[CONTENT] = str(json.loads(response.content))
@@ -665,19 +667,19 @@ def usage():
     print("  To modify those settings, copy settings_default.py to settings_secret.py and edit the copy.")
     print("\nHelp/usage details:")
     print("  -h, --help               : this help screen")
-    print("  -f, --localfile          : local file to download into then read from, -l will prevent download")
-    print("  -c, --schoolfile         : local school file to download into then read from, -l prevents download")
+    print("  -f, --localfile          : local student file to download then read from (-l to prevent download)")
+    print("  -c, --schoolfile         : local school file to download then read from (-l prevents download)")
     print("  Downloader Options:")
-    print("  -r, --remotepath         : remote filepath to download\n"
+    print("  -r, --remotepath         : remote student filepath to download\n"
           "                             (defaults to today's file, eg: './Students/CA_students_20171005.zip')")
-    print("  -o, --offset             : byte in the file to start downloading\n"
+    print("  -o, --offset             : byte in the remote student file to start downloading\n"
           "                             (will resume download at the end of any matching file found)")
     print("  Uploader Options:")
-    print("  -y, --dryrun             : do a dry run - does everything except actually POST to ART")
-    print("  -l, --localonly          : don't try to download anything - just read the local file")
-    print("  -e, --encoding           : encoding to use when processing CSV file")
-    print("  -d, --delimiter          : delimiter to use when processing CSV file")
-    print("  -s, --csv_start_line     : line in the csv file to start uploading")
+    print("  -y, --dryrun             : do a dry run - download and parse data but do not make any changes")
+    print("  -l, --localonly          : don't download anything - just use local files")
+    print("  -e, --encoding           : encoding to use when processing CSV files")
+    print("  -d, --delimiter          : delimiter to use when processing CSV files")
+    print("  -s, --csv_start_line     : line in the student csv file to start uploading")
     print("  -n, --number             : the (max) number of students to upload\n")
 
 
