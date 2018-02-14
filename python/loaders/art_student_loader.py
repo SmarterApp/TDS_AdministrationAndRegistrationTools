@@ -197,7 +197,6 @@ def main(argv):
 
         post_districts(districts, settings.ART_REST_ENDPOINT + "/district", bearer_token)
         post_schools(schools, settings.ART_REST_ENDPOINT + "/institution", bearer_token)
-        return
 
         upload_start_time = datetime.datetime.now()
         print("\nUpload starting at %s" % upload_start_time)
@@ -316,8 +315,8 @@ def read_lines(filename, encoding, csv_start_line=1):
         raise e
 
 
-def post_students(endpoint, total_loaded, students, delimiter, bearer_token, dry_run, progress):
-    student_dtos = create_student_dtos(students, delimiter)
+def post_students(endpoint, total_loaded, students, delimiter, bearer_token, cds_lookup, dry_run, progress):
+    student_dtos = create_student_dtos(students, delimiter, cds_lookup)
     if not dry_run:
         location = post_student_data(endpoint, student_dtos, bearer_token)
         progress("Batch status URL: %s" % location)
@@ -384,7 +383,7 @@ def load_student_data(filename, encoding, delimiter, csv_start_line, num_student
         # If we've got a full chunk of students, post 'em!
         if len(students) - 1 >= students_to_load:
             progress("Posting %d students, ending at line %d..." % (len(students) - 1, where))
-            total_loaded = post_students(endpoint, total_loaded, students, delimiter, bearer_token, dry_run, progress)
+            total_loaded = post_students(endpoint, total_loaded, students, delimiter, bearer_token, cds_lookup, dry_run, progress)
             students = [header_row]  # Reset for new chunk
 
         # We uploaded what the user wanted. Exit read loop.
@@ -395,7 +394,7 @@ def load_student_data(filename, encoding, delimiter, csv_start_line, num_student
     students = students[0:(num_students - total_loaded + 1)]  # Chop off any extras the user doesn't want.
     if len(students) > 1:
         progress("Posting final block of %d students, ending with line %d" % (len(students) - 1, where))
-        total_loaded = post_students(endpoint, total_loaded, students, delimiter, bearer_token, dry_run, progress)
+        total_loaded = post_students(endpoint, total_loaded, students, delimiter, bearer_token, cds_lookup, dry_run, progress)
 
     progress("%d total students uploaded. Ended at line %d." % (total_loaded, where))
 
@@ -542,15 +541,15 @@ def post_schools(schools, url, bearer_token):
 
 
 # takes a list of csv lines and parses into a DTO. row 1 must be a csv header row.
-def create_student_dtos(students, delimiter):
-    return [create_student_dto(student) for student in csv.DictReader(students, delimiter=delimiter)]
+def create_student_dtos(students, delimiter, cds_lookup):
+    return [create_student_dto(student, cds_lookup) for student in csv.DictReader(students, delimiter=delimiter)]
 
 
 # Unused but in CSV: ConfirmationCode, Filipino, ResidentialAddress (multiple fields),
 # ParentHighestEducationLevel, EnglishLanguageAcquisitionStatus,
 # "Special Education District of Accountability", EnrollmentEffectiveDate,
 # LastOrSurnameAlias, FirstNameAlias, MiddleNameAlias
-def create_student_dto(student):
+def create_student_dto(student, cds_lookup):
 
     # Report on any unknown gradelevels.
     global gradelevels
@@ -569,7 +568,7 @@ def create_student_dto(student):
         "sex": xstr(student['Sex']),
         "birthDate": xstr(student['DateofBirth']),
         "externalSsid": xstr(student['SmarterStudentID']),
-        "institutionIdentifier": generate_institution_identifier(student),
+        "institutionIdentifier": generate_institution_identifier(student, cds_lookup),
         "districtIdentifier": generate_district_identifier(student['ResponsibleDistrictIdentifier']),
         "gradeLevelWhenAssessed": gradeLevelWhenAssessed,
         "hispanicOrLatino": string_to_boolean(student['HispanicOrLatinoEthnicity']),
