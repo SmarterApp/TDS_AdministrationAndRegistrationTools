@@ -6,3 +6,4 @@ DBNAME = "testreg"
 DISTRICT_COLLECTION = "districtEntity"
 INSTITUTION_COLLECTION = "institutionEntity"
 STUDENT_COLLECTION = "student"
+DRY_RUN = True

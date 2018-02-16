@@ -63,6 +63,9 @@ class SchoolFixer:
         print("\nStarted at %s. %s schools, %s students in DB:\n\t%s" % (
             self.start_time, self.schools.count(), self.students.count(), self.db))
 
+        if settings.DRY_RUN == True:
+            print("\n***** DRY RUN - NO CHANGES WILL BE SAVED, SAVES PRETEND SUCCESS *****")
+
         input("\n***** Press enter to start fixing, CTRL-C to cancel! *****")
 
         print("Fetching students...")
@@ -151,9 +154,12 @@ class SchoolFixer:
         if not school_mongo_id:
             return SchoolFixer.Event.NOT_FIXED_INSTITUTION_NOT_FOUND
         # School found! Fix student and save record.
-        return self.save(student_id, school_mongo_id)
+        return None if settings.DRY_RUN == True else self.save(
+            student_id, district_identifier, school_mongo_id)
 
     def save(self, student_id, school_mongo_id):
+        if settings.DRY_RUN:  # Extra DRY_RUN check (for paranoia).
+            return None
         try:
             result = self.students.update_one({'_id': student_id}, {'$set': {
                 'institutionEntityMongoId': school_mongo_id
@@ -207,6 +213,9 @@ class DistrictFixer:
     def fix(self):
         print("\nDistrict Fix Started at %s. %d districts, %s students in DB:\n\t%s" % (
             self.start_time, self.districts.count(), self.students.count(), self.db))
+
+        if settings.DRY_RUN == True:
+            print("\n***** DRY RUN - NO CHANGES WILL BE SAVED, SAVES PRETEND SUCCESS *****")
 
         print("Fetching students...")
         print(datetime.datetime.now())
@@ -309,9 +318,12 @@ class DistrictFixer:
         if not district_mongo_id:
             return DistrictFixer.Event.NOT_FIXED_DISTRICT_NOT_FOUND
         # District found! Fix student and save record.
-        return self.save(student_id, district_identifier, district_mongo_id)
+        return None if settings.DRY_RUN == True else self.save(
+            student_id, district_identifier, district_mongo_id)
 
     def save(self, student_id, district_identifier, mongo_identifier):
+        if settings.DRY_RUN:  # Extra DRY_RUN check (for paranoia).
+            return None
         try:
             result = self.students.update_one({'_id': student_id}, {'$set': {
                 'districtIdentifier': district_identifier,
@@ -326,11 +338,11 @@ class DistrictFixer:
 
 
 if __name__ == "__main__":
-    sfixer = SchoolFixer()
     dfixer = DistrictFixer()
+    sfixer = SchoolFixer()
 
-    sfixer.fix()
     dfixer.fix()
+    sfixer.fix()
 
-    sfixer.summarize()
     dfixer.summarize()
+    sfixer.summarize()
