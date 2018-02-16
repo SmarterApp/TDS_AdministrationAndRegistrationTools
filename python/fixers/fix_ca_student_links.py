@@ -66,8 +66,6 @@ class SchoolFixer:
         if settings.DRY_RUN == True:
             print("\n***** DRY RUN - NO CHANGES WILL BE SAVED, SAVES PRETEND SUCCESS *****")
 
-        input("\n***** Press enter to start fixing, CTRL-C to cancel! *****")
-
         print("Fetching students...")
         print(datetime.datetime.now())
         cali_no_school = list(self.students.find(
@@ -216,6 +214,8 @@ class DistrictFixer:
 
         if settings.DRY_RUN == True:
             print("\n***** DRY RUN - NO CHANGES WILL BE SAVED, SAVES PRETEND SUCCESS *****")
+
+        input("\n***** Press enter to start fixing, CTRL-C to cancel! *****")
 
         print("Fetching students...")
         print(datetime.datetime.now())
