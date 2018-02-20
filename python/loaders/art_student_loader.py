@@ -343,10 +343,9 @@ def load_schools(filename, encoding, delimiter):
             [line[0] for line in read_lines(filename, encoding)], delimiter=delimiter):
         rows_processed += 1
         cds_lookup["%s%s" % (school[COUNTY_CODE], school[SCHOOL_CODE])] = school[CDS_CODE]
+        schools.append(school)
         if is_district(school):
             districts.append(school)
-        else:
-            schools.append(school)
 
     print("Finished schools file at %s..." % datetime.datetime.now())
     print("Processed %d rows, %d schools, %d districts, %d cds_lookup." % (
