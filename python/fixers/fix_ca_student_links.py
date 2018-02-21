@@ -152,8 +152,7 @@ class SchoolFixer:
         if not school_mongo_id:
             return SchoolFixer.Event.NOT_FIXED_INSTITUTION_NOT_FOUND
         # School found! Fix student and save record.
-        return None if settings.DRY_RUN == True else self.save(
-            student_id, district_identifier, school_mongo_id)
+        return None if settings.DRY_RUN == True else self.save(student_id, school_mongo_id)
 
     def save(self, student_id, school_mongo_id):
         if settings.DRY_RUN:  # Extra DRY_RUN check (for paranoia).
