@@ -9,14 +9,20 @@ import sys
 from pymongo import MongoClient
 import requests
 
-# Pull settings from csv_settings.py.
-try:
-    import settings_secret as settings
-    print("Using settings in settings_secret.py (good job!).")
-except:
-    import settings_default as settings
-    print("*** settings.py not found! USING DEFAULTS in settings_default.py.")
-    print("*** Please copy settings_default.py to settings_secret.py and modify that!")
+NUM_STUDENTS = None
+ART_REST_ENDPOINT = "https://localhost:8443/rest"
+ART_STUDENT_ENDPOINT = ART_REST_ENDPOINT + "/external/student/CA/batch"
+AUTH_ENDPOINT = "https://localhost/auth/oauth2/access_token?realm=/sbac"
+AUTH_PAYLOAD = {
+    "client_id": "me",
+    "client_secret": "secret",
+    "grant_type": "password",
+    "password": "password",
+    "username": "me@example.com"
+}
+MONGO_PARAMS = "mongodb://art:foo@localhost:27017/art"
+CHUNK_SIZE = 10000
+
 
 requests.packages.urllib3.disable_warnings(
     requests.packages.urllib3.exceptions.InsecureRequestWarning)
@@ -78,48 +84,48 @@ class Student:
             race[random.randint(0, 5)] = True  # 50/50 chance you get a race set
 
         return {
-                    "ssid": 'ASTDNT' + obj_id,
-                    "stateAbbreviation": "CA",
-                    "institutionIdentifier": institution_object['entityId'],
-                    "districtIdentifier": institution_object['parentEntityId'],
-                    "firstName": 'Name' + obj_id + id_generator(24),
-                    "lastName": 'LastName' + obj_id + id_generator(85),
-                    "middleName": 'MiddleName' + obj_id + id_generator(18),
-                    "birthDate": birthdate,
-                    "externalSsid": 'STDNT' + obj_id,
-                    "gradeLevelWhenAssessed": grade_level,
-                    "sex": "Female" if random.randint(0, 1) == 0 else "Male",
-                    "hispanicOrLatino": race[0],
-                    "americanIndianOrAlaskaNative": race[1],
-                    "asian": race[2],
-                    "blackOrAfricanAmerican": race[3],
-                    "white": race[4],
-                    "nativeHawaiianOrPacificIsland": race[5],
-                    "twoOrMoreRaces": random_boolean(),
-                    "iDEAIndicator": random_boolean(),
-                    "lepStatus": random_boolean(),
-                    "section504Status": random_boolean(),
-                    "disadvantageStatus": random_boolean(),
-                    "languageCode": language_code,
-                    "migrantStatus": random_boolean(),
-                    "firstEntryDateIntoUsSchool": self.entrydate,
-                    "lepEntryDate": None,
-                    "lepExitDate": None,
-                    "title3ProgramType": None,
-                    "primaryDisabilityType": None,
-                    "elpLevel": 0
-                }
+            "ssid": 'ASTDNT' + obj_id,
+            "stateAbbreviation": "CA",
+            "institutionIdentifier": institution_object['entityId'],
+            "districtIdentifier": institution_object['parentEntityId'],
+            "firstName": 'Name' + obj_id + id_generator(24),
+            "lastName": 'LastName' + obj_id + id_generator(85),
+            "middleName": 'MiddleName' + obj_id + id_generator(18),
+            "birthDate": birthdate,
+            "externalSsid": 'STDNT' + obj_id,
+            "gradeLevelWhenAssessed": grade_level,
+            "sex": "Female" if random.randint(0, 1) == 0 else "Male",
+            "hispanicOrLatino": race[0],
+            "americanIndianOrAlaskaNative": race[1],
+            "asian": race[2],
+            "blackOrAfricanAmerican": race[3],
+            "white": race[4],
+            "nativeHawaiianOrPacificIsland": race[5],
+            "twoOrMoreRaces": random_boolean(),
+            "iDEAIndicator": random_boolean(),
+            "lepStatus": random_boolean(),
+            "section504Status": random_boolean(),
+            "disadvantageStatus": random_boolean(),
+            "languageCode": language_code,
+            "migrantStatus": random_boolean(),
+            "firstEntryDateIntoUsSchool": self.entrydate,
+            "lepEntryDate": None,
+            "lepExitDate": None,
+            "title3ProgramType": None,
+            "primaryDisabilityType": None,
+            "elpLevel": 0
+        }
 
 
 def main(argv):
     bearer_token = get_bearer_token()
-    num_students = settings.NUM_STUDENTS
+    num_students = NUM_STUDENTS
     institution_ids = []
     grade_levels = []
     language_codes = []
     birthdate = None
     entrydate = None
-    connection = settings.MONGO_PARAMS
+    connection = MONGO_PARAMS
     seed = None
 
     try:
@@ -166,14 +172,14 @@ def main(argv):
     # let's break up the creation of students into chunks to keep from killing
     # the API endpoint, which was never designed to handle 1,000,000 student inserts
     # at a time
-    chunks, remainder = divmod(num_students, settings.CHUNK_SIZE)
+    chunks, remainder = divmod(num_students, CHUNK_SIZE)
     print("\nGenerating %d chunks, %d remainder" % (chunks, remainder))
 
     print("\nStarting at: %s" % datetime.datetime.now())
 
     for chunk in range(0, chunks):
-        print("\nGenerating and posting %d students..." % settings.CHUNK_SIZE)
-        generate_and_post_student_data(settings.CHUNK_SIZE, student, bearer_token)
+        print("\nGenerating and posting %d students..." % CHUNK_SIZE)
+        generate_and_post_student_data(CHUNK_SIZE, student, bearer_token)
 
     if remainder > 0:
         print("\nGenerating and posting %d students..." % remainder)
@@ -193,9 +199,9 @@ def write_data_file(data):
 
 
 def get_bearer_token():
-    endpoint = settings.AUTH_ENDPOINT
+    endpoint = AUTH_ENDPOINT
     headers = {"Content-Type": "application/x-www-form-urlencoded"}
-    payload = settings.AUTH_PAYLOAD
+    payload = AUTH_PAYLOAD
     response = requests.post(endpoint, headers=headers, data=payload)
     content = json.loads(response.content)
     if response.status_code == 200:
@@ -207,7 +213,7 @@ def get_bearer_token():
 
 
 def post_student_batch_data(bearer_token, data):
-    endpoint = settings.ART_ENDPOINT
+    endpoint = ART_STUDENT_ENDPOINT
     headers = {"Content-Type": "application/json", "Authorization": "Bearer %s" % bearer_token}
     response = requests.post(endpoint, headers=headers, data=json.dumps(data), verify=False)
     if response.status_code == 202:

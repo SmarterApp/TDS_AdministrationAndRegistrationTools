@@ -17,6 +17,9 @@ import pymongo
 import requests
 
 
+STATE_ENTITY_TYPE = 'STATE'
+DISTRICT_ENTITY_TYPE = 'DISTRICT'
+
 COUNTY_CODE = 'County-District Code'
 SCHOOL_CODE = 'School Code'
 CDS_CODE = 'Auth CDS Code'
@@ -95,7 +98,7 @@ def main(argv):
     keypass = settings.SFTP_KEYPASS
 
     # Downloader command line options
-    localfile = None
+    studentfile = None
     remotepath = None
     offset = 0
     # Uploader command line options
@@ -110,7 +113,7 @@ def main(argv):
 
     try:
         opts, _ = getopt.getopt(argv, "hylf:r:o:e:d:s:n:c:", [
-            "help", "dryrun", "localonly", "localfile=", "remotepath=", "offset=",
+            "help", "dryrun", "localonly", "studentfile=", "remotepath=", "offset=",
             "encoding=", "delimiter=", "csv_start_line", "number=", "schoolfile=", ])
     except getopt.GetoptError:
         usage()
@@ -126,9 +129,9 @@ def main(argv):
         elif opt in ("-l", "--localonly"):
             local_only = True
             print("*** LOCAL ONLY MODE REQUESTED! NOTHING WILL BE DOWNLOADED! ***\n\n")
-        elif opt in ("-f", "--localfile"):
-            localfile = arg
-            print("Command line set localfile to '%s'" % localfile)
+        elif opt in ("-f", "--studentfile"):
+            studentfile = arg
+            print("Command line set studentfile to '%s'" % studentfile)
         elif opt in ("-r", "--remotepath"):
             remotepath = arg
             print("Command line set remotepath to '%s'" % remotepath)
@@ -165,7 +168,7 @@ def main(argv):
         settings.SFTP_FILE_BASENAME,
         settings.SFTP_FILE_DATEFORMAT,
         settings.SFTP_FILE_EXT)
-    localfile = localfile if localfile else datewise_filepath(
+    studentfile = studentfile if studentfile else datewise_filepath(
         None,
         settings.SFTP_FILE_BASENAME,
         settings.SFTP_FILE_DATEFORMAT,
@@ -180,7 +183,7 @@ def main(argv):
             hostname, port, username, password, keyfile, keypass, remoteschool, schoolfile, 0, progress)
 
         dl_success &= download_file(
-            hostname, port, username, password, keyfile, keypass, remotepath, localfile, offset, progress)
+            hostname, port, username, password, keyfile, keypass, remotepath, studentfile, offset, progress)
 
     end_time = datetime.datetime.now()
     deltasecs = (end_time - start_time).total_seconds()
@@ -201,9 +204,9 @@ def main(argv):
 
         upload_start_time = datetime.datetime.now()
         print("\nUpload starting at %s" % upload_start_time)
-        print("Uploading from file '%s', encoding '%s', delimiter '%s'" % (localfile, encoding, delimiter))
+        print("Uploading from file '%s', encoding '%s', delimiter '%s'" % (studentfile, encoding, delimiter))
 
-        students_loaded = load_student_data(localfile, encoding, delimiter, csv_start_line, num_students, dry_run,
+        students_loaded = load_student_data(studentfile, encoding, delimiter, csv_start_line, num_students, dry_run,
                                             settings.ART_STUDENT_ENDPOINT, bearer_token, cds_lookup, progress)
 
         end_time = datetime.datetime.now()
@@ -226,10 +229,10 @@ def datewise_filepath(dir, basename, date_format, ext):
 
 
 # progress is a callback taking (message, completedbytes, totalbytes). Called frequently to display progress.
-def download_file(hostname, port, username, password, keyfile, keypass, remotepath, localfile, offset, progress):
+def download_file(hostname, port, username, password, keyfile, keypass, remotepath, studentfile, offset, progress):
 
     progress("Downloading file '%s' from '%s@%s'" % (remotepath, username, hostname))
-    progress("              to './%s'" % localfile)
+    progress("              to './%s'" % studentfile)
     if port != 22:
         progress("    Port %d" % port)
 
@@ -246,7 +249,7 @@ def download_file(hostname, port, username, password, keyfile, keypass, remotepa
                     return False
 
                 # Remote file OK, now open local file and seek to requested offset.
-                with open(localfile, 'ab+') as file:
+                with open(studentfile, 'ab+') as file:
                     if offset:
                         file.seek(offset)
                         file.truncate()  # New data goes here. Get rid of old.
@@ -273,7 +276,7 @@ def download_file(hostname, port, username, password, keyfile, keypass, remotepa
                     # All systems go! Commence with the downloading.
                     bytes_remaining = attribs.st_size - offset
                     progress('Downloading %s%d bytes of %s, total size %d.' % (
-                        "remaining " if offset else "", bytes_remaining, localfile, attribs.st_size))
+                        "remaining " if offset else "", bytes_remaining, studentfile, attribs.st_size))
                     remotefile.prefetch()
                     written = 0
                     while True:
@@ -428,7 +431,7 @@ def post_districts(districts, url, bearer_token):
                     ENTITY_NAME: entity_name,
                     NAT_ID: entity_id,
                     PARENT_EID: settings.STATE_ABBREVIATION,
-                    PARENT_ETYPE: settings.STATE_ENTITY_TYPE,
+                    PARENT_ETYPE: STATE_ENTITY_TYPE,
                     STATE_ABBREV: settings.STATE_ABBREVIATION,
                 }
                 # Update it if it's already in the DB, else insert.
@@ -491,7 +494,7 @@ def post_schools(schools, url, bearer_token):
                     ENTITY_NAME: school_name,
                     NAT_ID: entity_id,
                     PARENT_EID: parent_id,
-                    PARENT_ETYPE: settings.DISTRICT_ENTITY_TYPE,
+                    PARENT_ETYPE: DISTRICT_ENTITY_TYPE,
                     STATE_ABBREV: settings.STATE_ABBREVIATION,
                 }
                 # Update it if it's already in the DB, else insert.
@@ -598,11 +601,9 @@ def create_student_dto(student, cds_lookup):
 # Create a 14-digit district ID with seven 0's on end, left padded with 0's.
 def generate_district_identifier(district_code):
     # append seven 0's to the end of the district_code as institution placeholder
-    district_id = '%s0000000' % xstr(district_code)
+    district_id = xstr(district_code) + '0000000'
     # left pad with 0's until it's 14 characters long
-    while len(district_id) < 14:
-        district_id = '0' + district_id
-    return district_id
+    return '0' * max(14 - len(district_id), 0) + district_id
 
 
 # Look up CDS Code from data in CA_students.csv file.
@@ -666,7 +667,7 @@ def usage():
     print("  To modify those settings, copy settings_default.py to settings_secret.py and edit the copy.")
     print("\nHelp/usage details:")
     print("  -h, --help               : this help screen")
-    print("  -f, --localfile          : local student file to download then read from (-l to prevent download)")
+    print("  -f, --studentfile        : local student file to download then read from (-l to prevent download)")
     print("  -c, --schoolfile         : local school file to download then read from (-l prevents download)")
     print("  Downloader Options:")
     print("  -r, --remotepath         : remote student filepath to download\n"

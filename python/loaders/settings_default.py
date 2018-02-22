@@ -1,8 +1,38 @@
 # Don't edit this file - copy to settings_secret.py file and modify that copy.
 # The code will read settings_secret.py first and fallback to this file if missing.
 
+# MONGO DB SERVER SETTINGS
+MONGO_HOST = "localhost"  # "art-db-amptest.smarterbalanced.org"
+MONGO_PORT = 27017
+MONGO_DBNAME = "testreg"
+MONGO_DISTRICTS = "districtEntity"
+MONGO_INSTITUTIONS = "institutionEntity"
+MONGO_STUDENTS = "student"
+
 # BASIC DEFAULTS AND CONSTANTS
+# Settings for SFTP site (for csv download)
+SFTP_FILE_DIR = './Students/'  # start with ./ and end with /
+SFTP_FILE_BASENAME = 'CA_students_'  # base part of filename, no file or extension.
+SFTP_SCHOOL_FILE_DIR = './Schools/'  # start with ./ and end with /
+SFTP_SCHOOL_FILE_BASENAME = 'CA_schools_'  # base part of school filename.
+SFTP_FILE_DATEFORMAT = '%Y%m%d'  # Set to append date to filename. ex: '%Y%m%d'.
+SFTP_FILE_EXT = 'zip'  # Set to append to filepath after date is added.
+SFTP_HOSTNAME = 'localhost'  # sftp hostname or IP to connect to.
+SFTP_PORT = 22  # Port to use for sftp. Default is 22.
+SFTP_USER = 'testuser'  # Username on sftp server.
+SFTP_PASSWORD = '1BigSecret!'  # Set to use password auth, else None.
+SFTP_KEYFILE = None  # Set to absolute path of keyfile, else None.
+SFTP_KEYPASS = None  # Set to encrypted key's password, else None.
+
+# csv format settings
+DELIMITER = '^'
+FILE_ENCODING = 'latin1'  # which is also iso-8859-1 (don't use cp1252!)
+
+# EVERYTHING BELOW ONLY APPLIES TO LOADER
 NUM_STUDENTS = None
+STATE_ABBREVIATION = 'CA'
+
+# ART REST SERVER SETTINGS
 ART_REST_ENDPOINT = "https://localhost:8443/rest"
 ART_STUDENT_ENDPOINT = ART_REST_ENDPOINT + "/external/student/CA/batch"
 ART_SSL_CHECKS = True  # Disable for dev servers with bad SSL. Make it True FOR PROD!
@@ -17,25 +47,10 @@ AUTH_PAYLOAD = {
     "username": "me@example.com"
 }
 
-# Global mongodb settings
-MONGO_HOST = "localhost"  # "art-db-amptest.smarterbalanced.org"
-MONGO_PORT = 27017
-MONGO_DBNAME = "testreg"
-MONGO_DISTRICTS = "districtEntity"
-MONGO_INSTITUTIONS = "institutionEntity"
-MONGO_STUDENTS = "student"
-
-# RUNTIME SETTINGS
+# PERFORMANCE SETTINGS
 CHUNK_SIZE = 10000
 BUFFER_SIZE = 512 * 1024
 
-# settings for fixer
-FIXER_DRY_RUN = True
-
-# settings for art_student_loader
-DELIMITER = '^'
-FILE_ENCODING = 'latin1'  # which is also iso-8859-1 (don't use cp1252!)
-STATE_ABBREVIATION = 'CA'
 GRADEMAP = {
     # MAPPED VALUES
     'US': 'UG',  # US goes to 'ungraded'
@@ -63,26 +78,3 @@ GRADEMAP = {
     'PS': 'PS',  # POST SECONDARY
     'UG': 'UG',  # UNGRADED
 }
-STATE_ENTITY_TYPE = 'STATE'
-DISTRICT_ENTITY_TYPE = 'DISTRICT'
-
-# Settings for csv_downloader
-SFTP_FILE_DIR = './Students/'  # start with ./ and end with /
-SFTP_FILE_BASENAME = 'CA_students_'  # base part of filename, no file or extension.
-SFTP_SCHOOL_FILE_DIR = './Schools/'  # start with ./ and end with /
-SFTP_SCHOOL_FILE_BASENAME = 'CA_schools_'  # base part of school filename.
-SFTP_FILE_DATEFORMAT = '%Y%m%d'  # Set to append date to filename. ex: '%Y%m%d'.
-SFTP_FILE_EXT = 'zip'  # Set to append to filepath after date is added.
-SFTP_HOSTNAME = 'localhost'  # sftp hostname or IP to connect to.
-SFTP_PORT = 22  # Port to use for sftp. Default is 22.
-SFTP_USER = 'testuser'  # Username on sftp server.
-SFTP_PASSWORD = '1BigSecret!'  # Set to use password auth, else None.
-SFTP_KEYFILE = None  # Set to absolute path of keyfile, else None.
-SFTP_KEYPASS = None  # Set to encrypted key's password, else None.
-
-# settings for pg_load_students
-DB_PARAMS = {'host': 'localhost', 'database': 'postgres', 'user': 'ubuntu', 'password': 'ubuntu'}
-DATE_FORMAT_YYYY_MM_DD = '%Y-%m-%d'  # Date format expected in the CSV files.
-
-# settings for random_load_students
-MONGO_PARAMS = "mongodb://art:foo@localhost:27017/art"

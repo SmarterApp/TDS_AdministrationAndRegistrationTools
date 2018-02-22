@@ -4,6 +4,9 @@
 
 from enum import Enum
 import datetime
+import getopt
+import sys
+import time
 
 import pymongo
 
@@ -13,6 +16,13 @@ except:
     import settings_default as settings
     print("*** USING DEFAULTS in settings_default.py.")
     print("*** Please copy settings_default.py to settings_secret.py and modify that!")
+
+
+class Options:
+    def __init__(self):
+        self.writemode = False
+        self.studentfile = None
+        self.schoolfile = None
 
 
 class AutoNumber(Enum):
@@ -33,11 +43,14 @@ class SchoolFixer:
         NOT_FIXED_INSTITUTION_NOT_FOUND = ()
         NOT_FIXED_NO_INSTITUTION_ID = ()
 
-    def __init__(self):
+    def __init__(self, options):
+        self.options = options
         self.start_time = datetime.datetime.now().strftime('%Y%m%d_%H%M%S')
         self.rowidx = 0
         self.school_cache = {}
         self.events = {}
+        self.schools_not_found = set()
+        self.schools_fixed = set()
 
         client = pymongo.MongoClient(settings.MONGO_HOST, settings.MONGO_PORT)
         self.db = client[settings.MONGO_DBNAME]
@@ -47,9 +60,9 @@ class SchoolFixer:
     def tally_event(self, event):
         self.events[event] = self.events.get(event, 0) + 1
 
-    def fail(self, student, event):
+    def fail(self, student, event, file):
         self.tally_event(event)
-        self.students_not_fixed.write("%s,%s,%s,%s\n" % (
+        file.write("%s,%s,%s,%s\n" % (
             student.get('entityId', ''),
             student.get('districtIdentifier', ''),
             student.get('institutionIdentifier', ''),
@@ -62,9 +75,6 @@ class SchoolFixer:
     def fix(self):
         print("\nStarted at %s. %s schools, %s students in DB:\n\t%s" % (
             self.start_time, self.schools.count(), self.students.count(), self.db))
-
-        if settings.FIXER_DRY_RUN is True:
-            print("\n***** DRY RUN - NO CHANGES WILL BE SAVED, SAVES PRETEND SUCCESS *****")
 
         print("Fetching students...")
         print(datetime.datetime.now())
@@ -83,15 +93,11 @@ class SchoolFixer:
         print("got %d mongo_ids, cache has %d" % (len(mongo_ids), len(self.school_cache)))
         print(datetime.datetime.now())
 
-        self.students_not_fixed = open("out_fixer_students_school_failed_%s.csv" % self.start_time, "w")
-        self.students_not_fixed.write("entityId,institutionIdentifier,institutionIdentifier,failure\n")
-
-        self.schools_not_found = set()
-        self.schools_fixed = set()
-
         deltaupdates = 0
         updates = 0
-        try:
+        with open("out_fixer_students_school_failed_%s.csv" % self.start_time, "w") as students_not_fixed:
+            students_not_fixed.write("entityId,institutionIdentifier,institutionIdentifier,failure\n")
+
             for student in cali_no_school:
                 # Some nice progress to look at...
                 self.rowidx += 1
@@ -102,25 +108,23 @@ class SchoolFixer:
 
                 school_id = student.get('institutionIdentifier', None)
                 if not school_id:
-                    self.fail(student, SchoolFixer.Event.NOT_FIXED_NO_INSTITUTION_ID)
+                    self.fail(student, SchoolFixer.Event.NOT_FIXED_NO_INSTITUTION_ID, students_not_fixed)
                     continue
-
                 failure = self.link(student.get('_id'), school_id)
+
                 if failure:
                     self.schools_not_found.add(school_id)
-                    self.fail(student, failure)
+                    self.fail(student, failure, students_not_fixed)
                 else:
                     updates += 1
                     self.schools_fixed.add(school_id)
                     self.success(student, SchoolFixer.Event.FIXED)
-        except KeyboardInterrupt:
-            print("Got keyboard interrupt. Exiting school fixer.")
-
-        self.students_not_fixed.close()
         print(datetime.datetime.now())
 
     def summarize(self):
         print("\nSchool Fixer processed %d students." % self.rowidx)
+        if not self.options.writemode:
+            print("(READ-ONLY CHECKER MODE - NO CHANGES WERE ATTEMPTED)")
         print("Cached %d schools." % (len(self.school_cache)))
         print("Events:")
         for name, member in SchoolFixer.Event.__members__.items():
@@ -152,10 +156,10 @@ class SchoolFixer:
         if not school_mongo_id:
             return SchoolFixer.Event.NOT_FIXED_INSTITUTION_NOT_FOUND
         # School found! Fix student and save record.
-        return None if settings.FIXER_DRY_RUN is True else self.save(student_id, school_mongo_id)
+        return self.save(student_id, school_mongo_id) if self.options.writemode else None
 
     def save(self, student_id, school_mongo_id):
-        if settings.FIXER_DRY_RUN:  # Extra DRY_RUN check (for paranoia).
+        if not self.options.writemode:  # Extra WRITEMODE check (for paranoia).
             return None
         try:
             result = self.students.update_one({'_id': student_id}, {'$set': {
@@ -181,11 +185,14 @@ class DistrictFixer:
         NOT_FIXED_FAILED_TO_SAVE = ()
         NOT_FIXED_NO_DISTRICT_ID = ()
 
-    def __init__(self):
+    def __init__(self, options):
+        self.options = options
         self.start_time = datetime.datetime.now().strftime('%Y%m%d_%H%M%S')
         self.rowidx = 0
         self.district_cache = {}
         self.events = {}
+        self.districts_not_found = set()
+        self.districts_fixed = set()
 
         client = pymongo.MongoClient(settings.MONGO_HOST, settings.MONGO_PORT)
         self.db = client[settings.MONGO_DBNAME]
@@ -195,9 +202,9 @@ class DistrictFixer:
     def tally_event(self, event):
         self.events[event] = self.events.get(event, 0) + 1
 
-    def fail(self, student, event):
+    def fail(self, student, event, file):
         self.tally_event(event)
-        self.students_not_fixed.write("%s,%s,%s,%s\n" % (
+        file.write("%s,%s,%s,%s\n" % (
             student.get('entityId', ''),
             student.get('districtIdentifier', ''),
             student.get('institutionIdentifier', ''),
@@ -210,11 +217,6 @@ class DistrictFixer:
     def fix(self):
         print("\nDistrict Fix Started at %s. %d districts, %s students in DB:\n\t%s" % (
             self.start_time, self.districts.count(), self.students.count(), self.db))
-
-        if settings.FIXER_DRY_RUN is True:
-            print("\n***** DRY RUN - NO CHANGES WILL BE SAVED, SAVES PRETEND SUCCESS *****")
-
-        input("\n***** Press enter to start fixing, CTRL-C to cancel! *****")
 
         print("Fetching students...")
         print(datetime.datetime.now())
@@ -233,15 +235,12 @@ class DistrictFixer:
         print("got %d district_mongo_ids, cache has %d" % (len(district_mongo_ids), len(self.district_cache)))
         print(datetime.datetime.now())
 
-        self.students_not_fixed = open("out_fixer_students_district_failed_%s.csv" % self.start_time, "w")
-        self.students_not_fixed.write("entityId,districtIdentifier,institutionIdentifier,failure\n")
-
-        self.districts_not_found = set()
-        self.districts_fixed = set()
-
         deltaupdates = 0
         updates = 0
-        try:
+
+        with open("out_fixer_students_district_failed_%s.csv" % self.start_time, "w") as students_not_fixed:
+            students_not_fixed.write("entityId,institutionIdentifier,institutionIdentifier,failure\n")
+
             for student in cali_no_district:
                 # Some nice progress to look at...
                 self.rowidx += 1
@@ -252,7 +251,7 @@ class DistrictFixer:
 
                 district_id = student.get('districtIdentifier', None)
                 if not district_id:
-                    self.fail(student, DistrictFixer.Event.NOT_FIXED_NO_DISTRICT_ID)
+                    self.fail(student, DistrictFixer.Event.NOT_FIXED_NO_DISTRICT_ID, students_not_fixed)
                     continue
 
                 failure = True
@@ -273,19 +272,18 @@ class DistrictFixer:
 
                 if failure:
                     self.districts_not_found.add(student.get('districtIdentifier'))
-                    self.fail(student, failure)
+                    self.fail(student, failure, students_not_fixed)
                 else:
                     updates += 1
                     self.districts_fixed.add(student.get('districtIdentifier'))
                     self.success(student, scheme)
-        except KeyboardInterrupt:
-            print("Got keyboard interrupt. Exiting.")
 
-        self.students_not_fixed.close()
         print(datetime.datetime.now())
 
     def summarize(self):
         print("\nDistrict Fixer processed %d students." % self.rowidx)
+        if not self.options.writemode:
+            print("(READ-ONLY CHECKER MODE - NO CHANGES WERE ATTEMPTED)")
         print("Cached %d districts." % (len(self.district_cache)))
         print("Events:")
         for name, member in DistrictFixer.Event.__members__.items():
@@ -317,11 +315,10 @@ class DistrictFixer:
         if not district_mongo_id:
             return DistrictFixer.Event.NOT_FIXED_DISTRICT_NOT_FOUND
         # District found! Fix student and save record.
-        return None if settings.FIXER_DRY_RUN is True else self.save(
-            student_id, district_identifier, district_mongo_id)
+        return self.save(student_id, district_identifier, district_mongo_id) if self.options.writemode else None
 
     def save(self, student_id, district_identifier, mongo_identifier):
-        if settings.FIXER_DRY_RUN:  # Extra DRY_RUN check (for paranoia).
+        if not self.options.writemode:  # Extra WRITEMODE check (for paranoia).
             return None
         try:
             result = self.students.update_one({'_id': student_id}, {'$set': {
@@ -336,12 +333,63 @@ class DistrictFixer:
         return None
 
 
-if __name__ == "__main__":
-    dfixer = DistrictFixer()
-    sfixer = SchoolFixer()
+def main(argv):
+    options = Options()
+    try:
+        opts, _ = getopt.getopt(argv, "hwf:c:", ["help", "writemode", "studentfile=", "schoolfile=", ])
+    except getopt.GetoptError:
+        usage()
+        sys.exit(2)
 
-    dfixer.fix()
-    sfixer.fix()
+    for opt, arg in opts:
+        if opt in ("-h", "--help"):
+            usage()
+            sys.exit()
+        elif opt in ("-w", "--writemode"):
+            options.writemode = True
+        elif opt in ("-f", "--studentfile"):
+            options.studentfile = arg
+            print("Command line set studentfile to '%s'" % options.studentfile)
+        elif opt in ("-f", "--schoolfile"):
+            options.schoolfile = arg
+            print("Command line set schoolfile to '%s'" % options.schoolfile)
+
+    if options.writemode:
+        print("\n*** WRITE MODE ENABLED! THIS WILL REALLY WRITE TO THE DB!! ***\n")
+        print("\n*** 5 SECONDS TO CANCEL!! ***\n")
+        time.sleep(5)
+    else:
+        print("\n*** READ-ONLY CHECKER MODE - NO CHANGES WILL BE MADE ***\n")
+
+    dfixer = DistrictFixer(options)
+    sfixer = SchoolFixer(options)
+
+    try:
+        dfixer.fix()
+    except KeyboardInterrupt:
+        print("Got keyboard interrupt. Skipping.")
+
+    try:
+        sfixer.fix()
+    except KeyboardInterrupt:
+        print("Got keyboard interrupt. Skipping.")
 
     dfixer.summarize()
     sfixer.summarize()
+
+
+def usage():
+    print("Check ART DB against student/school CALPADS feed and fix problems.")
+    print("\nRuns in read-only mode unless the -w option is provided.")
+    print("If a zip file is specified, the first file inside will be read.")
+    print("\nMost settings are configured via settings files, NOT via the command line.")
+    print("  Copy settings_default.py to settings_secret.py and edit the copy.")
+    print("\nHelp/usage details:")
+    print("  -h, --help        : this help screen")
+    print("  -c, --schoolfile  : school file (defaults to CA_schools_YYYYMMDD.zip)")
+    print("  -f, --studentfile : student file (defaults to CA_students_YYYYMMDD.zip)")
+    print("  -w, --writemode   : WRITE MODE - WRITES FIXES TO LIVE ART DB!!")
+
+
+if __name__ == "__main__":
+    main(sys.argv[1:])
