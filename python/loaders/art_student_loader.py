@@ -409,8 +409,8 @@ def load_student_data(filename, encoding, delimiter, csv_start_line, num_student
 
 def post_districts(districts, url, bearer_token):
     print("Posting districts (%d in file)..." % len(districts))
-    with open("districts_success_%s.out.csv" % FILE_TIME, "w", newline='') as f_success, open(
-            "districts_failed_%s.out.csv" % FILE_TIME, "w", newline='') as f_failed:
+    with open("out_loader_districts_success_%s.csv" % FILE_TIME, "w", newline='') as f_success, open(
+            "out_loader_districts_failed_%s.csv" % FILE_TIME, "w", newline='') as f_failed:
         fieldnames = [ENTITY_ID, ENTITY_NAME, NAT_ID, PARENT_EID, PARENT_ETYPE,
                       STATE_ABBREV]
         csv_success = csv.DictWriter(f_success, fieldnames + [LOCATION])
@@ -471,8 +471,8 @@ def post_districts(districts, url, bearer_token):
 
 def post_schools(schools, url, bearer_token):
     print("Posting schools (%d in file)..." % len(schools))
-    with open("schools_success_%s.out.csv" % FILE_TIME, "w", newline='') as f_success, open(
-            "schools_failed_%s.out.csv" % FILE_TIME, "w", newline='') as f_failed:
+    with open("out_loader_schools_success_%s.csv" % FILE_TIME, "w", newline='') as f_success, open(
+            "out_loader_schools_failed_%s.csv" % FILE_TIME, "w", newline='') as f_failed:
         fieldnames = [ENTITY_ID, ENTITY_NAME, NAT_ID, PARENT_EID, PARENT_ETYPE,
                       STATE_ABBREV, STATUS]
         csv_success = csv.DictWriter(f_success, fieldnames)

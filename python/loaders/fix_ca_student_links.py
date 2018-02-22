@@ -83,7 +83,7 @@ class SchoolFixer:
         print("got %d mongo_ids, cache has %d" % (len(mongo_ids), len(self.school_cache)))
         print(datetime.datetime.now())
 
-        self.students_not_fixed = open("students_school_not_fixed_%s.csv" % self.start_time, "w")
+        self.students_not_fixed = open("out_fixer_students_school_failed_%s.csv" % self.start_time, "w")
         self.students_not_fixed.write("entityId,institutionIdentifier,institutionIdentifier,failure\n")
 
         self.schools_not_found = set()
@@ -127,12 +127,12 @@ class SchoolFixer:
             print("\t%s: %d" % (name, self.events.get(member, 0)))
 
         print("Could not find %d schools. Writing..." % len(self.schools_not_found))
-        with open("schools_not_found_%s.out" % self.start_time, "w") as f_schools_not_found:
+        with open("out_fixer_schools_not_found_%s.txt" % self.start_time, "w") as f_schools_not_found:
             for school in sorted(self.schools_not_found):
                 f_schools_not_found.write("%s\n" % school)
 
         print("Fixed %d schools. Writing..." % len(self.schools_fixed))
-        with open("schools_fixed_%s.out" % self.start_time, "w") as f_schools_fixed:
+        with open("out_fixer_schools_success_%s.txt" % self.start_time, "w") as f_schools_fixed:
             for school in sorted(self.schools_fixed):
                 f_schools_fixed.write("%s\n" % school)
 
@@ -233,7 +233,7 @@ class DistrictFixer:
         print("got %d district_mongo_ids, cache has %d" % (len(district_mongo_ids), len(self.district_cache)))
         print(datetime.datetime.now())
 
-        self.students_not_fixed = open("students_district_not_fixed_%s.csv" % self.start_time, "w")
+        self.students_not_fixed = open("out_fixer_students_district_failed_%s.csv" % self.start_time, "w")
         self.students_not_fixed.write("entityId,districtIdentifier,institutionIdentifier,failure\n")
 
         self.districts_not_found = set()
@@ -292,12 +292,12 @@ class DistrictFixer:
             print("\t%s: %d" % (name, self.events.get(member, 0)))
 
         print("Could not find %d districts. Writing..." % len(self.districts_not_found))
-        with open("districts_not_found_%s.out" % self.start_time, "w") as f_districts_not_found:
+        with open("out_fixer_districts_not_found_%s.txt" % self.start_time, "w") as f_districts_not_found:
             for district in sorted(self.districts_not_found):
                 f_districts_not_found.write("%s\n" % district)
 
         print("Fixed %d districts. Writing..." % len(self.districts_fixed))
-        with open("districts_fixed_%s.out" % self.start_time, "w") as f_districts_fixed:
+        with open("out_fixer_districts_success_%s.txt" % self.start_time, "w") as f_districts_fixed:
             for district in sorted(self.districts_fixed):
                 f_districts_fixed.write("%s\n" % district)
 
