@@ -17,9 +17,20 @@ AUTH_PAYLOAD = {
     "username": "me@example.com"
 }
 
+# Global mongodb settings
+MONGO_HOST = "localhost"  # "art-db-amptest.smarterbalanced.org"
+MONGO_PORT = 27017
+MONGO_DBNAME = "testreg"
+MONGO_DISTRICTS = "districtEntity"
+MONGO_INSTITUTIONS = "institutionEntity"
+MONGO_STUDENTS = "student"
+
 # RUNTIME SETTINGS
 CHUNK_SIZE = 10000
 BUFFER_SIZE = 512 * 1024
+
+# settings for fixer
+FIXER_DRY_RUN = True
 
 # settings for art_student_loader
 DELIMITER = '^'
@@ -54,11 +65,6 @@ GRADEMAP = {
 }
 STATE_ENTITY_TYPE = 'STATE'
 DISTRICT_ENTITY_TYPE = 'DISTRICT'
-MONGO_HOST = "art-db-amptest.smarterbalanced.org"
-MONGO_PORT = 27017
-MONGO_DBNAME = "testreg"
-MONGO_DISTRICTS = "districtEntity"
-MONGO_INSTITUTIONS = "institutionEntity"
 
 # Settings for csv_downloader
 SFTP_FILE_DIR = './Students/'  # start with ./ and end with /

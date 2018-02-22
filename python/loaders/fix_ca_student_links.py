@@ -39,10 +39,10 @@ class SchoolFixer:
         self.school_cache = {}
         self.events = {}
 
-        client = pymongo.MongoClient(settings.HOST, settings.PORT)
-        self.db = client[settings.DBNAME]
-        self.schools = self.db[settings.INSTITUTION_COLLECTION]
-        self.students = self.db[settings.STUDENT_COLLECTION]
+        client = pymongo.MongoClient(settings.MONGO_HOST, settings.MONGO_PORT)
+        self.db = client[settings.MONGO_DBNAME]
+        self.schools = self.db[settings.MONGO_INSTITUTIONS]
+        self.students = self.db[settings.MONGO_STUDENTS]
 
     def tally_event(self, event):
         self.events[event] = self.events.get(event, 0) + 1
@@ -63,7 +63,7 @@ class SchoolFixer:
         print("\nStarted at %s. %s schools, %s students in DB:\n\t%s" % (
             self.start_time, self.schools.count(), self.students.count(), self.db))
 
-        if settings.DRY_RUN == True:
+        if settings.FIXER_DRY_RUN is True:
             print("\n***** DRY RUN - NO CHANGES WILL BE SAVED, SAVES PRETEND SUCCESS *****")
 
         print("Fetching students...")
@@ -152,10 +152,10 @@ class SchoolFixer:
         if not school_mongo_id:
             return SchoolFixer.Event.NOT_FIXED_INSTITUTION_NOT_FOUND
         # School found! Fix student and save record.
-        return None if settings.DRY_RUN == True else self.save(student_id, school_mongo_id)
+        return None if settings.FIXER_DRY_RUN is True else self.save(student_id, school_mongo_id)
 
     def save(self, student_id, school_mongo_id):
-        if settings.DRY_RUN:  # Extra DRY_RUN check (for paranoia).
+        if settings.FIXER_DRY_RUN:  # Extra DRY_RUN check (for paranoia).
             return None
         try:
             result = self.students.update_one({'_id': student_id}, {'$set': {
@@ -187,10 +187,10 @@ class DistrictFixer:
         self.district_cache = {}
         self.events = {}
 
-        client = pymongo.MongoClient(settings.HOST, settings.PORT)
-        self.db = client[settings.DBNAME]
-        self.districts = self.db[settings.DISTRICT_COLLECTION]
-        self.students = self.db[settings.STUDENT_COLLECTION]
+        client = pymongo.MongoClient(settings.MONGO_HOST, settings.MONGO_PORT)
+        self.db = client[settings.MONGO_DBNAME]
+        self.districts = self.db[settings.MONGO_DISTRICTS]
+        self.students = self.db[settings.MONGO_STUDENTS]
 
     def tally_event(self, event):
         self.events[event] = self.events.get(event, 0) + 1
@@ -211,7 +211,7 @@ class DistrictFixer:
         print("\nDistrict Fix Started at %s. %d districts, %s students in DB:\n\t%s" % (
             self.start_time, self.districts.count(), self.students.count(), self.db))
 
-        if settings.DRY_RUN == True:
+        if settings.FIXER_DRY_RUN is True:
             print("\n***** DRY RUN - NO CHANGES WILL BE SAVED, SAVES PRETEND SUCCESS *****")
 
         input("\n***** Press enter to start fixing, CTRL-C to cancel! *****")
@@ -317,11 +317,11 @@ class DistrictFixer:
         if not district_mongo_id:
             return DistrictFixer.Event.NOT_FIXED_DISTRICT_NOT_FOUND
         # District found! Fix student and save record.
-        return None if settings.DRY_RUN == True else self.save(
+        return None if settings.FIXER_DRY_RUN is True else self.save(
             student_id, district_identifier, district_mongo_id)
 
     def save(self, student_id, district_identifier, mongo_identifier):
-        if settings.DRY_RUN:  # Extra DRY_RUN check (for paranoia).
+        if settings.FIXER_DRY_RUN:  # Extra DRY_RUN check (for paranoia).
             return None
         try:
             result = self.students.update_one({'_id': student_id}, {'$set': {

@@ -5,3 +5,4 @@
 settings_secret*.py
 __pycache__/
 environments/
+env/
