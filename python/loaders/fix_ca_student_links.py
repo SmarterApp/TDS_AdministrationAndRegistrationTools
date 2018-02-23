@@ -132,7 +132,7 @@ class Fixer:
     def tally_event(self, event):
         self.events[event] = self.events.get(event, 0) + 1
 
-    def fail(self, student, event, file):
+    def write_event(self, student, event, file):
         self.tally_event(event)
         file.write("%s,%s,%s,%s\n" % (
             student.get('entityId', ''),
@@ -141,10 +141,7 @@ class Fixer:
             event.name,
         ))
 
-    def success(self, student, event):
-        self.tally_event(event)
-
-    def perform_district_fixes(self, districts_not_fixed, cali_no_district, csv_student, ssid):
+    def perform_district_fixes(self, districts_fixed, districts_not_fixed, cali_no_district, csv_student, ssid):
         failure = True
         if ssid in cali_no_district:
             self.tally_event(Fixer.DistrictEvent.STUDENT_FIXES_ATTEMPTED)
@@ -173,14 +170,14 @@ class Fixer:
                 self.tally_event(Fixer.DistrictEvent.STUDENT_FIXES_FAILED)
                 self.unfixed_students_in_csv.add(ssid)
                 self.districts_not_found.add(student.get('districtIdentifier'))
-                self.fail(student, failure, districts_not_fixed)
+                self.write_event(student, failure, districts_not_fixed)
             else:
                 self.tally_event(Fixer.DistrictEvent.STUDENTS_FIXED)
                 self.districts_fixed.add(fixed_did)
-                self.success(student, scheme)
+                self.write_event(student, scheme, districts_fixed)
         return not failure
 
-    def perform_school_fixes(self, schools_not_fixed, cali_no_school, csv_student, ssid):
+    def perform_school_fixes(self, schools_fixed, schools_not_fixed, cali_no_school, csv_student, ssid):
         failure = True
         if ssid in cali_no_school:
             self.tally_event(Fixer.SchoolEvent.STUDENT_FIXES_ATTEMPTED)
@@ -215,11 +212,11 @@ class Fixer:
                 self.tally_event(Fixer.SchoolEvent.STUDENT_FIXES_FAILED)
                 self.unfixed_students_in_csv.add(ssid)
                 self.schools_not_found.add(db_iid)
-                self.fail(student, failure, schools_not_fixed)
+                self.write_event(student, failure, schools_not_fixed)
             else:
                 self.tally_event(Fixer.SchoolEvent.STUDENTS_FIXED)
                 self.schools_fixed.add(fixed_iid)
-                self.success(student, scheme)
+                self.write_event(student, scheme, schools_fixed)
         return not failure
 
     def fix(self):
@@ -248,9 +245,12 @@ class Fixer:
 
         with open(
             "out_fixer_students_district_failed_%s.csv" % self.start_time, "w") as districts_not_fixed, open(
-                "out_fixer_students_school_failed_%s.csv" % self.start_time, "w") as schools_not_fixed:
-            districts_not_fixed.write("entityId,districtIdentifier,institutionIdentifier,failure\n")
-            schools_not_fixed.write("entityId,districtIdentifier,institutionIdentifier,failure\n")
+                "out_fixer_students_district_fixed_%s.csv" % self.start_time, "w") as districts_fixed, open(
+                "out_fixer_students_school_failed_%s.csv" % self.start_time, "w") as schools_not_fixed, open(
+                "out_fixer_students_school_fixed_%s.csv" % self.start_time, "w") as schools_fixed:
+
+            for file in [districts_not_fixed, districts_fixed, schools_not_fixed, schools_fixed]:
+                file.write("entityId,districtIdentifier,institutionIdentifier,event\n")
 
             deltaupdates = 0
             updates = 0
@@ -267,10 +267,12 @@ class Fixer:
                             self.rowidx, updates, updates - deltaupdates))
                         deltaupdates = updates
 
-                    if self.perform_district_fixes(districts_not_fixed, cali_no_district, csv_student, ssid):
+                    if self.perform_district_fixes(
+                            districts_fixed, districts_not_fixed, cali_no_district, csv_student, ssid):
                         updates += 1
 
-                    if self.perform_school_fixes(schools_not_fixed, cali_no_school, csv_student, ssid):
+                    if self.perform_school_fixes(
+                            schools_fixed, schools_not_fixed, cali_no_school, csv_student, ssid):
                         updates += 1
 
         self.unfixed_students_not_in_csv.update(cali_no_school.keys())
