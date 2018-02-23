@@ -66,7 +66,7 @@ lastProgressBytes = False
 is_terminal = sys.stdout.isatty()
 
 
-# This is a callback method for reporting progress. Gets replaced by launcher GUI.
+# Default callback method for reporting progress.
 def progress(message, completedbytes=None, totalbytes=None):
     global lastProgressBytes, is_terminal
     if message is not None:
@@ -152,27 +152,11 @@ def main(argv):
             schoolfile = arg
             print("Command line set schoolfile to '%s'" % schoolfile)
 
-    remoteschool = datewise_filepath(
-        settings.SFTP_SCHOOL_FILE_DIR,
-        settings.SFTP_SCHOOL_FILE_BASENAME,
-        settings.SFTP_FILE_DATEFORMAT,
-        settings.SFTP_FILE_EXT)
-    schoolfile = schoolfile if schoolfile else datewise_filepath(
-        None,
-        settings.SFTP_SCHOOL_FILE_BASENAME,
-        settings.SFTP_FILE_DATEFORMAT,
-        settings.SFTP_FILE_EXT)
+    remoteschool = datewise_filepath(settings.SFTP_SCHOOL_FILE_DIR, settings.SFTP_SCHOOL_FILE_BASENAME)
+    schoolfile = schoolfile if schoolfile else datewise_filepath(None, settings.SFTP_SCHOOL_FILE_BASENAME)
 
-    remotepath = remotepath if remotepath else datewise_filepath(
-        settings.SFTP_FILE_DIR,
-        settings.SFTP_FILE_BASENAME,
-        settings.SFTP_FILE_DATEFORMAT,
-        settings.SFTP_FILE_EXT)
-    studentfile = studentfile if studentfile else datewise_filepath(
-        None,
-        settings.SFTP_FILE_BASENAME,
-        settings.SFTP_FILE_DATEFORMAT,
-        settings.SFTP_FILE_EXT)
+    remotepath = remotepath if remotepath else datewise_filepath(settings.SFTP_FILE_DIR, settings.SFTP_FILE_BASENAME)
+    studentfile = studentfile if studentfile else datewise_filepath(None, settings.SFTP_FILE_BASENAME)
 
     start_time = datetime.datetime.now()
     print("\nStarting at %s\n" % start_time)
@@ -216,16 +200,6 @@ def main(argv):
 
     deltasecs = (end_time - start_time).total_seconds()
     print("\nTotal Elapsed %s\n" % deltasecs)
-
-
-# Safely appends file_path + today().strftime(file_date_format) + file_ext.
-def datewise_filepath(dir, basename, date_format, ext):
-    path = str(dir) if dir else ''
-    path += str(basename) if basename else ''
-    path += datetime.datetime.today().strftime(date_format) if date_format else ''
-    # path += (datetime.datetime.today() - datetime.timedelta(days=1)).strftime(date_format) if date_format else ''
-    path += ('.' + str(ext)) if ext else ''
-    return path
 
 
 # progress is a callback taking (message, completedbytes, totalbytes). Called frequently to display progress.
@@ -290,18 +264,6 @@ def download_file(hostname, port, username, password, keyfile, keypass, remotepa
                     return True
 
 
-def open_csv_files(filename, encoding):
-    # If filename is a zip file, open first file in the zip. Otherwise open file as a CSV.
-    if zipfile.is_zipfile(filename):
-        with zipfile.ZipFile(filename, 'r') as zip_file:
-            for csv_filename in zip_file.namelist():
-                with zip_file.open(csv_filename) as csv_file:
-                    yield io.TextIOWrapper(csv_file, encoding=encoding)
-    else:
-        with open(filename, 'r', encoding=encoding) as csv_file:
-            yield csv_file
-
-
 def read_lines(filename, encoding, csv_start_line=1):
     current_line = 0
     try:
@@ -332,29 +294,6 @@ def post_students(endpoint, total_loaded, students, delimiter, bearer_token, cds
 
 def is_district(school):
     return school[COUNTY_CODE] and school[COUNTY_CODE] == school[SCHOOL_CODE]
-
-
-def load_schools(filename, encoding, delimiter):
-    rows_processed = 0
-    cds_lookup = {}
-    districts = []
-    schools = []
-
-    print("Processing schools file at %s..." % datetime.datetime.now())
-
-    for school in csv.DictReader(
-            [line[0] for line in read_lines(filename, encoding)], delimiter=delimiter):
-        rows_processed += 1
-        cds_lookup["%s%s" % (school[COUNTY_CODE], school[SCHOOL_CODE])] = school[CDS_CODE]
-        schools.append(school)
-        if is_district(school):
-            districts.append(school)
-
-    print("Finished schools file at %s..." % datetime.datetime.now())
-    print("Processed %d rows, %d schools, %d districts, %d cds_lookup." % (
-        rows_processed, len(schools), len(districts), len(cds_lookup)))
-
-    return cds_lookup, districts, schools
 
 
 def load_student_data(filename, encoding, delimiter, csv_start_line, num_students,
@@ -598,22 +537,6 @@ def create_student_dto(student, cds_lookup):
     }
 
 
-# Create a 14-digit district ID with seven 0's on end, left padded with 0's.
-def generate_district_identifier(district_code):
-    # append seven 0's to the end of the district_code as institution placeholder
-    district_id = xstr(district_code) + '0000000'
-    # left pad with 0's until it's 14 characters long
-    return '0' * max(14 - len(district_id), 0) + district_id
-
-
-# Look up CDS Code from data in CA_students.csv file.
-def generate_institution_identifier(student, cds_lookup):
-    cds = cds_lookup.get(xstr(student['ResponsibleDistrictIdentifier']) + xstr(student['ResponsibleSchoolIdentifier']))
-    if not cds:
-        print("Did not find CDS for student %s!", student)
-    return cds
-
-
 def get_bearer_token(username, password):
     endpoint = settings.AUTH_ENDPOINT
     payload = settings.AUTH_PAYLOAD
@@ -662,7 +585,7 @@ def xstr(s):
 
 def usage():
     print("Download, extract, and upload today's school and student dump files from sFTP server.")
-    print("  If a zip file is found, the first file inside will be read.")
+    print("  If a zip file is found, all files inside will be read.")
     print("\nMost settings are configured via settings files, NOT via the command line.")
     print("  To modify those settings, copy settings_default.py to settings_secret.py and edit the copy.")
     print("\nHelp/usage details:")
@@ -681,6 +604,69 @@ def usage():
     print("  -d, --delimiter          : delimiter to use when processing CSV files")
     print("  -s, --csv_start_line     : line in the student csv file to start uploading")
     print("  -n, --number             : the (max) number of students to upload\n")
+
+
+# 'Exported' methods below (used by other scripts)
+
+def open_csv_files(filename, encoding=settings.FILE_ENCODING):
+    # If filename is a zip file, open first file in the zip. Otherwise open file as a CSV.
+    if zipfile.is_zipfile(filename):
+        with zipfile.ZipFile(filename, 'r') as zip_file:
+            for csv_filename in zip_file.namelist():
+                with zip_file.open(csv_filename) as csv_file:
+                    yield io.TextIOWrapper(csv_file, encoding=encoding)
+    else:
+        with open(filename, 'r', encoding=encoding) as csv_file:
+            yield csv_file
+
+
+def load_schools(filename, encoding=settings.FILE_ENCODING, delimiter=settings.DELIMITER):
+    rows_processed = 0
+    cds_lookup = {}
+    districts = []
+    schools = []
+
+    print("Processing schools file at %s..." % datetime.datetime.now())
+
+    for school in csv.DictReader(
+            [line[0] for line in read_lines(filename, encoding)], delimiter=delimiter):
+        rows_processed += 1
+        cds_lookup["%s%s" % (school[COUNTY_CODE], school[SCHOOL_CODE])] = school[CDS_CODE]
+        schools.append(school)
+        if is_district(school):
+            districts.append(school)
+
+    print("Finished schools file at %s..." % datetime.datetime.now())
+    print("Processed %d rows, %d schools, %d districts, %d cds_lookup." % (
+        rows_processed, len(schools), len(districts), len(cds_lookup)))
+
+    return cds_lookup, districts, schools
+
+
+# Create a 14-digit district ID with seven 0's on end, left padded with 0's.
+def generate_district_identifier(district_code):
+    # append seven 0's to the end of the district_code as institution placeholder
+    district_id = xstr(district_code) + '0000000'
+    # left pad with 0's until it's 14 characters long
+    return '0' * max(14 - len(district_id), 0) + district_id
+
+
+# Look up CDS Code from data in CA_students.csv file.
+def generate_institution_identifier(student, cds_lookup):
+    cds = cds_lookup.get(xstr(student['ResponsibleDistrictIdentifier']) + xstr(student['ResponsibleSchoolIdentifier']))
+    if not cds:
+        print("Did not find CDS for student %s!", student)
+    return cds
+
+
+# Safely appends file_path + today().strftime(file_date_format) + file_ext.
+def datewise_filepath(dir, basename, date_format=settings.SFTP_FILE_DATEFORMAT, ext=settings.SFTP_FILE_EXT):
+    path = str(dir) if dir else ''
+    path += str(basename) if basename else ''
+    path += datetime.datetime.today().strftime(date_format) if date_format else ''
+    # path += (datetime.datetime.today() - datetime.timedelta(days=1)).strftime(date_format) if date_format else ''
+    path += ('.' + str(ext)) if ext else ''
+    return path
 
 
 if __name__ == "__main__":
