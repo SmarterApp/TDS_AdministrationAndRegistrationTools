@@ -79,13 +79,15 @@ class AutoNumber(Enum):
 class Fixer:
 
     class FixerEvent(AutoNumber):
-        MISSING_DISTRICTS = ()
-        MISSING_SCHOOLS = ()
-        MISSING_STUDENTS = ()
+        DISTRICTS_ENTITY_CHECKED = ()
+        DISTRICTS_MISSING = ()
         NOT_FIXED_STUDENTS_IN_CSV = ()
         NOT_FIXED_STUDENTS_NOT_IN_CSV = ()
+        SCHOOLS_ENTITY_CHECKED = ()
+        SCHOOLS_MISSING = ()
         STUDENTS_ENTITY_CHECKED = ()
         STUDENTS_LINK_CHECKED = ()
+        STUDENTS_MISSING = ()
 
     class DistrictEvent(AutoNumber):
         CACHED_DISTRICTS = ()
@@ -155,15 +157,6 @@ class Fixer:
             student.get('entityId', ''),
             student.get('districtIdentifier', ''),
             student.get('institutionIdentifier', ''),
-            event.name,
-        ))
-
-    def write_event_csv_student(self, csv_student, event, file):
-        self.tally_event(event)
-        file.write("%s,%s,%s,%s\n" % (
-            csv_student.get('SSID'),
-            csv_student.get('ResponsibleDistrictIdentifier'),
-            csv_student.get('ResponsibleSchoolIdentifier'),
             event.name,
         ))
 
@@ -282,7 +275,7 @@ class Fixer:
             # Load Student CSV
             self.link_fixer_count = 0
             print("Checking student district and school linkages...")
-            for csv_student in self.generate_csv_students:
+            for csv_student in self.generate_csv_students():
                 self.link_fixer_count += 1
                 ssid = csv_student['SSID']
                 if not (self.link_fixer_count % 10000):
@@ -303,33 +296,52 @@ class Fixer:
         print(datetime.datetime.now())
 
     def check_entities_match_csv(self):
-        print("\nEntity Checker started at %s." % datetime.datetime.now())
 
-        with open("out_fixer_missing_students_%s.csv" % self.start_time, "w") as missing_students:
-            # , open("out_fixer_missing_districts_%s.csv" % self.start_time, "w") as missing_districts
-            # , open( "out_fixer_missing_schools_%s.csv" % self.start_time, "w") as missing_schools:
-            missing_students.write("SSID,ResponsibleDistrictIdentifier,ResponsibleSchoolIdentifier,event\n")
+        print("\nEntity Checker started.\n\nChecking districts at %s." % datetime.datetime.now())
+        with open("out_fixer_missing_districts_%s.csv" % self.start_time, "w",
+                  encoding=settings.FILE_ENCODING) as missing_districts:
+            for district in self.resources.csv_districts:
+                # Check for district in DB
+                did = art_student_loader.generate_district_identifier(district[art_student_loader.COUNTY_CODE])
+                if not self.resources.districts.find_one({"entityId": did}, projection=[]):
+                    self.tally_event(Fixer.FixerEvent.DISTRICTS_MISSING)
+                    if missing_districts.tell() == 0:
+                        print(settings.DELIMITER.join(district.keys()), file=missing_districts)
+                    print(settings.DELIMITER.join(district.values()), file=missing_districts)
 
+        print("\nChecking schools at %s." % datetime.datetime.now())
+        with open("out_fixer_missing_schools_%s.csv" % self.start_time, "w",
+                  encoding=settings.FILE_ENCODING) as missing_schools:
+            for school in self.resources.csv_schools:
+                # Check for school in DB
+                iid = school[art_student_loader.CDS_CODE]
+                if not self.resources.schools.find_one({"entityId": iid}, projection=[]):
+                    self.tally_event(Fixer.FixerEvent.SCHOOLS_MISSING)
+                    if missing_schools.tell() == 0:
+                        print(settings.DELIMITER.join(school.keys()), file=missing_schools)
+                    print(settings.DELIMITER.join(school.values()), file=missing_schools)
+
+        print("\nChecking students at %s." % datetime.datetime.now())
+        with open("out_fixer_missing_students_%s.csv" % self.start_time, "w",
+                  encoding=settings.FILE_ENCODING) as missing_students:
             deltaupdates = 0
             updates = 0
-
-            # Load Student CSV
             self.entity_checker_count = 0
-            print("Checking student CSV against ART DB...")
             for csv_student in self.generate_csv_students():
                 self.entity_checker_count += 1
-                updates = self.events.get(Fixer.FixerEvent.MISSING_STUDENTS, 0)
+                updates = self.events.get(Fixer.FixerEvent.STUDENTS_MISSING, 0)
                 if not (self.entity_checker_count % 1000):
                     print("Processing csv row %d: %d missing students, %d delta..." % (
                         self.entity_checker_count, updates, updates - deltaupdates))
                     deltaupdates = updates
+                # Check for student in DB
+                if not self.resources.students.find_one({"entityId": csv_student['SSID']}, projection=[]):
+                    self.tally_event(Fixer.FixerEvent.STUDENTS_MISSING)
+                    if missing_students.tell() == 0:
+                        print(settings.DELIMITER.join(csv_student.keys()), file=missing_students)
+                    print(settings.DELIMITER.join(csv_student.values()), file=missing_students)
 
-                ssid = csv_student['SSID']
-                school = self.resources.students.find_one({"entityId": ssid}, projection=[])
-                if not school:
-                    self.write_event_csv_student(csv_student, Fixer.FixerEvent.MISSING_STUDENTS, missing_students)
-
-        print(datetime.datetime.now())
+        print("Entity check complete at %s." % datetime.datetime.now())
 
     def generate_csv_students(self):
         for file in art_student_loader.open_csv_files(self.options.studentfile):
@@ -340,6 +352,8 @@ class Fixer:
         self.events[Fixer.FixerEvent.NOT_FIXED_STUDENTS_IN_CSV] = len(self.unfixed_students_in_csv)
         self.events[Fixer.FixerEvent.NOT_FIXED_STUDENTS_NOT_IN_CSV] = len(self.unfixed_students_not_in_csv)
         self.events[Fixer.FixerEvent.STUDENTS_LINK_CHECKED] = self.link_fixer_count
+        self.events[Fixer.FixerEvent.DISTRICTS_ENTITY_CHECKED] = len(self.resources.csv_districts)
+        self.events[Fixer.FixerEvent.SCHOOLS_ENTITY_CHECKED] = len(self.resources.csv_schools)
         self.events[Fixer.FixerEvent.STUDENTS_ENTITY_CHECKED] = self.entity_checker_count
 
         self.events[Fixer.DistrictEvent.CACHED_DISTRICTS] = len(self.resources.district_cache)
