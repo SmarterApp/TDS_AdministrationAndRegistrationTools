@@ -494,14 +494,10 @@ def create_student_dtos(students, delimiter, cds_lookup):
 # LastOrSurnameAlias, FirstNameAlias, MiddleNameAlias
 def create_student_dto(student, cds_lookup):
 
-    # Report on any unknown gradelevels.
     global gradelevels
-    gradeLevelWhenAssessed = xstr(student['GradeLevelWhenAssessed'])
-    if gradeLevelWhenAssessed not in settings.GRADEMAP:
+    if xstr(student['GradeLevelWhenAssessed']) not in settings.GRADEMAP:
         # Record unexpected gradelevels for later display.
-        gradelevels[gradeLevelWhenAssessed] += 1
-        # Map known gradelevel values to expected.
-        gradeLevelWhenAssessed = settings.GRADEMAP.get(gradeLevelWhenAssessed, 'UG')
+        gradelevels[xstr(student['GradeLevelWhenAssessed'])] += 1
 
     return {
         "ssid": student['SSID'],
@@ -513,7 +509,7 @@ def create_student_dto(student, cds_lookup):
         "externalSsid": xstr(student['SmarterStudentID']),
         "institutionIdentifier": generate_institution_identifier(student, cds_lookup),
         "districtIdentifier": generate_district_identifier(student['ResponsibleDistrictIdentifier']),
-        "gradeLevelWhenAssessed": gradeLevelWhenAssessed,
+        "gradeLevelWhenAssessed": settings.GRADEMAP.get(xstr(student['GradeLevelWhenAssessed']), 'UG'),
         "hispanicOrLatino": string_to_boolean(student['HispanicOrLatinoEthnicity']),
         "americanIndianOrAlaskaNative": string_to_boolean(student['AmericanIndianOrAlaskaNative']),
         "asian": string_to_boolean(student['Asian']),

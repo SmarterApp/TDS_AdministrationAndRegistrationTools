@@ -305,11 +305,9 @@ class Fixer:
     def check_entities_match_csv(self):
         print("\nEntity Checker started at %s." % datetime.datetime.now())
 
-        with open(
-            "out_fixer_missing_students_%s.csv" % self.start_time, "w") as missing_students, open(
-                "out_fixer_missing_districts_%s.csv" % self.start_time, "w") as missing_districts, open(
-                "out_fixer_missing_schools_%s.csv" % self.start_time, "w") as missing_schools:
-
+        with open("out_fixer_missing_students_%s.csv" % self.start_time, "w") as missing_students:
+            # , open("out_fixer_missing_districts_%s.csv" % self.start_time, "w") as missing_districts
+            # , open( "out_fixer_missing_schools_%s.csv" % self.start_time, "w") as missing_schools:
             missing_students.write("SSID,ResponsibleDistrictIdentifier,ResponsibleSchoolIdentifier,event\n")
 
             deltaupdates = 0
@@ -488,10 +486,10 @@ def main(argv):
 
     fixer = Fixer(options, Resources(options))
 
-    # try:
-    #     fixer.fix_missing_mongo_ids()
-    # except KeyboardInterrupt:
-    #     print("Got keyboard interrupt. Skipping rest of lines for student/district mongo ID fixes.")
+    try:
+        fixer.fix_missing_mongo_ids()
+    except KeyboardInterrupt:
+        print("Got keyboard interrupt. Skipping rest of lines for student/district mongo ID fixes.")
 
     try:
         fixer.check_entities_match_csv()
