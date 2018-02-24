@@ -79,29 +79,33 @@ class AutoNumber(Enum):
 class Fixer:
 
     class FixerEvent(AutoNumber):
-        STUDENTS_PROCESSED = ()
+        MISSING_DISTRICTS = ()
+        MISSING_SCHOOLS = ()
+        MISSING_STUDENTS = ()
         NOT_FIXED_STUDENTS_IN_CSV = ()
         NOT_FIXED_STUDENTS_NOT_IN_CSV = ()
+        STUDENTS_ENTITY_CHECKED = ()
+        STUDENTS_LINK_CHECKED = ()
 
     class DistrictEvent(AutoNumber):
+        CACHED_DISTRICTS = ()
         CACHE_HIT = ()
         CACHE_MISS = ()
-        CACHED_DISTRICTS = ()
-        DISTRICT_CSV_AND_DB_MISMATCH = ()
         DISTRICTS_FIXED = ()
         DISTRICTS_NOT_FOUND = ()
-        FIXED_LINKED_WITH_DB_DID = ()
+        DISTRICT_CSV_AND_DB_MISMATCH = ()
         FIXED_LINKED_WITH_CSV_DID = ()
+        FIXED_LINKED_WITH_DB_DID = ()
         NOT_FIXED_DISTRICT_NOT_FOUND = ()
         NOT_FIXED_FAILED_TO_SAVE = ()
+        STUDENTS_FIXED = ()
         STUDENT_FIXES_ATTEMPTED = ()
         STUDENT_FIXES_FAILED = ()
-        STUDENTS_FIXED = ()
 
     class SchoolEvent(AutoNumber):
+        CACHED_SCHOOLS = ()
         CACHE_HIT = ()
         CACHE_MISS = ()
-        CACHED_SCHOOLS = ()
         CDS_LOOKUP_ADDS = ()
         FIXED_LINKED_WITH_CSV_IID_CDS_LOOKUP = ()
         FIXED_LINKED_WITH_DB_IID = ()
@@ -110,16 +114,17 @@ class Fixer:
         NOT_FIXED_INSTITUTION_NOT_FOUND = ()
         SCHOOLS_FIXED = ()
         SCHOOLS_NOT_FOUND = ()
+        STUDENTS_FIXED = ()
         STUDENT_CSV_AND_DB_MISMATCH = ()
         STUDENT_FIXES_ATTEMPTED = ()
         STUDENT_FIXES_FAILED = ()
-        STUDENTS_FIXED = ()
 
     def __init__(self, options, resources):
         self.options = options
         self.resources = resources
         self.start_time = datetime.datetime.now().strftime('%Y%m%d_%H%M%S')
-        self.rowidx = 0
+        self.link_fixer_count = 0
+        self.entity_checker_count = 0
         self.events = {}
         self.schools_fixed = set()
         self.schools_not_found = set()
@@ -128,6 +133,18 @@ class Fixer:
 
         self.districts_not_found = set()
         self.districts_fixed = set()
+
+        print("\nFixer created at %s. %s districts, %s schools, %s students in DB:\n\t%s" % (
+            self.start_time, self.resources.districts.count(), self.resources.schools.count(),
+            self.resources.students.count(), self.resources.db))
+
+        if options.writemode:
+            print("\n\nWRITE MODE ENABLED! THIS WILL REALLY WRITE TO THE DB!!")
+            print("\n\n\n*** YOU HAVE 5 SECONDS TO CTRL-C WRITING TO DB '%s:%s'!! ***" % (
+                settings.MONGO_HOST, settings.MONGO_PORT))
+            time.sleep(6)
+        else:
+            print("\n*** READ-ONLY CHECKER MODE - NO CHANGES WILL BE MADE ***\n")
 
     def tally_event(self, event):
         self.events[event] = self.events.get(event, 0) + 1
@@ -138,6 +155,15 @@ class Fixer:
             student.get('entityId', ''),
             student.get('districtIdentifier', ''),
             student.get('institutionIdentifier', ''),
+            event.name,
+        ))
+
+    def write_event_csv_student(self, csv_student, event, file):
+        self.tally_event(event)
+        file.write("%s,%s,%s,%s\n" % (
+            csv_student.get('SSID'),
+            csv_student.get('ResponsibleDistrictIdentifier'),
+            csv_student.get('ResponsibleSchoolIdentifier'),
             event.name,
         ))
 
@@ -219,10 +245,8 @@ class Fixer:
                 self.write_event(student, scheme, schools_fixed)
         return not failure
 
-    def fix(self):
-        print("\nStarted at %s. %s districts, %s schools, %s students in DB:\n\t%s" % (
-            self.start_time, self.resources.districts.count(), self.resources.schools.count(),
-            self.resources.students.count(), self.resources.db))
+    def fix_missing_mongo_ids(self):
+        print("\nStudent district/student link fixer started at %s." % datetime.datetime.now())
 
         cali_no_district = get_students_unlinked_districts(self.resources.students)
         districts = {s.get('districtIdentifier', None) for s in cali_no_district.values()}
@@ -256,33 +280,69 @@ class Fixer:
             updates = 0
 
             # Load Student CSV
-            self.rowidx = 0
-            print("Processing Student CSV...")
-            for file in art_student_loader.open_csv_files(self.options.studentfile):
-                for csv_student in csv.DictReader(file, delimiter=settings.DELIMITER):
-                    self.rowidx += 1
-                    ssid = csv_student['SSID']
-                    if not (self.rowidx % 10000):
-                        print("Processing csv row %d, %d updates, %d delta..." % (
-                            self.rowidx, updates, updates - deltaupdates))
-                        deltaupdates = updates
+            self.link_fixer_count = 0
+            print("Checking student district and school linkages...")
+            for csv_student in self.generate_csv_students:
+                self.link_fixer_count += 1
+                ssid = csv_student['SSID']
+                if not (self.link_fixer_count % 10000):
+                    print("Processing csv row %d, %d updates, %d delta..." % (
+                        self.link_fixer_count, updates, updates - deltaupdates))
+                    deltaupdates = updates
 
-                    if self.perform_district_fixes(
-                            districts_fixed, districts_not_fixed, cali_no_district, csv_student, ssid):
-                        updates += 1
+                if self.perform_district_fixes(
+                        districts_fixed, districts_not_fixed, cali_no_district, csv_student, ssid):
+                    updates += 1
 
-                    if self.perform_school_fixes(
-                            schools_fixed, schools_not_fixed, cali_no_school, csv_student, ssid):
-                        updates += 1
+                if self.perform_school_fixes(
+                        schools_fixed, schools_not_fixed, cali_no_school, csv_student, ssid):
+                    updates += 1
 
         self.unfixed_students_not_in_csv.update(cali_no_school.keys())
         self.unfixed_students_not_in_csv.update(cali_no_district.keys())
         print(datetime.datetime.now())
 
+    def check_entities_match_csv(self):
+        print("\nEntity Checker started at %s." % datetime.datetime.now())
+
+        with open(
+            "out_fixer_missing_students_%s.csv" % self.start_time, "w") as missing_students, open(
+                "out_fixer_missing_districts_%s.csv" % self.start_time, "w") as missing_districts, open(
+                "out_fixer_missing_schools_%s.csv" % self.start_time, "w") as missing_schools:
+
+            missing_students.write("SSID,ResponsibleDistrictIdentifier,ResponsibleSchoolIdentifier,event\n")
+
+            deltaupdates = 0
+            updates = 0
+
+            # Load Student CSV
+            self.entity_checker_count = 0
+            print("Checking student CSV against ART DB...")
+            for csv_student in self.generate_csv_students():
+                self.entity_checker_count += 1
+                updates = self.events.get(Fixer.FixerEvent.MISSING_STUDENTS, 0)
+                if not (self.entity_checker_count % 1000):
+                    print("Processing csv row %d: %d missing students, %d delta..." % (
+                        self.entity_checker_count, updates, updates - deltaupdates))
+                    deltaupdates = updates
+
+                ssid = csv_student['SSID']
+                school = self.resources.students.find_one({"entityId": ssid}, projection=[])
+                if not school:
+                    self.write_event_csv_student(csv_student, Fixer.FixerEvent.MISSING_STUDENTS, missing_students)
+
+        print(datetime.datetime.now())
+
+    def generate_csv_students(self):
+        for file in art_student_loader.open_csv_files(self.options.studentfile):
+            for csv_student in csv.DictReader(file, delimiter=settings.DELIMITER):
+                yield csv_student
+
     def summarize(self):
         self.events[Fixer.FixerEvent.NOT_FIXED_STUDENTS_IN_CSV] = len(self.unfixed_students_in_csv)
         self.events[Fixer.FixerEvent.NOT_FIXED_STUDENTS_NOT_IN_CSV] = len(self.unfixed_students_not_in_csv)
-        self.events[Fixer.FixerEvent.STUDENTS_PROCESSED] = self.rowidx
+        self.events[Fixer.FixerEvent.STUDENTS_LINK_CHECKED] = self.link_fixer_count
+        self.events[Fixer.FixerEvent.STUDENTS_ENTITY_CHECKED] = self.entity_checker_count
 
         self.events[Fixer.DistrictEvent.CACHED_DISTRICTS] = len(self.resources.district_cache)
         self.events[Fixer.DistrictEvent.DISTRICTS_FIXED] = len(self.districts_fixed)
@@ -422,22 +482,22 @@ def main(argv):
             options.schoolfile = arg
             print("Command line set schoolfile to '%s'" % options.schoolfile)
 
-    if options.writemode:
-        print("\n*** WRITE MODE ENABLED! THIS WILL REALLY WRITE TO THE DB!! ***\n")
-        print("\n*** 5 SECONDS TO CANCEL!! ***\n")
-        time.sleep(5)
-    else:
-        print("\n*** READ-ONLY CHECKER MODE - NO CHANGES WILL BE MADE ***\n")
-
     # Make sure school and student files are readable before doing anything.
     raise_unless_readable(options.schoolfile)
     raise_unless_readable(options.studentfile)
 
     fixer = Fixer(options, Resources(options))
+
+    # try:
+    #     fixer.fix_missing_mongo_ids()
+    # except KeyboardInterrupt:
+    #     print("Got keyboard interrupt. Skipping rest of lines for student/district mongo ID fixes.")
+
     try:
-        fixer.fix()
+        fixer.check_entities_match_csv()
     except KeyboardInterrupt:
         print("Got keyboard interrupt. Skipping.")
+
     fixer.summarize()
 
 
