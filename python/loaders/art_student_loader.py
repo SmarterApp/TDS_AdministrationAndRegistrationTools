@@ -583,7 +583,7 @@ def usage():
     print("Download, extract, and upload today's school and student dump files from sFTP server.")
     print("  If a zip file is found, all files inside will be read.")
     print("\nMost settings are configured via settings files, NOT via the command line.")
-    print("  To modify those settings, copy settings_default.py to settings_secret.py and edit the copy.")
+    print("  Copy settings_default.py to settings_secret.py and edit the copy. See README.md.")
     print("\nHelp/usage details:")
     print("  -h, --help               : this help screen")
     print("  -f, --studentfile        : local student file to download then read from (-l to prevent download)")

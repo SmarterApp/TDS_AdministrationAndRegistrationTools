@@ -2,65 +2,100 @@
 ## Instruction Manual
 
 ### Description
-The ART student loader utility is a Python scripts designed to automatically load the millions of students from the nightly CALPADS dump file into ART's REST API. The main utility includes an executable python script and a settings file, which is copied and modified for your local setup. There is also an optional GUI. The utilities are primarily designed to be run unattended by cron on a daily schedule.
+The ART student loader utility is a Python script designed to automatically load districts, schools, and millions of students from the nightly CALPADS csv feed file into ART's REST API. There is also a 'checker' utility that checks to ensure all entities in the feed were loaded successfully into ART. The checker should only be run after ART has finished processing all of the newly imported students from its queues. The utilities are designed to be run unattended by cron on a daily schedule, but can be run manually. The utility includes executable python scripts and a default settings file, which should be copied and modified to configure your local setup. 
 
 #### art_student_loader.py
-This is the main executable script. Run with -h or --help for a usage summary. This script performs the following main functions:
+This is the main executable script that loads students, districts, and schools into ART. Run with -h or --help for a usage summary. This script performs the following main functions:
 
-1. Download the nightly dump file from the CALPADS sFTP server.
-  - Will auto-resume an aborted download where it left off, if found.
-  - Will automatically download this morning's dump file from the server using an established naming convention.
-2. Extract the CSV data from the zip format used into a separate file, as defined in the zip file
-3. Upload the student data from the CSV file into ART via the ART REST API.
-  - Can be instructed to start at any offset in the data file in case a previous run was aborted.
-  - Can also be given a max number of students to upload instead of uploading the entire file.
+1. Download the nightly zipped CSV dump files (schools, students) from the CALPADS sFTP server.
+  - Will auto-resume aborted download where it left off.
+  - Will automatically download "this morning's" dump file from the server using an established naming convention.
+2. Read and parse the district, school, and student CSV data from any CSV files found in the ZIP archive.
+3. Upload the data from the CSV files into ART via the ART REST API.
+  - Script can be instructed to start at any offset in the student data file in case a previous run was aborted.
+  - Script can be given a max number of students to upload instead of uploading the entire file.
 
-#### launcher.py
-This optional python script provides a GUI that can automate the loader.
-This allows the user to see and change the important settings used by the loader before clicking GO. This will start the loading process and display the output as it goes. It's mainly designed for one-off execution, testing, and troubleshooting. It's especially useful to test connectivity without accidentally uploading anything (you can alternatively use the dry-run option of the command-line loader).
+#### art_student_checker.py
+This is the checker utility. It walks through the school and student feeds and confirms that all districts, schools,
+and students are in ART by checking directly against ART's mongo DB. This script does not communicate with the ART REST API.
 
 #### settings_default.py
-This file is distributed with the utilities and contain default settings used by all the tools.
-It's mainly designed to be a template you will copy to settings_secret.py before modifying. If settings_secret.py is missing this file will be read, but a warning will be printed as you probably won't connect to the right servers!
+This file is distributed with the utilities and contain default settings used by the tools.
+It's designed to be a template you will copy to settings_secret.py before modifying. If settings_secret.py is missing this file will be used, but a warning will be printed as you probably won't connect to the right servers.
 The settings file is documented via internal comments. See the file for information about the options.
 
 #### settings_secret.py
-This file is a settings override file the user will create and modify, then prevent unauthorized users from reading via permissions, etc. Copy settings_default.py to this file and modify to taste.
+This file is a settings override file the user will create and modify, then set permission such that unauthorized users cannot read it. Copy settings_default.py to this file and modify to taste.
 This file should contain all the sensitive passwords and URL's, etc, the utilities read to connect to ART and the sFTP server where the sensitive data is stored. Due to its nature, this file is not distributed with the utilities and is not in source control.
 
-### Usage
+### Loader Usage
 ```
 $ ./art_student_loader.py -h
-Download, extract, and upload today's student dump from CALPADS sFTP server into ART.
-  If a zip file is fetched, the first file inside will be extracted then uploaded to ART.
+Download, extract, and upload today's school and student dump files from sFTP server.
+  If a zip file is found, all files inside will be read.
 
-Most settings are configured via settings files, NOT via this command line!
-  To modify those settings, copy settings_default.py to settings_secret.py and edit the copy.
+Most settings are configured via settings files, NOT via the command line.
+  Copy settings_default.py to settings_secret.py and edit the copy. See README.md.
 
 Help/usage details:
   -h, --help               : this help screen
-  -f, --localfile          : local filename to write into. defaults to 'today's filename'
+  -f, --studentfile        : local student file to download then read from (-l to prevent download)
+  -c, --schoolfile         : local school file to download then read from (-l prevents download)
   Downloader Options:
-  -r, --remotepath         : remote filepath to download
+  -r, --remotepath         : remote student filepath to download
                              (defaults to today's file, eg: './Students/CA_students_20171005.zip')
-  -o, --offset             : byte in the file to start downloading
+  -o, --offset             : byte in the remote student file to start downloading
                              (will resume download at the end of any matching file found)
   Uploader Options:
-  -y, --dryrun             : do a dry run - does everything except actually POST to ART
-  -e, --encoding           : encoding to use when processing CSV file
-  -d, --delimiter          : delimiter to use when processing CSV file
-  -s, --csv_start_line     : line in the csv file to start uploading
+  -y, --dryrun             : do a dry run - download and parse data but do not make any changes
+  -l, --localonly          : don't download anything - just use local files
+  -e, --encoding           : encoding to use when processing CSV files
+  -d, --delimiter          : delimiter to use when processing CSV files
+  -s, --csv_start_line     : line in the student csv file to start uploading
   -n, --number             : the (max) number of students to upload
+
 ```
 ### Examples
 The script is designed to be run with no arguments, with all settings coming from settings_secret.py. For example, to download the students and upload them into ART using the settings file, just run it as follows:
 > $ ./art_student_loader.py
 
-Or to grab a file from a specified server directory and put it in my_local_file.csv, then upload the students inside:
-> $ ./art_student_loader.py -f my_local_file.csv -r ./Requests/special_dump.csv
+Or to grab the student file from a specified server directory, write to specified local csv files, then upload the data inside:
+> $ ./art_student_loader.py -f my_student_file.csv -c my_school_file.csv -r ./Requests/special_dump.csv
 
-Or to resume extra.csv at the one millionth byte in the file (potentially truncating it), then dry-run loading 200 students starting at the 2,000,000th line:
+Or to resume extra.csv at the one millionth byte in the file (potentially truncating it), then dry-run loading 200 students starting at the 2,000,000th line, using the default school file and location:
 > $ ./art_student_loader.py -f extra.csv -o 1000000 -s 2000000 -n 20 -y
+
+### Checker Usage
+```
+$ ./art_student_checker.py -h
+Walk the student/school CALPADS feeds and report any entities missing in ART DB.
+
+Can optionally fix missing links from students to schools and districts.
+(runs in read-only checker mode unless the -w option is provided)
+
+This utility doesn't download anything - it relies on the loader for that.
+By default it looks for files art_student_loader.py would have just downloaded.
+Like the loader, if a zip file is specified, all files inside will be read.
+
+This utility uses art_student_loader.py's configuration files. See README.md.
+
+Help/usage details:
+  -h, --help        : this help screen
+  -c, --schoolfile  : school file (defaults to CA_schools_YYYYMMDD.zip)
+  -f, --studentfile : student file (defaults to CA_students_YYYYMMDD.zip)
+  -w, --writemode   : WRITE MODE - WRITES FIXES TO CONFIGURED ART DB!!
+
+```
+### Examples
+The script is designed to be run with no arguments, with all settings coming from settings_secret.py.
+For example, to check everything the loader might have just loaded, just run it as follows:
+> $ ./art_student_checker.py
+
+Or to check and FIX student any linkage problems it finds:
+> $ ./art_student_loader.py -w
+
+Or to use different input files and fix problems (the full monty). You can mix zip and csv input files:
+> $ ./art_student_checker.py -c my_school_file.csv -f my_student_file.zip -w
 
 ##### Usage notes
 For performance, the loader uploads students in blocks of 10,000. When each block of students is uploaded, ART queues the request into a batch that will be processed later. ART then provides a URL that can be used to check the status of that batch.  This apprears for each chunk in the output as follows:

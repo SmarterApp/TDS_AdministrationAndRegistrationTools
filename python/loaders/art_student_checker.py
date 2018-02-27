@@ -514,16 +514,18 @@ def main(argv):
 
 
 def usage():
-    print("Check ART DB against student/school CALPADS feed and fix problems.")
-    print("\nRuns in read-only mode unless the -w option is provided.")
-    print("If a zip file is specified, all files inside will be read.")
-    print("\nMost settings are configured via settings files, NOT via the command line.")
-    print("  Copy settings_default.py to settings_secret.py and edit the copy.")
+    print("Walk the student/school CALPADS feeds and report any entities missing in ART DB.")
+    print("\nCan optionally fix missing links from students to schools and districts.")
+    print("(runs in read-only checker mode unless the -w option is provided)")
+    print("\nThis utility doesn't download anything - it relies on the loader for that.")
+    print("By default it looks for files art_student_loader.py would have just downloaded.")
+    print("Like the loader, if a zip file is specified, all files inside will be read.")
+    print("\nThis utility uses art_student_loader.py's configuration files. See README.md.")
     print("\nHelp/usage details:")
     print("  -h, --help        : this help screen")
     print("  -c, --schoolfile  : school file (defaults to CA_schools_YYYYMMDD.zip)")
     print("  -f, --studentfile : student file (defaults to CA_students_YYYYMMDD.zip)")
-    print("  -w, --writemode   : WRITE MODE - WRITES FIXES TO LIVE ART DB!!")
+    print("  -w, --writemode   : WRITE MODE - WRITES FIXES TO CONFIGURED ART DB!!")
 
 
 if __name__ == "__main__":
