@@ -32,7 +32,7 @@
         <sb11-shared-security.version>4.0.4</sb11-shared-security.version>
         <tds-dll.version>4.0.4</tds-dll.version>
         <tsb-client.version>4.0.2</tsb-client.version>
-        <support-tool-client.version>0.0.8</support-tool-client.version>
+        <support-tool-client.version>0.0.15</support-tool-client.version>
     </properties>
 
     <build>
