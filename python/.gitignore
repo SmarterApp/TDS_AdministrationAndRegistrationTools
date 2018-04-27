@@ -1,6 +1,8 @@
 *.pyc
 *.csv
 *.zip
+out_*
 settings_secret*.py
 __pycache__/
 environments/
+env/
