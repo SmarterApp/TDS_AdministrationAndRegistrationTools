@@ -3,7 +3,7 @@
   <parent>
     <groupId>org.opentestsystem.delivery</groupId>
     <artifactId>test-reg-parent</artifactId>
-    <version>3.1.5.RELEASE</version>
+    <version>4.1.2.RELEASE</version>
   </parent>
   <artifactId>testreg.rest</artifactId>
   <packaging>war</packaging>
@@ -15,19 +15,11 @@
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-webmvc</artifactId>
-            <version>${spring.version}</version>
-            <exclusions>
-                <exclusion>
-                    <groupId>org.springframework</groupId>
-                    <artifactId>spring-aop</artifactId>
-                </exclusion>
-            </exclusions>
         </dependency>
 
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-web</artifactId>
-            <version>${spring.version}</version>
         </dependency>
 
         <dependency>
@@ -81,6 +73,12 @@
             <groupId>org.opentestsystem.delivery</groupId>
             <artifactId>tds-dll-common</artifactId>
             <version>${tds-dll.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.springframework.data</groupId>
+                    <artifactId>spring-data-redis</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
 
         <dependency>
@@ -148,7 +146,7 @@
             <groupId>com.google.guava</groupId>
             <artifactId>guava</artifactId>
             <version>${guava.version}</version>
-        </dependency>                   
+        </dependency>
     		<!-- OPEN CSV -->
         <dependency>
             <groupId>net.sf.opencsv</groupId>

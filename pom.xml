@@ -3,18 +3,18 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.opentestsystem.delivery</groupId>
     <artifactId>test-reg-parent</artifactId>
-    <version>3.1.5.RELEASE</version>
+    <version>4.1.2.RELEASE</version>
     <name>Smarter Balanced #11 Test Registration - Parent Project</name>
     <packaging>pom</packaging>
 
     <parent>
         <groupId>org.opentestsystem.shared</groupId>
         <artifactId>shared-build-parent</artifactId>
-        <version>3.0.2</version>
+        <version>4.0.8</version>
     </parent>
 
     <properties>
-        <shared-master.version>3.1.1.RELEASE</shared-master.version>
+        <shared-master.version>4.0.7</shared-master.version>
         <apache-poi.version>3.9</apache-poi.version>
         <lowagie-itext.version>4.2.1</lowagie-itext.version>
 		<commons-jexl.version>2.0</commons-jexl.version>
@@ -24,14 +24,15 @@
         <bouncycastle.version>1.50</bouncycastle.version>
         <commons-compress.version>1.7</commons-compress.version>
         <open-csv.version>2.3</open-csv.version>
-        <progman-client.version>3.1.0.RELEASE</progman-client.version>
-        <rest-api-generator.version>3.1.1.RELEASE</rest-api-generator.version>
+        <progman-client.version>4.0.6</progman-client.version>
+        <rest-api-generator.version>4.0.3</rest-api-generator.version>
         <super-csv.version>2.1.0</super-csv.version>
-        <sb11-mna-client.version>3.1.0.RELEASE</sb11-mna-client.version>
-        <sb11-shared-code.version>3.1.1.RELEASE</sb11-shared-code.version>
-        <sb11-shared-security.version>3.1.1.RELEASE</sb11-shared-security.version>
-        <tds-dll.version>3.1.1.RELEASE</tds-dll.version>
-        <tsb-client.version>3.1.0.RELEASE</tsb-client.version>
+        <sb11-mna-client.version>4.0.2</sb11-mna-client.version>
+        <sb11-shared-code.version>4.0.7</sb11-shared-code.version>
+        <sb11-shared-security.version>4.0.4</sb11-shared-security.version>
+        <tds-dll.version>4.0.4</tds-dll.version>
+        <tsb-client.version>4.0.2</tsb-client.version>
+        <support-tool-client.version>4.1.8</support-tool-client.version>
     </properties>
 
     <build>
@@ -47,7 +48,7 @@
         <connection>scm:git:https://github.com/SmarterApp/TDS_AdministrationAndRegistrationTools.git</connection>
         <developerConnection>scm:git:git://github.com/SmarterApp/TDS_AdministrationAndRegistrationTools.git</developerConnection>
         <url>https://github.com/SmarterApp/TDS_AdministrationAndRegistrationTools</url>
-        <tag>3.1.5.RELEASE</tag>
+        <tag>4.1.2.RELEASE</tag>
     </scm>
 
     <dependencies>
@@ -61,7 +62,7 @@
             <groupId>commons-collections</groupId>
             <artifactId>commons-collections</artifactId>
             <version>${commons-collections.version}</version>
-        </dependency> 
+        </dependency>
         
         <dependency>
             <groupId>commons-beanutils</groupId>
@@ -80,30 +81,32 @@
             <artifactId>sb11-shared-code</artifactId>
             <version>${sb11-shared-code.version}</version>
         </dependency>
-        
+
          <dependency>
             <groupId>org.opentestsystem.shared</groupId>
             <artifactId>sb11-shared-security</artifactId>
             <version>${sb11-shared-security.version}</version>
         </dependency>
-        
+
+        <dependency>
+            <groupId>org.opentestsystem.delivery</groupId>
+            <artifactId>tds-support-tool-client</artifactId>
+            <version>${support-tool-client.version}</version>
+        </dependency>
 
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-core</artifactId>
-            <version>${spring.version}</version>
         </dependency>
 
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-webmvc</artifactId>
-            <version>${spring.version}</version>
         </dependency>
 
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-expression</artifactId>
-            <version>${spring.version}</version>
         </dependency>
 
         <dependency>
@@ -115,43 +118,49 @@
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-aspects</artifactId>
-            <version>${spring.version}</version>
         </dependency>
 
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-context</artifactId>
-            <version>${spring.version}</version>
         </dependency>
 
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-beans</artifactId>
-            <version>${spring.version}</version>
         </dependency>
 
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-tx</artifactId>
-            <version>${spring.version}</version>
         </dependency>
 
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-web</artifactId>
-            <version>${spring.version}</version>
         </dependency>
-        
+
         <dependency>
             <groupId>org.springframework.security</groupId>
             <artifactId>spring-security-taglibs</artifactId>
-            <version>${spring-security.version}</version>
         </dependency>
-        
+
         <dependency>
             <groupId>com.fasterxml.jackson.datatype</groupId>
             <artifactId>jackson-datatype-joda</artifactId>
             <version>${jackson-datatype-joda.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.fasterxml.jackson.datatype</groupId>
+            <artifactId>jackson-datatype-guava</artifactId>
+            <version>2.8.10</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.fasterxml.jackson.datatype</groupId>
+            <artifactId>jackson-datatype-jdk8</artifactId>
+            <version>2.8.6</version>
         </dependency>
 
         <dependency>
@@ -225,20 +234,8 @@
 
         <dependency>
             <groupId>ch.qos.logback</groupId>
-            <artifactId>logback-core</artifactId>
-            <version>${logback.version}</version>
-        </dependency>
-
-        <dependency>
-            <groupId>ch.qos.logback</groupId>
             <artifactId>logback-classic</artifactId>
             <version>${logback.version}</version>
-        </dependency>
-
-        <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-api</artifactId>
-            <version>${slf4j.version}</version>
         </dependency>
 
         <dependency>
