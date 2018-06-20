@@ -11,17 +11,21 @@ import sys
 # from datetime import datetime
 from psycopg2 import extras
 
-# Pull settings from csv_settings.py.
-try:
-    import settings_secret as settings
-    print("Using settings in settings_secret.py (good job!).")
-except:
-    import settings_default as settings
-    print("*** settings.py not found! USING DEFAULTS in settings_default.py.")
-    print("*** Please copy settings_default.py to settings_secret.py and modify that!")
-
-# do everything except post the data to the Student API (for testing)
-DRY_RUN_MODE = False
+DRY_RUN = True
+NUM_STUDENTS = None
+ART_REST_ENDPOINT = "https://localhost:8443/rest"
+ART_STUDENT_ENDPOINT = ART_REST_ENDPOINT + "/external/student/CA/batch"
+AUTH_ENDPOINT = "https://localhost/auth/oauth2/access_token?realm=/sbac"
+AUTH_PAYLOAD = {
+    "client_id": "me",
+    "client_secret": "secret",
+    "grant_type": "password",
+    "password": "password",
+    "username": "me@example.com"
+}
+CHUNK_SIZE = 10000
+DB_PARAMS = {'host': 'localhost', 'database': 'postgres', 'user': 'ubuntu', 'password': 'ubuntu'}
+DATE_FORMAT_YYYY_MM_DD = '%Y-%m-%d'  # Date format expected in the CSV files.
 
 offset = 0
 randpercent = 0.0
@@ -32,7 +36,7 @@ def main(argv):
     global randpercent
     global offset
     # number of students to create
-    num_students = settings.NUM_STUDENTS
+    num_students = NUM_STUDENTS
 
     try:
         opts, args = getopt.getopt(argv, "hn:o:r:", ["help", "number=", "offset=", "randpercent="])
@@ -63,7 +67,7 @@ def main(argv):
     deltasecs = (end_time - start_time).total_seconds()
     print("\nStarting at: %s" % start_time)
     print("\nFinished at: %s\n\tElapsed %s\n\tStudents/sec %0.4f\n\tMutated/sec  %0.4f\n" % (
-        end_time, deltasecs, num_students / deltasecs, randcount/deltasecs))
+        end_time, deltasecs, num_students / deltasecs, randcount / deltasecs))
     print("Randomized %d of %d students (got %0.2f%% wanted %0.2f%%)." % (
         randcount, num_students, 100.0 * randcount / num_students, randpercent))
 
@@ -83,22 +87,22 @@ def load_student_data(num_students):
     # at a time
     bearer_token = get_bearer_token()
 
-    print("\nLoading %d full chunks, %d remainder" % divmod(num_students, settings.CHUNK_SIZE))
+    print("\nLoading %d full chunks, %d remainder" % divmod(num_students, CHUNK_SIZE))
     total_loaded = 0
 
-    db_params = settings.DB_PARAMS
+    db_params = DB_PARAMS
     db_conn = connect_db(db_params)
     cursor = db_conn.cursor(name="server_side_cursor", cursor_factory=extras.RealDictCursor)
-    cursor.arraysize = settings.CHUNK_SIZE
-    cursor.itersize = settings.CHUNK_SIZE
+    cursor.arraysize = CHUNK_SIZE
+    cursor.itersize = CHUNK_SIZE
 
     # cursor.execute('SELECT * FROM "public"."tmp_students" ORDER BY "SSID" OFFSET %d' % offset)
     cursor.execute('SELECT * FROM "public"."CA_students" ORDER BY "SSID" OFFSET %d' % offset)
 
     while True:
         remaining = num_students - total_loaded
-        print("Loading %d students (%d remaining)..." % (min(settings.CHUNK_SIZE, remaining), remaining))
-        students = cursor.fetchmany(min(settings.CHUNK_SIZE, num_students - total_loaded))
+        print("Loading %d students (%d remaining)..." % (min(CHUNK_SIZE, remaining), remaining))
+        students = cursor.fetchmany(min(CHUNK_SIZE, num_students - total_loaded))
         if not students:
             break
         print("\nPosting %d students..." % len(students))
@@ -206,10 +210,10 @@ def ensure_first_date_of_entry_after_date_of_birth(student_dto):
     if not dob_str:
         return
 
-    dob = datetime.datetime.strptime(dob_str, settings.DATE_FORMAT_YYYY_MM_DD)
+    dob = datetime.datetime.strptime(dob_str, DATE_FORMAT_YYYY_MM_DD)
 
     if entry_date_str:
-        entry_date = datetime.datetime.strptime(entry_date_str, settings.DATE_FORMAT_YYYY_MM_DD)
+        entry_date = datetime.datetime.strptime(entry_date_str, DATE_FORMAT_YYYY_MM_DD)
         if entry_date < dob + datetime.timedelta(days=366):
             entry_date = dob + datetime.timedelta(days=366)
 
@@ -235,9 +239,9 @@ def ensure_first_date_of_entry_after_date_of_birth(student_dto):
 
 
 def get_bearer_token():
-    endpoint = settings.AUTH_ENDPOINT
+    endpoint = AUTH_ENDPOINT
     headers = {"Content-Type": "application/x-www-form-urlencoded"}
-    payload = settings.AUTH_PAYLOAD
+    payload = AUTH_PAYLOAD
     response = requests.post(endpoint, headers=headers, data=payload)
     content = json.loads(response.content)
     if response.status_code == 200:
@@ -249,10 +253,10 @@ def get_bearer_token():
 
 
 def post_student_data(students, bearer_token):
-    endpoint = settings.ART_ENDPOINT
+    endpoint = ART_STUDENT_ENDPOINT
     headers = {"Content-Type": "application/json", "Authorization": "Bearer %s" % bearer_token}
 
-    if not DRY_RUN_MODE:
+    if not DRY_RUN:
         response = requests.post(endpoint, headers=headers, data=json.dumps(
             [create_student_dto(student) for student in students]))
 
@@ -277,7 +281,7 @@ def date_to_yyyy_mm_dd_str(date):
     if date is None:
         return ''
     else:
-        return date.strftime(settings.DATE_FORMAT_YYYY_MM_DD)
+        return date.strftime(DATE_FORMAT_YYYY_MM_DD)
 
 
 # handle None when we expect a string

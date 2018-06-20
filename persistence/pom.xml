@@ -3,7 +3,7 @@
   <parent>
     <groupId>org.opentestsystem.delivery</groupId>
     <artifactId>test-reg-parent</artifactId>
-    <version>3.1.5.RELEASE</version>
+    <version>4.1.1</version>
   </parent>
   <artifactId>test-reg-persistence</artifactId>
   
@@ -11,7 +11,6 @@
   <packaging>jar</packaging>
 
     <dependencies>
-
         <dependency>
             <groupId>org.opentestsystem.delivery</groupId>
             <artifactId>test-reg-domain</artifactId>
@@ -73,35 +72,22 @@
             <groupId>org.opentestsystem.authoring</groupId>
             <artifactId>test-spec-bank-client</artifactId>
             <version>${tsb-client.version}</version>
-        </dependency>   
+        </dependency>
+
         <dependency>
             <groupId>org.springframework.data</groupId>
             <artifactId>spring-data-mongodb</artifactId>
-            <version>${spring-data-mongodb.version}</version>
-            <exclusions>
-                <exclusion>
-                    <groupId>org.mongodb</groupId>
-                    <artifactId>mongo-java-driver</artifactId>
-                </exclusion>
-            </exclusions>
         </dependency>
 
         <dependency>
             <groupId>org.springframework.integration</groupId>
             <artifactId>spring-integration-sftp</artifactId>
-            <version>${spring-integration-sftp.version}</version>
+            <version>${spring-integration.version}</version>
         </dependency>
 
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-core</artifactId>
-            <version>${spring.version}</version>
-            <exclusions>
-                <exclusion>
-                    <groupId>commons-logging</groupId>
-                    <artifactId>commons-logging</artifactId>
-                </exclusion>
-            </exclusions>
         </dependency>
         
         <dependency>
@@ -160,7 +146,6 @@
             <artifactId>super-csv</artifactId>
             <version>${super-csv.version}</version>
         </dependency>
-
     </dependencies>
     
     <build>

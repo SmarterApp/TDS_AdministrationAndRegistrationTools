@@ -1,11 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
+    xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
 
     <!-- Root Context: defines shared resources visible to all other web components -->
-    
-    <import resource="classpath:/spring/rest-context.xml" />
+
     <import resource="classpath:/security/oauth_client.xml" />
     <import resource="classpath:/security/samlmetadata-context.xml" />
     <import resource="classpath:/security/securityContext.xml" />
@@ -28,4 +27,9 @@
     <import resource="classpath:/spring/no-rabbitmq-context.xml" />
 
     <import resource="classpath:/spring/intercept-generated-data-context.xml" />
+
+    <!-- IMPORTANT:  Due to the number of object mappers registered in the various XML files that configure this
+     application and its dependencies, the object mappers get overwritten by different configurations at startup.  To
+     ensure we get the configuration we need, the rest-context.xml file needs to be loaded last. -->
+    <import resource="classpath:/spring/rest-context.xml" />
 </beans>
