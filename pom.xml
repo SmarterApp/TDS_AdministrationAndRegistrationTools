@@ -3,7 +3,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.opentestsystem.delivery</groupId>
     <artifactId>test-reg-parent</artifactId>
-    <version>4.1.1</version>
+    <version>4.1.2.RELEASE</version>
     <name>Smarter Balanced #11 Test Registration - Parent Project</name>
     <packaging>pom</packaging>
 
@@ -48,7 +48,7 @@
         <connection>scm:git:https://github.com/SmarterApp/TDS_AdministrationAndRegistrationTools.git</connection>
         <developerConnection>scm:git:git://github.com/SmarterApp/TDS_AdministrationAndRegistrationTools.git</developerConnection>
         <url>https://github.com/SmarterApp/TDS_AdministrationAndRegistrationTools</url>
-        <tag>4.1.1</tag>
+        <tag>4.1.2.RELEASE</tag>
     </scm>
 
     <dependencies>
