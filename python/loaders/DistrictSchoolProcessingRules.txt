@@ -1,0 +1,49 @@
+The proposed solution is to implement a new district/school loader script and update the existing student loader script to fetch the CDS code from the schools.csv provided by CALPADS.
+
+On top of these loaders that will fix the issue, we'll also build a 'checker script' that will confirm the data uploaded by the above two scripts has been inserted correctly into ART.
+
+Background
+
+Every night, CDE provides a dump of the CALPADS data for schools and students to SB via an automated SFTP feed. The data is contained within two files, CA_schools.csv and CA_students.csv.
+
+These files are zipped and uploaded to the SFTP location with a filename representing the date they were exported. The student and school loader scripts know this convention and can download these files automatically to perform the upload to ART.
+
+District/School Loader Description
+
+The CA_schools.csv file contains the following information for CA schools:
+
+County-District CodeSchool CodeAuth CDS CodeDistrict Name (used to upload a district)School Name (used to upload a school)County Name, Charter School, Charter Status, NPS School, Charter Number (not stored in art)
+
+The school loader will read this information and upload it into ART via the import API, uploading a set of districts referenced in the file, and then a set of schools.
+
+When ART receives an import request via the API for either a school, district, or student, it performs an 'upsert' operation on that entity using the primary key of that entity. For a student, that key is the SSID. For a School, it is the Auth CDS Code, and for a district it is the County-District Code. The Auth CDS Code is derived from the District and School codes (CDS stands for 'County District School'), so when they change, the CDS code also changes, maintaining its uniqueness.
+
+The term 'upsert' implies:
+
+If an entity already exists in ART with this primary key, ART will modify any fields in the existing records that have changed to match the data in the uploaded data.
+
+If an entity does not exist in ART with the primary key, it will be created.
+
+At no point will ANY data be deleted.
+
+This behavior is straightforward for any student, as their SSID does not change over time.
+
+This behavior does imply the following for schools when the following changes appear in the CSV feed:
+
+1) A school changes districtsA new CDS Code will appear in the CA_schools.csv file - therefore, it will be created as a new school in ART. Then when the students are imported, they will point at this new CDS code and be relinked to point at the new school.The district would also have appeared in the CA_schools.csv file first, and would have already been upserted by the loader script before the school gets upserted.
+
+2) A school name is changedThe same CDS Code would appear on the school, so the existing record in ART would be updated with the new name spelling only. The same record would remain in ART having only a new name. (This behavior would occur for any change that does not include school ID or district ID changes)
+
+3) A school ID changes but stays in the same districtThis does not regularly occur, but the same logic as 1) above would happen, except that the new school would happen to point at the same district as the existing school did before.
+
+4) An existing school doesn't appear in the feed tomorrow:Nothing will happen in ART.
+
+5) A district changes its ID:A new district would be inserted, and what happens is listed in item 1 above.The old district remains in the database.
+
+
+
+
+
+
+
+
